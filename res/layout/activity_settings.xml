@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/settings_sign_in_text_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/settings_sign_in_text" />
+
+    <TextView
+        android:id="@+id/settings_signed_in_user_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/settings_sign_in_text_textView"
+        android:layout_alignBottom="@+id/settings_sign_in_text_textView"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/settings_sign_in_text_textView"
+        android:text="@string/settings_sign_in_default"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/settings_signIn_btn"
+        android:layout_width="100dip"
+        android:layout_height="40dip"
+        android:layout_alignLeft="@+id/settings_signed_in_user_textView"
+        android:layout_below="@+id/settings_signed_in_user_textView"
+        android:onClick="signInBtnOnclick"
+        android:layout_marginTop="10dip"
+        android:text="@string/setting_sign_in_btn" />
+
+    <Button
+        android:id="@+id/settings_signOut_btn"
+        android:layout_width="100dip"
+        android:layout_height="40dip"
+        android:layout_alignLeft="@+id/settings_signed_in_user_textView"
+        android:layout_below="@+id/settings_signed_in_user_textView"
+        android:layout_marginTop="10dip"
+        android:onClick="signOutBtnOnclick"
+        android:text="@string/setting_sign_out_btn" />
+
+</RelativeLayout>

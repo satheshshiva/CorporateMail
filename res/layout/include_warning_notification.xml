@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/titleBar_Warning_linearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/LightGrey"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+           <ImageView android:id="@+id/titlebar_warning_pic"
+               android:src="@drawable/warning_small"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/titlebar_warning_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text=""
+                android:textSize="11sp" />
+        </LinearLayout>

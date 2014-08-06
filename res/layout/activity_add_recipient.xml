@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".AddRecipientActivity" >
+ 
+            <EditText
+                android:id="@+id/contactSearch"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/addrecipient_contactSearch_hint"
+                android:singleLine="true"
+                android:ems="10" />
+
+            <TextView
+                android:id="@+id/searchHelpText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/addrecipient_contactSearch_helptext"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/searchDirectoryBtn"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:onClick="onClickDirectorySearch"
+                android:text="@string/addrecipient_searchdirectory_btn_lbl" />
+
+            <ListView
+                android:id="@+id/suggestionsListView"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:fadeScrollbars="false"
+               >
+            </ListView>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/addTo"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="addToOnClick"
+                    android:text="@string/addrecipient_addTo_btn_lbl" />
+
+                <Button
+                    android:id="@+id/addCC"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="addCCOnClick"
+                    android:text="@string/addrecipient_addCC_btn_lbl" />
+
+                <Button
+                    android:id="@+id/addBCC"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="addBCCOnClick"
+                    android:text="@string/addrecipient_addBCC_btn_lbl" />
+            </LinearLayout>
+    
+
+</LinearLayout>

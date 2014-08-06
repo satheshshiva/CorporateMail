@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:background="@color/LightGrey" >
+
+        <TextView
+            android:id="@+id/listview_maillist_header_dateHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:textColor="@color/Black" />
+
+        <TextView
+            android:id="@+id/listview_maillist_header_dateHeader_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingRight="2dp"
+            android:textColor="@color/Black" />
+    </RelativeLayout>
+
+    <include layout="@layout/listview_maillist"/>
+
+</LinearLayout>
