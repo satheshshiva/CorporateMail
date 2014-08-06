@@ -1,3 +1,4 @@
+
 package com.wipromail.sathesh.sqlite.db.dao;
 
 import java.util.Arrays;
@@ -50,6 +51,50 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		return insertId;
 	}
 
+	/** Get all records
+	 * Where Clause - Mail Type
+	 * @param 
+	 * @return List<VO>
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Cursor getAllRecordsByMailTypeCursor(int mailType) throws Exception {
+
+		Cursor cursor=null ;
+		
+		if(mailType>0){
+			String mailTypeStr = String.valueOf(mailType);
+			try{
+				open();
+				//call the select query with the where clause mail type
+				cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
+						new String[]{mailTypeStr});
+			}finally{
+				//close();
+			}
+		}
+		return cursor;
+	}
+
+	/** Get all records
+	 * Where Clause - Folder Id
+	 * @param 
+	 * @return List<VO>
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Cursor getAllRecordsByFolderIdCursor(String folderId) throws Exception {
+
+		Cursor cursor=null;
+		try{
+			open();
+			//call the select query with where clause as folder id
+			cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
+					new String[]{folderId});
+		}finally{
+		//	close();
+		}
+		return cursor;
+	}
+	
 	/** Get all records
 	 * Where Clause - Mail Type
 	 * @param 
@@ -147,11 +192,13 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 * @param 
 	 * @return 
 	 */
-	public void deleteAllByMailType() throws Exception {
-
+	public void deleteAllByMailType(int mailType) throws Exception {
+		
 		try{
+			String mailTypeStr = String.valueOf(mailType);
 			open();
-			database.execSQL(TableCachedMailHeader.getDeleteAllQueryByMailTypeQuery());
+			database.execSQL(TableCachedMailHeader.getDeleteAllQueryByMailTypeQuery(),
+					new String[]{mailTypeStr});
 		}finally{
 			close();
 		}
@@ -163,11 +210,12 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 * @param 
 	 * @return 
 	 */
-	public void deleteAllByFolderId() throws Exception {
+	public void deleteAllByFolderId(String mailFolderId) throws Exception {
 
 		try{
 			open();
-			database.execSQL(TableCachedMailHeader.getDeleteAllQueryByFolderIdQuery());
+			database.execSQL(TableCachedMailHeader.getDeleteAllQueryByFolderIdQuery(),
+					new String[]{mailFolderId});
 		}finally{
 			close();
 		}

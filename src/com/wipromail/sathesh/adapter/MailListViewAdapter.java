@@ -6,24 +6,24 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 
-public class MailListViewAdapter extends ArrayAdapter<String> implements Constants{
+public class MailListViewAdapter extends SimpleCursorAdapter implements Constants{
 	private final Context context;
 	private  Map<Integer, String> dateHeader;
 
@@ -31,6 +31,7 @@ public class MailListViewAdapter extends ArrayAdapter<String> implements Constan
 	private int mailType;
 	private List<CachedMailHeaderVO> mailListHeaderData;
 	private CachedMailHeaderVO mailListHeader;
+	private Cursor cursor;
 
 	/** Constructor
 	 * @param context
@@ -38,16 +39,12 @@ public class MailListViewAdapter extends ArrayAdapter<String> implements Constan
 	 * @param mailListHeaderData
 	 * @param MailType
 	 */
-	public MailListViewAdapter(Context context, String[] mailItemIds,  List<CachedMailHeaderVO> mailListHeaderData , int mailType) {
-		super(context, R.layout.listview_maillist,  mailItemIds);
-		this.mailItemIds=mailItemIds;
+	public MailListViewAdapter(Context context, int layout, Cursor cursor, String[] from , int[] to, int flags) {
+		super(context, layout, cursor, from, to, flags);
 		this.context = context;
-		this.mailType=mailType;
-		this.mailListHeaderData = mailListHeaderData;
-
 		//populating date headers
 		try {
-			this.dateHeader = populateDateHeaderFromMailItems(mailListHeaderData);
+			//this.dateHeader = populateDateHeaderFromMailItems(mailListHeaderData);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -59,7 +56,14 @@ public class MailListViewAdapter extends ArrayAdapter<String> implements Constan
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		//loading fresh EWS data
-		View rowView=loadInboxMailList(position, convertView, parent);
+		View rowView;
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		rowView = inflater.inflate(R.layout.listview_maillist, parent, false);
+		TextView listview_maillist_from = (TextView) rowView.findViewById(R.id.listview_maillist_from);
+		cursor = this.getCursor();
+		cursor.moveToPosition(position);
+		listview_maillist_from.setText(this.getCursor().getString(5));
 		return rowView;
 	}
 
