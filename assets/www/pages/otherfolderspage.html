@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <title>
+        </title>
+        <link rel="stylesheet" href="../jquery/jquery.mobile.min.css" />
+        <script src="../jquery/jquery.min.js">
+        </script>
+        <script src="../jquery/jquery.mobile.min.js">
+        </script>
+        
+        
+        <!-- JS FUNCTIONS -->
+        <script>
+        function onOpenFolderId(a, name){
+        
+        window.folderspage.openFolderId(a, name);
+        }
+        
+         function onOpenInboxSubFolder(a, name){
+        
+        window.folderspage.openInboxSubFolder(a, name);
+        }
+        
+        function onClickOutbox(){
+        
+        window.folderspage.openOutbox();
+        }
+        
+        function onClickJunkEmail(){
+        
+        window.folderspage.openJunkEmail();
+        }
+        
+        </script>
+        
+        <!-- JQUERY INITIALIZATION -->
+        <script>
+            try {
+
+    $(function() {
+    
+    /*
+$("#mailListView").append("<li data-role=\"list-divider\" role=\"heading\">Subscription</li>");
+$('#mailListView').listview('refresh');
+*/
+    });
+    
+
+  } catch (error) {
+   alert("Javascript error: " + error);
+  }
+        </script>
+    </head>
+    <body>
+    
+  
+
+        <!-- Home -->
+        <div data-role="page" id="page1">
+        
+            <div data-role="content">
+              <!-- Progress Circle -->
+    <div style="position:absolute; top:0px; left:0px; display:none;" id="progressCircle" >
+    <img src="../images/progress_circle.gif"/>
+	<span style="color:blue; " >Getting folders</span>
+	</div>
+                            <ul id="mailListView" data-role="listview" data-divider-theme="d" data-inset="true">
+                            
+                            <!--
+                             <li data-theme="d">
+                        <a href="javascript:onClickOutbox();" >
+                        <img src="../images/outbox.png"  class="ui-li-icon">
+                            Outbox
+                        </a>
+                    </li>
+                    <li data-theme="d">
+                        <a href="javascript:onClickJunkEmail();">
+                        <img src="../images/junk.png"  class="ui-li-icon">
+
+                            Junk Email
+                        </a>
+                    </li>
+                    -->
+                    
+            </ul>
+            </div>
+        </div>
+        
+        
+    </body>
+</html>

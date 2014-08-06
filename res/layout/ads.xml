@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+<!--  DEV -->
+
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="a150f3edd164d4f"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR, B3EEABB8EE11C2BE770B684D95219ECB" 
+        />
+         
+ <!-- 
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ads:adSize="BANNER"
+        ads:adUnitId="a150f3edd164d4f"
+        ads:loadAdOnCreate="true"
+        /> -->
+   
+</RelativeLayout>

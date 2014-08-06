@@ -1,0 +1,359 @@
+package com.wipromail.sathesh.threads;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.InboxUpdaterStatus;
+import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.cache.CacheInboxAdapter;
+import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.customexceptions.StoredDateIsNullException;
+import com.wipromail.sathesh.ews.EWSConnection;
+import com.wipromail.sathesh.ews.MailFunctions;
+import com.wipromail.sathesh.ews.MailFunctionsImpl;
+import com.wipromail.sathesh.service.data.ChangeCollection;
+import com.wipromail.sathesh.service.data.ChangeType;
+import com.wipromail.sathesh.service.data.EmailMessage;
+import com.wipromail.sathesh.service.data.ExchangeService;
+import com.wipromail.sathesh.service.data.FindItemsResults;
+import com.wipromail.sathesh.service.data.Item;
+import com.wipromail.sathesh.service.data.ItemChange;
+import com.wipromail.sathesh.service.data.ServiceLocalException;
+import com.wipromail.sathesh.sync.SyncUsingStateVariable;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+public class InboxAutoUpdater_autosync_bck
+extends Thread implements Constants
+{
+	public static final String HANDLER_KEY_MESSAGE = "Message";
+	public static final String HANDLER_KEY_MESSAGE_DETAILED = "MessageDetailed";
+	public static final String HANDLER_KEY_PROGRESS = "Progress";
+	public static final String HANDLER_KEY_STATUS = "Status";
+
+	//these status messages are used by Handler and not be InboxUpdater status
+	public static final String STATUS_ERROR = "Error";
+	public static final String STATUS_RUNNING = "Running";
+	public static final String STATUS_UPDATE_LIST = "UpdateListView";
+	public static final String STATUS_SYNCED = "Synced";
+
+	private Bundle bundle;
+	private ChangeCollection<ItemChange> changeCollection;
+	private Context context;
+	public FindItemsResults<Item> findResults;
+	private Handler handlerInbox;
+	private InboxUpdaterStatus inboxUpdaterStatus;
+	private Message msgInbox;
+	private ExchangeService service;
+	private SyncUsingStateVariable ss;
+
+	private boolean isSatisfyingMinInterval =false;
+
+	private ArrayList<Item> createdRows= new ArrayList<Item>();
+	private ArrayList<Item> readFlagChangedRows= new ArrayList<Item>();
+	private ArrayList<Item> deletedRows= new ArrayList<Item>();
+	private ArrayList<Item> updatedRows= new ArrayList<Item>();
+
+	private int initialSyncPassCounter = 0;
+	private Date lastSyncDate=null;
+
+	public boolean shutdownCurrentThread=false;
+	
+	public InboxAutoUpdater_autosync_bck(Context context, Handler handlerInbox)
+	{
+		this.context = context;
+		this.handlerInbox = handlerInbox;
+	}
+
+
+	private void cacheChangedItems(ChangeCollection<ItemChange> changeCollection) throws ServiceLocalException, Exception 
+	{
+		Log.d(TAG, "Change Collection Count " + changeCollection.getCount());
+
+		//collecting all the seperate types of changed items in ArrayList
+		for (ItemChange change : changeCollection)
+		{
+			if (change.getChangeType() == ChangeType.Create)
+			{
+				createdRows.add(change.getItem());
+			}
+			else if(change.getChangeType() == ChangeType.ReadFlagChange){
+				readFlagChangedRows.add(change.getItem());
+			}
+
+			else if(change.getChangeType() == ChangeType.Delete){
+				deletedRows.add(change.getItem());
+			}
+			else if(change.getChangeType() == ChangeType.Update){
+				updatedRows.add(change.getItem());
+			}	
+
+		}
+
+		//write the mails thereby to cache
+		CacheInboxAdapter.writeCacheInboxData(context, createdRows, false);
+
+		//CODE HERE TO PROCESS readFlagChangedRows, deletedRows, updatedRows
+	}
+
+	private void recursiveSync(SyncUsingStateVariable ss) throws Exception
+	{
+
+		if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+		
+		Log.d(TAG, "Entered recursive Sync");
+		try
+		{
+			isSatisfyingMinInterval = MailApplication.isSatisfyingMinInterval(inboxUpdaterStatus.getLastSuccessfulSync(context));
+
+		}
+		catch(StoredDateIsNullException e){
+
+			//never synced completely before.. its the first time sync
+			isSatisfyingMinInterval = true;
+		}
+
+		if (isSatisfyingMinInterval)
+		{
+			//show the progress bar to the ui.
+			Log.d(TAG, "InboxAutoUpdater -> Inside isSatisfyingMinInterval if condition ");
+			updateUserInterface(getProgressString(context), "Calling Sync", 5, STATUS_RUNNING);
+
+			//null check for status
+			if ((inboxUpdaterStatus != null) && (inboxUpdaterStatus.getStatus() != null))
+			{
+				Log.d(TAG, "InboxAutoUpdater -> Inside inboxUpdaterStatus null check  if condition ");
+
+				//check if some other process is already updating the inbox
+				if (!(inboxUpdaterStatus.getStatus().equalsIgnoreCase(InboxUpdaterStatus.STATUS_RUNNING)))
+				{
+					Log.d(TAG, "InboxAutoUpdater -> Inside inboxUpdaterStatus.getStatus().equalsIgnoreCase(InboxUpdaterStatus.STATUS_RUNNING) if condition ");
+					Log.d(TAG, "Calling the Sync Using State Variable method");
+					inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_RUNNING);
+					inboxUpdaterStatus.setExecutionType(InboxUpdaterStatus.TYPE_AUTO_UPDATE);
+					service = EWSConnection.getServiceFromStoredCredentials(context);
+
+					if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+					
+					//EWS Call
+					changeCollection = ss.doSync(context, service);		//actual sync
+					Log.d(TAG, "Processing collected changed items");
+
+					if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+					
+					if(isInboxInitialSyncDone(context)){
+
+						//processing changed items
+						//send the changed items to UI thread for updating list view
+						updateUserInterface(getProgressString(context), "Updating the change collection", 5, STATUS_UPDATE_LIST, changeCollection);
+
+
+
+						//update the cache only after the inital sync
+						//cache the changed items
+						try{
+							cacheChangedItems(this.changeCollection);
+						}
+						catch(Exception e){
+							Log.e(TAG, "Exception occured while writing cache data");
+							e.printStackTrace();
+						}
+					}
+					//checking if more changes available
+					if (this.changeCollection.getMoreChangesAvailable())
+					{
+						Log.d(TAG, "InboxAutoUpdater -> More changes available. will try again after short time");
+						//temporarily setting the status as done so that the sync will happen on the upcoming recursive call
+						inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_DONE);
+						inboxUpdaterStatus.setExecutionType(InboxUpdaterStatus.TYPE_AUTO_UPDATE);
+						if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+						Thread.sleep(INBOX_UPDATER_SHORT_REFRESH_RATE);
+						if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+						recursiveSync(ss);
+					}
+
+					//no more changes available. 
+					else{
+						lastSyncDate = new Date();
+						Log.d(TAG, "InboxAutoUpdater -> No more changes available. Will call again after long refresh rate");
+						updateUserInterface(context.getString(R.string.inbox_updater_success, lastSyncDate), lastSyncDate.toString(), 5, STATUS_SYNCED);
+						inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_DONE);
+						inboxUpdaterStatus.setLastSuccessfulSync(context, lastSyncDate);
+						inboxUpdaterStatus.setExecutionType(InboxUpdaterStatus.TYPE_AUTO_UPDATE);
+						inboxUpdaterStatus.storeIsInboxInitialSyncDone(context, "Yes");
+						if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+						Thread.sleep(INBOX_UPDATER_LONG_REFRESH_RATE);
+						if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+						recursiveSync(ss);
+					}
+				}
+
+				else{
+					//some other processing is running
+
+					Log.i(TAG, "InboxAutoUpdater -> " + ((inboxUpdaterStatus.getExecutionType() != null) ? inboxUpdaterStatus.getExecutionType() : "Some other process ")  + " is already updating the inbox and InboxAutoUpdater cannot continue now and wil retry after some time.");
+					Log.i(TAG, "InboxAutoUpdater will retry after " +INBOX_UPDATER_LONG_REFRESH_RATE/1000 + " secs");
+					if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+					Thread.sleep(INBOX_UPDATER_LONG_REFRESH_RATE);
+					if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+					recursiveSync(ss);
+				}
+			}
+			else
+			{
+				//inboxUdpaterstatus is null
+				Log.e(TAG, "InboxAutoUpdater -> Cannot get the status. inboxUpdaterStatus or inboxUpdaterStatus.getStatus()  is null");
+				Log.d(TAG, "InboxAutoUpdater -> inboxUpdaterStatus=" + inboxUpdaterStatus);
+				updateUserInterface(context.getString(R.string.inbox_updater_error , "asd"), "Cannot get status", 0, STATUS_ERROR);
+				if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+				Thread.sleep(INBOX_UPDATER_LONG_REFRESH_RATE);
+				if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+				recursiveSync(ss);
+			}
+
+
+
+		}
+
+		else
+		{
+			// synced just recently before.. will wait for short time and try again..
+			Log.d(TAG, "InboxAutoUpdater -> MailFunctions synced very recently. Waiting for minimum interval");
+			if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+			Thread.sleep(INBOX_UPDATER_MIN_INTERVAL);
+			if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+			recursiveSync(ss);
+		}
+	}
+
+	private void updateUserInterface(String message, String messageDetailed, int progress, String status)
+	{
+		msgInbox = Message.obtain();
+		bundle.putString(HANDLER_KEY_MESSAGE, message);
+		bundle.putString(HANDLER_KEY_MESSAGE_DETAILED, messageDetailed);
+		bundle.putInt(HANDLER_KEY_PROGRESS, progress);
+		bundle.putString(HANDLER_KEY_STATUS, status);
+		msgInbox.setData(bundle);
+		handlerInbox.sendMessage(this.msgInbox);
+	}
+
+	private void updateUserInterface(String message, String messageDetailed, int progress, String status, Object obj)
+	{
+		msgInbox = Message.obtain();
+		msgInbox.obj = obj;
+		bundle.putString(HANDLER_KEY_MESSAGE, message);
+		bundle.putString(HANDLER_KEY_MESSAGE_DETAILED, messageDetailed);
+		bundle.putInt(HANDLER_KEY_PROGRESS, progress);
+		bundle.putString(HANDLER_KEY_STATUS, status);
+		msgInbox.setData(bundle);
+		handlerInbox.sendMessage(this.msgInbox);
+	}
+
+	public void run()
+	{
+		try
+		{
+			Log.d(TAG, "InboxAutoUpdater -> Thread has started");
+			bundle = new Bundle();
+			inboxUpdaterStatus = InboxUpdaterStatus.getInboxUpdater();
+
+			ss = new SyncUsingStateVariable();
+			ss.setPageSize(UPDATE_INBOX_PAGESIZE);
+			if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+			recursiveSync(ss);
+			if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+
+		}
+		catch(java.lang.OutOfMemoryError oe){
+			try {
+				//trying again 1st time with lesser page size
+				Log.d(TAG, "Memory insufficient. Reducing page size to " +(UPDATE_INBOX_PAGESIZE / 2) + " and trying again" );
+				ss.setPageSize(UPDATE_INBOX_PAGESIZE / 2);
+				inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_ERROR);
+				if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+				Thread.sleep(INBOX_UPDATER_MIN_INTERVAL);
+				if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+				recursiveSync(ss);
+			}
+
+			catch(java.lang.OutOfMemoryError oe1){
+				//trying again 2nd time with lesser page size
+				Log.d(TAG, "Memory insufficient. Reducing page size to 100 and trying again" );
+				ss.setPageSize(100);
+				inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_ERROR);
+
+				try {
+					if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+					Thread.sleep(INBOX_UPDATER_MIN_INTERVAL);
+					if(shutdownCurrentThread){ threadExitPostProcess(); return;	}
+					recursiveSync(ss);
+				} 
+				catch(java.lang.OutOfMemoryError oe2){
+					updateUserInterface(context.getString(R.string.inbox_updater_memory_error), oe2.getMessage(), 5, STATUS_ERROR);
+					inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_ERROR);
+
+				}
+				catch (Exception e) {
+					// TODO Auto-generated catch block
+					handleGeneralException(e);
+				}
+
+			}
+
+			catch(Exception e){
+				handleGeneralException(e);
+			}
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			handleGeneralException(e);
+		}
+		Log.i(TAG, "InboxSutoUpdater -> Thread exiting");
+
+	}
+
+
+
+	private void threadExitPostProcess() {
+		// TODO Auto-generated method stub
+		Log.d(TAG, "InboxAutoUpdater -> Thread exiting");
+		inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_INTERRUPTED);
+	}
+
+
+	private void handleGeneralException(Exception e) {
+		// TODO Auto-generated method stub
+		updateUserInterface(context.getString(R.string.inbox_updater_error), e.getMessage(), 5, STATUS_ERROR);
+		inboxUpdaterStatus.setStatus(InboxUpdaterStatus.STATUS_ERROR);
+		inboxUpdaterStatus.setExecutionType(InboxUpdaterStatus.TYPE_AUTO_UPDATE);
+		e.printStackTrace();
+	}
+
+
+	private boolean isInboxInitialSyncDone(Context context) throws Exception{
+		if(null != inboxUpdaterStatus){
+			if( inboxUpdaterStatus.getIsInboxInitialSyncDone(context).equalsIgnoreCase("Yes") ){
+
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	private String getProgressString(Context context) throws Exception{
+		return (isInboxInitialSyncDone(context) ?context.getString(R.string.inbox_updater_progress): (context.getString(R.string.inbox_updater_initialsync_progress) + ++initialSyncPassCounter) );
+	}
+
+
+}
+
