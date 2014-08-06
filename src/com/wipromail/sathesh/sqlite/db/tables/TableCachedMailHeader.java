@@ -13,7 +13,7 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 
 	private static String tableName = DbConstants.table.CACHED_MAIL_HEADERS;
 	
-	public static final String COLUMN_ID = "ID";
+	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_MAIL_TYPE = "MAIL_TYPE";
 	public static final String COLUMN_FOLDER_ID = "FOLDER_ID";
 	public static final String COLUMN_FOLDER_NAME = "FOLDER_NAME";
