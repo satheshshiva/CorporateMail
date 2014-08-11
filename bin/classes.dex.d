@@ -126,7 +126,7 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/ews/MailFunctionsImpl.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/ews/NetworkCall.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$1.class \
-/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$GetInbox.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$GetNewMails.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/intentservice/PollServerMNS$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/intentservice/PollServerMNS.class \

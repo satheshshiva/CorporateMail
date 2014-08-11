@@ -128,16 +128,11 @@ public class BaseDAO implements Constants{
 	}
 
 
-	/** DB TABLE to VO 
-	 * USES SETTER IN VO
-	 * Maps the Cursor column values to the corresponding VO object members automatically
-	 * First gets the column index one by one and matches the column name with the VO object member "setActualColumnName"
-	 * gets the column value and invokes the "setActualColumnName" method
+	/** This calls processCursorToVOAtPosition() but porcesses list of VOs
 	 * @param cursor
 	 * @param vo
-	 * @return
+	 * @return list - list of VOs
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	protected List<PojoVO> autoMapCursorToVo(Cursor cursor,Class voClass){
 		List<PojoVO> list = new ArrayList<PojoVO>();
 		PojoVO vo;
@@ -146,109 +141,11 @@ public class BaseDAO implements Constants{
 			if (cursor!=null){
 
 				cursor.moveToFirst();
-				int columnIndex;
-				while (!cursor.isAfterLast()) {
-					//create new object for the VO
-					vo = (PojoVO)voClass.newInstance();
-					Method[] methods = vo.getClass().getMethods();
-
-					//iterate all the methods mentioned in the VO object
-					// we should find the method, setActualColumnName() 
-					for(Method method: methods){
-						//iterate all the columns from the cursor
-						for(String columnName:cursor.getColumnNames()){
-							//match column name from the cursor with the method name
-							if(columnName!=null && ("set" + columnName).equalsIgnoreCase(method.getName())){
-								columnIndex=cursor.getColumnIndex(columnName);
-								//data type matching is only for API >= 11
-								if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
-									if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_STRING){
-										//The datatype from the database is of type String
-										//call the VO objects set method with the value from the db table as argument
-
-										if(method.getParameterTypes()!=null && method.getParameterTypes().length ==1){
-											String setParameterType="";
-											//get the corresponding set methods data type(target datatype) from the set methods argument. it chooses only the method with
-											//one parameter
-											setParameterType=method.getParameterTypes()[0].getName();
-
-											//target set method's data type is String
-											if(setParameterType.equals("java.lang.String"))
-											{
-												method.invoke(vo,cursor.getString(columnIndex));
-											}
-											//target set method's data type is boolean
-											else if (setParameterType.equals("boolean"))
-											{
-												// for boolean data type the value true or false is stored as 1 or 0
-												String strValue=cursor.getString(columnIndex);
-												if(strValue.equals("1") || strValue.equals("true")){
-													method.invoke(vo,true);
-												}
-												else if(strValue.equals("0") || strValue.equals("false")){
-													method.invoke(vo,false);
-												}
-												else{
-													if(BuildConfig.DEBUG)
-														Log.w(TAG, "BaseDAO -> the VO set parameter is of type boolean but the value is not of type boolean");
-												}
-											}
-											else if(setParameterType.equals("java.util.Date"))
-											{
-												try {
-													String strDateValue = cursor.getString(columnIndex);
-													SimpleDateFormat dt = new SimpleDateFormat(DB_DATE_FORMAT); 
-													Date date = dt.parse(strDateValue);
-													method.invoke(vo,date);
-												} catch (Exception e) {
-													// TODO Auto-generated catch block
-													if(BuildConfig.DEBUG){
-														Log.w(TAG, "BaseDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
-														e.printStackTrace();
-													}
-												}
-											}
-
-										}
-										else{
-											if(BuildConfig.DEBUG){
-											Log.w(TAG, "BaseDAO -> the VO set parameter has more than 1 parameter types");
-											}
-										}
-
-									}
-
-									else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_INTEGER){
-										//The datatype from the database is of type Integer
-										//call the VO objects set method with the value from the db table as argument
-										method.invoke(vo,cursor.getInt(columnIndex));
-									}
-									else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_FLOAT){
-										//The datatype from the database is of type Float
-										//call the VO objects set method with the value from the db table as argument
-										method.invoke(vo,cursor.getFloat(columnIndex));
-									}
-									else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_BLOB){
-										//The datatype from the database is of type blob
-										// to be implemented if needed
-									}
-									else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_NULL){
-										//The datatype from the database is of type Null
-										//to be implemented if needed
-									}
-								}
-								else{
-									//pre honey comb devices. no type checking for column. Automatically considers as string
-									//call the VO objects set method with the value from the db table as argument
-									method.invoke(vo,cursor.getString(columnIndex));
-								}
-							}
-						}
-					}
+				for(int i=0; i<cursor.getCount(); i++){
+					vo = processCursorToVOAtPosition(cursor, i, voClass );
 					//add the VO to the list of VOs. 
 					// note that we are adding to the list only after all the fields are set and not for each field
 					list.add(vo);
-					cursor.moveToNext();
 				}
 			}
 
@@ -261,6 +158,128 @@ public class BaseDAO implements Constants{
 		}
 		return list;	
 	}
+ 
+	/**DB TABLE to VO 
+	 * USES SETTER IN VO
+	 * Maps the Cursor column values to the corresponding VO object members automatically
+	 * First gets the column index one by one and matches the column name with the VO object member "setActualColumnName"
+	 * gets the column value and invokes the "setActualColumnName" method
+	 *  
+	 * This method process the cursor at certain position and returns a vo corresponding to that position
+	 * @param cursor - the cursor
+	 * @param i - position to which convert to vo
+	 * @param voClass - the class which corresponds to the return vo
+	 * @return
+	 * @throws Exception
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	protected PojoVO processCursorToVOAtPosition(Cursor cursor, int i, Class voClass) throws Exception {
+		// TODO Auto-generated method stub
+		PojoVO vo;
+		int columnIndex;
+		Log.i(TAG, "Cursor count:" + cursor.getCount()  + " Position " + i);
+		cursor.moveToPosition(i);
+		//create new object for the VO
+		vo = (PojoVO)voClass.newInstance();
+		Method[] methods = vo.getClass().getMethods();
+
+		//iterate all the methods mentioned in the VO object
+		// we should find the method, setActualColumnName() 
+		for(Method method: methods){
+			//iterate all the columns from the cursor
+			for(String columnName:cursor.getColumnNames()){
+				//match column name from the cursor with the method name
+				if(columnName!=null && ("set" + columnName).equalsIgnoreCase(method.getName())){
+					columnIndex=cursor.getColumnIndex(columnName);
+					//data type matching is only for API >= 11
+					if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
+						if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_STRING){
+							//The datatype from the database is of type String
+							//call the VO objects set method with the value from the db table as argument
+
+							if(method.getParameterTypes()!=null && method.getParameterTypes().length ==1){
+								String setParameterType="";
+								//get the corresponding set methods data type(target datatype) from the set methods argument. it chooses only the method with
+								//one parameter
+								setParameterType=method.getParameterTypes()[0].getName();
+
+								//target set method's data type is String
+								if(setParameterType.equals("java.lang.String"))
+								{
+									method.invoke(vo,cursor.getString(columnIndex));
+								}
+								//target set method's data type is boolean
+								else if (setParameterType.equals("boolean"))
+								{
+									// for boolean data type the value true or false is stored as 1 or 0
+									String strValue=cursor.getString(columnIndex);
+									if(strValue.equals("1") || strValue.equals("true")){
+										method.invoke(vo,true);
+									}
+									else if(strValue.equals("0") || strValue.equals("false")){
+										method.invoke(vo,false);
+									}
+									else{
+										if(BuildConfig.DEBUG)
+											Log.w(TAG, "BaseDAO -> the VO set parameter is of type boolean but the value is not of type boolean");
+									}
+								}
+								else if(setParameterType.equals("java.util.Date"))
+								{
+									try {
+										String strDateValue = cursor.getString(columnIndex);
+										SimpleDateFormat dt = new SimpleDateFormat(DB_DATE_FORMAT); 
+										Date date = dt.parse(strDateValue);
+										method.invoke(vo,date);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										if(BuildConfig.DEBUG){
+											Log.w(TAG, "BaseDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
+											e.printStackTrace();
+										}
+									}
+								}
+
+							}
+							else{
+								if(BuildConfig.DEBUG){
+									Log.w(TAG, "BaseDAO -> the VO set parameter has more than 1 parameter types");
+								}
+							}
+
+						}
+
+						else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_INTEGER){
+							//The datatype from the database is of type Integer
+							//call the VO objects set method with the value from the db table as argument
+							method.invoke(vo,cursor.getInt(columnIndex));
+						}
+						else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_FLOAT){
+							//The datatype from the database is of type Float
+							//call the VO objects set method with the value from the db table as argument
+							method.invoke(vo,cursor.getFloat(columnIndex));
+						}
+						else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_BLOB){
+							//The datatype from the database is of type blob
+							// to be implemented if needed
+						}
+						else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_NULL){
+							//The datatype from the database is of type Null
+							//to be implemented if needed
+						}
+					}
+					else{
+						//pre honey comb devices. no type checking for column. Automatically considers as string
+						//call the VO objects set method with the value from the db table as argument
+						method.invoke(vo,cursor.getString(columnIndex));
+					}
+				}
+			}
+		}
+		return vo;
+
+	}
+
 
 	/** check the fields name whether it is the right table column name starting with "COLUMN_"
 	 * @param name

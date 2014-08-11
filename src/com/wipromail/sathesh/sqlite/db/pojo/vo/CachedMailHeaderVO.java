@@ -1,9 +1,15 @@
 package com.wipromail.sathesh.sqlite.db.pojo.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class CachedMailHeaderVO implements PojoVO{
+public class CachedMailHeaderVO implements PojoVO, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -913385326556905939L;
+	
 	private String folder_id;
 	private String folder_name;
 	private String item_id;

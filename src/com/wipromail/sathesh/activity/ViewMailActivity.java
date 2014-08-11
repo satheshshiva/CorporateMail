@@ -28,6 +28,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
@@ -53,6 +54,7 @@ import com.wipromail.sathesh.service.data.ItemId;
 import com.wipromail.sathesh.service.data.MessageBody;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
+import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
 import com.wipromail.sathesh.util.Utilities;
@@ -68,7 +70,7 @@ public class ViewMailActivity extends SherlockActivity implements Constants{
 	private Date date;
 	private SherlockActivity activity;
 
-	private String itemIdToOpen;
+	private CachedMailHeaderVO itemToOpen;
 	private TextView ViewMailFromId ;
 	private TextView ViewMailToId ;
 	private TextView ViewMailCCId ;
@@ -159,25 +161,29 @@ public class ViewMailActivity extends SherlockActivity implements Constants{
 
 		CC_ViewMail_LinearLayout =(LinearLayout)findViewById(R.id.CC_ViewMail_LinearLayout);
 		//load email
-		itemIdToOpen = getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_ITEMID);
+		itemToOpen = (CachedMailHeaderVO) getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER);
 
-		from = getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_FROM);
-		to = getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_TO);
-		cc = getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_CC);
-		bcc = getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_BCC);
-		subject = getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_SUBJECT);
-		mailType = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_MAIL_TYPE, 0);
-
+		if(itemToOpen!=null){
+		from = itemToOpen.getMail_from();
+		to = itemToOpen.getMail_to();
+		cc = itemToOpen.getMail_cc();
+		//bcc = itemToOpen.getm;
+		subject = itemToOpen.getMail_subject();
+		mailType = itemToOpen.getMail_type();
+		}
+		
+		if(BuildConfig.DEBUG){
 		Log.d(TAG, "ViewMailActivity -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
+		}
 		try {
-			date = new Date(getIntent().getStringExtra(MailListViewActivity.EXTRA_MESSAGE_DATETIMERECEIVED));
+			date = itemToOpen.getMail_datetimereceived();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		showDetails();
 
-		(new LoadEmail()).execute(itemIdToOpen);
+		(new LoadEmail()).execute(itemToOpen.getItem_id());
 
 	}
 
