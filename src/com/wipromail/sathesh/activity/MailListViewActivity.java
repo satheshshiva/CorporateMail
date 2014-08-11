@@ -53,14 +53,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
 	public final static String FOLDER_NAME_EXTRA = "FOLDER_NAME_EXTRA";
 
-	public static final String EXTRA_MESSAGE_ITEMID = "itemIdToOpen";
-	public static final String EXTRA_MESSAGE_FROM = "from";
-	public static final String EXTRA_MESSAGE_TO = "to";
-	public static final String EXTRA_MESSAGE_CC = "cc";
-	public static final String EXTRA_MESSAGE_BCC = "bcc";
-	public static final String EXTRA_MESSAGE_SUBJECT = "subject";
-	public static final String EXTRA_MESSAGE_DATETIMERECEIVED = "dateTimeReceived";
-	public static final String EXTRA_MESSAGE_MAIL_TYPE = "MailType";
+	public static final String EXTRA_MESSAGE_CACHED_HEADER = "cachedMailHeaderToOpen";
 
 	private int mailType ;
 	private String mailFolderName;

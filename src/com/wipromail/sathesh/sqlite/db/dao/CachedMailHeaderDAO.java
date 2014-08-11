@@ -56,8 +56,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 * @param 
 	 * @return List<VO>
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Cursor getAllRecordsByMailTypeCursor(int mailType) throws Exception {
+	public Cursor getCursorAllRecordsByMailType(int mailType) throws Exception {
 
 		Cursor cursor=null ;
 		
@@ -80,8 +79,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 * @param 
 	 * @return List<VO>
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Cursor getAllRecordsByFolderIdCursor(String folderId) throws Exception {
+	public Cursor getCursorAllRecordsByFolderId(String folderId) throws Exception {
 
 		Cursor cursor=null;
 		try{
@@ -93,51 +91,6 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		//	close();
 		}
 		return cursor;
-	}
-	
-	/** Get all records
-	 * Where Clause - Mail Type
-	 * @param 
-	 * @return List<VO>
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<CachedMailHeaderVO> getAllRecordsByMailType(int mailType) throws Exception {
-
-		List<CachedMailHeaderVO> returnList =null;
-		if(mailType>0){
-			String mailTypeStr = String.valueOf(mailType);
-			try{
-				open();
-				//call the select query with the where clause mail type
-				Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
-						new String[]{mailTypeStr});
-				returnList =(List)autoMapCursorToVo(cursor,voClass);
-			}finally{
-				close();
-			}
-		}
-		return returnList;
-	}
-
-	/** Get all records
-	 * Where Clause - Folder Id
-	 * @param 
-	 * @return List<VO>
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<CachedMailHeaderVO> getAllRecordsByFolderId(String folderId) throws Exception {
-
-		List<CachedMailHeaderVO> returnList =null;
-		try{
-			open();
-			//call the select query with where clause as folder id
-			Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
-					new String[]{folderId});
-			returnList =(List)autoMapCursorToVo(cursor,voClass);
-		}finally{
-			close();
-		}
-		return returnList;
 	}
 
 	/** Get Records Count.
@@ -230,4 +183,11 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		return database.insertWithOnConflict(DbConstants.table.CACHED_MAIL_HEADERS, null,
 				values,SQLiteDatabase.CONFLICT_REPLACE);
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public CachedMailHeaderVO autoMapCursorToVOAtPoisition(Cursor cursor, int position) throws Exception{
+		CachedMailHeaderVO vo= (CachedMailHeaderVO)processCursorToVOAtPosition(cursor,position,voClass);
+		return vo;
+	}
+	
 }

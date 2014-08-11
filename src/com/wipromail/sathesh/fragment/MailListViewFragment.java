@@ -127,14 +127,14 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 		if(activity != null){
 			listView = this.getListView();
 			listView.setOnScrollListener(this);
-			
+
 			titlebar_inbox_status_textswitcher = (TextSwitcher)activity.findViewById(R.id.titlebar_inbox_status_textswitcher);
-			
+
 			//THE UI ELEMENTS IN THE FRAGMENTS MUST BE INITIALIZED IN THE ACTIVITY ITSELF
 			mailType = activityDataPasser.getMailType();
 			mailFolderName = activityDataPasser.getMailFolderName();
 			mailFolderId = activityDataPasser.getStrFolderId();
-			
+
 			myActionBar = activityDataPasser.getMyActionBar();
 			mPullRefreshListView = activityDataPasser.getPullRefreshListView();
 			maillist_refresh_progressbar = activityDataPasser.getMaillist_refresh_progressbar();
@@ -145,19 +145,19 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 
 			//update mail type in the action bar title
 			myActionBar.setTitle(getMailFolderDisplayName(mailType));
-		
+
 			//initializes the cursor, adapter and associates the listview. 
 			//this set  of code when placed when placed few lines before wont initilize and is giving empty listview. dont know why.
 			//get the cursor
-			Cursor mailListHeaderData = getCachedHeaderDataCursor();
+			Cursor mailListHeaderData = getCursorCachedHeaderData();
 			activity.startManagingCursor(mailListHeaderData);
 			//initialize the adapter
 			adapter = new MailListViewAdapter(context,
-	                R.layout.listview_maillist, mailListHeaderData, 
-	                new String[] {"MAIL_FROM"}, 
-	                new int[] {R.id.listview_maillist_from  },CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+					R.layout.listview_maillist, mailListHeaderData, 
+					new String[] {"MAIL_FROM"}, 
+					new int[] {R.id.listview_maillist_from  },CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 			setListAdapter(adapter);
-			
+
 			//refresh the list view
 			refreshList(false);
 		}
@@ -170,7 +170,7 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	public void refreshList(boolean showPulltoRefresh){
 
 		if(!(currentStatus.equals(STATUS_UPDATING)) && !(currentStatus.equals(STATUS_UPDATE_LIST))){
-			
+
 			maillist_update_progressbar.setVisibility(View.VISIBLE);
 			maillist_update_progressbar.setProgress(20);
 			if(showPulltoRefresh){
@@ -215,44 +215,23 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	public void onListItemClick(ListView l, View v, int position, long id) {
 
 		//the pull to refresh list view starts from instead of 0.. fix for that
-		position=positionFixForPullToRefresh(position);
+		System.out.println("clicked position " + position);
+		CachedMailHeaderVO vo;
+		Cursor cursor ;
 
-		ListAdapter listAdapter = getListAdapter();
-		String itemId = (String)listAdapter.getItem(position);
-
-		String subject="", from="", to="", cc="";
-		Date receivedDate=null;
 		try{
-			mailListHeaderData = getCachedHeaderData();
-
-			CachedMailHeaderVO mailListHeader = mailListHeaderData.get(position);
-			subject= mailListHeader.getMail_subject();
-			from=mailListHeader.getMail_from();
-			to=mailListHeader.getMail_to();
-			cc=mailListHeader.getMail_cc();
-			receivedDate=mailListHeader.getMail_datetimereceived();
+			//get the curosor at the position
+			cursor = (Cursor)l.getItemAtPosition(position);
+			// move the cursor to the corresponding position and conver that to VO
+			vo = dao.autoMapCursorToVOAtPoisition(cursor, (position-1));
+			Intent viewMailIntent = new Intent(activity.getBaseContext(), ViewMailActivity.class);
+			viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
+			startActivity(viewMailIntent);
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			if(BuildConfig.DEBUG)
+				e.printStackTrace();
 		}
-
-		if(BuildConfig.DEBUG)
-			Log.d(TAG, "Opening Item with " + "subject= " + subject +  " from= " + from + " to= " + to + " cc= " + cc +" received date= " + ((receivedDate!=null) ? receivedDate.toString():""));
-		Intent viewMailIntent = new Intent(activity.getBaseContext(), ViewMailActivity.class);
-
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_ITEMID, itemId);
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_FROM, from);
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_TO, to);
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CC, cc);
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_DATETIMERECEIVED,receivedDate.toString());
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_SUBJECT, subject);
-		viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_MAIL_TYPE, mailType);
-		startActivity(viewMailIntent);
-	}
-
-	private int positionFixForPullToRefresh(int position) {
-		// TODO Auto-generated method stub
-		return position-1;
 	}
 
 	/**
@@ -459,48 +438,27 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	 * 
 	 */
 	private void updateListViewWithCachedData(){
-		Cursor mailListHeaderData = getCachedHeaderDataCursor();
+		Cursor mailListHeaderData = getCursorCachedHeaderData();
+		// stop monitoring the old cursor
 		activity.stopManagingCursor(adapter.getCursor());
+		//start monitoring the new curosor for destroying it when necessary
 		adapter.changeCursor(mailListHeaderData);
 		activity.startManagingCursor(mailListHeaderData);
 	}
 
-	/** This method will return the cached mail header data 
-	 * @return
-	 */
-	private List<CachedMailHeaderVO> getCachedHeaderData(){
-		List<CachedMailHeaderVO> mailListHeaderData=null;
-		try {
-			// mail type 8 and 9 have folder id. The rest can be determined by the mailType
-			if(mailType!=8 && mailType!=9){
-				mailListHeaderData = dao.getAllRecordsByMailType(mailType);
-			}
-			else{
-				//by folder id
-				mailListHeaderData = dao.getAllRecordsByFolderId(mailFolderId);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			if(BuildConfig.DEBUG)
-				e.printStackTrace();
-		}
-		return mailListHeaderData;
-
-	}
-	
 	/** This method will return the cached mail header data cursor
 	 * @return
 	 */
-	private Cursor getCachedHeaderDataCursor(){
+	private Cursor getCursorCachedHeaderData(){
 		Cursor mailListHeaderData=null;
 		try {
 			// mail type 8 and 9 have folder id. The rest can be determined by the mailType
 			if(mailType!=8 && mailType!=9){
-				mailListHeaderData = dao.getAllRecordsByMailTypeCursor(mailType);
+				mailListHeaderData = dao.getCursorAllRecordsByMailType(mailType);
 			}
 			else{
 				//by folder id
-				mailListHeaderData = dao.getAllRecordsByFolderIdCursor(mailFolderId);
+				mailListHeaderData = dao.getCursorAllRecordsByFolderId(mailFolderId);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -652,7 +610,7 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 					if(BuildConfig.DEBUG)
 						Log.d(TAG, "MailListViewFragment -> Last Item listener");
 
-					
+
 					// adapter.notifyDataSetChanged();
 					preLast = lastItem;
 				}
