@@ -75,7 +75,6 @@ public class ViewMailActivity extends SherlockActivity implements Constants{
 	private TextView ViewMailToId ;
 	private TextView ViewMailCCId ;
 	private TextView ViewMailDateId;
-	private TextView titleBarSubject ;
 	private Button ViewMailToShowMoreBtn;
 	private Button ViewMailCCShowMoreBtn;
 	private boolean toShowMoreFlag=false;
@@ -167,7 +166,7 @@ public class ViewMailActivity extends SherlockActivity implements Constants{
 		from = itemToOpen.getMail_from();
 		to = itemToOpen.getMail_to();
 		cc = itemToOpen.getMail_cc();
-		//bcc = itemToOpen.getm;
+		bcc = itemToOpen.getMail_bcc();
 		subject = itemToOpen.getMail_subject();
 		mailType = itemToOpen.getMail_type();
 		}
@@ -300,7 +299,7 @@ public class ViewMailActivity extends SherlockActivity implements Constants{
 		}
 
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_ATTACHMENT)){
-			Notifications.showToast(this.getApplicationContext(),getString(R.string.attachment_feature_not_avaialable) , Toast.LENGTH_SHORT);
+		//	Notifications.showToast(this.getApplicationContext(),getString(R.string.attachment_feature_not_avaialable) , Toast.LENGTH_SHORT);
 		}
 
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){

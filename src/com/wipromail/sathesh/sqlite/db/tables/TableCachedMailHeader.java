@@ -21,6 +21,7 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 	public static final String COLUMN_FROM = "MAIL_FROM";
 	public static final String COLUMN_TO = "MAIL_TO";
 	public static final String COLUMN_CC = "MAIL_CC";
+	public static final String COLUMN_BCC = "MAIL_BCC";
 	public static final String COLUMN_SUBJECT = "MAIL_SUBJECT";
 	public static final String COLUMN_DATETIMERECEIVED = "MAIL_DATETIMERECEIVED";
 	public static final String COLUMN_ISREAD = "MAIL_ISREAD";
@@ -38,6 +39,7 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 				+ COLUMN_FROM + " TEXT,"
 				+ COLUMN_TO + " TEXT,"
 				+ COLUMN_CC + " TEXT,"
+				+ COLUMN_BCC + " TEXT,"
 				+ COLUMN_SUBJECT + " TEXT,"
 				+ COLUMN_DATETIMERECEIVED + " TEXT,"
 				+ COLUMN_ISREAD + " TEXT, "
@@ -80,6 +82,22 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 	 */
 	public static String getAllRecordsCountByFolderIdQuery(){
 		return "SELECT COUNT(*) FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=?";
+	}
+	
+	/** SELECT UNREAD COUNT QUERY
+	 * WHERE CLAUSE - MAIL TYPE
+	 * @return
+	 */
+	public static String getUnreadByMailTypeQuery(){
+		return "SELECT COUNT(*) FROM " + tableName + " WHERE " + COLUMN_MAIL_TYPE + "=? AND " + COLUMN_ISREAD + "=0";
+	}
+	
+	/** SELECT UNREAD COUNT QUERY
+	 * WHERE CLAUSE - FOLDER ID
+	 * @return
+	 */
+	public static String getUnreadCountByFolderIdQuery(){
+		return "SELECT COUNT(*) FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? AND " + COLUMN_ISREAD + "=0";
 	}
 	
 	/** DELETE 

@@ -34,11 +34,12 @@ import com.wipromail.sathesh.sqlite.db.dao.BaseDAO;
 public class Utilities implements Constants {
 
 	private static String tempDateStr="";
-	private static SimpleDateFormat sdf;
+	
 
 	public static Date convertUTCtoLocal(Date gmt) throws ParseException{
-		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		tempDateStr = sdf.format(gmt);
+		gmt=null;	//since we not going to use this anymore.
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return sdf.parse(tempDateStr);
 	}

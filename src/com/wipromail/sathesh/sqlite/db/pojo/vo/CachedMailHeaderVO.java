@@ -18,6 +18,7 @@ public class CachedMailHeaderVO implements PojoVO, Serializable{
 	private String mail_to="";
 	private String mail_subject="";
 	private String mail_cc="";
+	private String mail_bcc="";
 	private Date mail_datetimereceived;
 	private boolean mail_isread;
 	private boolean mail_has_attachments;
@@ -64,6 +65,12 @@ public class CachedMailHeaderVO implements PojoVO, Serializable{
 	}
 	public void setMail_cc(String mail_cc) {
 		this.mail_cc = mail_cc;
+	}
+	public String getMail_bcc() {
+		return mail_bcc;
+	}
+	public void setMail_bcc(String mail_bcc) {
+		this.mail_bcc = mail_bcc;
 	}
 	public String getMail_subject() {
 		return mail_subject;

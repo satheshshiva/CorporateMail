@@ -177,7 +177,6 @@ public class BaseDAO implements Constants{
 		// TODO Auto-generated method stub
 		PojoVO vo;
 		int columnIndex;
-		Log.i(TAG, "Cursor count:" + cursor.getCount()  + " Position " + i);
 		cursor.moveToPosition(i);
 		//create new object for the VO
 		vo = (PojoVO)voClass.newInstance();

@@ -80,6 +80,7 @@ public class MailFunctionsImpl implements MailFunctions{
 	@Override
 	public Date getDateTimeReceived(Item item) throws ServiceLocalException, ParseException {
 		// TODO Auto-generated method stub
+		//return the local time
 		return Utilities.convertUTCtoLocal(item.getDateTimeReceived());
 	}
 

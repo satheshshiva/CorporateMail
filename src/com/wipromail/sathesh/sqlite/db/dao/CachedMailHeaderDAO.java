@@ -56,22 +56,23 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 * @param 
 	 * @return List<VO>
 	 */
-	public Cursor getCursorAllRecordsByMailType(int mailType) throws Exception {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<CachedMailHeaderVO> getAllRecordsByMailType(int mailType) throws Exception {
 
-		Cursor cursor=null ;
-		
+		List<CachedMailHeaderVO> returnList =null;
 		if(mailType>0){
 			String mailTypeStr = String.valueOf(mailType);
 			try{
 				open();
 				//call the select query with the where clause mail type
-				cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
+				Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
 						new String[]{mailTypeStr});
+				returnList =(List)autoMapCursorToVo(cursor,voClass);
 			}finally{
-				//close();
+				close();
 			}
 		}
-		return cursor;
+		return returnList;
 	}
 
 	/** Get all records
@@ -79,18 +80,20 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 * @param 
 	 * @return List<VO>
 	 */
-	public Cursor getCursorAllRecordsByFolderId(String folderId) throws Exception {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<CachedMailHeaderVO> getAllRecordsByFolderId(String folderId) throws Exception {
 
-		Cursor cursor=null;
+		List<CachedMailHeaderVO> returnList =null;
 		try{
 			open();
 			//call the select query with where clause as folder id
-			cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
+			Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
 					new String[]{folderId});
+			returnList =(List)autoMapCursorToVo(cursor,voClass);
 		}finally{
-		//	close();
+			close();
 		}
-		return cursor;
+		return returnList;
 	}
 
 	/** Get Records Count.
@@ -140,6 +143,54 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		return count;
 	}
 
+	/** Get Unread mail count by Mail Type
+	 * Where Clause - MailType
+	 * @param 
+	 * @return int count. -1 if an exception
+	 */
+	public int getUnreadByMailType(int mailType) throws Exception {
+
+		int count=-1;
+		if(mailType>0){
+			String mailTypeStr = String.valueOf(mailType);
+			try{
+				open();
+				Cursor cursor = database.rawQuery(TableCachedMailHeader.getUnreadByMailTypeQuery(), 
+						new String[]{mailTypeStr});
+				if(cursor!=null){
+					cursor.moveToFirst();
+					count=cursor.getInt(0);
+				}
+			}finally{
+				close();
+			}
+		}
+		return count;
+	}
+
+	/** Get unread mail count by FolderId
+	 * Where Clause - Folder Id
+	 * @param 
+	 * @return int count. -1 if an exception
+	 */
+	public int getUnreadCountByFolderId(String folderId) throws Exception {
+
+		int count=-1;
+		try{
+			open();
+			Cursor cursor = database.rawQuery(TableCachedMailHeader.getUnreadCountByFolderIdQuery(), 
+					new String[]{folderId});
+			if(cursor!=null){
+				cursor.moveToFirst();
+				count=cursor.getInt(0);
+			}
+		}finally{
+			close();
+		}
+		return count;
+	}
+
+	
 	/** Delete Cache
 	 * Where Clause - MailType
 	 * @param 
@@ -184,7 +235,6 @@ public class CachedMailHeaderDAO extends BaseDAO{
 				values,SQLiteDatabase.CONFLICT_REPLACE);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public CachedMailHeaderVO autoMapCursorToVOAtPoisition(Cursor cursor, int position) throws Exception{
 		CachedMailHeaderVO vo= (CachedMailHeaderVO)processCursorToVOAtPosition(cursor,position,voClass);
 		return vo;

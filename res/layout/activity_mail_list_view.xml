@@ -45,12 +45,27 @@
             android:padding="1dp"
             android:contentDescription="Failure sync"
             android:visibility="gone"/>
+         <ImageView 
+            android:id="@+id/maillist_read_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_menu_mail_read"
+            android:padding="1dp"
+            android:contentDescription="All Mails Read"
+            android:visibility="gone"/>
+          <ImageView 
+            android:id="@+id/maillist_unread_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_menu_mail_unread"
+            android:padding="1dp"
+            android:contentDescription="Unread mails"
+            android:visibility="visible"/>
           <TextSwitcher
             android:id="@+id/titlebar_inbox_status_textswitcher"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_marginLeft="2dp"
-            android:layout_height="wrap_content"
-            android:textSize="13dp" >
+            android:layout_height="wrap_content" >
         </TextSwitcher>
         </LinearLayout>
         </RelativeLayout>

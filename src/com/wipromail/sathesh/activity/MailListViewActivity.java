@@ -3,9 +3,9 @@ package com.wipromail.sathesh.activity;
 import static com.wipromail.sathesh.constants.Constants.TAG;
 
 import java.io.File;
-import java.util.Date;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
+import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -61,7 +62,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 
 	private ActionBar myActionBar;
 
-	private ImageView successIcon, failureIcon;
+	private ImageView successIcon, failureIcon, readIcon, unreadIcon;
 
 	@Override
 	public TextSwitcher getTitlebar_inbox_status_textswitcher() {
@@ -126,7 +127,16 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		//Initializing the Text Switcher to use in fragment
 		titlebar_inbox_status_textswitcher = (TextSwitcher)findViewById(R.id.titlebar_inbox_status_textswitcher);
 		setMaillist_refresh_progressbar((ProgressBar)findViewById(R.id.maillist_refresh_progressbar));
-		titlebar_inbox_status_textswitcher.setFactory(this);
+		titlebar_inbox_status_textswitcher.setFactory(new ViewFactory() {
+            
+            public View makeView() {
+                // TODO Auto-generated method stub
+                TextView textView = new TextView(MailListViewActivity.this);
+                textView.setGravity(Gravity.LEFT);
+                textView.setTextSize(12);
+                return textView;
+            }
+        });
 
 		ApplyAnimation.setTitleInboxStatusTextSwitcher(this, titlebar_inbox_status_textswitcher);
 
@@ -153,6 +163,8 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		//initialize icons
 		setSuccessIcon((ImageView)findViewById(R.id.maillist_success_icon));
 		setFailureIcon((ImageView)findViewById(R.id.maillist_failure_icon));
+		setReadIcon((ImageView)findViewById(R.id.maillist_read_icon));
+		setUnreadIcon((ImageView)findViewById(R.id.maillist_unread_icon));
 
 	}
 
@@ -298,6 +310,22 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		this.failureIcon = failureIcon;
 	}
 
+	@Override
+	public ImageView getReadIcon() {
+		return readIcon;
+	}
+
+	public void setReadIcon(ImageView readIcon) {
+		this.readIcon = readIcon;
+	}
+	@Override
+	public ImageView getUnreadIcon() {
+		return unreadIcon;
+	}
+
+	public void setUnreadIcon(ImageView unreadIcon) {
+		this.unreadIcon = unreadIcon;
+	}
 	@Override
 	public ProgressBar getMaillist_update_progressbar() {
 		return maillist_update_progressbar;
