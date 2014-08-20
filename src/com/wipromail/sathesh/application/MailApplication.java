@@ -2,9 +2,11 @@ package com.wipromail.sathesh.application;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
@@ -180,13 +182,13 @@ public class MailApplication implements Constants {
 
 	/**
 	 * @param dateTimeReceived
-	 * @return Customized Date field string to be displayed in inbox
+	 * @return Customized Date field string to be displayed in mail list view  for mails
 	 */
 	public static CharSequence getCustomizedInboxDate(Date dDate) {
 		// TODO Auto-generated method stub
 		String strDate="";
-		if (null != dDate){
 
+		if (null != dDate){
 
 			long dateDiff = 0;
 			dateDiff= Utilities.getNumberOfDaysFromToday(dDate) ;
@@ -194,87 +196,89 @@ public class MailApplication implements Constants {
 			if (dateDiff <= 0){
 				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_TIME)).format(dDate.getTime());
 			}
-			else if (dateDiff == 1){
-				//strDate = INBOX_TEXT_DATE_YESTERDAY;
-				strDate = INBOX_TEXT_DATE_YESTERDAY + " " +(new SimpleDateFormat(INBOX_TEXT_DATE_TIME)).format(dDate.getTime());
-			}
-			else if (dateDiff > 1 && dateDiff <= 6)
-			{
-				//strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_WEEK)).format(dDate.getTime());
-				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR)).format(dDate.getTime());
-			}
-			else if(dateDiff > 6 )
-			{
-				Calendar today = Calendar.getInstance();
-				Calendar date = Calendar.getInstance();
-				date.setTime(dDate);
-				if( today.get(Calendar.YEAR) == date.get(Calendar.YEAR)){
-					//strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_MONTH)).format(dDate.getTime());
-					strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR)).format(dDate.getTime());
-				}
-				else{
-					strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR)).format(dDate.getTime());
-				}
-			}
 			else
 			{
-				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR)).format(dDate.getTime());
+				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE)).format(dDate.getTime());
 			}
 
 		}
 		return strDate;
 	}
 
-
 	/**
 	 * @param dateTimeReceived
-	 * @return Customized Date field string to be displayed in inbox
+	 * @return Customized Date field string to be displayed in mail list view for Header
 	 */
-	public static CharSequence getCustomizedInboxDateHeader(Date dDate) {
+	public static List<String> getCustomizedInboxDateHeader(Context context, Date dDate) {
 		// TODO Auto-generated method stub
-		String strDate="";
+		List<String> returnStr=null;
 		if (null != dDate){
+			returnStr= new ArrayList<String>();
+
 			Calendar today = Calendar.getInstance();
 			today.set(Calendar.HOUR_OF_DAY, 0);
 			today.set(Calendar.MINUTE, 0);
 			today.set(Calendar.SECOND, 0);
 			today.set(Calendar.MILLISECOND, 0);
 
-			Calendar date = Calendar.getInstance();
-			date.setTime(dDate);
-			date.set(Calendar.HOUR_OF_DAY, 0);
-			date.set(Calendar.MINUTE, 0);
-			date.set(Calendar.SECOND, 0);
-			date.set(Calendar.MILLISECOND, 0);
+			Calendar cDate = Calendar.getInstance();
+			cDate.setTime(dDate);
+			cDate.set(Calendar.HOUR_OF_DAY, 0);
+			cDate.set(Calendar.MINUTE, 0);
+			cDate.set(Calendar.SECOND, 0);
+			cDate.set(Calendar.MILLISECOND, 0);
 
-			long dateDiff = (today.getTimeInMillis() - date.getTimeInMillis()) / (1000 * 60 * 60 * 24) ;
-
+			long dateDiff = (today.getTimeInMillis() - cDate.getTimeInMillis()) / (1000 * 60 * 60 * 24) ;
+			String date=(new SimpleDateFormat(INBOX_TEXT_DATE_HEADER)).format(dDate.getTime());
 			if (dateDiff <= 0){
-				strDate = INBOX_TEXT_DATE_TODAY_HEADER + INBOX_TEXT_DATE_DELIMITER + (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR_HEADER)).format(dDate.getTime());
+				//Today
+				returnStr.add(context.getString(R.string.mailListView_today));
+				returnStr.add(date);
 			}
 			else if (dateDiff == 1){
-				strDate = INBOX_TEXT_DATE_YESTERDAY_HEADER+ INBOX_TEXT_DATE_DELIMITER + (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR_HEADER)).format(dDate.getTime());
+				//Yesterday
+				returnStr.add(context.getString(R.string.mailListView_yesterday));
+				returnStr.add(date);
 			}
-			/*
-		else if (dateDiff > 1 && dateDiff <= 6)
-		{
-			strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_WEEK_HEADER)).format(dDate.getTime());
-		}
-		else if(dateDiff > 6 )
-		{
-			if( today.get(Calendar.YEAR) == date.get(Calendar.YEAR))
-				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_MONTH_HEADER)).format(dDate.getTime());
-			else
-				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR_HEADER)).format(dDate.getTime());
-		}
-			 */
+
+			else if (dateDiff > 1 && dateDiff <= 6)
+			{
+				//This week
+				returnStr.add((new SimpleDateFormat(INBOX_TEXT_DATE_DAY_HEADER)).format(dDate.getTime()));
+				returnStr.add(date);
+			}
+			else if(dateDiff > 6 )
+			{
+				//this year
+				if( today.get(Calendar.YEAR) == cDate.get(Calendar.YEAR)){
+					//this month
+					if(today.get(Calendar.MONTH) == cDate.get(Calendar.MONTH)){
+					returnStr.add(context.getString(R.string.mailListView_same_month));
+					}
+					else{
+						//this year not this month
+						returnStr.add((new SimpleDateFormat(INBOX_TEXT_MONTH_HEADER)).format(dDate.getTime()));
+					}
+					
+				}
+				else{
+					//not this year
+					if((today.get(Calendar.YEAR)-cDate.get(Calendar.YEAR)) ==1){
+					returnStr.add(context.getString(R.string.mailListView_1_year));
+					}else{
+						returnStr.add(String.valueOf(cDate.get(Calendar.YEAR)));
+					}
+				}
+			}
+
 			else
 			{
-				strDate =  (new SimpleDateFormat(INBOX_TEXT_DATE_DAY_HEADER)).format(dDate.getTime())+ INBOX_TEXT_DATE_DELIMITER + (new SimpleDateFormat(INBOX_TEXT_DATE_YEAR_HEADER)).format(dDate.getTime());
+				returnStr.add((new SimpleDateFormat(INBOX_TEXT_DATE_DAY_HEADER)).format(dDate.getTime()));
+				returnStr.add((new SimpleDateFormat(INBOX_TEXT_DATE_HEADER)).format(dDate.getTime()));
 			}
 
 		}
-		return strDate;
+		return returnStr;
 	}
 
 

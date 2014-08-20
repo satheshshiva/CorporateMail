@@ -24,6 +24,4 @@
             android:textColor="@color/Black" />
     </RelativeLayout>
 
-    <include layout="@layout/listview_maillist"/>
-
 </LinearLayout>

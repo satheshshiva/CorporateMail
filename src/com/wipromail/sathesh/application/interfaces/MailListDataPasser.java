@@ -28,6 +28,10 @@ public interface MailListDataPasser {
 	public ImageView getSuccessIcon();
 
 	public ImageView getFailureIcon();
+	
+	public ImageView getReadIcon();
+
+	public ImageView getUnreadIcon();
 
 	public ProgressBar getMaillist_update_progressbar();
 

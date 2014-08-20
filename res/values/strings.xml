@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Application -->
     <string name="app_name">Wipro Mail</string>
     <string name="app_version">0.2.7 alpha</string>
+
+    <!-- Login Page -->
     <string name="login_logo_bigText">Wipro Mail</string>
     <string name="login_logo_bigText_beta">alpha</string>
     <string name="webmail1_url">https://webmail.wipro.com</string>
@@ -24,17 +27,23 @@
     <string name="setting_sign_out_btn">Sign Out/Reset</string>
     <string name="setting_sign_in_btn">Sign In</string>
     <string name="main_activity_loading_text">Loading..</string>
-    <string name="folder_updater_progress">Updating %s</string>
+
+    <!-- Mail List View -->
+    <string name="mailListView_today">Today</string>
+    <string name="mailListView_yesterday">Yesterday</string>
+    <string name="mailListView_same_month">This Month</string>
+    <string name="mailListView_1_year">Last Year</string>
+    <string name="mailListView_x_years">%s Years</string>
+    <string name="new_mail_1">1 New Mail</string>
+    <string name="new_mail_x">%s New Mails</string>
+    <string name="no_new_mail">No New Mail</string>
     <string name="folder_updater_checking">Checking for new mails</string>
     <string name="folder_updater_success">Done</string>
     <string name="folder_updater_error">Update failed</string>
     <string name="folder_checking_almostDone">Almost Done</string>
-    <string name="inbox_updater_memory_error">Update failed due to insufficient memory</string>
-    <string name="inbox_warning_morechanges">Some mails are not shown due to more changes</string>
+    <string name="folder_updater_progress">Updating %s</string>
     <string name="pullToRefresh_checking_big">Loading..</string>
     <string name="pullToRefresh_checking_small">Checking for mails</string>
-    <string name="inbox_checking_small_almostDone">Almost Done</string>
-    <string name="attachment_feature_not_avaialable">Attachment feature not available</string>
 
     <!-- Mail Notification Service -->
     <string name="mnsServiceNewMailNotification">You have %d new email</string>
@@ -44,11 +53,11 @@
     <string name="mns_service_stopped">Wipro Mail Notification Service Stopped</string>
     <string name="mns_service_invalidUser_title">Error: Invalid UserName/Password</string>
     <string name="mns_service_invalidUser_message">Have you recently changed your Wipro AD Username/Password? Please login to the application with your new Username/Password.</string>
-   
-    <!--  About -->
+
+    <!-- About -->
     <string name="title_activity_about">About</string>
     <string name="title_activity_please_like_my_fb_beg_you">Like our Facebook page for latest app updates.</string>
-     <string name="title_activity_Apk_download_Url">Latest Apk can be downloaded from, \n http://tiny.cc/wipromail</string>
+    <string name="title_activity_Apk_download_Url">Latest Apk can be downloaded from, \n http://tiny.cc/wipromail</string>
     <string name="title_activity_url">Like our Facebook page for latest app updates. \nApk Manual Download URL \n http://tiny.cc/wipromail</string>
     <string name="about_activity_update_btn">Check for Updates</string>
     <string name="about_activity_bugOrSuggestion_btn">Bugs/Suggestion</string>
@@ -213,7 +222,7 @@
     <string name="ActionBarTitle_ConversationHistory">Chat History</string>
     <string name="ConversationHistoryFolderName">ConversationHistory</string>
     <string name="action_settings">Settings</string>
-    
+
     <!-- Dialog -->
     <string name="dialog_changepwd_title">Change Password</string>
     <string name="dialog_changepwd_hint">New Password</string>
