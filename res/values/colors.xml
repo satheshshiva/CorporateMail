@@ -3,6 +3,10 @@
     <color name="Holo_Light">#33B5E5</color>
     <color name="Holo_Dark">#0099CC</color>
      <color name="Holo_Bright">#00ddff</color>
+     <color name="Pallete_Red">#FF4444</color>
+     <color name="Pallete_Yellow">#FFBB33</color>
+     <color name="Pallete_Green">#99CC00</color>
+     <color name="Pallete_Violet">#AA66CC</color>
  	<color name="white">#FFFFFF</color>
  	<color name="yellow">#FFFF00</color>
  	<color name="fuchsia">#FF00FF</color>
