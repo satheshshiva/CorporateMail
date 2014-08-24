@@ -9,13 +9,16 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ViewSwitcher.ViewFactory;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextSwitcher;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -23,7 +26,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.handmark.pulltorefresh.extras.listfragment.PullToRefreshListFragment;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.AboutActivity;
@@ -33,6 +38,7 @@ import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.PreferencesActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
+import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListDataPasser;
@@ -60,7 +66,7 @@ import com.wipromail.sathesh.util.Utilities;
  * This fragment is used to load only the MailFunctions.
  */
 
-public class MailListViewFragment extends PullToRefreshListFragment implements Constants, OnScrollListener {
+public class MailListViewFragment extends PullToRefreshListFragment implements Constants, OnScrollListener, OnRefreshListener<ListView> {
 
 	// ListFragment is a very useful class that provides a simple ListView inside of a Fragment.
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
@@ -104,11 +110,11 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		activity = (SherlockFragmentActivity) getActivity();
 		context = (SherlockFragmentActivity) getActivity();
 		activityDataPasser = (MailListDataPasser)getActivity();
-
+		
 		//DAO for local cache
 		dao = new CachedMailHeaderDAO(context);
 	}
@@ -123,24 +129,42 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 
 				titlebar_inbox_status_textswitcher = (TextSwitcher)activity.findViewById(R.id.titlebar_inbox_status_textswitcher);
 
+				titlebar_inbox_status_textswitcher.setFactory(new ViewFactory() {
+		            
+		            public View makeView() {
+		                // TODO Auto-generated method stub
+		                TextView textView = new TextView(activity);
+		                textView.setGravity(Gravity.LEFT);
+		                textView.setTextSize(12);
+		                return textView;
+		            }
+		        });
+				ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, titlebar_inbox_status_textswitcher);
+				
 				//THE UI ELEMENTS IN THE FRAGMENTS MUST BE INITIALIZED IN THE ACTIVITY ITSELF
 				mailType = activityDataPasser.getMailType();
 				mailFolderName = activityDataPasser.getMailFolderName();
 				mailFolderId = activityDataPasser.getStrFolderId();
 
-				myActionBar = activityDataPasser.getMyActionBar();
-				mPullRefreshListView = activityDataPasser.getPullRefreshListView();
-				maillist_refresh_progressbar = activityDataPasser.getMaillist_refresh_progressbar();
-				myActionBar = activityDataPasser.getMyActionBar();
-				successIcon = activityDataPasser.getSuccessIcon();
-				failureIcon = activityDataPasser.getFailureIcon();
-				readIcon = activityDataPasser.getReadIcon();
-				unreadIcon = activityDataPasser.getUnreadIcon();
-				maillist_update_progressbar = activityDataPasser.getMaillist_update_progressbar();
+				myActionBar = activity.getSupportActionBar();
+				mPullRefreshListView = this.getPullToRefreshListView();
+				maillist_refresh_progressbar = (ProgressBar)activity.findViewById(R.id.maillist_refresh_progressbar);
 
+				// Set a listener to be invoked when the list should be refreshed.
+				mPullRefreshListView.setOnRefreshListener(this);
+				mPullRefreshListView.setRefreshingLabel(getText(R.string.pullToRefresh_checking_big));
+				this.setListShown(true);
+				
+				successIcon = (ImageView)activity.findViewById(R.id.maillist_success_icon);
+				failureIcon = (ImageView)activity.findViewById(R.id.maillist_failure_icon);
+				readIcon = (ImageView)activity.findViewById(R.id.maillist_read_icon);
+				unreadIcon = (ImageView)activity.findViewById(R.id.maillist_unread_icon);
+				maillist_update_progressbar = (ProgressBar)activity.findViewById(R.id.maillist_update_progressbar);
+				
 				//update mail type in the action bar title
 				myActionBar.setTitle(getMailFolderDisplayName(mailType));
-
+				myActionBar.setDisplayHomeAsUpEnabled(true);
+				
 				//initializes the adapter and associates the listview. 
 				//this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
 				//get the cursor
@@ -549,74 +573,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 		unreadIcon.setVisibility(unreadIconVisibility);
 	}
 
-
-	public void backPressed() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(activity, HomePageActivity.class);
-		startActivity(intent);
-		activity.finish();
-	}
-
-	public void actionbarHomePressed() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(activity, HomePageActivity.class);
-		startActivity(intent);
-		activity.finish();
-	}
-
-	public void createOptionsMenu(Menu menu){
-
-		//Always Visible menu
-		menu.add(ACTIONBAR_COMPOSE)
-		.setIcon(OptionsUIContent.getComposeIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		//Submenu
-		SubMenu subMenu = menu.addSubMenu("");
-
-		subMenu.add(ACTIONBAR_REFRESH)
-		.setIcon(OptionsUIContent.getRefreshIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		subMenu
-		.add(ACTIONBAR_SETTINGS)
-		.setIcon(OptionsUIContent.getSettingsIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		subMenu
-		.add(ACTIONBAR_ABOUT)
-		.setIcon(OptionsUIContent.getAboutIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		//Overflow submenu icon
-		MenuItem subMenuItem = subMenu.getItem();
-		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-	}
-
-	public void optionsItemSelected(MenuItem item){
-		if(item!=null && item.getItemId()==android.R.id.home){
-			actionbarHomePressed();
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_REFRESH))
-		{
-			refreshList(false);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_COMPOSE)){
-			Intent intent = new Intent(activity, ComposeActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			Intent intent = new Intent(activity, PreferencesActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-			Intent intent = new Intent(activity, AboutActivity.class);
-			startActivity(intent);
-		}
-
-	}
-
 	/* This is the OnScroll Listener implementation for this listview. 
 	 * Load more mails when the last of the mail is in the list view is visible.
 	 * (non-Javadoc)
@@ -653,5 +609,14 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
 
+	}
+
+	/* (non-Javadoc)
+	 * @see com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener#onRefresh(com.handmark.pulltorefresh.library.PullToRefreshBase)
+	 */
+	@Override
+	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+		// TODO Auto-generated method stub
+		this.refreshList(false);
 	}
 }
