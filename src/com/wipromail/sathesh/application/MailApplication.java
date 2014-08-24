@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MainActivity;
@@ -39,7 +38,6 @@ import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.service.MailNotificationService;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
-import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
 import com.wipromail.sathesh.ui.ChangePasswordDialog;
 import com.wipromail.sathesh.update.AutoUpdater;
