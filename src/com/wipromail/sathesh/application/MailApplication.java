@@ -29,6 +29,7 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MainActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
+import com.wipromail.sathesh.cache.CacheDirectories;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
 import com.wipromail.sathesh.customexceptions.StoredDateIsNullException;
@@ -38,6 +39,7 @@ import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.service.MailNotificationService;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
+import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
 import com.wipromail.sathesh.ui.ChangePasswordDialog;
 import com.wipromail.sathesh.update.AutoUpdater;
@@ -508,6 +510,17 @@ public class MailApplication implements Constants {
 		if(getInstance().isWrongPwd()){
 			ChangePasswordDialog.showAlertdialog(activity, context);
 		}
+	}
+	
+
+	/** Gets the cache image directory
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getMailCacheImageDirectory(Context context) throws Exception{
+		return CacheDirectories.getApplicationCacheDirectory(context)+"/" + CACHE_DIRECTORY_MAILCACHE ;
+		//return MailApplication.getApplicationCacheDirectory(activity).toString() ;
 	}
 
 }
