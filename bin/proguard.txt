@@ -114,7 +114,7 @@
 # view res/xml/mainpreferences.xml #generated:9
 -keep class com.wipromail.sathesh.customwidgets.WebmailURLPreference { <init>(...); }
 
-# view res/layout/activity_mail_list_view.xml #generated:62
+# view res/layout/activity_mail_list_view.xml #generated:77
 -keep class com.wipromail.sathesh.fragment.MailListViewFragment { <init>(...); }
 
 # view AndroidManifest.xml #generated:49

@@ -38,7 +38,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 * @param mailListHeaderData
 	 * @param MailType
 	 */
-	public MailListViewAdapter(Context context, int layout, List<CachedMailHeaderVO>  listVOs) {
+	public MailListViewAdapter(Context context, List<CachedMailHeaderVO>  listVOs) {
 		this.context = context;
 		this.listVOs=listVOs;
 		

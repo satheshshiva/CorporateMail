@@ -56,6 +56,7 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/LoginPageActivity$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/LoginPageActivity$Login.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/LoginPageActivity.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/MailListViewActivity$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/MailListViewActivity.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/MainActivity$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/MainActivity$CheckLogin$1.class \
@@ -80,6 +81,9 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/activity/ViewMailActivity.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/ComposeActivityAdapter.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/GeneralPreferenceAdapter.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/MailListViewAdapter$1.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/MailListViewAdapter$LocalContent$types.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/MailListViewAdapter$LocalContent.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/MailListViewAdapter.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/animation/ApplyAnimation.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/interfaces/CacheData.class \
