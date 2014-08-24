@@ -1,6 +1,3 @@
-// new branch has thish 1
-//adding some more comments
-//test change
 package com.wipromail.sathesh.fragment;
 
 import java.net.UnknownHostException;
@@ -9,10 +6,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -343,7 +338,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 			}
 			else  if(str[0].equals(STATUS_UPDATED)){
 				//successful update
-				int totalUnread;
 				try {
 					activity.setSupportProgressBarIndeterminateVisibility(false);
 					updateTextSwitcherWithMailCount();
