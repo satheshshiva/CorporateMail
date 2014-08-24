@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -22,10 +23,6 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.handmark.pulltorefresh.extras.listfragment.PullToRefreshListFragment;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
@@ -56,7 +53,7 @@ import com.wipromail.sathesh.util.Utilities;
  * This fragment is used to load only the MailFunctions.
  */
 
-public class MailListViewFragment extends PullToRefreshListFragment implements Constants, OnScrollListener, OnRefreshListener<ListView> {
+public class MailListViewFragment extends ListFragment implements Constants, OnScrollListener {
 
 	// ListFragment is a very useful class that provides a simple ListView inside of a Fragment.
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
@@ -73,7 +70,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	private String mailFolderId;
 
 	boolean cacheLoaded=false;
-	private PullToRefreshListView mPullRefreshListView;
 	private final String STATUS_UPDATING="STATUS_UPDATING";
 	private final String STATUS_UPDATED="STATUS_UPDATED";
 	private final String STATUS_UPDATE_LIST="STATUS_UPDATE_LIST";
@@ -137,14 +133,8 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 				mailFolderId = activityDataPasser.getStrFolderId();
 
 				myActionBar = activity.getSupportActionBar();
-				mPullRefreshListView = this.getPullToRefreshListView();
 				maillist_refresh_progressbar = (ProgressBar)activity.findViewById(R.id.maillist_refresh_progressbar);
 
-				// Set a listener to be invoked when the list should be refreshed.
-				mPullRefreshListView.setOnRefreshListener(this);
-				mPullRefreshListView.setRefreshingLabel(getText(R.string.pullToRefresh_checking_big));
-				this.setListShown(true);
-				
 				successIcon = (ImageView)activity.findViewById(R.id.maillist_success_icon);
 				failureIcon = (ImageView)activity.findViewById(R.id.maillist_failure_icon);
 				readIcon = (ImageView)activity.findViewById(R.id.maillist_read_icon);
@@ -166,7 +156,7 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
 				
 				//refresh list view
-				refreshList(false);
+				refreshList();
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -179,15 +169,12 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	/** Refreshes the list view
 	 * @param showPulltoRefresh: Either show the big pull to refresh label while refreshing
 	 */
-	public void refreshList(boolean showPulltoRefresh){
+	public void refreshList(){
 
 		if(!(currentStatus.equals(STATUS_UPDATING)) && !(currentStatus.equals(STATUS_UPDATE_LIST))){
 
 			maillist_update_progressbar.setVisibility(View.VISIBLE);
 			maillist_update_progressbar.setProgress(20);
-			if(showPulltoRefresh){
-				showPullToRefresh();
-			}
 			textSwitcherIcons(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE);
 			//network call for getting the new mails
 			(new GetNewMails()).execute();
@@ -337,7 +324,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 				else{
 					titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_progress, getMailFolderDisplayName(mailType)).toString());
 				}
-				mPullRefreshListView.setLastUpdatedLabel(activity.getText(R.string.pullToRefresh_checking_small).toString());
 				textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
 				maillist_update_progressbar.setProgress(40);
 
@@ -354,7 +340,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 				try {
 					activity.setSupportProgressBarIndeterminateVisibility(false);
 					updateTextSwitcherWithMailCount();
-					hidePullToRefresh();
 					maillist_update_progressbar.setProgress(0);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -364,18 +349,15 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 			}
 			else  if(str[0].equals(STATUS_ERROR)){
 				activity.setSupportProgressBarIndeterminateVisibility(false);
-				hidePullToRefresh();
 				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 				maillist_update_progressbar.setProgress(0);
 				if(!(str[1].equalsIgnoreCase("Authentication failed"))){
 					titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
-					mPullRefreshListView.setLastUpdatedLabel(activity.getText(R.string.folder_updater_error));
 				}
 				else{
 					// for auth failed show an alert box
 					activity.setSupportProgressBarIndeterminateVisibility(false);
 					titlebar_inbox_status_textswitcher.setText("Authentication failed");
-					mPullRefreshListView.setLastUpdatedLabel("Authentication Failed");
 					NotificationProcessing.showLoginErrorNotification(context);
 					if(isAdded()){
 						AuthFailedAlertDialog.showAlertdialog(activity, context);
@@ -458,15 +440,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
 		}
 		titlebar_inbox_status_textswitcher.setText(successMsg);
-		mPullRefreshListView.setLastUpdatedLabel(successMsg);
-	}
-
-	private void showPullToRefresh(){
-		mPullRefreshListView.setRefreshing();
-	}
-	private void hidePullToRefresh(){
-		//notify pull to refresh
-		mPullRefreshListView.onRefreshComplete();
 	}
 
 	/** Refreshes the listview
@@ -599,14 +572,5 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
 
-	}
-
-	/* (non-Javadoc)
-	 * @see com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener#onRefresh(com.handmark.pulltorefresh.library.PullToRefreshBase)
-	 */
-	@Override
-	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-		// TODO Auto-generated method stub
-		this.refreshList(false);
 	}
 }
