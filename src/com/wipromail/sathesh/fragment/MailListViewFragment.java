@@ -168,10 +168,10 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 				        }
 				    });
 				    // sets the colors used in the refresh animation
-				    swipeRefreshLayout.setColorScheme(R.color.Holo_Dark,
-				    		R.color.Holo_Dark,
-				    		R.color.Holo_Bright,
-				    		R.color.Red);
+				    swipeRefreshLayout.setColorSchemeResources(R.color.Holo_Bright,
+				    		R.color.Pallete_Red,
+				    		R.color.Pallete_Yellow,
+				    		R.color.Pallete_Violet);
 				    
 				//refresh list view
 				refreshList();
@@ -334,7 +334,6 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 		@Override
 		protected void onProgressUpdate(String... str) {
 			if(str[0].equals(STATUS_UPDATING)){
-				activity.setSupportProgressBarIndeterminateVisibility(true);	//this is not needed here bcos the progress is not set to false in oncreate
 				swipeRefreshLayout.setRefreshing(true);
 				//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
 				if(totalCachedRecords>0){
@@ -357,7 +356,6 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 			else  if(str[0].equals(STATUS_UPDATED)){
 				//successful update
 				try {
-					activity.setSupportProgressBarIndeterminateVisibility(false);
 					swipeRefreshLayout.setRefreshing(false);
 					updateTextSwitcherWithMailCount();
 					maillist_update_progressbar.setProgress(0);
@@ -368,7 +366,6 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 
 			}
 			else  if(str[0].equals(STATUS_ERROR)){
-				activity.setSupportProgressBarIndeterminateVisibility(false);
 				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 				swipeRefreshLayout.setRefreshing(false);
 				maillist_update_progressbar.setProgress(0);
@@ -377,7 +374,6 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 				}
 				else{
 					// for auth failed show an alert box
-					activity.setSupportProgressBarIndeterminateVisibility(false);
 					titlebar_inbox_status_textswitcher.setText("Authentication failed");
 					NotificationProcessing.showLoginErrorNotification(context);
 					if(isAdded()){
