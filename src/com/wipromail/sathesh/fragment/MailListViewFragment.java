@@ -146,8 +146,7 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 				//get the cursor
 
 				//initialize the adapter
-				adapter = new MailListViewAdapter(context,
-						R.layout.listview_maillist, getCachedHeaderData());
+				adapter = new MailListViewAdapter(context, getCachedHeaderData());
 				setListAdapter(adapter);
 
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
