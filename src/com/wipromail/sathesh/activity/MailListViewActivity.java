@@ -148,6 +148,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 				R.id.mailListViewFragment);
 
 		// Get PullToRefreshListView from Fragment
+		//mPullRefreshListView = mailListViewFragment.getPullToRefreshListView();
 		mPullRefreshListView = mailListViewFragment.getPullToRefreshListView();
 
 		// Set a listener to be invoked when the list should be refreshed.

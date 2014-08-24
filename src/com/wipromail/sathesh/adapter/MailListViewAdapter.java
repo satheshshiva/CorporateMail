@@ -31,7 +31,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	private CachedMailHeaderVO mailListHeader;
 	private LayoutInflater inflater;
 	private List<LocalContent> listLocalContent;
-
+	
 	/** Constructor
 	 * @param context
 	 * @param mailItemIds
@@ -41,11 +41,13 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	public MailListViewAdapter(Context context, int layout, List<CachedMailHeaderVO>  listVOs) {
 		this.context = context;
 		this.listVOs=listVOs;
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+		
 		try {
-			this.listLocalContent = updatedLocalContent(listVOs);
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
+			//populate the localcontent list which will have the list view contents order with date headers, mail and more mail loading symbol etc.,
+			this.listLocalContent = makeLocalContent(listVOs);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -61,28 +63,31 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		ImageView mailReadUnreadIcon,hasAttachment;
 
 		try {
-
-
 			//Header part - shows the day and date (Categorization) 
 			// and also loads the corresponding layout file
 			if(this.listLocalContent!=null && this.listLocalContent.get(position)!=null ){
 				LocalContent localContent=this.listLocalContent.get(position);
+				
+				//DATE_HEADER view
+				if(localContent.type==LocalContent.types.DATE_HEADER){
+					if(!(localContent.date_left.equals("")) || !(localContent.date_right.equals(""))){
+						// Date Header Present. Show Date Header View
+						rowView = inflater.inflate(R.layout.listview_maillist_header, parent, false);
 
-				if(!(this.listLocalContent.get(position).date_left.equals("")) || !(this.listLocalContent.get(position).date_right.equals(""))){
-					// Date Header Present. Show Date Header View
-					rowView = inflater.inflate(R.layout.listview_maillist_header, parent, false);
+						//initializing controls
+						dateHeaderLeftView = (TextView) rowView.findViewById(R.id.listview_maillist_header_dateHeader);
+						dateHeaderRightView = (TextView) rowView.findViewById(R.id.listview_maillist_header_dateHeader_right);
 
-					//initializing controls
-					dateHeaderLeftView = (TextView) rowView.findViewById(R.id.listview_maillist_header_dateHeader);
-					dateHeaderRightView = (TextView) rowView.findViewById(R.id.listview_maillist_header_dateHeader_right);
+						dateHeaderLeftView.setText(localContent.date_left);
+						dateHeaderRightView.setText(localContent.date_right);
 
-					dateHeaderLeftView.setText(localContent.date_left);
-					dateHeaderRightView.setText(localContent.date_right);
+						return rowView;
 
-					return rowView;
-
+					}
 				}
-				else{
+				
+				//MAIL view
+				else if(localContent.type==LocalContent.types.MAIL){
 					//Show Mail Header View
 					rowView = inflater.inflate(R.layout.listview_maillist, parent, false);
 
@@ -135,6 +140,9 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 						hasAttachment.setVisibility(View.GONE);
 					}
 				}
+				else if(localContent.type==LocalContent.types.LOADING_MORE_MAILS){
+					rowView = inflater.inflate(R.layout.listview_maillist_more_loading, parent, false);
+				}
 			}
 
 		} 
@@ -156,18 +164,30 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		return rowView;
 	}
 
-	/** This creates a hashmap of label for the date categorization
+	/** This creates a local object containing date header, mails and loading synmbol to easily display in UI
+	 * First it iterates the mailListHeaderData which has the list of all the VOs(mail headers)
+	 * Starts with getting the customized date for the first mail. dae_left and date_right has the headers to be displayed in left and right section.
+	 * Then goes to next mail. if same date then just adds the VO. If different date then gets the date header. If same date header as the previous one,
+	 * then just adds the VO, otherwise adds the date header and VO. Goes on till the end of list VOs.
+	 * 
 	 * @param mailListHeaderData
 	 * @return
 	 * @throws Exception
 	 */
 	@SuppressLint("UseSparseArrays")
-	private List<LocalContent> updatedLocalContent(List<CachedMailHeaderVO> mailListHeaderData) throws Exception{
+	private List<LocalContent> makeLocalContent(List<CachedMailHeaderVO> mailListHeaderData) throws Exception{
 		// TODO Auto-generated method stub
 		Date thisDate,prevDate=null;
 		List<String> dateHeaderList;
 		String date_left="", date_right="", prev_date_left="",prev_date_right="";
-		List<LocalContent> listListContent = new ArrayList<LocalContent>();
+		if(listLocalContent!=null){
+		//clear list of local content
+			listLocalContent.clear();	
+		}
+		else{
+			//if it is not created create a new list
+			listLocalContent = new ArrayList<LocalContent>();	
+		}
 		LocalContent localContent;
 		for(CachedMailHeaderVO mailListHeader: mailListHeaderData){
 			thisDate = mailListHeader.getMail_datetimereceived();
@@ -192,7 +212,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 				}
 
-				//if the label text is same as the prevous label text then do nothing and increment counter
+				//if the label text is same as the previous label text then do nothing and increment counter
 
 				if(!prev_date_left.equals(date_left) || !prev_date_right.equals(date_right)){
 					//Date Header preset condition.
@@ -201,13 +221,15 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 					localContent = new LocalContent();
 					localContent.date_left=date_left;
 					localContent.date_right=date_right;
+					localContent.type=LocalContent.types.DATE_HEADER;
 
-					listListContent.add(localContent);
+					listLocalContent.add(localContent);
 
 					//store the vo in a sepearate object in the list
 					localContent = new LocalContent();
 					localContent.vo=mailListHeader;
-					listListContent.add(localContent);
+					localContent.type=LocalContent.types.MAIL;
+					listLocalContent.add(localContent);
 
 					prev_date_left=date_left;
 					prev_date_right=date_right;
@@ -219,9 +241,11 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			//create a new LocalContent object with only vo and not date
 			localContent = new LocalContent();
 			localContent.vo=mailListHeader;
-			listListContent.add(localContent);
+			localContent.type=LocalContent.types.MAIL;
+			listLocalContent.add(localContent);
+
 		}
-		return listListContent;
+		return listLocalContent;
 	}
 
 
@@ -229,7 +253,15 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 * @author sathesh
 	 *
 	 */
-	private class LocalContent{
+	private static  class LocalContent{
+		private int type=-1;
+
+		private static interface types{
+			public final int DATE_HEADER=1;
+			public final int MAIL=2;
+			public final int LOADING_MORE_MAILS=3;
+		}
+
 		private String date_left="";
 		private String date_right="";
 		private CachedMailHeaderVO vo=null;
@@ -238,9 +270,9 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			StringBuilder builder = new StringBuilder();
 			builder.append("LocalContent [date_left=");
 			builder.append(date_left);
-			builder.append(", \\n date_right=");
+			builder.append(",  date_right=");
 			builder.append(date_right);
-			builder.append(", \\n vo=");
+			builder.append(",  vo=");
 			builder.append(vo);
 			builder.append("]");
 			return builder.toString();
@@ -279,16 +311,18 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		// TODO Auto-generated method stub
 		return position;
 	}
-
+	
 	@Override
 	public void notifyDataSetChanged() {
-		super.notifyDataSetChanged();
+		
 		try {
-			this.listLocalContent = updatedLocalContent(listVOs);
+			//refresh the local content list from VOs
+			this.listLocalContent = makeLocalContent(listVOs);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
+		super.notifyDataSetChanged();
 	}
 
 
@@ -298,5 +332,20 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 	public void setListVOs(List<CachedMailHeaderVO> listVOs) {
 		this.listVOs = listVOs;
+	}
+
+	/** Will get invoked when the listview is scrolled to the last.
+	 * Will show a progress icon
+	 * 
+	 */
+	public void scrolledToLast() {
+		// TODO Auto-generated method stub
+		
+		LocalContent localContent = new LocalContent();
+		localContent.type=LocalContent.types.LOADING_MORE_MAILS;
+		//no need to call  makeLocalContent(listVOs)since only when extra row will be added
+		listLocalContent.add(localContent);
+		super.notifyDataSetChanged();
+		
 	}
 } 

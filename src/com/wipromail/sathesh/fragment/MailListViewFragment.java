@@ -71,7 +71,6 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	private SherlockFragmentActivity activity ;
 	private Context context ;
 
-	private MailFunctions mailFunctions = new MailFunctionsImpl();
 	private MailListViewAdapter adapter;
 	private TextSwitcher titlebar_inbox_status_textswitcher;
 
@@ -98,15 +97,11 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	private ProgressBar maillist_update_progressbar;
 	private FindItemsResults<Item> findResults = null;
 	private ListView listView;
-	private int listViewIndex=0;
-	private int listViewTop=0;
 	private CachedMailHeaderDAO dao;
 	private int totalCachedRecords=0;
 
 	private int preLast;
-	private List<CachedMailHeaderVO> mailListHeaderData ;
-	private String[] listViewItemIds= new String[0];
-	private Cursor cursor;
+	private boolean  loadingSymbolShown=false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -158,26 +153,9 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 				setListAdapter(adapter);
 
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
-
+				
 				//refresh list view
-				//for inbox delayed refresh
-				if(mailType==MailType.INBOX && totalCachedRecords>0){
-					if(!(currentStatus.equals(STATUS_UPDATING)) && !(currentStatus.equals(STATUS_UPDATE_LIST))){
-						//if there are already some records 
-						//display the unread mail count in text switcher
-						updateTextSwitcherWithMailCount();
-						//delay refresh 10secs for inbox. (usability feature)
-						(new Handler()).postDelayed(new Runnable(){
-							public void run() {
-								refreshList(false);
-							}
-						}, 10000);
-					}
-
-				}
-				else{
-					refreshList(false);
-				}
+				refreshList(false);
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -651,17 +629,20 @@ public class MailListViewFragment extends PullToRefreshListFragment implements C
 	@Override
 	public void onScroll(AbsListView lw, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
-
+		
 		switch(lw.getId()) {
 		case android.R.id.list:     
 			//	Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 			final int lastItem = firstVisibleItem + visibleItemCount;
-			if(lastItem == totalItemCount) {
+			if(!loadingSymbolShown && lastItem == totalItemCount) {
 				if(preLast!=lastItem){ //to avoid multiple calls for last item
-					if(BuildConfig.DEBUG)
+					if(BuildConfig.DEBUG){
 						Log.d(TAG, "MailListViewFragment -> Last Item listener");
-
-
+					}
+					
+					adapter.scrolledToLast();
+					loadingSymbolShown=true;
+					
 					// adapter.notifyDataSetChanged();
 					preLast = lastItem;
 				}
