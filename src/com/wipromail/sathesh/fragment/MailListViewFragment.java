@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -92,11 +94,12 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 
 	private int preLast;
 	private boolean  loadingSymbolShown=false;
-
+	private Handler handler = new Handler();
+	private SwipeRefreshLayout swipeRefreshLayout ;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		activity = (SherlockFragmentActivity) getActivity();
 		context = (SherlockFragmentActivity) getActivity();
 		activityDataPasser = (MailListDataPasser)getActivity();
@@ -155,6 +158,21 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
 				
+				swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_container);
+				    // the refresh listner. this would be called when the layout is pulled down
+				    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+				         
+				        @Override
+				        public void onRefresh() {
+				        	refreshList();
+				        }
+				    });
+				    // sets the colors used in the refresh animation
+				    swipeRefreshLayout.setColorScheme(R.color.Holo_Dark,
+				    		R.color.Holo_Dark,
+				    		R.color.Holo_Bright,
+				    		R.color.Red);
+				    
 				//refresh list view
 				refreshList();
 
@@ -317,6 +335,7 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 		protected void onProgressUpdate(String... str) {
 			if(str[0].equals(STATUS_UPDATING)){
 				activity.setSupportProgressBarIndeterminateVisibility(true);	//this is not needed here bcos the progress is not set to false in oncreate
+				swipeRefreshLayout.setRefreshing(true);
 				//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
 				if(totalCachedRecords>0){
 					titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
@@ -339,6 +358,7 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 				//successful update
 				try {
 					activity.setSupportProgressBarIndeterminateVisibility(false);
+					swipeRefreshLayout.setRefreshing(false);
 					updateTextSwitcherWithMailCount();
 					maillist_update_progressbar.setProgress(0);
 				} catch (Exception e) {
@@ -350,6 +370,7 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 			else  if(str[0].equals(STATUS_ERROR)){
 				activity.setSupportProgressBarIndeterminateVisibility(false);
 				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
+				swipeRefreshLayout.setRefreshing(false);
 				maillist_update_progressbar.setProgress(0);
 				if(!(str[1].equalsIgnoreCase("Authentication failed"))){
 					titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
@@ -544,7 +565,19 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 	@Override
 	public void onScroll(AbsListView lw, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
-		
+		//enable Swipe Refresh
+		boolean enable = false;
+        if(lw != null && lw.getChildCount() > 0){
+            // check if the first item of the list is visible
+            boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
+            // check if the top of the first item is visible
+            boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
+            // enabling or disabling the refresh layout
+            enable = firstItemVisible && topOfFirstItemVisible;
+        }
+      if(swipeRefreshLayout!=null)  swipeRefreshLayout.setEnabled(enable);
+        
+        //Last Item Listener - loads more mails
 		switch(lw.getId()) {
 		case android.R.id.list:     
 			//	Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);

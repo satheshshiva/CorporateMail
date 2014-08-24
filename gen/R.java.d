@@ -612,7 +612,11 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/push_up_in.xml \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/push_up_out.xml \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/shake.xml \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_in_from_bottom.xml \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_in_from_top.xml \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_left.xml \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_out_to_bottom.xml \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_out_to_top.xml \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_right.xml \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/slide_top_to_bottom.xml \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/res/anim/wave_scale.xml \
