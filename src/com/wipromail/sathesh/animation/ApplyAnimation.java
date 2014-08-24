@@ -43,10 +43,10 @@ public class ApplyAnimation {
 	//View Mail Activity
 	public static Animation getDownloadingImagesLblInAnim(Activity activity){
 
-		return  AnimationUtils.loadAnimation(activity, R.anim.slide_in_from_top);
+		return  AnimationUtils.loadAnimation(activity, R.anim.push_up_in);
 		
 	}
 	public static Animation getDownloadingImagesLblOutAnim(Activity activity){
-		return  AnimationUtils.loadAnimation(activity, R.anim.slide_out_to_top);
+		return  AnimationUtils.loadAnimation(activity, R.anim.push_up_out);
 	}
 }

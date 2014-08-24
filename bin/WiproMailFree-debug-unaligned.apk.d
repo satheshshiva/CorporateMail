@@ -9,8 +9,6 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/src/com/wipromail/sathesh/threads/InboxAutoUpdater.java.bck \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/src/com/wipromail/sathesh/threads/InboxAutoUpdater_autosync_bck.java.bck \
 /Users/sathesh/MyContent/workspaces/workspace_android/library1/bin/classes.jar \
-/Users/sathesh/MyContent/workspaces/workspace_android/PullToRefreshListFragment/bin/classes.jar \
-/Users/sathesh/MyContent/workspaces/workspace_android/library/bin/classes.jar \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/libs/acra-4.4.0.jar \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/libs/jcifs-1.3.17.jar \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/libs/libGoogleAnalyticsV2.jar \

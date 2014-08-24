@@ -5,40 +5,22 @@ import static com.wipromail.sathesh.constants.Constants.TAG;
 import java.io.File;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextSwitcher;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
-import android.widget.ViewSwitcher.ViewFactory;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListDataPasser;
-import com.wipromail.sathesh.cache.CacheDirectories;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -155,7 +137,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_REFRESH))
 		{
-			mailListViewFragment.refreshList(false);
+			mailListViewFragment.refreshList();
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_COMPOSE)){
 			Intent intent = new Intent(this, ComposeActivity.class);
