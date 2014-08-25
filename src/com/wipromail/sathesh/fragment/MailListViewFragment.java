@@ -116,7 +116,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		activityDataPasser = (MailListActivityDataPasser)getActivity();
 		//DAO for local cache
 		dao = new CachedMailHeaderDAO(context);
-
+		setRetainInstance(true);
+		
 		if(activity != null){
 			try {
 				//List View Initialization
@@ -190,7 +191,11 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 				//get the total number of records in cache
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
-
+				
+				//if the activity is recreated, and if the thread is already updating then update the UI status
+				if((currentStatus==State.UPDATING) || (currentStatus==State.UPDATE_LIST)){
+					updatingStatusUIChanges();
+				}
 				//refresh list view
 				refreshList();
 
@@ -210,11 +215,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
 
-			maillist_update_progressbar.setVisibility(View.VISIBLE);
-			maillist_update_progressbar.setProgress(20);
-			textSwitcherIcons(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE);
 			//network call for getting the new mails
-			(new GetNewMails("A")).execute();
+			(new GetNewMails(this)).execute();
 		}
 	}
 
@@ -253,9 +255,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 *
 	 */
 	private class GetNewMails extends AsyncTask<Void, State, Void>{
+		MailListViewFragment parent;
 		
-		GetNewMails(String a){
-			
+		GetNewMails(MailListViewFragment parent){
+			this.parent=parent;
 		}
 		
 		ExchangeService service;
@@ -342,16 +345,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			switch(_state[0]){
 			
 			case UPDATING:
-				swipeRefreshLayout.setRefreshing(true);
-				//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
-				if(totalCachedRecords>0){
-					titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
-				}
-				else{
-					titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_progress, getMailFolderDisplayName(mailType)).toString());
-				}
-				textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
-				maillist_update_progressbar.setProgress(40);
+				updatingStatusUIChanges();
 				break;
 				
 			case UPDATE_CACHE_DONE:
@@ -417,6 +411,24 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		//end of async task
 	}
 
+	/** The UI changes when the current status is updating
+	 * 
+	 */
+	private void updatingStatusUIChanges() {
+		// TODO Auto-generated method stub
+		maillist_update_progressbar.setVisibility(View.VISIBLE);
+		swipeRefreshLayout.setRefreshing(true);
+		//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
+		if(totalCachedRecords>0){
+			titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
+		}
+		else{
+			titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_progress, getMailFolderDisplayName(mailType)).toString());
+		}
+		textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
+		maillist_update_progressbar.setProgress(40);
+	}
+	
 	/** Writes the array List of items to cache
 	 * @param items
 	 * @param emptyCache	Empties the cache before writing
