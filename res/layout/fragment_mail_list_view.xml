@@ -64,7 +64,7 @@
                 android:contentDescription="Unread mails"
                 android:padding="1dp"
                 android:src="@drawable/ic_menu_mail_unread"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextSwitcher
                 android:id="@+id/titlebar_inbox_status_textswitcher"

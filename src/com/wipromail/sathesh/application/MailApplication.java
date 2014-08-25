@@ -521,4 +521,16 @@ public class MailApplication implements Constants {
 		//return MailApplication.getApplicationCacheDirectory(activity).toString() ;
 	}
 
+	/** Gets SwipeRefreshLayout color resources
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public static int[] getSwipeRefreshLayoutColorResources() throws Exception{
+		return new int[]{R.color.Holo_Bright,
+				R.color.Pallete_Red,
+				R.color.Pallete_Yellow,
+				R.color.Pallete_Violet};
+	}
+	
 }

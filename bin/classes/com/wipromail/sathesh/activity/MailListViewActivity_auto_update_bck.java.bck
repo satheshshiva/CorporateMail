@@ -21,7 +21,7 @@ import android.widget.ViewSwitcher;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
-import com.wipromail.sathesh.application.interfaces.MailListDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.CustomTitleBar;
 import com.wipromail.sathesh.fragment.MailListViewFragment;

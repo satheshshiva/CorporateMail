@@ -40,6 +40,7 @@
     <string name="folder_updater_checking">Checking for new mails</string>
     <string name="folder_updater_success">Done</string>
     <string name="folder_updater_error">Update failed</string>
+    <string name="folder_auth_error">Authentication failed</string>
     <string name="folder_checking_almostDone">Almost Done</string>
     <string name="folder_updater_progress">Updating %s</string>
     <string name="pullToRefresh_checking_big">Loading..</string>

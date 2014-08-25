@@ -1,7 +1,7 @@
 package com.wipromail.sathesh.application.interfaces;
 
 
-public interface MailListDataPasser {
+public interface MailListActivityDataPasser {
 
 	public int getMailType();
 
