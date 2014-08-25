@@ -75,26 +75,9 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private String  mailFolderName;
 	private String mailFolderId;
 
-	boolean cacheLoaded=false;
-
-	/** Type of the status of this activity
-	 * @author sathesh
-	 *
-	 */
-	private interface status{
-		public final int UPDATING=1;
-		public final int UPDATED=2;
-		public final int UPDATE_LIST=3;
-		public final int UPDATE_CACHE_DONE=4;
-		public final int ERROR=5;
-		public final int ERROR_AUTH_FAILED=6;
-	}
-
-	private int currentStatus=-1;
 	private ProgressBar maillist_refresh_progressbar;
 
 	private ImageView successIcon, failureIcon, readIcon, unreadIcon;
-
 
 	private ActionBar myActionBar;
 
@@ -107,7 +90,20 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private int preLast;
 	private boolean  loadingSymbolShown=false;
 	private SwipeRefreshLayout swipeRefreshLayout ;
+	private State currentStatus;
 
+	/** Status Types of this activity
+	 * @author sathesh
+	 *
+	 */
+	public enum State{
+		UPDATING,
+		UPDATED,
+		UPDATE_LIST,
+		UPDATE_CACHE_DONE,
+		ERROR,
+		ERROR_AUTH_FAILED
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -212,13 +208,13 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	@Override
 	public void refreshList(){
 
-		if(!(currentStatus==status.UPDATING) && !(currentStatus==status.UPDATE_LIST)){
+		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
 
 			maillist_update_progressbar.setVisibility(View.VISIBLE);
 			maillist_update_progressbar.setProgress(20);
 			textSwitcherIcons(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE);
 			//network call for getting the new mails
-			(new GetNewMails()).execute();
+			(new GetNewMails("A")).execute();
 		}
 	}
 
@@ -238,19 +234,16 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 */
 	private String getMailFolderDisplayName(int mailType) {
 		// TODO Auto-generated method stub
-		if(mailType==MailType.SENT_ITEMS){
+		switch(mailType){
+		case (MailType.SENT_ITEMS):
 			return (activity.getString(R.string.ActionBarTitle_SentItems));
-		}
-		else if(mailType==MailType.DELETED_ITEMS){
+		case MailType.DELETED_ITEMS:
 			return (activity.getString(R.string.ActionBarTitle_DeletedItems));
-		}
-		else if(mailType==MailType.JUNK_EMAIL){
+		case MailType.JUNK_EMAIL:
 			return (activity.getString(R.string.ActionBarTitle_JunkEmail));
-		}
-		else if(mailType==MailType.CONVERSATION_HISTORY){
+		case MailType.CONVERSATION_HISTORY:
 			return (activity.getString(R.string.ActionBarTitle_ConversationHistory));
-		}
-		else{
+		default:
 			return (mailFolderName);
 		}
 	}
@@ -259,8 +252,12 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 * @author sathesh
 	 *
 	 */
-	private class GetNewMails extends AsyncTask<Void, Integer, Void>{
-
+	private class GetNewMails extends AsyncTask<Void, State, Void>{
+		
+		GetNewMails(String a){
+			
+		}
+		
 		ExchangeService service;
 
 		@Override
@@ -273,11 +270,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 					//get the total no of records in cache and get all the same number of records.
 					totalCachedRecords = getTotalNumberOfRecordsInCache();
+					publishProgress(State.UPDATING);
+					currentStatus=State.UPDATING;
 
-					publishProgress(status.UPDATING);
-					currentStatus=status.UPDATING;
-
-					publishProgress(status.UPDATE_CACHE_DONE);
+					publishProgress(State.UPDATE_CACHE_DONE);
 
 					service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
 
@@ -300,41 +296,41 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 						cacheNewData(findResults.getItems(), true);
 					}
 
-					publishProgress(status.UPDATE_LIST);
-					currentStatus=status.UPDATE_LIST;
+					publishProgress(State.UPDATE_LIST);
+					currentStatus=State.UPDATE_LIST;
 				}
 				catch (final NoUserSignedInException e) {
-					publishProgress(status.ERROR);
-					currentStatus=status.ERROR;
+					publishProgress(State.ERROR);
+					currentStatus=State.ERROR;
 					e.printStackTrace();
 				}
 				catch (UnknownHostException e) {
-					publishProgress(status.ERROR);
-					currentStatus=status.ERROR;
+					publishProgress(State.ERROR);
+					currentStatus=State.ERROR;
 					e.printStackTrace();
 
 				}
 				catch(NoInternetConnectionException nic){
-					publishProgress(status.ERROR);
-					currentStatus=status.ERROR;
+					publishProgress(State.ERROR);
+					currentStatus=State.ERROR;
 					nic.printStackTrace();
 				}
 				catch(HttpErrorException e){
 					if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 						//unauthorised
-						publishProgress(status.ERROR_AUTH_FAILED);
-						currentStatus=status.ERROR_AUTH_FAILED;
+						publishProgress(State.ERROR_AUTH_FAILED);
+						currentStatus=State.ERROR_AUTH_FAILED;
 					}
 					else
 					{
-						publishProgress(status.ERROR);
-						currentStatus=status.ERROR;
+						publishProgress(State.ERROR);
+						currentStatus=State.ERROR;
 					}
 					e.printStackTrace();
 				}
 				catch (Exception e) {
-					publishProgress(status.ERROR);
-					currentStatus=status.ERROR;
+					publishProgress(State.ERROR);
+					currentStatus=State.ERROR;
 					e.printStackTrace();
 				}
 			}
@@ -342,8 +338,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		}
 
 		@Override
-		protected void onProgressUpdate(Integer... _int) {
-			if(_int[0]==status.UPDATING){
+		protected void onProgressUpdate(State... _state) {
+			switch(_state[0]){
+			
+			case UPDATING:
 				swipeRefreshLayout.setRefreshing(true);
 				//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
 				if(totalCachedRecords>0){
@@ -354,16 +352,17 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				}
 				textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
 				maillist_update_progressbar.setProgress(40);
-
-			}
-			if(_int[0]==status.UPDATE_CACHE_DONE){
+				break;
+				
+			case UPDATE_CACHE_DONE:
 				maillist_update_progressbar.setProgress(65);
-
-			}
-			else if(_int[0]==status.UPDATE_LIST){
+				break;
+				
+			case UPDATE_LIST:
 				maillist_update_progressbar.setProgress(90);
-			}
-			else  if(_int[0]==status.UPDATED){
+				break;
+				
+			case UPDATED:
 				//successful update
 				try {
 					swipeRefreshLayout.setRefreshing(false);
@@ -373,9 +372,9 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					// TODO Auto-generated catch block
 					Utilities.generalCatchBlock(e, this.getClass());
 				}
-
-			}
-			else if(_int[0]==status.ERROR_AUTH_FAILED){
+				break;
+				
+			case ERROR_AUTH_FAILED:
 				// for auth failed show an alert box
 				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_auth_error));
 				NotificationProcessing.showLoginErrorNotification(context);
@@ -387,14 +386,14 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				}
 				// stop the MNS service
 				MailApplication.stopMNSService(context);
-			}
-			else  if(_int[0]==status.ERROR){
+				break;
+				
+			case ERROR:
 				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 				swipeRefreshLayout.setRefreshing(false);
 				maillist_update_progressbar.setProgress(0);
 				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
-
-
+				break;
 			}
 		}
 
@@ -403,9 +402,9 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			try {
 				//refresh the display from the cache (which is now updated with new records)
 				softRefreshList();
-				if(currentStatus==status.UPDATE_LIST){
-					publishProgress(status.UPDATED);
-					currentStatus=status.UPDATED;
+				if(currentStatus==State.UPDATE_LIST){
+					publishProgress(State.UPDATED);
+					currentStatus=State.UPDATED;
 				}
 
 			}
