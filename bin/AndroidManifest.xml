@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.wipromail.sathesh"
+    android:installLocation="auto"
+    android:versionCode="14"
+    android:versionName="@string/app_version" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="10" />
+    <!-- setting target sdk to 10 to have the overflow menu button on ICS tablets -->
+
+
+    <!-- Allow Internet Access to the application -->
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/customTheme" >
+
+        <!--
+        <application
+        android:name="com.wipromail.sathesh.application.MyApplication"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/customTheme" >
+        -->
+        <service android:name="com.wipromail.sathesh.service.MailNotificationService" />
+
+        <receiver android:name="com.wipromail.sathesh.broadcastreceiver.OnBoot" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.wipromail.sathesh.broadcastreceiver.MNSAlarmSetter" />
+
+        <service android:name="com.wipromail.sathesh.intentservice.PollServerMNS" />
+
+        <activity
+            android:name="com.wipromail.sathesh.activity.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.HomePageActivity"
+            android:label="@string/title_activity_home_page"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.LoginPageActivity"
+            android:label="@string/title_activity_login_page"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wipromail.sathesh.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.MailListViewActivity"
+            android:label="@string/title_activity_mail_list_view"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.PreferencesActivity"
+            android:label="@string/title_activity_preferences"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.ViewMailActivity"
+            android:label="@string/title_activity_view_mail"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.OtherFoldersPageActivity"
+            android:label="@string/title_activity_folders_page"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.ComposeActivity"
+            android:label="@string/title_activity_compose"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <!--
+             <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        -->
+        <!--
+         <provider android:name=".contentprovider.ImageContentProvider"
+          android:authorities="com.wipromail.sathesh.localfile"
+      />
+        -->
+        <activity
+            android:name="com.wipromail.sathesh.activity.AddRecipientActivity"
+            android:label="@string/title_activity_add_recipient"
+            android:theme="@style/Theme.Sherlock.Light" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.SearchContactsActivity"
+            android:label="@string/title_activity_search_contacts"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.ContactDetailsActivity"
+            android:label="@string/title_activity_contact_details"
+            android:theme="@style/Theme.Sherlock.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.wipromail.sathesh.activity.ChangePasswordPopupActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Dialog" />
+    </application>
+
+</manifest>

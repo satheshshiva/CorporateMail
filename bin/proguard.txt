@@ -1,0 +1,172 @@
+# view res/layout/activity_mail_list_view.xml #generated:77
+-keep class android.support.v4.widget.SwipeRefreshLayout { <init>(...); }
+
+# view res/layout/abs__screen_action_bar.xml #generated:43
+# view res/layout/abs__screen_action_bar_overlay.xml #generated:26
+# view res/layout/abs__screen_simple.xml #generated:32
+# view res/layout/abs__screen_simple_overlay_action_mode.xml #generated:27
+# view xlarge/res/layout-xlarge/abs__screen_action_bar.xml #generated:43
+# view xlarge/res/layout-xlarge/abs__screen_action_bar_overlay.xml #generated:24
+-keep class com.actionbarsherlock.internal.nineoldandroids.widget.NineFrameLayout { <init>(...); }
+
+# view large/res/layout-large/abs__action_mode_close_item.xml #generated:17
+# view res/layout/abs__action_mode_close_item.xml #generated:17
+-keep class com.actionbarsherlock.internal.nineoldandroids.widget.NineLinearLayout { <init>(...); }
+
+# view res/layout/abs__action_menu_item_layout.xml #generated:17
+-keep class com.actionbarsherlock.internal.view.menu.ActionMenuItemView { <init>(...); }
+
+# view res/layout/abs__action_menu_layout.xml #generated:17
+-keep class com.actionbarsherlock.internal.view.menu.ActionMenuView { <init>(...); }
+
+# view res/layout/abs__list_menu_item_layout.xml #generated:17
+# view res/layout/abs__popup_menu_item_layout.xml #generated:17
+-keep class com.actionbarsherlock.internal.view.menu.ListMenuItemView { <init>(...); }
+
+# view res/layout/abs__screen_action_bar.xml #generated:26
+# view res/layout/abs__screen_action_bar.xml #generated:50
+# view res/layout/abs__screen_action_bar_overlay.xml #generated:29
+# view res/layout/abs__screen_action_bar_overlay.xml #generated:52
+# view xlarge/res/layout-xlarge/abs__screen_action_bar.xml #generated:26
+# view xlarge/res/layout-xlarge/abs__screen_action_bar_overlay.xml #generated:27
+-keep class com.actionbarsherlock.internal.widget.ActionBarContainer { <init>(...); }
+
+# view res/layout/abs__action_mode_bar.xml #generated:19
+# view res/layout/abs__screen_action_bar.xml #generated:36
+# view res/layout/abs__screen_action_bar_overlay.xml #generated:40
+# view xlarge/res/layout-xlarge/abs__screen_action_bar.xml #generated:36
+# view xlarge/res/layout-xlarge/abs__screen_action_bar_overlay.xml #generated:37
+-keep class com.actionbarsherlock.internal.widget.ActionBarContextView { <init>(...); }
+
+# view res/layout/abs__screen_action_bar.xml #generated:31
+# view res/layout/abs__screen_action_bar_overlay.xml #generated:35
+# view xlarge/res/layout-xlarge/abs__screen_action_bar.xml #generated:31
+# view xlarge/res/layout-xlarge/abs__screen_action_bar_overlay.xml #generated:32
+-keep class com.actionbarsherlock.internal.widget.ActionBarView { <init>(...); }
+
+# view res/layout/abs__action_bar_home.xml #generated:17
+-keep class com.actionbarsherlock.internal.widget.ActionBarView$HomeView { <init>(...); }
+
+# view res/layout/abs__action_menu_item_layout.xml #generated:40
+-keep class com.actionbarsherlock.internal.widget.CapitalizingButton { <init>(...); }
+
+# view res/layout/abs__dialog_title_holo.xml #generated:23
+-keep class com.actionbarsherlock.internal.widget.FakeDialogPhoneWindow { <init>(...); }
+
+# view res/layout/abs__action_bar_tab_bar_view.xml #generated:3
+# view res/layout/abs__activity_chooser_view.xml #generated:19
+-keep class com.actionbarsherlock.internal.widget.IcsLinearLayout { <init>(...); }
+
+# view res/layout/abs__action_bar_tab.xml #generated:3
+-keep class com.actionbarsherlock.internal.widget.ScrollingTabContainerView$TabView { <init>(...); }
+
+# view res/layout/abs__search_view.xml #generated:84
+-keep class com.actionbarsherlock.widget.SearchView$SearchAutoComplete { <init>(...); }
+
+# view res/layout/ads.xml #generated:9
+-keep class com.google.ads.AdView { <init>(...); }
+
+# view AndroidManifest.xml #generated:112
+-keep class com.wipromail.sathesh.activity.AboutActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:128
+-keep class com.wipromail.sathesh.activity.AddRecipientActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:145
+-keep class com.wipromail.sathesh.activity.ChangePasswordPopupActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:105
+-keep class com.wipromail.sathesh.activity.ComposeActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:139
+-keep class com.wipromail.sathesh.activity.ContactDetailsActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:61
+-keep class com.wipromail.sathesh.activity.HomePageActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:68
+-keep class com.wipromail.sathesh.activity.LoginPageActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:81
+-keep class com.wipromail.sathesh.activity.MailListViewActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:51
+-keep class com.wipromail.sathesh.activity.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:99
+-keep class com.wipromail.sathesh.activity.OtherFoldersPageActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:87
+-keep class com.wipromail.sathesh.activity.PreferencesActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:133
+-keep class com.wipromail.sathesh.activity.SearchContactsActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:77
+-keep class com.wipromail.sathesh.activity.SettingsActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:93
+-keep class com.wipromail.sathesh.activity.ViewMailActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:47
+-keep class com.wipromail.sathesh.broadcastreceiver.MNSAlarmSetter { <init>(...); }
+
+# view AndroidManifest.xml #generated:42
+-keep class com.wipromail.sathesh.broadcastreceiver.OnBoot { <init>(...); }
+
+# view res/xml/mainpreferences.xml #generated:9
+-keep class com.wipromail.sathesh.customwidgets.WebmailURLPreference { <init>(...); }
+
+# view res/layout/activity_mail_list_view.xml #generated:86
+# view res/layout/fragment_mail_list_view.xml #generated:77
+-keep class com.wipromail.sathesh.fragment.MailListViewFragment { <init>(...); }
+
+# view AndroidManifest.xml #generated:49
+-keep class com.wipromail.sathesh.intentservice.PollServerMNS { <init>(...); }
+
+# view AndroidManifest.xml #generated:40
+-keep class com.wipromail.sathesh.service.MailNotificationService { <init>(...); }
+
+# onClick res/layout/activity_add_recipient.xml #generated:70
+-keepclassmembers class * { *** addBCCOnClick(...); }
+
+# onClick res/layout/activity_add_recipient.xml #generated:61
+-keepclassmembers class * { *** addCCOnClick(...); }
+
+# onClick res/layout/activity_add_recipient.xml #generated:52
+-keepclassmembers class * { *** addToOnClick(...); }
+
+# onClick res/layout/activity_about.xml #generated:142
+-keepclassmembers class * { *** fbOnclick(...); }
+
+# onClick res/layout/activity_about.xml #generated:112
+-keepclassmembers class * { *** onBugOrSuggestion(...); }
+
+# onClick res/layout/activity_about.xml #generated:124
+-keepclassmembers class * { *** onClickChkUpdate(...); }
+
+# onClick res/layout/activity_add_recipient.xml #generated:28
+# onClick res/layout/activity_search_contacts.xml #generated:20
+-keepclassmembers class * { *** onClickDirectorySearch(...); }
+
+# onClick res/layout/activity_login_page.xml #generated:113
+-keepclassmembers class * { *** onClickLogin(...); }
+
+# onClick res/layout/activity_view_mail.xml #generated:102
+-keepclassmembers class * { *** showMoreCCBtnOnClick(...); }
+
+# onClick res/layout/activity_view_mail.xml #generated:64
+-keepclassmembers class * { *** showMoreToBtnOnClick(...); }
+
+# onClick res/layout/activity_settings.xml #generated:27
+-keepclassmembers class * { *** signInBtnOnclick(...); }
+
+# onClick res/layout/activity_settings.xml #generated:37
+-keepclassmembers class * { *** signOutBtnOnclick(...); }
+
+# onClick res/layout/activity_login_page.xml #generated:65
+-keepclassmembers class * { *** textView5OnClick(...); }
+
+# onClick res/layout/activity_compose.xml #generated:111
+-keepclassmembers class * { *** toAddOnClick(...); }
+
