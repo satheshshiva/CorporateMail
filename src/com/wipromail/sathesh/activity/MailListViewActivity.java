@@ -38,45 +38,12 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	private String mailFolderName;
 	private String strFolderId="";
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		//Notification Service
-		if(BuildConfig.DEBUG)
-		Log.i(TAG, "MailListViewActivity -> Starting MNS Service");
-		MailApplication.startMNSService(this);
-		EasyTracker.getInstance().activityStart(this); // Add this method.
-	}
-
-	//Google Analytics
-	@Override
-	public void onStop() {
-		super.onStop();
-		EasyTracker.getInstance().activityStop(this); // Add this method.
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		//deleting cache mail images
-		boolean success=false;
-		try {
-			File cacheDir = new File(MailApplication.getMailCacheImageDirectory(this.getApplicationContext()));
-			if(cacheDir.exists()){
-				success=Utilities.deleteDirectory(cacheDir);
-				if(BuildConfig.DEBUG){
-				Log.d(TAG, "Deleting image cache directory " +((success)?"successful":"failed"));}
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			if(BuildConfig.DEBUG){
-			Log.d(TAG, "Exception while deleting cache" + e.getMessage());
-			e.printStackTrace();
-			}
-		}
-	}
-
+	/** ON CREATE **
+	 * Gets the mailType folder id and folder name from the intent params. 
+	 * Makes it ready by getters so that fragment can make use of
+	 * (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,11 +56,65 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		//load the fragment. If different fragment or layout has to be loaded for a mail type, then an "if" condition has to be given here.
 		setContentView(R.layout.activity_mail_list_view);
 
-		// declaring the fragment (list fragment)
+		// declaring the fragment (list fragment). used for calling the refresh in the fragment
 		mailListViewFragment = (MailListViewFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.mailListViewFragment);
 	}
+	
+	/** ON START **
+	 * Starts the MNS service 
+	 * (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onStart()
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		//Notification Service
+		if(BuildConfig.DEBUG)
+			Log.i(TAG, "MailListViewActivity -> Starting MNS Service");
+		MailApplication.startMNSService(this);
+		EasyTracker.getInstance().activityStart(this); // Add this method.
+	}
 
+	/** ON STOP  **
+	 * Google Analytics
+	 *  (non-Javadoc)
+	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onStop()
+	 */
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this); // Add this method.
+	}
+
+	/** ON DESTROY **
+	 * Delete the cached images 
+	 * (non-Javadoc)
+	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onDestroy()
+	 */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		//deleting cache mail images
+		boolean success=false;
+		try {
+			File cacheDir = new File(MailApplication.getMailCacheImageDirectory(this.getApplicationContext()));
+			if(cacheDir.exists()){
+				success=Utilities.deleteDirectory(cacheDir);
+				if(BuildConfig.DEBUG){
+					Log.d(TAG, "Deleting image cache directory " +((success)?"successful":"failed"));}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			if(BuildConfig.DEBUG){
+				Log.d(TAG, "Exception while deleting cache" + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/** OPTION ITEMS **/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -126,7 +147,8 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		return true;
 	}
-
+	
+	/** OPTION ITEM SELECTED **/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -137,6 +159,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_REFRESH))
 		{
+			//this shld use an interface to call this method. kind of lazy to create this interface
 			mailListViewFragment.refreshList();
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_COMPOSE)){
@@ -153,25 +176,33 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	/** ON RESUME **/
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 
 		try {
+			//cancel all the notifications
 			NotificationProcessing.cancelAllNotifications(this);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	
+	/* When back Presed finish this activity
+	 * (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed(){
 		finish();
 	}
 
+	
+	/** GETTER SETTER PART **/
 	@Override
 	public int getMailType() {
 		return mailType;

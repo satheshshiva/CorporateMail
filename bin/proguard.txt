@@ -1,4 +1,4 @@
-# view res/layout/activity_mail_list_view.xml #generated:77
+# view res/layout/fragment_mail_list_view.xml #generated:83
 -keep class android.support.v4.widget.SwipeRefreshLayout { <init>(...); }
 
 # view res/layout/abs__screen_action_bar.xml #generated:43
@@ -117,8 +117,7 @@
 # view res/xml/mainpreferences.xml #generated:9
 -keep class com.wipromail.sathesh.customwidgets.WebmailURLPreference { <init>(...); }
 
-# view res/layout/activity_mail_list_view.xml #generated:86
-# view res/layout/fragment_mail_list_view.xml #generated:77
+# view res/layout/activity_mail_list_view.xml #generated:8
 -keep class com.wipromail.sathesh.fragment.MailListViewFragment { <init>(...); }
 
 # view AndroidManifest.xml #generated:49

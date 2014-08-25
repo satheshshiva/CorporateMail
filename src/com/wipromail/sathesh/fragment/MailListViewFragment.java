@@ -9,13 +9,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -55,7 +59,7 @@ import com.wipromail.sathesh.util.Utilities;
  * This fragment is used to load only the MailFunctions.
  */
 
-public class MailListViewFragment extends ListFragment implements Constants, OnScrollListener {
+public class MailListViewFragment extends Fragment implements Constants, OnScrollListener, OnItemClickListener {
 
 	// ListFragment is a very useful class that provides a simple ListView inside of a Fragment.
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
@@ -94,16 +98,24 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 
 	private int preLast;
 	private boolean  loadingSymbolShown=false;
-	private Handler handler = new Handler();
 	private SwipeRefreshLayout swipeRefreshLayout ;
-	
+
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_mail_list_view,
+				container, false);
+		return view;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		activity = (SherlockFragmentActivity) getActivity();
 		context = (SherlockFragmentActivity) getActivity();
 		activityDataPasser = (MailListDataPasser)getActivity();
-		
+
 		//DAO for local cache
 		dao = new CachedMailHeaderDAO(context);
 	}
@@ -113,23 +125,24 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 		super.onResume();
 		if(activity != null){
 			try {
-				listView = this.getListView();
+				listView = (ListView)activity.findViewById(R.id.listView);
 				listView.setOnScrollListener(this);
 
+				listView.setOnItemClickListener(this);
 				titlebar_inbox_status_textswitcher = (TextSwitcher)activity.findViewById(R.id.titlebar_inbox_status_textswitcher);
 
 				titlebar_inbox_status_textswitcher.setFactory(new ViewFactory() {
-		            
-		            public View makeView() {
-		                // TODO Auto-generated method stub
-		                TextView textView = new TextView(activity);
-		                textView.setGravity(Gravity.LEFT);
-		                textView.setTextSize(12);
-		                return textView;
-		            }
-		        });
+
+					public View makeView() {
+						// TODO Auto-generated method stub
+						TextView textView = new TextView(activity);
+						textView.setGravity(Gravity.LEFT);
+						textView.setTextSize(12);
+						return textView;
+					}
+				});
 				ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, titlebar_inbox_status_textswitcher);
-				
+
 				//THE UI ELEMENTS IN THE FRAGMENTS MUST BE INITIALIZED IN THE ACTIVITY ITSELF
 				mailType = activityDataPasser.getMailType();
 				mailFolderName = activityDataPasser.getMailFolderName();
@@ -143,36 +156,36 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 				readIcon = (ImageView)activity.findViewById(R.id.maillist_read_icon);
 				unreadIcon = (ImageView)activity.findViewById(R.id.maillist_unread_icon);
 				maillist_update_progressbar = (ProgressBar)activity.findViewById(R.id.maillist_update_progressbar);
-				
+
 				//update mail type in the action bar title
 				myActionBar.setTitle(getMailFolderDisplayName(mailType));
 				myActionBar.setDisplayHomeAsUpEnabled(true);
-				
+
 				//initializes the adapter and associates the listview. 
 				//this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
 				//get the cursor
 
 				//initialize the adapter
 				adapter = new MailListViewAdapter(context, getCachedHeaderData());
-				setListAdapter(adapter);
+				listView.setAdapter(adapter);
 
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
-				
+
 				swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_container);
-				    // the refresh listner. this would be called when the layout is pulled down
-				    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-				         
-				        @Override
-				        public void onRefresh() {
-				        	refreshList();
-				        }
-				    });
-				    // sets the colors used in the refresh animation
-				    swipeRefreshLayout.setColorSchemeResources(R.color.Holo_Bright,
-				    		R.color.Pallete_Red,
-				    		R.color.Pallete_Yellow,
-				    		R.color.Pallete_Violet);
-				    
+				// the refresh listner. this would be called when the layout is pulled down
+				swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+					@Override
+					public void onRefresh() {
+						refreshList();
+					}
+				});
+				// sets the colors used in the refresh animation
+				swipeRefreshLayout.setColorSchemeResources(R.color.Holo_Bright,
+						R.color.Pallete_Red,
+						R.color.Pallete_Yellow,
+						R.color.Pallete_Violet);
+
 				//refresh list view
 				refreshList();
 
@@ -221,27 +234,6 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 		}
 		else{
 			return (mailFolderName);
-		}
-	}
-	/* This is executed when an item in the list view is clicked. 
-	 * (non-Javadoc)
-	 * @see android.support.v4.app.ListFragment#onListItemClick(android.widget.ListView, android.view.View, int, long)
-	 */
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-
-		//the pull to refresh list view starts from instead of 0.. fix for that
-		CachedMailHeaderVO vo;
-
-		try{
-			vo = (CachedMailHeaderVO) l.getItemAtPosition(position);
-			Intent viewMailIntent = new Intent(activity.getBaseContext(), ViewMailActivity.class);
-			viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
-			startActivity(viewMailIntent);
-		}
-		catch(Exception e){
-			if(BuildConfig.DEBUG)
-				e.printStackTrace();
 		}
 	}
 
@@ -563,17 +555,17 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 			final int visibleItemCount, final int totalItemCount) {
 		//enable Swipe Refresh
 		boolean enable = false;
-        if(lw != null && lw.getChildCount() > 0){
-            // check if the first item of the list is visible
-            boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
-            // check if the top of the first item is visible
-            boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
-            // enabling or disabling the refresh layout
-            enable = firstItemVisible && topOfFirstItemVisible;
-        }
-      if(swipeRefreshLayout!=null)  swipeRefreshLayout.setEnabled(enable);
-        
-        //Last Item Listener - loads more mails
+		if(lw != null && lw.getChildCount() > 0){
+			// check if the first item of the list is visible
+			boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
+			// check if the top of the first item is visible
+			boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
+			// enabling or disabling the refresh layout
+			enable = firstItemVisible && topOfFirstItemVisible;
+		}
+		if(swipeRefreshLayout!=null)  swipeRefreshLayout.setEnabled(enable);
+
+		//Last Item Listener - loads more mails
 		switch(lw.getId()) {
 		case android.R.id.list:     
 			//	Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
@@ -583,10 +575,10 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 					if(BuildConfig.DEBUG){
 						Log.d(TAG, "MailListViewFragment -> Last Item listener");
 					}
-					
+
 					adapter.scrolledToLast();
 					loadingSymbolShown=true;
-					
+
 					// adapter.notifyDataSetChanged();
 					preLast = lastItem;
 				}
@@ -601,5 +593,28 @@ public class MailListViewFragment extends ListFragment implements Constants, OnS
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
 
+	}
+
+	/* (non-Javadoc)
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		// TODO Auto-generated method stub
+
+		//the pull to refresh list view starts from instead of 0.. fix for that
+		CachedMailHeaderVO vo;
+
+		try{
+			vo = (CachedMailHeaderVO) parent.getItemAtPosition(position);
+			Intent viewMailIntent = new Intent(activity.getBaseContext(), ViewMailActivity.class);
+			viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
+			startActivity(viewMailIntent);
+		}
+		catch(Exception e){
+			if(BuildConfig.DEBUG)
+				e.printStackTrace();
+		}
 	}
 }
