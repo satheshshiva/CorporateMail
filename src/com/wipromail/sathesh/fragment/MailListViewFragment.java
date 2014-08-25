@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -37,7 +36,8 @@ import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
-import com.wipromail.sathesh.application.interfaces.MailListDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.CacheAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
@@ -59,12 +59,12 @@ import com.wipromail.sathesh.util.Utilities;
  * This fragment is used to load only the MailFunctions.
  */
 
-public class MailListViewFragment extends Fragment implements Constants, OnScrollListener, OnItemClickListener {
+public class MailListViewFragment extends Fragment implements Constants, OnScrollListener, OnItemClickListener, MailListFragmentDataPasser {
 
 	// ListFragment is a very useful class that provides a simple ListView inside of a Fragment.
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
 	// in your app.
-	private MailListDataPasser activityDataPasser ;
+	private MailListActivityDataPasser activityDataPasser ;
 	private SherlockFragmentActivity activity ;
 	private Context context ;
 
@@ -76,13 +76,21 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private String mailFolderId;
 
 	boolean cacheLoaded=false;
-	private final String STATUS_UPDATING="STATUS_UPDATING";
-	private final String STATUS_UPDATED="STATUS_UPDATED";
-	private final String STATUS_UPDATE_LIST="STATUS_UPDATE_LIST";
-	private final String STATUS_UPDATE_CACHE_DONE="STATUS_UPDATE_CACHE_DONE";
-	private final String STATUS_ERROR="STATUS_ERROR";
 
-	private String currentStatus="";
+	/** Type of the status of this activity
+	 * @author sathesh
+	 *
+	 */
+	private interface status{
+		public final int UPDATING=1;
+		public final int UPDATED=2;
+		public final int UPDATE_LIST=3;
+		public final int UPDATE_CACHE_DONE=4;
+		public final int ERROR=5;
+		public final int ERROR_AUTH_FAILED=6;
+	}
+
+	private int currentStatus=-1;
 	private ProgressBar maillist_refresh_progressbar;
 
 	private ImageView successIcon, failureIcon, readIcon, unreadIcon;
@@ -106,56 +114,55 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_mail_list_view,
 				container, false);
-		return view;
-	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		activity = (SherlockFragmentActivity) getActivity();
 		context = (SherlockFragmentActivity) getActivity();
-		activityDataPasser = (MailListDataPasser)getActivity();
-
+		activityDataPasser = (MailListActivityDataPasser)getActivity();
 		//DAO for local cache
 		dao = new CachedMailHeaderDAO(context);
-	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
 		if(activity != null){
 			try {
-				listView = (ListView)activity.findViewById(R.id.listView);
+				//List View Initialization
+				listView = (ListView)view.findViewById(R.id.listView);
+				//ListView -OnScroll Listener
 				listView.setOnScrollListener(this);
-
+				//ListView -Itemclick Listener
 				listView.setOnItemClickListener(this);
-				titlebar_inbox_status_textswitcher = (TextSwitcher)activity.findViewById(R.id.titlebar_inbox_status_textswitcher);
 
+				//Text Switcher Initiliazation
+				titlebar_inbox_status_textswitcher = (TextSwitcher)view.findViewById(R.id.titlebar_inbox_status_textswitcher);
+
+				//Text Switcher customze with text view
 				titlebar_inbox_status_textswitcher.setFactory(new ViewFactory() {
-
 					public View makeView() {
-						// TODO Auto-generated method stub
+						// Custom text view since the default one auto applies center gravity
 						TextView textView = new TextView(activity);
 						textView.setGravity(Gravity.LEFT);
 						textView.setTextSize(12);
 						return textView;
 					}
 				});
+
+				//animation for text switcher
 				ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, titlebar_inbox_status_textswitcher);
 
-				//THE UI ELEMENTS IN THE FRAGMENTS MUST BE INITIALIZED IN THE ACTIVITY ITSELF
+				//mailtype, folname and folder id get from activity
 				mailType = activityDataPasser.getMailType();
 				mailFolderName = activityDataPasser.getMailFolderName();
 				mailFolderId = activityDataPasser.getStrFolderId();
 
+				//action bar initialize 
 				myActionBar = activity.getSupportActionBar();
-				maillist_refresh_progressbar = (ProgressBar)activity.findViewById(R.id.maillist_refresh_progressbar);
+				//progress bar initialize 
+				maillist_refresh_progressbar = (ProgressBar)view.findViewById(R.id.maillist_refresh_progressbar);
 
-				successIcon = (ImageView)activity.findViewById(R.id.maillist_success_icon);
-				failureIcon = (ImageView)activity.findViewById(R.id.maillist_failure_icon);
-				readIcon = (ImageView)activity.findViewById(R.id.maillist_read_icon);
-				unreadIcon = (ImageView)activity.findViewById(R.id.maillist_unread_icon);
-				maillist_update_progressbar = (ProgressBar)activity.findViewById(R.id.maillist_update_progressbar);
+				//icons initialize
+				successIcon = (ImageView)view.findViewById(R.id.maillist_success_icon);
+				failureIcon = (ImageView)view.findViewById(R.id.maillist_failure_icon);
+				readIcon = (ImageView)view.findViewById(R.id.maillist_read_icon);
+				unreadIcon = (ImageView)view.findViewById(R.id.maillist_unread_icon);
+				maillist_update_progressbar = (ProgressBar)view.findViewById(R.id.maillist_update_progressbar);
 
 				//update mail type in the action bar title
 				myActionBar.setTitle(getMailFolderDisplayName(mailType));
@@ -169,22 +176,24 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				adapter = new MailListViewAdapter(context, getCachedHeaderData());
 				listView.setAdapter(adapter);
 
-				totalCachedRecords = getTotalNumberOfRecordsInCache();
-
-				swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_container);
+				//Initialize SwipeRefreshLayout
+				swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 				// the refresh listner. this would be called when the layout is pulled down
 				swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
 					@Override
 					public void onRefresh() {
+						//refresh list when the SwipeRefresh is pulled
 						refreshList();
 					}
 				});
 				// sets the colors used in the refresh animation
-				swipeRefreshLayout.setColorSchemeResources(R.color.Holo_Bright,
-						R.color.Pallete_Red,
-						R.color.Pallete_Yellow,
-						R.color.Pallete_Violet);
+				int[] resources= MailApplication.getSwipeRefreshLayoutColorResources();
+				if(resources.length==4){
+					swipeRefreshLayout.setColorSchemeResources(resources[0],resources[1],resources[2],resources[3]);
+				}
+
+				//get the total number of records in cache
+				totalCachedRecords = getTotalNumberOfRecordsInCache();
 
 				//refresh list view
 				refreshList();
@@ -194,15 +203,16 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				Utilities.generalCatchBlock(e, this.getClass());
 			}
 		}
+		return view;
 	}
 
-
-	/** Refreshes the list view
+	/** Refreshes the list from network
 	 * @param showPulltoRefresh: Either show the big pull to refresh label while refreshing
 	 */
+	@Override
 	public void refreshList(){
 
-		if(!(currentStatus.equals(STATUS_UPDATING)) && !(currentStatus.equals(STATUS_UPDATE_LIST))){
+		if(!(currentStatus==status.UPDATING) && !(currentStatus==status.UPDATE_LIST)){
 
 			maillist_update_progressbar.setVisibility(View.VISIBLE);
 			maillist_update_progressbar.setProgress(20);
@@ -212,6 +222,14 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		}
 	}
 
+	/** Refreshes the listview from local cache
+	 * 
+	 */
+	@Override
+	public void softRefreshList(){
+		adapter.setListVOs(getCachedHeaderData());
+		adapter.notifyDataSetChanged();
+	}
 
 	/** This method gets the customized Display name for a folder. 
 	 * Well Known Folder Name can be used as is, but some have 2 words without space.
@@ -241,7 +259,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 * @author sathesh
 	 *
 	 */
-	private class GetNewMails extends AsyncTask<Void, String, Void>{
+	private class GetNewMails extends AsyncTask<Void, Integer, Void>{
 
 		ExchangeService service;
 
@@ -256,10 +274,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					//get the total no of records in cache and get all the same number of records.
 					totalCachedRecords = getTotalNumberOfRecordsInCache();
 
-					publishProgress(STATUS_UPDATING, "Updating");
-					currentStatus=STATUS_UPDATING;
+					publishProgress(status.UPDATING);
+					currentStatus=status.UPDATING;
 
-					publishProgress(STATUS_UPDATE_CACHE_DONE, "Cache done");
+					publishProgress(status.UPDATE_CACHE_DONE);
 
 					service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
 
@@ -282,41 +300,41 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 						cacheNewData(findResults.getItems(), true);
 					}
 
-					publishProgress(STATUS_UPDATE_LIST, "Almost done");
-					currentStatus=STATUS_UPDATE_LIST;
+					publishProgress(status.UPDATE_LIST);
+					currentStatus=status.UPDATE_LIST;
 				}
 				catch (final NoUserSignedInException e) {
-					publishProgress(STATUS_ERROR,  "Trouble getting login details\n\nDetails: " +e.getMessage());
-					currentStatus=STATUS_ERROR;
+					publishProgress(status.ERROR);
+					currentStatus=status.ERROR;
 					e.printStackTrace();
 				}
 				catch (UnknownHostException e) {
-					publishProgress(STATUS_ERROR,  "Error Occured\n\nDetails: " +e.getMessage());
-					currentStatus=STATUS_ERROR;
+					publishProgress(status.ERROR);
+					currentStatus=status.ERROR;
 					e.printStackTrace();
 
 				}
 				catch(NoInternetConnectionException nic){
-					publishProgress(STATUS_ERROR,  nic.toString());
-					currentStatus=STATUS_ERROR;
+					publishProgress(status.ERROR);
+					currentStatus=status.ERROR;
 					nic.printStackTrace();
 				}
 				catch(HttpErrorException e){
 					if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 						//unauthorised
-						publishProgress(STATUS_ERROR,  "Authentication failed");
-						currentStatus=STATUS_ERROR;
+						publishProgress(status.ERROR_AUTH_FAILED);
+						currentStatus=status.ERROR_AUTH_FAILED;
 					}
 					else
 					{
-						publishProgress(STATUS_ERROR,  "Error Occured\n\nDetails: " +e.getMessage());
-						currentStatus=STATUS_ERROR;
+						publishProgress(status.ERROR);
+						currentStatus=status.ERROR;
 					}
 					e.printStackTrace();
 				}
 				catch (Exception e) {
-					publishProgress(STATUS_ERROR, "Error Occured \n\nDetails: " +e.getMessage());
-					currentStatus=STATUS_ERROR;
+					publishProgress(status.ERROR);
+					currentStatus=status.ERROR;
 					e.printStackTrace();
 				}
 			}
@@ -324,8 +342,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		}
 
 		@Override
-		protected void onProgressUpdate(String... str) {
-			if(str[0].equals(STATUS_UPDATING)){
+		protected void onProgressUpdate(Integer... _int) {
+			if(_int[0]==status.UPDATING){
 				swipeRefreshLayout.setRefreshing(true);
 				//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
 				if(totalCachedRecords>0){
@@ -338,14 +356,14 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				maillist_update_progressbar.setProgress(40);
 
 			}
-			if(str[0].equals(STATUS_UPDATE_CACHE_DONE)){
+			if(_int[0]==status.UPDATE_CACHE_DONE){
 				maillist_update_progressbar.setProgress(65);
 
 			}
-			else if(str[0].equals(STATUS_UPDATE_LIST)){
+			else if(_int[0]==status.UPDATE_LIST){
 				maillist_update_progressbar.setProgress(90);
 			}
-			else  if(str[0].equals(STATUS_UPDATED)){
+			else  if(_int[0]==status.UPDATED){
 				//successful update
 				try {
 					swipeRefreshLayout.setRefreshing(false);
@@ -357,27 +375,26 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				}
 
 			}
-			else  if(str[0].equals(STATUS_ERROR)){
+			else if(_int[0]==status.ERROR_AUTH_FAILED){
+				// for auth failed show an alert box
+				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_auth_error));
+				NotificationProcessing.showLoginErrorNotification(context);
+				if(isAdded()){
+					AuthFailedAlertDialog.showAlertdialog(activity, context);
+				}
+				else{
+					Log.e(TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
+				}
+				// stop the MNS service
+				MailApplication.stopMNSService(context);
+			}
+			else  if(_int[0]==status.ERROR){
 				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 				swipeRefreshLayout.setRefreshing(false);
 				maillist_update_progressbar.setProgress(0);
-				if(!(str[1].equalsIgnoreCase("Authentication failed"))){
-					titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
-				}
-				else{
-					// for auth failed show an alert box
-					titlebar_inbox_status_textswitcher.setText("Authentication failed");
-					NotificationProcessing.showLoginErrorNotification(context);
-					if(isAdded()){
-						AuthFailedAlertDialog.showAlertdialog(activity, context);
-					}
-					else{
-						Log.e(TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
-					}
-					// stop the MNS service
-					MailApplication.stopMNSService(context);
+				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
 
-				}
+
 			}
 		}
 
@@ -385,10 +402,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		protected void onPostExecute(Void a) {
 			try {
 				//refresh the display from the cache (which is now updated with new records)
-				refreshListView();
-				if(currentStatus.equalsIgnoreCase(STATUS_UPDATE_LIST)){
-					publishProgress(STATUS_UPDATED, "Updated");
-					currentStatus=STATUS_UPDATED;
+				softRefreshList();
+				if(currentStatus==status.UPDATE_LIST){
+					publishProgress(status.UPDATED);
+					currentStatus=status.UPDATED;
 				}
 
 			}
@@ -449,14 +466,6 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
 		}
 		titlebar_inbox_status_textswitcher.setText(successMsg);
-	}
-
-	/** Refreshes the listview
-	 * 
-	 */
-	private void refreshListView(){
-		adapter.setListVOs(getCachedHeaderData());
-		adapter.notifyDataSetChanged();
 	}
 
 	/** This method will return the cached mail header data list of VOs
@@ -553,22 +562,24 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	@Override
 	public void onScroll(AbsListView lw, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
-		//enable Swipe Refresh
-		boolean enable = false;
-		if(lw != null && lw.getChildCount() > 0){
-			// check if the first item of the list is visible
-			boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
-			// check if the top of the first item is visible
-			boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
-			// enabling or disabling the refresh layout
-			enable = firstItemVisible && topOfFirstItemVisible;
-		}
-		if(swipeRefreshLayout!=null)  swipeRefreshLayout.setEnabled(enable);
-
-		//Last Item Listener - loads more mails
+		//Determine whether its our listener
 		switch(lw.getId()) {
-		case android.R.id.list:     
-			//	Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+		case R.id.listView:  
+			//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+			//enable Swipe Refresh
+			boolean enable = false;
+			if(lw != null && lw.getChildCount() > 0){
+				// check if the first item of the list is visible
+				boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
+				// check if the top of the first item is visible
+				boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
+				// enabling or disabling the refresh layout
+				enable = firstItemVisible && topOfFirstItemVisible;
+			}
+			if(swipeRefreshLayout!=null)  swipeRefreshLayout.setEnabled(enable);
+
+			//Last Item Listener - loads more mails
+
 			final int lastItem = firstVisibleItem + visibleItemCount;
 			if(!loadingSymbolShown && lastItem == totalItemCount) {
 				if(preLast!=lastItem){ //to avoid multiple calls for last item

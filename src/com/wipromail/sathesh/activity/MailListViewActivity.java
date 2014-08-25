@@ -18,15 +18,22 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
-import com.wipromail.sathesh.application.interfaces.MailListDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.util.Utilities;
 
-public class MailListViewActivity extends SherlockFragmentActivity implements Constants,MailListDataPasser{
+/** This Activity is the one which shows the mail list.
+ * 
+ * All the heavy loading is done by the fragment MailListViewFragment
+ * 
+ * @author sathesh
+ *
+ */
+public class MailListViewActivity extends SherlockFragmentActivity implements Constants,MailListActivityDataPasser{
 
-	private MailListViewFragment mailListViewFragment;
+	private MailListFragmentDataPasser mailListViewFragment;
 
 	public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
 	public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -39,6 +46,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	private String strFolderId="";
 
 	/** ON CREATE **
+	 *  Fragment : MailListViewFragment
 	 * Gets the mailType folder id and folder name from the intent params. 
 	 * Makes it ready by getters so that fragment can make use of
 	 * (non-Javadoc)
@@ -55,9 +63,10 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 
 		//load the fragment. If different fragment or layout has to be loaded for a mail type, then an "if" condition has to be given here.
 		setContentView(R.layout.activity_mail_list_view);
-
+		
 		// declaring the fragment (list fragment). used for calling the refresh in the fragment
-		mailListViewFragment = (MailListViewFragment) getSupportFragmentManager()
+		//actually MailListViewFragment
+		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
 				.findFragmentById(R.id.mailListViewFragment);
 	}
 	
@@ -159,7 +168,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_REFRESH))
 		{
-			//this shld use an interface to call this method. kind of lazy to create this interface
 			mailListViewFragment.refreshList();
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_COMPOSE)){
@@ -186,6 +194,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		try {
 			//cancel all the notifications
 			NotificationProcessing.cancelAllNotifications(this);
+			mailListViewFragment.softRefreshList();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
