@@ -42,21 +42,9 @@ public class GetNewMails implements Runnable, Constants{
 
 	private MailListViewFragment parent;
 	private FindItemsResults<Item> findResults = null;
-	private String mailFolderId="";
-	private String mailFolderName="";
-	private SwipeRefreshLayout swipeRefreshLayout;
-	private ProgressBar bar_progressbar;
-	private Activity activity;
-	private TextSwitcher textswitcher;
 
 	public GetNewMails(MailListViewFragment parent){
 		this.parent=parent;
-		this.activity=parent.getActivity();
-		this.mailFolderId=parent.getMailFolderId();
-		this.mailFolderName=parent.getMailFolderName();
-		this.bar_progressbar=parent.getBar_progressbar();
-		this.swipeRefreshLayout=parent.getSwipeRefreshLayout();
-		this.textswitcher=parent.getTextswitcher();
 	}
 
 	ExchangeService service;
@@ -69,15 +57,13 @@ public class GetNewMails implements Runnable, Constants{
 		// TODO Auto-generated method stub
 		int totalCachedRecords ;
 
-		if (activity != null) {
+		if (parent.getActivity() != null) {
 			try {
-				totalCachedRecords = parent.getTotalNumberOfRecordsInCache();
-				//get the total no of records in cache and get all the same number of records.
 				threadMsg(State.UPDATING);
-				parent.setCurrentStatus(State.UPDATING);
 				
-				threadMsg(State.UPDATE_CACHE_DONE);
-
+				//get the total no of records in cache and get all the same number of records.
+				totalCachedRecords = parent.getTotalNumberOfRecordsInCache();
+				
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
@@ -87,53 +73,46 @@ public class GetNewMails implements Runnable, Constants{
 				//if the cache is present, then get the same number of rows from EWS as of the local no of rows
 				int noOfMailsToFetch=(totalCachedRecords>MIN_NO_OF_MAILS?totalCachedRecords:MIN_NO_OF_MAILS);
 
-				if(mailFolderId!=null && !(mailFolderId.equals("")))
+				if(parent.getMailFolderId()!=null && !(parent.getMailFolderId().equals("")))
 					//Ews call
-					findResults = NetworkCall.getFirstNItemsFromFolder(mailFolderId, service, noOfMailsToFetch);
+					findResults = NetworkCall.getFirstNItemsFromFolder(parent.getMailFolderId(), service, noOfMailsToFetch);
 				else
 					//Ews call
-					findResults = NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.valueOf(mailFolderName), service, noOfMailsToFetch);
+					findResults = NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.valueOf(parent.getMailFolderName()), service, noOfMailsToFetch);
 
 				//empties the cache for this 
 				if(findResults!=null){
 					parent.cacheNewData(findResults.getItems(), true);
 				}
 				threadMsg(State.UPDATED);
-				parent.setCurrentStatus(State.UPDATED);
 
 			}
 			catch (final NoUserSignedInException e) {
 				threadMsg(State.ERROR);
-				parent.setCurrentStatus(State.ERROR);
 				e.printStackTrace();
 			}
 			catch (UnknownHostException e) {
 				threadMsg(State.ERROR);
-				parent.setCurrentStatus(State.ERROR);
 				e.printStackTrace();
 
 			}
 			catch(NoInternetConnectionException nic){
 				threadMsg(State.ERROR);
-				parent.setCurrentStatus(State.ERROR);
 				nic.printStackTrace();
 			}
 			catch(HttpErrorException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
 					threadMsg(State.ERROR_AUTH_FAILED);
-					parent.setCurrentStatus(State.ERROR_AUTH_FAILED);
 				}
 				else
 				{
 					threadMsg(State.ERROR);
-					parent.setCurrentStatus(State.ERROR);
 				}
 				e.printStackTrace();
 			}
 			catch (Exception e) {
 				threadMsg(State.ERROR);
-				parent.setCurrentStatus(State.ERROR);
 				e.printStackTrace();
 			}
 		}
@@ -163,29 +142,22 @@ public class GetNewMails implements Runnable, Constants{
 	private Handler handler = new Handler(){
 		@Override
 		 public void handleMessage(Message msg) {
-			System.out.println("Handler Message Obtainied " + msg);
+			System.out.println("Message Obtained " + msg.getData().getSerializable("state"));
 			State state = (MailListViewFragment.State)msg.getData().getSerializable("state");
 			switch(state){
 
 			case UPDATING:
+				parent.setCurrentStatus(State.UPDATING);
 				parent.updatingStatusUIChanges();
-				break;
-
-			case UPDATE_CACHE_DONE:
-				bar_progressbar.setProgress(65);
-				break;
-
-			case UPDATE_LIST:
-				bar_progressbar.setProgress(90);
 				break;
 
 			case UPDATED:
 				//successful update
 				try {
+					parent.setCurrentStatus(State.UPDATED);
 					parent.softRefreshList();
-					swipeRefreshLayout.setRefreshing(false);
-					parent.updateTextSwitcherWithMailCount();
-					bar_progressbar.setProgress(0);
+					parent.getSwipeRefreshLayout().setRefreshing(false);
+					parent.getBar_progressbar().setProgress(0);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					Utilities.generalCatchBlock(e, this.getClass());
@@ -193,24 +165,26 @@ public class GetNewMails implements Runnable, Constants{
 				break;
 
 			case ERROR_AUTH_FAILED:
+				parent.setCurrentStatus(State.ERROR_AUTH_FAILED);
 				// for auth failed show an alert box
-				textswitcher.setText(activity.getText(R.string.folder_auth_error));
-				NotificationProcessing.showLoginErrorNotification(activity.getApplicationContext());
+				parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_auth_error));
+				NotificationProcessing.showLoginErrorNotification(parent.getActivity().getApplicationContext());
 				if(parent.isAdded()){
-					AuthFailedAlertDialog.showAlertdialog(activity, activity.getApplicationContext());
+					AuthFailedAlertDialog.showAlertdialog(parent.getActivity(), parent.getActivity().getApplicationContext());
 				}
 				else{
 					Log.e(TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
 				}
 				// stop the MNS service
-				MailApplication.stopMNSService(activity.getApplicationContext());
+				MailApplication.stopMNSService(parent.getActivity().getApplicationContext());
 				break;
 
 			case ERROR:
+				parent.setCurrentStatus(State.ERROR);
 				parent.updateTextSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
-				swipeRefreshLayout.setRefreshing(false);
-				bar_progressbar.setProgress(0);
-				textswitcher.setText(activity.getText(R.string.folder_updater_error));
+				parent.getSwipeRefreshLayout().setRefreshing(false);
+				parent.getBar_progressbar().setProgress(0);
+				parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_updater_error));
 				break;
 			}
 		 }

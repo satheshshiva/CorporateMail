@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -28,8 +22,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.activity.MailListViewActivity;
-import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
@@ -41,6 +33,7 @@ import com.wipromail.sathesh.handlers.runnables.GetNewMails;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.ui.listeners.MailListViewFragmentListener;
 import com.wipromail.sathesh.util.Utilities;
 
 /**
@@ -48,7 +41,7 @@ import com.wipromail.sathesh.util.Utilities;
  * This fragment is used to load only the MailFunctions.
  */
 
-public class MailListViewFragment extends Fragment implements Constants, OnScrollListener, OnItemClickListener, MailListFragmentDataPasser {
+public class MailListViewFragment extends Fragment implements Constants, MailListFragmentDataPasser {
 
 	// ListFragment is a very useful class that provides a simple ListView inside of a Fragment.
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
@@ -75,13 +68,12 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private CachedMailHeaderDAO dao;
 	private int totalCachedRecords=0;
 
-	private int preLast;
-	private boolean  loadingSymbolShown=false;
 	private SwipeRefreshLayout swipeRefreshLayout ;
 	private State currentStatus;
 
 	private boolean fragmentAlreadyLoaded=false;
-
+	private boolean loadingSymbolShown;
+	
 	/**
 	 * @author sathesh
 	 *
@@ -89,8 +81,6 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	public enum State{
 		UPDATING,
 		UPDATED,
-		UPDATE_LIST,
-		UPDATE_CACHE_DONE,
 		ERROR,
 		ERROR_AUTH_FAILED
 	}
@@ -107,15 +97,11 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		//DAO for local cache
 		dao = new CachedMailHeaderDAO(context);
 		setRetainInstance(true);
-
+		
 		if(activity != null){
 			try {
 				//List View Initialization
 				listView = (ListView)view.findViewById(R.id.listView);
-				//ListView -OnScroll Listener
-				listView.setOnScrollListener(this);
-				//ListView -Itemclick Listener
-				listView.setOnItemClickListener(this);
 
 				//Text Switcher Initiliazation
 				textswitcher = (TextSwitcher)view.findViewById(R.id.textswitcher);
@@ -182,9 +168,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				if(resources.length==4){
 					swipeRefreshLayout.setColorSchemeResources(resources[0],resources[1],resources[2],resources[3]);
 				}
-
+				
+				//Action
 				//if the activity is recreated, and if the thread is already updating then update the UI status
-				if((currentStatus==State.UPDATING) || (currentStatus==State.UPDATE_LIST)){
+				if(currentStatus==State.UPDATING) {
 					updatingStatusUIChanges();
 				}
 
@@ -196,7 +183,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					//config change (Screen rotation)
 					softRefreshList();
 				}
-				fragmentAlreadyLoaded=true; //make unncessary recreation of new objects after config change(screen rotation)
+				fragmentAlreadyLoaded=true; //tracks config change(screen rotation)
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -205,14 +192,29 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		}
 		return view;
 	}
+	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
+	 */
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
 
+		//contains all the UI listners for this fragment
+		MailListViewFragmentListener listener = new MailListViewFragmentListener(this);
+		
+		super.onActivityCreated(savedInstanceState);
+		listView.setOnScrollListener(listener);
+		//ListView -Itemclick Listener
+		listView.setOnItemClickListener(listener);
+	}
+	
 	/** Refreshes the list from network
 	 * @param showPulltoRefresh: Either show the big pull to refresh label while refreshing
 	 */
 	@Override
 	public void refreshList(){
 
-		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
+		if(!(currentStatus==State.UPDATING)){
 			//network call for getting the new mails
 			Thread t = new Thread(new GetNewMails(this));
 			t.start();
@@ -425,80 +427,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		unreadIcon.setVisibility(unreadIconVisibility);
 	}
 
-	/* This is the OnScroll Listener implementation for this listview. 
-	 * Load more mails when the last of the mail is in the list view is visible.
-	 * (non-Javadoc)
-	 * @see android.widget.AbsListView.OnScrollListener#onScroll(android.widget.AbsListView, int, int, int)
-	 */
-	@Override
-	public void onScroll(AbsListView lw, final int firstVisibleItem,
-			final int visibleItemCount, final int totalItemCount) {
-		//Determine whether its our listener
-		switch(lw.getId()) {
-		case R.id.listView:  
-			//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
-			//enable Swipe Refresh
-			boolean enable = false;
-			if(lw != null && lw.getChildCount() > 0){
-				// check if the first item of the list is visible
-				boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
-				// check if the top of the first item is visible
-				boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
-				// enabling or disabling the refresh layout
-				enable = firstItemVisible && topOfFirstItemVisible;
-			}
-			if(swipeRefreshLayout!=null)  swipeRefreshLayout.setEnabled(enable);
-
-			//Last Item Listener - loads more mails
-
-			final int lastItem = firstVisibleItem + visibleItemCount;
-			if(!loadingSymbolShown && lastItem == totalItemCount) {
-				if(preLast!=lastItem){ //to avoid multiple calls for last item
-					if(BuildConfig.DEBUG){
-						Log.d(TAG, "MailListViewFragment -> Last Item listener");
-					}
-
-					adapter.scrolledToLast();
-					loadingSymbolShown=true;
-
-					// adapter.notifyDataSetChanged();
-					preLast = lastItem;
-				}
-			}
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see android.widget.AbsListView.OnScrollListener#onScrollStateChanged(android.widget.AbsListView, int)
-	 */
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		// TODO Auto-generated method stub
-
-		//the pull to refresh list view starts from instead of 0.. fix for that
-		CachedMailHeaderVO vo;
-
-		try{
-			vo = (CachedMailHeaderVO) parent.getItemAtPosition(position);
-			Intent viewMailIntent = new Intent(activity.getBaseContext(), ViewMailActivity.class);
-			viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
-			startActivity(viewMailIntent);
-		}
-		catch(Exception e){
-			if(BuildConfig.DEBUG)
-				e.printStackTrace();
-		}
-	}
+	/*** GETTER SETTER PART ***/
 
 	public State getCurrentStatus() {
 		return currentStatus;
@@ -563,5 +492,20 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 	public void setTextswitcher(TextSwitcher textswitcher) {
 		this.textswitcher = textswitcher;
+	}
+	public MailListViewAdapter getAdapter() {
+		return adapter;
+	}
+
+	public void setAdapter(MailListViewAdapter adapter) {
+		this.adapter = adapter;
+	}
+
+	public boolean isLoadingSymbolShown() {
+		return loadingSymbolShown;
+	}
+
+	public void setLoadingSymbolShown(boolean loadingSymbolShown) {
+		this.loadingSymbolShown = loadingSymbolShown;
 	}
 }
