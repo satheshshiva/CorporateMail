@@ -67,15 +67,15 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
 	// in your app.
 	private MailListActivityDataPasser activityDataPasser ;
-	private SherlockFragmentActivity activity ;
+	protected SherlockFragmentActivity activity ;
 	private Context context ;
 
 	private MailListViewAdapter adapter;
 	private TextSwitcher titlebar_inbox_status_textswitcher;
 
 	private int mailType;
-	private String  mailFolderName;
-	private String mailFolderId;
+	protected String  mailFolderName;
+	protected String mailFolderId;
 
 	private ProgressBar maillist_refresh_progressbar;
 
@@ -84,15 +84,15 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private ActionBar myActionBar;
 
 	private ProgressBar maillist_update_progressbar;
-	private FindItemsResults<Item> findResults = null;
+	protected FindItemsResults<Item> findResults = null;
 	private ListView listView;
 	private CachedMailHeaderDAO dao;
-	private int totalCachedRecords=0;
+	protected int totalCachedRecords=0;
 
 	private int preLast;
 	private boolean  loadingSymbolShown=false;
 	private SwipeRefreshLayout swipeRefreshLayout ;
-	private State currentStatus;
+	protected State currentStatus;
 
 	private boolean fragmentAlreadyLoaded=false;
 
@@ -457,7 +457,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 * @param items
 	 * @param emptyCache	Empties the cache before writing
 	 */
-	private void cacheNewData(ArrayList<Item> items, boolean emptyCache)  {
+	protected void cacheNewData(ArrayList<Item> items, boolean emptyCache)  {
 		// TODO Auto-generated method stub
 		try {
 			if(emptyCache){
@@ -534,7 +534,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 * @throws Exception 
 	 * 
 	 */
-	private int getTotalNumberOfRecordsInCache() throws Exception {
+	protected int getTotalNumberOfRecordsInCache() throws Exception {
 		// TODO Auto-generated method stub
 		int totalCachedRecords;
 		if(mailType!=8 && mailType!=9){
