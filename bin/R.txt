@@ -547,7 +547,9 @@ int id adView 0x7f07007e
 int id addBCC 0x7f070044
 int id addCC 0x7f070043
 int id addTo 0x7f070042
+int id bar_progressbar 0x7f070084
 int id button1 0x7f07006b
+int id circle_progressbar 0x7f070085
 int id companyName 0x7f070057
 int id compose_bcc_disp 0x7f07004d
 int id compose_bcc_disp_lbl 0x7f07004c
@@ -569,6 +571,7 @@ int id displayName 0x7f070055
 int id edit_query 0x7f070027
 int id email 0x7f07005b
 int id emailLbl 0x7f07005a
+int id failure_icon 0x7f070087
 int id fax 0x7f070061
 int id faxLbl 0x7f070060
 int id folders_page_webview 0x7f070064
@@ -591,12 +594,6 @@ int id login_passwd 0x7f07006a
 int id login_username 0x7f070069
 int id mailListViewFragment 0x7f07006c
 int id mailReadUnreadIcon 0x7f070093
-int id maillist_failure_icon 0x7f070087
-int id maillist_read_icon 0x7f070088
-int id maillist_refresh_progressbar 0x7f070085
-int id maillist_success_icon 0x7f070086
-int id maillist_unread_icon 0x7f070089
-int id maillist_update_progressbar 0x7f070084
 int id menu_settings 0x7f07009d
 int id mobilePhone 0x7f07005f
 int id mobilePhoneLbl 0x7f07005e
@@ -609,6 +606,7 @@ int id progressBar1 0x7f07006d
 int id quoteLinearLayout 0x7f070052
 int id quoteWebview 0x7f070054
 int id quotedTextLbl 0x7f070053
+int id read_icon 0x7f070088
 int id resetSettings 0x7f070081
 int id searchDirectoryBtn 0x7f070040
 int id searchHelpText 0x7f07003f
@@ -620,6 +618,7 @@ int id showCustom 0x7f070008
 int id showHome 0x7f070005
 int id showTitle 0x7f070007
 int id subject 0x7f070096
+int id success_icon 0x7f070086
 int id suggestionsListView 0x7f070041
 int id swipe_container 0x7f07008b
 int id tabMode 0x7f070003
@@ -628,16 +627,17 @@ int id textView2 0x7f07003d
 int id textView3 0x7f070066
 int id textView4 0x7f070067
 int id textView5 0x7f070068
+int id textswitcher 0x7f07008a
 int id titleBar_Progress_img 0x7f07008e
 int id titleBar_Progress_linearLayout 0x7f07008d
 int id titleBar_Warning_linearLayout 0x7f070090
-int id titlebar_inbox_status_textswitcher 0x7f07008a
 int id titlebar_loginDisplayName 0x7f07009c
 int id titlebar_logo 0x7f07009a
 int id titlebar_title 0x7f07009b
 int id titlebar_viewmail_status 0x7f07008f
 int id titlebar_warning_msg 0x7f070092
 int id titlebar_warning_pic 0x7f070091
+int id unread_icon 0x7f070089
 int id url_edit 0x7f070083
 int id url_view 0x7f070082
 int id useLogo 0x7f070004

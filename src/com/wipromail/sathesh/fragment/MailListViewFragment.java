@@ -6,8 +6,6 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -35,7 +33,6 @@ import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
-import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.CacheAdapter;
@@ -44,7 +41,6 @@ import com.wipromail.sathesh.handlers.runnables.GetNewMails;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
-import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
 import com.wipromail.sathesh.util.Utilities;
 
 /**
@@ -62,19 +58,19 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private Context context ;
 
 	private MailListViewAdapter adapter;
-	private TextSwitcher titlebar_inbox_status_textswitcher;
+	private TextSwitcher textswitcher;
 
 	private int mailType;
 	private String  mailFolderName;
 	private String mailFolderId;
 
-	private ProgressBar maillist_refresh_progressbar;
+	private ProgressBar circle_progressbar;
 
 	private ImageView successIcon, failureIcon, readIcon, unreadIcon;
 
 	private ActionBar myActionBar;
 
-	private ProgressBar maillist_update_progressbar;
+	private ProgressBar bar_progressbar;
 	private ListView listView;
 	private CachedMailHeaderDAO dao;
 	private int totalCachedRecords=0;
@@ -86,10 +82,6 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 	private boolean fragmentAlreadyLoaded=false;
 
-	/** Status Types of this activity
-	 * @author sathesh
-	 *
-	 */
 	/**
 	 * @author sathesh
 	 *
@@ -126,10 +118,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				listView.setOnItemClickListener(this);
 
 				//Text Switcher Initiliazation
-				titlebar_inbox_status_textswitcher = (TextSwitcher)view.findViewById(R.id.titlebar_inbox_status_textswitcher);
+				textswitcher = (TextSwitcher)view.findViewById(R.id.textswitcher);
 
 				//Text Switcher customze with text view
-				titlebar_inbox_status_textswitcher.setFactory(new ViewFactory() {
+				textswitcher.setFactory(new ViewFactory() {
 					public View makeView() {
 						// Custom text view since the default one auto applies center gravity
 						TextView textView = new TextView(activity);
@@ -140,7 +132,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				});
 
 				//animation for text switcher
-				ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, titlebar_inbox_status_textswitcher);
+				ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, textswitcher);
 
 				//mailtype, folname and folder id get from activity
 				mailType = activityDataPasser.getMailType();
@@ -150,14 +142,14 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				//action bar initialize 
 				myActionBar = activity.getSupportActionBar();
 				//progress bar initialize 
-				maillist_refresh_progressbar = (ProgressBar)view.findViewById(R.id.maillist_refresh_progressbar);
+				circle_progressbar = (ProgressBar)view.findViewById(R.id.circle_progressbar);
 
 				//icons initialize
-				successIcon = (ImageView)view.findViewById(R.id.maillist_success_icon);
-				failureIcon = (ImageView)view.findViewById(R.id.maillist_failure_icon);
-				readIcon = (ImageView)view.findViewById(R.id.maillist_read_icon);
-				unreadIcon = (ImageView)view.findViewById(R.id.maillist_unread_icon);
-				maillist_update_progressbar = (ProgressBar)view.findViewById(R.id.maillist_update_progressbar);
+				successIcon = (ImageView)view.findViewById(R.id.success_icon);
+				failureIcon = (ImageView)view.findViewById(R.id.failure_icon);
+				readIcon = (ImageView)view.findViewById(R.id.read_icon);
+				unreadIcon = (ImageView)view.findViewById(R.id.unread_icon);
+				bar_progressbar = (ProgressBar)view.findViewById(R.id.bar_progressbar);
 
 				//update mail type in the action bar title
 				myActionBar.setTitle(getMailFolderDisplayName(mailType));
@@ -221,10 +213,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	public void refreshList(){
 
 		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
-			System.out.println("Hander in caller " + handler);
-			Runnable runnable1 = new GetNewMails(this, handler);
 			//network call for getting the new mails
-			Thread t = new Thread(runnable1);
+			Thread t = new Thread(new GetNewMails(this));
 			t.start();
 		}
 	}
@@ -265,84 +255,30 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		}
 	}
 
-	private Handler handler = new Handler(){
-		@Override
-		 public void handleMessage(Message msg) {
-			System.out.println("Handler Message Obtainied " + msg);
-			State state = (MailListViewFragment.State)msg.getData().getSerializable("state");
-			switch(state){
-
-			case UPDATING:
-				updatingStatusUIChanges();
-				break;
-
-			case UPDATE_CACHE_DONE:
-				maillist_update_progressbar.setProgress(65);
-				break;
-
-			case UPDATE_LIST:
-				maillist_update_progressbar.setProgress(90);
-				break;
-
-			case UPDATED:
-				//successful update
-				try {
-					softRefreshList();
-					swipeRefreshLayout.setRefreshing(false);
-					updateTextSwitcherWithMailCount();
-					maillist_update_progressbar.setProgress(0);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					Utilities.generalCatchBlock(e, this.getClass());
-				}
-				break;
-
-			case ERROR_AUTH_FAILED:
-				// for auth failed show an alert box
-				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_auth_error));
-				NotificationProcessing.showLoginErrorNotification(context);
-				if(isAdded()){
-					AuthFailedAlertDialog.showAlertdialog(activity, context);
-				}
-				else{
-					Log.e(TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
-				}
-				// stop the MNS service
-				MailApplication.stopMNSService(context);
-				break;
-
-			case ERROR:
-				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
-				swipeRefreshLayout.setRefreshing(false);
-				maillist_update_progressbar.setProgress(0);
-				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
-				break;
-			}
-		 }
-	};
+	
 
 	/** The UI changes when the current status is updating
 	 * 
 	 */
-	private void updatingStatusUIChanges() {
+	public void updatingStatusUIChanges() {
 		// TODO Auto-generated method stub
 		try {
 			//progress bar - visible
-			maillist_update_progressbar.setVisibility(View.VISIBLE);
+			bar_progressbar.setVisibility(View.VISIBLE);
 			//swipe refresh layout - visible
 			swipeRefreshLayout.setRefreshing(true);
 			//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
 			totalCachedRecords = getTotalNumberOfRecordsInCache();
 			if(totalCachedRecords>0){
-				titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
+				textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
 			}
 			else{
-				titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)).toString());
+				textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)).toString());
 			}
 			//text switcher - refreshing icon
-			textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
+			updateTextSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
 			//progress bar at 40
-			maillist_update_progressbar.setProgress(40);
+			bar_progressbar.setProgress(40);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
@@ -382,7 +318,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					getString(R.string.new_mail_x,totalUnread):
 					getString(R.string.unread_item_x,totalUnread);
 			//update icon
-			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
+			updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
 		}
 		//one unread email
 		else if(totalUnread==1){
@@ -391,16 +327,16 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					getString(R.string.new_mail_1,totalUnread):
 					getString(R.string.unread_item_1,totalUnread);
 			//update icon
-			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
+			updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
 		}
 		//no new mail
 		else{
 			//update text in text switcher
 			successMsg=getString(R.string.no_new_mail);
 			//update icon
-			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
+			updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
 		}
-		titlebar_inbox_status_textswitcher.setText(successMsg);
+		textswitcher.setText(successMsg);
 	}
 
 	/** This method will return the cached mail header data list of VOs
@@ -481,8 +417,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 * @param successIconVisibility
 	 * @param failureIconVisibility
 	 */
-	private void textSwitcherIcons(int progressCircleVisibility, int successIconVisibility, int failureIconVisibility, int readIconVisibility, int unreadIconVisibility){
-		maillist_refresh_progressbar.setVisibility(progressCircleVisibility);
+	public void updateTextSwitcherIcons(int progressCircleVisibility, int successIconVisibility, int failureIconVisibility, int readIconVisibility, int unreadIconVisibility){
+		circle_progressbar.setVisibility(progressCircleVisibility);
 		successIcon.setVisibility(successIconVisibility);
 		failureIcon.setVisibility(failureIconVisibility);
 		readIcon.setVisibility(readIconVisibility);
@@ -593,5 +529,39 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 	public void setMailFolderName(String mailFolderName) {
 		this.mailFolderName = mailFolderName;
+	}
+
+	public ProgressBar getCircle_progressbar() {
+		return circle_progressbar;
+	}
+
+	public void setCircle_progressbar(
+			ProgressBar maillist_refresh_progressbar) {
+		this.circle_progressbar = maillist_refresh_progressbar;
+	}
+
+	public ProgressBar getBar_progressbar() {
+		return bar_progressbar;
+	}
+
+	public void setBar_progressbar(
+			ProgressBar maillist_update_progressbar) {
+		this.bar_progressbar = maillist_update_progressbar;
+	}
+
+	public SwipeRefreshLayout getSwipeRefreshLayout() {
+		return swipeRefreshLayout;
+	}
+
+	public void setSwipeRefreshLayout(SwipeRefreshLayout swipeRefreshLayout) {
+		this.swipeRefreshLayout = swipeRefreshLayout;
+	}
+
+	public TextSwitcher getTextswitcher() {
+		return textswitcher;
+	}
+
+	public void setTextswitcher(TextSwitcher textswitcher) {
+		this.textswitcher = textswitcher;
 	}
 }
