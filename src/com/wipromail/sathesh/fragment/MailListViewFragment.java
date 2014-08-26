@@ -92,6 +92,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private SwipeRefreshLayout swipeRefreshLayout ;
 	private State currentStatus;
 
+	private boolean fragmentAlreadyLoaded=false;
+
 	/** Status Types of this activity
 	 * @author sathesh
 	 *
@@ -117,7 +119,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		//DAO for local cache
 		dao = new CachedMailHeaderDAO(context);
 		setRetainInstance(true);
-		
+
 		if(activity != null){
 			try {
 				//List View Initialization
@@ -169,8 +171,12 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				//this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
 				//get the cursor
 
-				//initialize the adapter
-				adapter = new MailListViewAdapter(context, getCachedHeaderData());
+				if(adapter==null){	//on config change it wont be null
+					//initialize the adapter
+					adapter = new MailListViewAdapter(context, getCachedHeaderData());
+				}
+
+				// initializes the list view with the adapter. also will place all the cached mails in list view initially
 				listView.setAdapter(adapter);
 
 				//Initialize SwipeRefreshLayout
@@ -191,13 +197,21 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 
 				//get the total number of records in cache
 				totalCachedRecords = getTotalNumberOfRecordsInCache();
-				
+
 				//if the activity is recreated, and if the thread is already updating then update the UI status
 				if((currentStatus==State.UPDATING) || (currentStatus==State.UPDATE_LIST)){
 					updatingStatusUIChanges();
 				}
-				//refresh list view
-				refreshList();
+
+				//make a refresh only once when the screen is loaded first time. make a soft refresh on config change
+				if(!fragmentAlreadyLoaded){
+					refreshList();
+				}
+				else{
+					//config change (Screen rotation)
+					softRefreshList();
+				}
+				fragmentAlreadyLoaded=true; //make unncessary recreation of new objects after config change(screen rotation)
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -225,8 +239,14 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 */
 	@Override
 	public void softRefreshList(){
-		adapter.setListVOs(getCachedHeaderData());
-		adapter.notifyDataSetChanged();
+		try {
+			adapter.setListVOs(getCachedHeaderData());
+			adapter.notifyDataSetChanged();
+			updateTextSwitcherWithMailCount();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Utilities.generalCatchBlock(e, this.getClass());
+		}
 	}
 
 	/** This method gets the customized Display name for a folder. 
@@ -256,11 +276,11 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 */
 	private class GetNewMails extends AsyncTask<Void, State, Void>{
 		MailListViewFragment parent;
-		
+
 		GetNewMails(MailListViewFragment parent){
 			this.parent=parent;
 		}
-		
+
 		ExchangeService service;
 
 		@Override
@@ -343,19 +363,19 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		@Override
 		protected void onProgressUpdate(State... _state) {
 			switch(_state[0]){
-			
+
 			case UPDATING:
 				updatingStatusUIChanges();
 				break;
-				
+
 			case UPDATE_CACHE_DONE:
 				maillist_update_progressbar.setProgress(65);
 				break;
-				
+
 			case UPDATE_LIST:
 				maillist_update_progressbar.setProgress(90);
 				break;
-				
+
 			case UPDATED:
 				//successful update
 				try {
@@ -367,7 +387,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					Utilities.generalCatchBlock(e, this.getClass());
 				}
 				break;
-				
+
 			case ERROR_AUTH_FAILED:
 				// for auth failed show an alert box
 				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_auth_error));
@@ -381,7 +401,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				// stop the MNS service
 				MailApplication.stopMNSService(context);
 				break;
-				
+
 			case ERROR:
 				textSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 				swipeRefreshLayout.setRefreshing(false);
@@ -428,7 +448,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
 		maillist_update_progressbar.setProgress(40);
 	}
-	
+
 	/** Writes the array List of items to cache
 	 * @param items
 	 * @param emptyCache	Empties the cache before writing
@@ -457,15 +477,19 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		String successMsg="";
 		//more than 1 unread email 
 		if(totalUnread>1){
-			//update text
-			successMsg=getString(R.string.new_mail_x,totalUnread);
+			//update text in text switcher. for inbox alone show as "new mail" for other folders show "unread"
+			successMsg = (mailType==MailType.INBOX || mailType==MailType.INBOX_SUBFOLDER_WITH_ID) ?
+					getString(R.string.new_mail_x,totalUnread):
+					getString(R.string.unread_item_x,totalUnread);
 			//update icon
 			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
 		}
 		//one unread email
 		else if(totalUnread==1){
-			//update text in text switcher
-			successMsg=getString(R.string.new_mail_1);
+			//update text in text switcher. for inbox alone show as "new mail" for other folders show "unread"
+			successMsg = (mailType==MailType.INBOX || mailType==MailType.INBOX_SUBFOLDER_WITH_ID) ?
+					getString(R.string.new_mail_1,totalUnread):
+					getString(R.string.unread_item_1,totalUnread);
 			//update icon
 			textSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
 		}

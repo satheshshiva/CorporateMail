@@ -44,7 +44,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	private int mailType ;
 	private String mailFolderName;
 	private String strFolderId="";
-
+	
 	/** ON CREATE **
 	 *  Fragment : MailListViewFragment
 	 * Gets the mailType folder id and folder name from the intent params. 
@@ -68,6 +68,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		//actually MailListViewFragment
 		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
 				.findFragmentById(R.id.mailListViewFragment);
+		
 	}
 	
 	/** ON START **

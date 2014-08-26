@@ -1,3 +1,4 @@
-Last working on item open for mail list view.
+Last working on state mainitenance on config change
 
-start on MailListView Fragment
+Was readingg the example of Handlers in Vogella. Start with getting the GetNewMails ASync task as an 
+external handler
