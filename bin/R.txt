@@ -824,8 +824,8 @@ int string folder_auth_error 0x7f0c0034
 int string folder_checking_almostDone 0x7f0c0035
 int string folder_updater_checking 0x7f0c0031
 int string folder_updater_error 0x7f0c0033
-int string folder_updater_progress 0x7f0c0036
 int string folder_updater_success 0x7f0c0032
+int string folder_updater_updating 0x7f0c0036
 int string ga_trackingId 0x7f0c000f
 int string hello_world 0x7f0c0017
 int string login_logo_bigText 0x7f0c0012

@@ -11,6 +11,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
+import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
@@ -18,21 +19,28 @@ import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.State;
 import com.wipromail.sathesh.service.data.ExchangeService;
+import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
+import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 
 /**
  * @author sathesh
  *
  */
-public class GetNewMails1 extends MailListViewFragment implements Runnable{
+public class GetNewMails implements Runnable, Constants{
 
-	MailListViewFragment parent;
-	Handler handler1;
+	private MailListViewFragment parent;
+	private Handler handler;
+	private FindItemsResults<Item> findResults = null;
+	private String mailFolderId="";
+	private String mailFolderName="";
 
-	public GetNewMails1(MailListViewFragment parent, Handler handler){
+	public GetNewMails(MailListViewFragment parent, Handler handler){
 		this.parent=parent;
-		this.handler1=handler;
+		this.handler=handler;
+		this.mailFolderId=parent.getMailFolderId();
+		this.mailFolderName=parent.getMailFolderName();
 	}
 
 	ExchangeService service;
@@ -43,18 +51,18 @@ public class GetNewMails1 extends MailListViewFragment implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		if (activity != null) {
+		int totalCachedRecords ;
 
+		if (parent.activity != null) {
 			try {
-
+				totalCachedRecords = parent.getTotalNumberOfRecordsInCache();
 				//get the total no of records in cache and get all the same number of records.
-				totalCachedRecords = getTotalNumberOfRecordsInCache();
 				threadMsg(State.UPDATING);
-				currentStatus=State.UPDATING;
+				parent.setCurrentStatus(State.UPDATING);
 
 				threadMsg(State.UPDATE_CACHE_DONE);
 
-				service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
+				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
 					Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
@@ -72,62 +80,67 @@ public class GetNewMails1 extends MailListViewFragment implements Runnable{
 
 				//empties the cache for this 
 				if(findResults!=null){
-					cacheNewData(findResults.getItems(), true);
+					parent.cacheNewData(findResults.getItems(), true);
 				}
 				threadMsg(State.UPDATED);
-				currentStatus=State.UPDATED;
+				parent.setCurrentStatus(State.UPDATED);
 
 			}
 			catch (final NoUserSignedInException e) {
 				threadMsg(State.ERROR);
-				currentStatus=State.ERROR;
+				parent.setCurrentStatus(State.ERROR);
 				e.printStackTrace();
 			}
 			catch (UnknownHostException e) {
 				threadMsg(State.ERROR);
-				currentStatus=State.ERROR;
+				parent.setCurrentStatus(State.ERROR);
 				e.printStackTrace();
 
 			}
 			catch(NoInternetConnectionException nic){
 				threadMsg(State.ERROR);
-				currentStatus=State.ERROR;
+				parent.setCurrentStatus(State.ERROR);
 				nic.printStackTrace();
 			}
 			catch(HttpErrorException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
 					threadMsg(State.ERROR_AUTH_FAILED);
-					currentStatus=State.ERROR_AUTH_FAILED;
+					parent.setCurrentStatus(State.ERROR_AUTH_FAILED);
 				}
 				else
 				{
 					threadMsg(State.ERROR);
-					currentStatus=State.ERROR;
+					parent.setCurrentStatus(State.ERROR);
 				}
 				e.printStackTrace();
 			}
 			catch (Exception e) {
 				threadMsg(State.ERROR);
-				currentStatus=State.ERROR;
+				parent.setCurrentStatus(State.ERROR);
 				e.printStackTrace();
 			}
 		}
+		else{
+			Log.e(TAG, "GetNewMails -> activity is null");
+		}
+	}	//end run()
+
+
+	/** Private method for bundling the message and sending it to the handler
+	 * @param state
+	 */
+	private void threadMsg(State state) {
+
+		if (state!=null) {
+			Message msgObj = handler.obtainMessage();
+			Bundle b = new Bundle();
+			b.putSerializable("state", state);
+			msgObj.setData(b);
+			handler.sendMessage(msgObj);
+		}
+
 	}
 
-	
-	private void threadMsg(State state) {
-		 
-        if (state!=null) {
-            Message msgObj = handler1.obtainMessage();
-            Bundle b = new Bundle();
-            b.putSerializable("state", state);
-            msgObj.setData(b);
-            handler1.sendMessage(msgObj);
-        }
-        
-	//end of async task
-}
 
-	
 }
