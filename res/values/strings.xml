@@ -36,6 +36,8 @@
     <string name="mailListView_x_years">%s Years</string>
     <string name="new_mail_1">1 New Mail</string>
     <string name="new_mail_x">%s New Mails</string>
+    <string name="unread_item_1">1 Unread Item</string>
+    <string name="unread_item_x">%s Unread Items</string>
     <string name="no_new_mail">No New Mail</string>
     <string name="folder_updater_checking">Checking for new mails</string>
     <string name="folder_updater_success">Done</string>
