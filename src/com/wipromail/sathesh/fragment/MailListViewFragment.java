@@ -232,7 +232,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
 
 			//network call for getting the new mails
-			Thread t = new Thread(new GetNewMails(this));
+			Thread t = new Thread(new GetNewMails(this, handler));
 			t.start();
 		}
 	}
@@ -333,9 +333,11 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 */
 	private class GetNewMails implements Runnable{
 		MailListViewFragment parent;
+		Handler handler1;
 
-		GetNewMails(MailListViewFragment parent){
+		GetNewMails(MailListViewFragment parent, Handler handler){
 			this.parent=parent;
+			this.handler1=handler;
 		}
 
 		ExchangeService service;
@@ -422,11 +424,11 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		private void threadMsg(State state) {
 			 
             if (state!=null) {
-                Message msgObj = handler.obtainMessage();
+                Message msgObj = handler1.obtainMessage();
                 Bundle b = new Bundle();
                 b.putSerializable("state", state);
                 msgObj.setData(b);
-                handler.sendMessage(msgObj);
+                handler1.sendMessage(msgObj);
             }
             
 		//end of async task
