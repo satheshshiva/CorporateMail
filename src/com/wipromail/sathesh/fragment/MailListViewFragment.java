@@ -1,12 +1,10 @@
 package com.wipromail.sathesh.fragment;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,15 +40,8 @@ import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.CacheAdapter;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
-import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
-import com.wipromail.sathesh.ews.EWSConnection;
-import com.wipromail.sathesh.ews.NetworkCall;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.FindItemsResults;
-import com.wipromail.sathesh.service.data.HttpErrorException;
+import com.wipromail.sathesh.handlers.runnables.GetNewMails;
 import com.wipromail.sathesh.service.data.Item;
-import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
@@ -67,15 +58,15 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
 	// in your app.
 	private MailListActivityDataPasser activityDataPasser ;
-	protected SherlockFragmentActivity activity ;
+	public SherlockFragmentActivity activity ;
 	private Context context ;
 
 	private MailListViewAdapter adapter;
 	private TextSwitcher titlebar_inbox_status_textswitcher;
 
 	private int mailType;
-	protected String  mailFolderName;
-	protected String mailFolderId;
+	private String  mailFolderName;
+	private String mailFolderId;
 
 	private ProgressBar maillist_refresh_progressbar;
 
@@ -84,19 +75,22 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private ActionBar myActionBar;
 
 	private ProgressBar maillist_update_progressbar;
-	protected FindItemsResults<Item> findResults = null;
 	private ListView listView;
 	private CachedMailHeaderDAO dao;
-	protected int totalCachedRecords=0;
+	private int totalCachedRecords=0;
 
 	private int preLast;
 	private boolean  loadingSymbolShown=false;
 	private SwipeRefreshLayout swipeRefreshLayout ;
-	protected State currentStatus;
+	private State currentStatus;
 
 	private boolean fragmentAlreadyLoaded=false;
 
 	/** Status Types of this activity
+	 * @author sathesh
+	 *
+	 */
+	/**
 	 * @author sathesh
 	 *
 	 */
@@ -197,9 +191,6 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 					swipeRefreshLayout.setColorSchemeResources(resources[0],resources[1],resources[2],resources[3]);
 				}
 
-				//get the total number of records in cache
-				totalCachedRecords = getTotalNumberOfRecordsInCache();
-
 				//if the activity is recreated, and if the thread is already updating then update the UI status
 				if((currentStatus==State.UPDATING) || (currentStatus==State.UPDATE_LIST)){
 					updatingStatusUIChanges();
@@ -230,9 +221,10 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	public void refreshList(){
 
 		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
-
+			System.out.println("Hander in caller " + handler);
+			Runnable runnable1 = new GetNewMails(this, handler);
 			//network call for getting the new mails
-			Thread t = new Thread(new GetNewMails(this, handler));
+			Thread t = new Thread(runnable1);
 			t.start();
 		}
 	}
@@ -276,6 +268,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	private Handler handler = new Handler(){
 		@Override
 		 public void handleMessage(Message msg) {
+			System.out.println("Handler Message Obtainied " + msg);
 			State state = (MailListViewFragment.State)msg.getData().getSerializable("state");
 			switch(state){
 
@@ -327,137 +320,40 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			}
 		 }
 	};
-	/**
-	 * @author sathesh
-	 *
-	 */
-	private class GetNewMails implements Runnable{
-		MailListViewFragment parent;
-		Handler handler1;
-
-		GetNewMails(MailListViewFragment parent, Handler handler){
-			this.parent=parent;
-			this.handler1=handler;
-		}
-
-		ExchangeService service;
-
-		/* (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			if (activity != null) {
-
-				try {
-
-					//get the total no of records in cache and get all the same number of records.
-					totalCachedRecords = getTotalNumberOfRecordsInCache();
-					threadMsg(State.UPDATING);
-					currentStatus=State.UPDATING;
-
-					threadMsg(State.UPDATE_CACHE_DONE);
-
-					service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
-
-					if(BuildConfig.DEBUG){
-						Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
-					}
-
-					//if the cache is present, then get the same number of rows from EWS as of the local no of rows
-					int noOfMailsToFetch=(totalCachedRecords>MIN_NO_OF_MAILS?totalCachedRecords:MIN_NO_OF_MAILS);
-
-					if(mailFolderId!=null && !(mailFolderId.equals("")))
-						//Ews call
-						findResults = NetworkCall.getFirstNItemsFromFolder(mailFolderId, service, noOfMailsToFetch);
-					else
-						//Ews call
-						findResults = NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.valueOf(mailFolderName), service, noOfMailsToFetch);
-
-					//empties the cache for this 
-					if(findResults!=null){
-						cacheNewData(findResults.getItems(), true);
-					}
-					threadMsg(State.UPDATED);
-					currentStatus=State.UPDATED;
-
-				}
-				catch (final NoUserSignedInException e) {
-					threadMsg(State.ERROR);
-					currentStatus=State.ERROR;
-					e.printStackTrace();
-				}
-				catch (UnknownHostException e) {
-					threadMsg(State.ERROR);
-					currentStatus=State.ERROR;
-					e.printStackTrace();
-
-				}
-				catch(NoInternetConnectionException nic){
-					threadMsg(State.ERROR);
-					currentStatus=State.ERROR;
-					nic.printStackTrace();
-				}
-				catch(HttpErrorException e){
-					if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
-						//unauthorised
-						threadMsg(State.ERROR_AUTH_FAILED);
-						currentStatus=State.ERROR_AUTH_FAILED;
-					}
-					else
-					{
-						threadMsg(State.ERROR);
-						currentStatus=State.ERROR;
-					}
-					e.printStackTrace();
-				}
-				catch (Exception e) {
-					threadMsg(State.ERROR);
-					currentStatus=State.ERROR;
-					e.printStackTrace();
-				}
-			}
-		}
-
-		
-		private void threadMsg(State state) {
-			 
-            if (state!=null) {
-                Message msgObj = handler1.obtainMessage();
-                Bundle b = new Bundle();
-                b.putSerializable("state", state);
-                msgObj.setData(b);
-                handler1.sendMessage(msgObj);
-            }
-            
-		//end of async task
-	}
-	}
 
 	/** The UI changes when the current status is updating
 	 * 
 	 */
 	private void updatingStatusUIChanges() {
 		// TODO Auto-generated method stub
-		maillist_update_progressbar.setVisibility(View.VISIBLE);
-		swipeRefreshLayout.setRefreshing(true);
-		//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
-		if(totalCachedRecords>0){
-			titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
+		try {
+			//progress bar - visible
+			maillist_update_progressbar.setVisibility(View.VISIBLE);
+			//swipe refresh layout - visible
+			swipeRefreshLayout.setRefreshing(true);
+			//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
+			totalCachedRecords = getTotalNumberOfRecordsInCache();
+			if(totalCachedRecords>0){
+				titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
+			}
+			else{
+				titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)).toString());
+			}
+			//text switcher - refreshing icon
+			textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
+			//progress bar at 40
+			maillist_update_progressbar.setProgress(40);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Utilities.generalCatchBlock(e, this.getClass());
 		}
-		else{
-			titlebar_inbox_status_textswitcher.setText(activity.getString(R.string.folder_updater_progress, getMailFolderDisplayName(mailType)).toString());
-		}
-		textSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
-		maillist_update_progressbar.setProgress(40);
 	}
 
 	/** Writes the array List of items to cache
 	 * @param items
 	 * @param emptyCache	Empties the cache before writing
 	 */
-	protected void cacheNewData(ArrayList<Item> items, boolean emptyCache)  {
+	public void cacheNewData(ArrayList<Item> items, boolean emptyCache)  {
 		// TODO Auto-generated method stub
 		try {
 			if(emptyCache){
@@ -534,7 +430,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 	 * @throws Exception 
 	 * 
 	 */
-	protected int getTotalNumberOfRecordsInCache() throws Exception {
+	public int getTotalNumberOfRecordsInCache() throws Exception {
 		// TODO Auto-generated method stub
 		int totalCachedRecords;
 		if(mailType!=8 && mailType!=9){
@@ -666,5 +562,36 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			if(BuildConfig.DEBUG)
 				e.printStackTrace();
 		}
+	}
+
+	public State getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(State currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+	public String getMailFolderId() {
+		return mailFolderId;
+	}
+
+	public void setMailFolderId(String mailFolderId) {
+		this.mailFolderId = mailFolderId;
+	}
+
+	public CachedMailHeaderDAO getDao() {
+		return dao;
+	}
+
+	public void setDao(CachedMailHeaderDAO dao) {
+		this.dao = dao;
+	}
+
+	public String getMailFolderName() {
+		return mailFolderName;
+	}
+
+	public void setMailFolderName(String mailFolderName) {
+		this.mailFolderName = mailFolderName;
 	}
 }
