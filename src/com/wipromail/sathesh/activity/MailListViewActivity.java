@@ -1,7 +1,5 @@
 package com.wipromail.sathesh.activity;
 
-import static com.wipromail.sathesh.constants.Constants.TAG;
-
 import java.io.File;
 
 import android.content.Intent;

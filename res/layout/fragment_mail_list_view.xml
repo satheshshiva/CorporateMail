@@ -10,7 +10,7 @@
         android:layout_height="20dp" >
 
         <ProgressBar
-            android:id="@+id/maillist_update_progressbar"
+            android:id="@+id/bar_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
@@ -19,11 +19,11 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@+id/maillist_update_progressbar"
+            android:layout_below="@+id/bar_progressbar"
             android:orientation="horizontal" >
 
             <ProgressBar
-                android:id="@+id/maillist_refresh_progressbar"
+                android:id="@+id/circle_progressbar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
@@ -31,7 +31,7 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/maillist_success_icon"
+                android:id="@+id/success_icon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:contentDescription="Successful sync"
@@ -40,7 +40,7 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/maillist_failure_icon"
+                android:id="@+id/failure_icon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:contentDescription="Failure sync"
@@ -49,7 +49,7 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/maillist_read_icon"
+                android:id="@+id/read_icon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:contentDescription="All Mails Read"
@@ -58,7 +58,7 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/maillist_unread_icon"
+                android:id="@+id/unread_icon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:contentDescription="Unread mails"
@@ -67,7 +67,7 @@
                 android:visibility="gone" />
 
             <TextSwitcher
-                android:id="@+id/titlebar_inbox_status_textswitcher"
+                android:id="@+id/textswitcher"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp" >
