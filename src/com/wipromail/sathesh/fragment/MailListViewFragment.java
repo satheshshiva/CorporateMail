@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -230,7 +232,8 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		if(!(currentStatus==State.UPDATING) && !(currentStatus==State.UPDATE_LIST)){
 
 			//network call for getting the new mails
-			(new GetNewMails(this)).execute();
+			Thread t = new Thread(new GetNewMails(this));
+			t.start();
 		}
 	}
 
@@ -270,99 +273,11 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 		}
 	}
 
-	/**
-	 * @author sathesh
-	 *
-	 */
-	private class GetNewMails extends AsyncTask<Void, State, Void>{
-		MailListViewFragment parent;
-
-		GetNewMails(MailListViewFragment parent){
-			this.parent=parent;
-		}
-
-		ExchangeService service;
-
+	private Handler handler = new Handler(){
 		@Override
-		protected Void doInBackground(Void... paramArrayOfParams) {
-			// TODO Auto-generated method stub
-
-			if (activity != null) {
-
-				try {
-
-					//get the total no of records in cache and get all the same number of records.
-					totalCachedRecords = getTotalNumberOfRecordsInCache();
-					publishProgress(State.UPDATING);
-					currentStatus=State.UPDATING;
-
-					publishProgress(State.UPDATE_CACHE_DONE);
-
-					service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
-
-					if(BuildConfig.DEBUG){
-						Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
-					}
-
-					//if the cache is present, then get the same number of rows from EWS as of the local no of rows
-					int noOfMailsToFetch=(totalCachedRecords>MIN_NO_OF_MAILS?totalCachedRecords:MIN_NO_OF_MAILS);
-
-					if(mailFolderId!=null && !(mailFolderId.equals("")))
-						//Ews call
-						findResults = NetworkCall.getFirstNItemsFromFolder(mailFolderId, service, noOfMailsToFetch);
-					else
-						//Ews call
-						findResults = NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.valueOf(mailFolderName), service, noOfMailsToFetch);
-
-					//empties the cache for this 
-					if(findResults!=null){
-						cacheNewData(findResults.getItems(), true);
-					}
-
-					publishProgress(State.UPDATE_LIST);
-					currentStatus=State.UPDATE_LIST;
-				}
-				catch (final NoUserSignedInException e) {
-					publishProgress(State.ERROR);
-					currentStatus=State.ERROR;
-					e.printStackTrace();
-				}
-				catch (UnknownHostException e) {
-					publishProgress(State.ERROR);
-					currentStatus=State.ERROR;
-					e.printStackTrace();
-
-				}
-				catch(NoInternetConnectionException nic){
-					publishProgress(State.ERROR);
-					currentStatus=State.ERROR;
-					nic.printStackTrace();
-				}
-				catch(HttpErrorException e){
-					if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
-						//unauthorised
-						publishProgress(State.ERROR_AUTH_FAILED);
-						currentStatus=State.ERROR_AUTH_FAILED;
-					}
-					else
-					{
-						publishProgress(State.ERROR);
-						currentStatus=State.ERROR;
-					}
-					e.printStackTrace();
-				}
-				catch (Exception e) {
-					publishProgress(State.ERROR);
-					currentStatus=State.ERROR;
-					e.printStackTrace();
-				}
-			}
-			return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(State... _state) {
-			switch(_state[0]){
+		 public void handleMessage(Message msg) {
+			State state = (MailListViewFragment.State)msg.getData().getSerializable("state");
+			switch(state){
 
 			case UPDATING:
 				updatingStatusUIChanges();
@@ -379,6 +294,7 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 			case UPDATED:
 				//successful update
 				try {
+					softRefreshList();
 					swipeRefreshLayout.setRefreshing(false);
 					updateTextSwitcherWithMailCount();
 					maillist_update_progressbar.setProgress(0);
@@ -409,26 +325,112 @@ public class MailListViewFragment extends Fragment implements Constants, OnScrol
 				titlebar_inbox_status_textswitcher.setText(activity.getText(R.string.folder_updater_error));
 				break;
 			}
+		 }
+	};
+	/**
+	 * @author sathesh
+	 *
+	 */
+	private class GetNewMails implements Runnable{
+		MailListViewFragment parent;
+
+		GetNewMails(MailListViewFragment parent){
+			this.parent=parent;
 		}
 
+		ExchangeService service;
+
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
 		@Override
-		protected void onPostExecute(Void a) {
-			try {
-				//refresh the display from the cache (which is now updated with new records)
-				softRefreshList();
-				if(currentStatus==State.UPDATE_LIST){
-					publishProgress(State.UPDATED);
-					currentStatus=State.UPDATED;
-				}
+		public void run() {
+			// TODO Auto-generated method stub
+			if (activity != null) {
 
-			}
-			catch(Exception e){
-				if(BuildConfig.DEBUG)
+				try {
+
+					//get the total no of records in cache and get all the same number of records.
+					totalCachedRecords = getTotalNumberOfRecordsInCache();
+					threadMsg(State.UPDATING);
+					currentStatus=State.UPDATING;
+
+					threadMsg(State.UPDATE_CACHE_DONE);
+
+					service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
+
+					if(BuildConfig.DEBUG){
+						Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
+					}
+
+					//if the cache is present, then get the same number of rows from EWS as of the local no of rows
+					int noOfMailsToFetch=(totalCachedRecords>MIN_NO_OF_MAILS?totalCachedRecords:MIN_NO_OF_MAILS);
+
+					if(mailFolderId!=null && !(mailFolderId.equals("")))
+						//Ews call
+						findResults = NetworkCall.getFirstNItemsFromFolder(mailFolderId, service, noOfMailsToFetch);
+					else
+						//Ews call
+						findResults = NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.valueOf(mailFolderName), service, noOfMailsToFetch);
+
+					//empties the cache for this 
+					if(findResults!=null){
+						cacheNewData(findResults.getItems(), true);
+					}
+					threadMsg(State.UPDATED);
+					currentStatus=State.UPDATED;
+
+				}
+				catch (final NoUserSignedInException e) {
+					threadMsg(State.ERROR);
+					currentStatus=State.ERROR;
 					e.printStackTrace();
+				}
+				catch (UnknownHostException e) {
+					threadMsg(State.ERROR);
+					currentStatus=State.ERROR;
+					e.printStackTrace();
+
+				}
+				catch(NoInternetConnectionException nic){
+					threadMsg(State.ERROR);
+					currentStatus=State.ERROR;
+					nic.printStackTrace();
+				}
+				catch(HttpErrorException e){
+					if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
+						//unauthorised
+						threadMsg(State.ERROR_AUTH_FAILED);
+						currentStatus=State.ERROR_AUTH_FAILED;
+					}
+					else
+					{
+						threadMsg(State.ERROR);
+						currentStatus=State.ERROR;
+					}
+					e.printStackTrace();
+				}
+				catch (Exception e) {
+					threadMsg(State.ERROR);
+					currentStatus=State.ERROR;
+					e.printStackTrace();
+				}
 			}
 		}
 
+		
+		private void threadMsg(State state) {
+			 
+            if (state!=null) {
+                Message msgObj = handler.obtainMessage();
+                Bundle b = new Bundle();
+                b.putSerializable("state", state);
+                msgObj.setData(b);
+                handler.sendMessage(msgObj);
+            }
+            
 		//end of async task
+	}
 	}
 
 	/** The UI changes when the current status is updating

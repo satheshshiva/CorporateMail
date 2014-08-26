@@ -67,9 +67,8 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/MailListViewAdapter$LocalContent.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/adapter/MailListViewAdapter.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/animation/ApplyAnimation.class \
-/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/interfaces/CacheData.class \
-/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/interfaces/CacheMailList.class \
-/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/interfaces/MailListDataPasser.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/interfaces/MailListActivityDataPasser.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/interfaces/MailListFragmentDataPasser.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/MailApplication$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/MailApplication$2.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/application/MailApplication$3.class \
@@ -84,6 +83,7 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/DeleteItemsAsyncTask.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/DownloadAndUpdateAppAsyncTask$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/DownloadAndUpdateAppAsyncTask.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/GetNewMails.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/interfaces/GenericAsyncTask.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/interfaces/IResolveNames.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/asynctask/ResolveNamesAsyncTask.class \
@@ -112,7 +112,10 @@
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/ews/NetworkCall.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$2.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$3.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$4.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$GetNewMails.class \
+/Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment$State.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/fragment/MailListViewFragment.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/intentservice/PollServerMNS$1.class \
 /Users/sathesh/MyContent/workspaces/workspace_android/WiproMailFree/bin/classes/com/wipromail/sathesh/intentservice/PollServerMNS.class \
