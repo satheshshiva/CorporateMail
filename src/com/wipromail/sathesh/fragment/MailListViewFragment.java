@@ -348,7 +348,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		List<CachedMailHeaderVO> mailListHeaderData=null;
 		try {
 			// mail type 8 and 9 have folder id. The rest can be determined by the mailType
-			if(mailType!=8 && mailType!=9){
+			if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 				mailListHeaderData = dao.getAllRecordsByMailType(mailType);
 			}
 			else{
@@ -371,7 +371,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	public int getTotalNumberOfRecordsInCache() throws Exception {
 		// TODO Auto-generated method stub
 		int totalCachedRecords;
-		if(mailType!=8 && mailType!=9){
+		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			totalCachedRecords=dao.getRecordsCountByMailType(mailType);
 		}
 		else{
@@ -388,7 +388,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	private int getUnreadMailsInCache() throws Exception {
 		// TODO Auto-generated method stub
 		int totalUnread;
-		if(mailType!=8 && mailType!=9){
+		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			totalUnread=dao.getUnreadByMailType(mailType);
 		}
 		else{
@@ -405,7 +405,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	private void deleteCache() throws Exception {
 		// TODO Auto-generated method stub
 		// mail type 8 and 9 have folder id. The rest can be determined by the mailType
-		if(mailType!=8 && mailType!=9){
+		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			dao.deleteAllByMailType(mailType);
 		}
 		else{
