@@ -29,8 +29,6 @@ public interface MailFunctions {
 	
 	public Date getDateTimeReceived(Item item) throws ServiceLocalException, ParseException;
 	
-	public FindItemsResults<Item> getFirstNItems(ExchangeService service, int n) throws Exception;
-
 	public String getItemId(Item item) throws ServiceLocalException, Exception;
 	
 	public MessageBody getBody(EmailMessage message) throws ServiceLocalException;

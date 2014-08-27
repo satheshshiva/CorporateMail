@@ -31,7 +31,9 @@ import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
 import com.wipromail.sathesh.util.Utilities;
 
-/** This Handler will load the new set of mails from the network asynchronously for the particular mail type
+/** This Runnable will load the new set of mails from the network asynchronously for the particular mail type
+ * Handler: GetMoreMailsHandler
+ * Fragment: MailListViewFragment
  * 
  * NOTE: One general rule for handler - Don't pass the variables to the constructor and use inside the handler class. Because on Configuration change
  * all the View elements will get new elements and Handler thread will refer to the old elements. Always use parent.getElement() to get the latest element from 
@@ -79,10 +81,10 @@ public class GetNewMailsRunnable implements Runnable, Constants{
 
 				if(parent.getMailFolderId()!=null && !(parent.getMailFolderId().equals("")))
 					//Ews call
-					findResults = NetworkCall.getFirstNItemsFromFolder(parent.getMailFolderId(), service, noOfMailsToFetch);
+					findResults = NetworkCall.getNItemsFromFolder(parent.getMailFolderId(), service, 0, noOfMailsToFetch);
 				else
 					//Ews call
-					findResults = NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.valueOf(parent.getMailFolderName()), service, noOfMailsToFetch);
+					findResults = NetworkCall.getNItemsFromFolder(WellKnownFolderName.valueOf(parent.getMailFolderName()), service, 0, noOfMailsToFetch);
 
 				if(findResults!=null){
 					//delete the old cache and updates the new cache

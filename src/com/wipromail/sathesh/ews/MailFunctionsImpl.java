@@ -4,13 +4,9 @@ import java.text.ParseException;
 import java.util.Date;
 
 import com.wipromail.sathesh.service.data.EmailMessage;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.Item;
-import com.wipromail.sathesh.service.data.ItemView;
 import com.wipromail.sathesh.service.data.MessageBody;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
-import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.util.Utilities;
 
 
@@ -88,14 +84,6 @@ public class MailFunctionsImpl implements MailFunctions{
 	public MessageBody getBody(EmailMessage message) throws ServiceLocalException{
 		// TODO Auto-generated method stub
 		return message.getBody();
-	}
-	
-	@Override
-	public FindItemsResults<Item> getFirstNItems(ExchangeService service, int n) throws Exception {
-		// TODO Auto-generated method stub
-		
-			 return NetworkCall.getFirstNItemsFromFolder(WellKnownFolderName.Inbox,service,  n);
-		
 	}
 
 	public static MailFunctions getInbox() {

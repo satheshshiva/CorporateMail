@@ -33,18 +33,20 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 		this.parent=parent;
 	}
 	
-	/* This is the OnScroll Listener implementation for this listview. 
-	 * Load more mails when the last of the mail is in the list view is visible.
+	/** LISTVIEW ONSCROLL LISTENER 
+	 * Load more mails when the last of the mail is in the list view is visible. Also some code for SwipeRefreshLayout
 	 * (non-Javadoc)
 	 * @see android.widget.AbsListView.OnScrollListener#onScroll(android.widget.AbsListView, int, int, int)
 	 */
 	@Override
 	public void onScroll(AbsListView lw, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
-		//Determine whether its our listener
+		//Determine whether its our listview listener
 		switch(lw.getId()) {
 		case R.id.listView:  
 			//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+			
+			//Swipe RefreshLayout code
 			//enable Swipe Refresh
 			boolean enable = false;
 			if(lw != null && lw.getChildCount() > 0){
@@ -69,7 +71,7 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 					}
 					parent.getAdapter().scrolledToLast();
 					parent.setLoadingSymbolShown(true);
-
+					parent.getMoreMails();
 					preLast = lastItem;
 				}
 			}
@@ -85,7 +87,8 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 
 	}
 	
-	/* (non-Javadoc)
+	/** LIST VIEW ITEM CLICK LISTENER 
+	 * (non-Javadoc)
 	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
 	 */
 	@Override

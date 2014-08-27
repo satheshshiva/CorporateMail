@@ -154,7 +154,7 @@ public class NetworkCall implements Constants{
 	 */
 	public static void replyMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body, boolean replyAll) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
-			
+
 			Log.d(TAG, "NetworkCall -> replyMail Item id " + itemIdStr);
 			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
 
@@ -190,8 +190,8 @@ public class NetworkCall implements Constants{
 			}
 
 		}
-		
-		
+
+
 		else{	throw new NoInternetConnectionException(); }
 	}
 
@@ -242,8 +242,8 @@ public class NetworkCall implements Constants{
 			}
 
 		}
-		
-		
+
+
 		else{	throw new NoInternetConnectionException(); }
 	}
 
@@ -307,51 +307,64 @@ public class NetworkCall implements Constants{
 	}
 
 
-	public static FindItemsResults<Item> getFirstNItemsFromFolder(WellKnownFolderName folderName, ExchangeService service, int n) throws Exception {
+	/** Gets the N items from the WellKnownFolderName specified
+	 * @param folderName
+	 * @param service
+	 * @param offset - No of mails to leave on top. pass 0 to fetch from first mail
+	 * @param n - number of mails to fetch
+	 * @return
+	 * @throws Exception
+	 */
+	public static FindItemsResults<Item> getNItemsFromFolder(WellKnownFolderName folderName, ExchangeService service, int offset, int n) throws Exception {
 		// TODO Auto-generated method stub
 		ItemView view = new ItemView(n);
 		FindItemsResults<Item> findResults = null;
-		//view.setOffset(1);
-
-		//do
-		//{
-
-
+		if(offset>0){
+			view.setOffset(offset);
+		}
 		findResults = service.findItems(folderName, view);
 		return findResults;
 
 	}
 
-
-
-	public static FindItemsResults<Item> getFirstNItemsFromFolder(FolderId folderId, ExchangeService service, int n) throws Exception {
+	/** Gets the number of items specified in the specified folder id
+	 * @param folderId
+	 * @param service
+	 * @param offset - No of mails to leave on top. pass 0 to fetch from first mail 
+	 * @param n - number of mails to fetch
+	 * @return
+	 * @throws Exception
+	 */
+	public static FindItemsResults<Item> getNItemsFromFolder(FolderId folderId, ExchangeService service, int offset, int n) throws Exception {
 		// TODO Auto-generated method stub
 		ItemView view = new ItemView(n);
 		FindItemsResults<Item> findResults = null;
-		//view.setOffset(1);
-
-		//do
-		//{
-
+		if(offset>0){
+			view.setOffset(offset);
+		}
 		findResults = service.findItems(folderId, view);
 		return findResults;
 
 	}
-	public static FindItemsResults<Item> getFirstNItemsFromFolder(String strFolderId, ExchangeService service, int n) throws Exception {
+	/** Overrides the getFirstNItemsFromFolder with String folderId
+	 * @param strFolderId
+	 * @param service
+	 * @param offset - No of mails to leave on top. pass 0 to fetch from first mail
+	 * @param n - number of mails to fetch
+	 * @return
+	 * @throws Exception
+	 */
+	public static FindItemsResults<Item> getNItemsFromFolder(String strFolderId, ExchangeService service, int offset, int n) throws Exception {
 		// TODO Auto-generated method stub
 		FolderId folderId = FolderId.getFolderIdFromString(strFolderId);
-
-		return getFirstNItemsFromFolder(folderId, service, n);
-
+		return getNItemsFromFolder(folderId, service,offset, n);
 	}
 
 	public static FindFoldersResults getFolders(ExchangeService service, FolderId folderId) throws Exception{
-
 		return service.findFolders(folderId,new  FolderView(Integer.MAX_VALUE));
-
 	}
 
-	
+
 	/** This method deletes the particular item whether its mail or anything and sends to deleted items, 
 	 * @param service
 	 * @param item
@@ -362,7 +375,7 @@ public class NetworkCall implements Constants{
 		item.delete(DeleteMode.MoveToDeletedItems);
 
 	}
-	
+
 	/** This method deletes the particular item whether its mail or anything and deletes it permanently, 
 	 * @param service
 	 * @param item

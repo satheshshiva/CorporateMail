@@ -37,14 +37,14 @@ public class GetNewMailsHandler extends Handler implements Constants {
 		switch(state){
 
 		case UPDATING:
-			parent.setCurrentStatus(State.UPDATING);
+			parent.setNewMailsThreadState(State.UPDATING);
 			parent.updatingStatusUIChanges();
 			break;
 
 		case UPDATED:
 			//successful update
 			try {
-				parent.setCurrentStatus(State.UPDATED);
+				parent.setNewMailsThreadState(State.UPDATED);
 				parent.softRefreshList();
 				parent.getSwipeRefreshLayout().setRefreshing(false);
 				parent.getBar_progressbar().setProgress(0);
@@ -55,7 +55,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 			break;
 
 		case ERROR_AUTH_FAILED:
-			parent.setCurrentStatus(State.ERROR_AUTH_FAILED);
+			parent.setNewMailsThreadState(State.ERROR_AUTH_FAILED);
 			// for auth failed show an alert box
 			parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_auth_error));
 			NotificationProcessing.showLoginErrorNotification(parent.getActivity().getApplicationContext());
@@ -70,7 +70,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 			break;
 
 		case ERROR:
-			parent.setCurrentStatus(State.ERROR);
+			parent.setNewMailsThreadState(State.ERROR);
 			parent.updateTextSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 			parent.getSwipeRefreshLayout().setRefreshing(false);
 			parent.getBar_progressbar().setProgress(0);
