@@ -1,10 +1,8 @@
 package com.wipromail.sathesh.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
@@ -20,19 +18,16 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
-import com.wipromail.sathesh.cache.CacheAdapter;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.handlers.runnables.GetNewMails;
-import com.wipromail.sathesh.service.data.Item;
-import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.handlers.GetNewMailsHandler;
+import com.wipromail.sathesh.handlers.runnables.GetNewMailsRunnable;
 import com.wipromail.sathesh.ui.listeners.MailListViewFragmentListener;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -65,7 +60,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	private ProgressBar bar_progressbar;
 	private ListView listView;
-	private CachedMailHeaderDAO dao;
+	private CachedMailHeaderCacheAdapter cacheAdapter;
 	private int totalCachedRecords=0;
 
 	private SwipeRefreshLayout swipeRefreshLayout ;
@@ -94,8 +89,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		activity = (SherlockFragmentActivity) getActivity();
 		context = (SherlockFragmentActivity) getActivity();
 		activityDataPasser = (MailListActivityDataPasser)getActivity();
-		//DAO for local cache
-		dao = new CachedMailHeaderDAO(context);
+		
+		if (cacheAdapter==null){
+			cacheAdapter = new CachedMailHeaderCacheAdapter(context);
+		}
 		setRetainInstance(true);
 		
 		if(activity != null){
@@ -147,7 +144,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 				if(adapter==null){	//on config change it wont be null
 					//initialize the adapter
-					adapter = new MailListViewAdapter(context, getCachedHeaderData());
+					adapter = new MailListViewAdapter(context, cacheAdapter.getMailHeaders(mailType, mailFolderName, mailFolderId));
 				}
 
 				// initializes the list view with the adapter. also will place all the cached mails in list view initially
@@ -216,7 +213,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 		if(!(currentStatus==State.UPDATING)){
 			//network call for getting the new mails
-			Thread t = new Thread(new GetNewMails(this));
+			Handler getNewMailsHandler = new GetNewMailsHandler(this);
+			Thread t = new Thread(new GetNewMailsRunnable(this, getNewMailsHandler));
 			t.start();
 		}
 	}
@@ -227,7 +225,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	@Override
 	public void softRefreshList(){
 		try {
-			adapter.setListVOs(getCachedHeaderData());
+			adapter.setListVOs(cacheAdapter.getMailHeaders(mailType, mailFolderName, mailFolderId));
 			adapter.notifyDataSetChanged();
 			updateTextSwitcherWithMailCount();
 		} catch (Exception e) {
@@ -259,7 +257,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	
 
-	/** The UI changes when the current status is updating
+	/** Make UI changes for the Updating status
+	 * which includes progress bar, text switcher, swipe refresh
 	 * 
 	 */
 	public void updatingStatusUIChanges() {
@@ -270,7 +269,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			//swipe refresh layout - visible
 			swipeRefreshLayout.setRefreshing(true);
 			//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
-			totalCachedRecords = getTotalNumberOfRecordsInCache();
+			totalCachedRecords = cacheAdapter.getRecordsCount(mailType, mailFolderName, mailFolderId);
 			if(totalCachedRecords>0){
 				textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
 			}
@@ -287,23 +286,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		}
 	}
 
-	/** Writes the array List of items to cache
-	 * @param items
-	 * @param emptyCache	Empties the cache before writing
-	 */
-	public void cacheNewData(ArrayList<Item> items, boolean emptyCache)  {
-		// TODO Auto-generated method stub
-		try {
-			if(emptyCache){
-				deleteCache();
-			}
-			CacheAdapter.writeCacheData(context, mailType, mailFolderName, mailFolderId, items);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			if(BuildConfig.DEBUG)
-				e.printStackTrace();
-		}	
-	}
+	
 
 	/** Updates the Text Switcher with the unread mail count. 
 	 * usually called after successful update
@@ -311,7 +294,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	public void updateTextSwitcherWithMailCount() throws Exception {
 		//get the unread emails count
-		int totalUnread = getUnreadMailsInCache();
+		int totalUnread = cacheAdapter.getUnreadMailCount(mailType, mailFolderName, mailFolderId);
 		String successMsg="";
 		//more than 1 unread email 
 		if(totalUnread>1){
@@ -341,78 +324,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		textswitcher.setText(successMsg);
 	}
 
-	/** This method will return the cached mail header data list of VOs
-	 * @return
-	 */
-	private List<CachedMailHeaderVO> getCachedHeaderData(){
-		List<CachedMailHeaderVO> mailListHeaderData=null;
-		try {
-			// mail type 8 and 9 have folder id. The rest can be determined by the mailType
-			if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
-				mailListHeaderData = dao.getAllRecordsByMailType(mailType);
-			}
-			else{
-				//by folder id
-				mailListHeaderData = dao.getAllRecordsByFolderId(mailFolderId);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			if(BuildConfig.DEBUG)
-				e.printStackTrace();
-		}
-		return mailListHeaderData;
-
-	}
-
-	/** Gets the total number of record mail headers in cache for this particular mail type
-	 * @throws Exception 
-	 * 
-	 */
-	public int getTotalNumberOfRecordsInCache() throws Exception {
-		// TODO Auto-generated method stub
-		int totalCachedRecords;
-		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
-			totalCachedRecords=dao.getRecordsCountByMailType(mailType);
-		}
-		else{
-			//by folder id
-			totalCachedRecords=dao.getRecordsCountByFolderId(mailFolderId);
-		}
-		return totalCachedRecords;
-	}
-
-	/** Gets the total number of record mail headers in cache for this particular mail type
-	 * @throws Exception 
-	 * 
-	 */
-	private int getUnreadMailsInCache() throws Exception {
-		// TODO Auto-generated method stub
-		int totalUnread;
-		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
-			totalUnread=dao.getUnreadByMailType(mailType);
-		}
-		else{
-			//by folder id
-			totalUnread=dao.getUnreadCountByFolderId(mailFolderId);
-		}
-		return totalUnread;
-	}
-
-	/** Delete all the cached mail headers for this particular mail type
-	 * @throws Exception 
-	 * 
-	 */
-	private void deleteCache() throws Exception {
-		// TODO Auto-generated method stub
-		// mail type 8 and 9 have folder id. The rest can be determined by the mailType
-		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
-			dao.deleteAllByMailType(mailType);
-		}
-		else{
-			//by folder id
-			dao.deleteAllByFolderId(mailFolderId);
-		}
-	}
+	
 
 	/** This method sets the visibility of the icons inside the text switcher
 	 * @param progressCircleVisibility
@@ -442,14 +354,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	public void setMailFolderId(String mailFolderId) {
 		this.mailFolderId = mailFolderId;
-	}
-
-	public CachedMailHeaderDAO getDao() {
-		return dao;
-	}
-
-	public void setDao(CachedMailHeaderDAO dao) {
-		this.dao = dao;
 	}
 
 	public String getMailFolderName() {
@@ -507,5 +411,21 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	public void setLoadingSymbolShown(boolean loadingSymbolShown) {
 		this.loadingSymbolShown = loadingSymbolShown;
+	}
+
+	public CachedMailHeaderCacheAdapter getMailHeadersCacheAdapter() {
+		return cacheAdapter;
+	}
+
+	public void setMailHeadersCacheAdapter(CachedMailHeaderCacheAdapter mailHeadersCacheAdapter) {
+		this.cacheAdapter = mailHeadersCacheAdapter;
+	}
+
+	public int getMailType() {
+		return mailType;
+	}
+
+	public void setMailType(int mailType) {
+		this.mailType = mailType;
 	}
 }
