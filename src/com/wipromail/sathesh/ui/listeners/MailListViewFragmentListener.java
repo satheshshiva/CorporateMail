@@ -70,7 +70,6 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 					parent.getAdapter().scrolledToLast();
 					parent.setLoadingSymbolShown(true);
 
-					// adapter.notifyDataSetChanged();
 					preLast = lastItem;
 				}
 			}
