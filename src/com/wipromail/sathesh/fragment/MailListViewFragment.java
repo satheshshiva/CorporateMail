@@ -26,7 +26,9 @@ import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
+import com.wipromail.sathesh.handlers.runnables.GetMoreMailsRunnable;
 import com.wipromail.sathesh.handlers.runnables.GetNewMailsRunnable;
 import com.wipromail.sathesh.ui.listeners.MailListViewFragmentListener;
 import com.wipromail.sathesh.util.Utilities;
@@ -64,7 +66,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	private int totalCachedRecords=0;
 
 	private SwipeRefreshLayout swipeRefreshLayout ;
-	private State currentStatus;
+	private State newMailsThreadState;
+	private State moreMailsThreadState;
 
 	private boolean fragmentAlreadyLoaded=false;
 	private boolean loadingSymbolShown;
@@ -168,7 +171,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				
 				//Action
 				//if the activity is recreated, and if the thread is already updating then update the UI status
-				if(currentStatus==State.UPDATING) {
+				if(newMailsThreadState==State.UPDATING) {
 					updatingStatusUIChanges();
 				}
 
@@ -211,7 +214,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	@Override
 	public void refreshList(){
 
-		if(!(currentStatus==State.UPDATING)){
+		if(newMailsThreadState!=State.UPDATING){
 			//network call for getting the new mails
 			Handler getNewMailsHandler = new GetNewMailsHandler(this);
 			Thread t = new Thread(new GetNewMailsRunnable(this, getNewMailsHandler));
@@ -231,6 +234,18 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
+		}
+	}
+	
+	/** Gets More mails when the user scrolls down
+	 * 
+	 */
+	public void getMoreMails(){
+		if(moreMailsThreadState!=State.UPDATING){
+			//network call for getting the new mails
+			Handler getMoreMailsHandler = new GetMoreMailsHandler(this);
+			Thread t = new Thread(new GetMoreMailsRunnable(this, getMoreMailsHandler));
+			t.start();
 		}
 	}
 
@@ -341,12 +356,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	/*** GETTER SETTER PART ***/
 
-	public State getCurrentStatus() {
-		return currentStatus;
+	public State getNewMailsThreadState() {
+		return newMailsThreadState;
 	}
 
-	public void setCurrentStatus(State currentStatus) {
-		this.currentStatus = currentStatus;
+	public void setNewMailsThreadState(State currentStatus) {
+		this.newMailsThreadState = currentStatus;
 	}
 	public String getMailFolderId() {
 		return mailFolderId;
@@ -427,5 +442,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	public void setMailType(int mailType) {
 		this.mailType = mailType;
+	}
+
+	public State getMoreMailsThreadState() {
+		return moreMailsThreadState;
+	}
+
+	public void setMoreMailsThreadState(State moreMailThreadState) {
+		this.moreMailsThreadState = moreMailThreadState;
 	}
 }

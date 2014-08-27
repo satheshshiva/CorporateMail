@@ -52,6 +52,8 @@ public interface Constants {
 
 	//Mail List View
 	public static final int MIN_NO_OF_MAILS = 25;
+	public static final int MORE_NO_OF_MAILS = 25;	//when the user scrolls, load this no of mails
+	
 	public static final String INBOX_FILTER_TEXT_FROM = "(WT01"; 	//for the inbox, the From field text will be displayed only up to this text
 
 	//inbox date formats
