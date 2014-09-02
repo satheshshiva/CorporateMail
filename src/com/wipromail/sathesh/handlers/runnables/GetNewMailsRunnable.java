@@ -91,6 +91,8 @@ public class GetNewMailsRunnable implements Runnable, Constants{
 					headersCacheAdapter.cacheNewData(parent.getActivity(), 
 							findResults.getItems(),parent.getMailType(), 
 							parent.getMailFolderName(), parent.getMailFolderId(), true);
+					
+					parent.setTotalMailsInFolder(findResults.getTotalCount());	//set the total no of mails in this folder
 				}
 				threadMsg(State.UPDATED);
 

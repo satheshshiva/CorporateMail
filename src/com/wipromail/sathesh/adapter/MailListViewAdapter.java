@@ -31,7 +31,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	private CachedMailHeaderVO mailListHeader;
 	private LayoutInflater inflater;
 	private List<LocalContent> listLocalContent;
-	
+
 	/** Constructor
 	 * @param context
 	 * @param mailItemIds
@@ -41,11 +41,11 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	public MailListViewAdapter(Context context, List<CachedMailHeaderVO>  listVOs) {
 		this.context = context;
 		this.listVOs=listVOs;
-		
+
 		try {
 			inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			
+
 			//populate the localcontent list which will have the list view contents order with date headers, mail and more mail loading symbol etc.,
 			this.listLocalContent = makeLocalContent(listVOs);
 
@@ -59,7 +59,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		View rowView=null;
-		TextView fromView, dateView, dateHeaderLeftView,subjectView,dateHeaderRightView;
+		TextView fromView, dateView, dateHeaderLeftView,subjectView,dateHeaderRightView,moreLoadingText1View,moreLoadingText2View;
 		ImageView mailReadUnreadIcon,hasAttachment;
 
 		try {
@@ -67,7 +67,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			// and also loads the corresponding layout file
 			if(this.listLocalContent!=null && this.listLocalContent.get(position)!=null ){
 				LocalContent localContent=this.listLocalContent.get(position);
-				
+
 				//DATE_HEADER view
 				if(localContent.type==LocalContent.types.DATE_HEADER){
 					if(!(localContent.date_left.equals("")) || !(localContent.date_right.equals(""))){
@@ -85,7 +85,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 					}
 				}
-				
+
 				//MAIL view
 				else if(localContent.type==LocalContent.types.MAIL){
 					//Show Mail Header View
@@ -141,7 +141,25 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 					}
 				}
 				else if(localContent.type==LocalContent.types.LOADING_MORE_MAILS){
+					//shows the loading symbol with the no of mails remaining
 					rowView = inflater.inflate(R.layout.listview_maillist_more_loading, parent, false);
+					moreLoadingText1View = (TextView) rowView.findViewById(R.id.loadingMore1Text);
+					moreLoadingText2View = (TextView) rowView.findViewById(R.id.loadingMore2Text);
+
+					//set the Loading more text in the big 1st text view
+					if(localContent.loading_loadingCount>0){
+						moreLoadingText1View.setText(context.getString(R.string.mailListView_moreloading_next_x,localContent.loading_loadingCount ));
+					}
+					else{
+						moreLoadingText1View.setText(context.getString(R.string.mailListView_moreloading));
+					}
+					
+					//set the remaining no of mails in the second text view
+					if(localContent.loading_totalMailCount>localContent.loading_totalCached){
+						//calculate the remaining no of mails by subtracting the total no of mails in folder and in cache
+						long remaining=(localContent.loading_totalMailCount - localContent.loading_totalCached);
+						moreLoadingText2View.setText(context.getString(R.string.mailListView_moreloading_remaining, String.valueOf(remaining)));
+					}
 				}
 			}
 
@@ -181,7 +199,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		List<String> dateHeaderList;
 		String date_left="", date_right="", prev_date_left="",prev_date_right="";
 		if(listLocalContent!=null){
-		//clear list of local content
+			//clear list of local content
 			listLocalContent.clear();	
 		}
 		else{
@@ -243,7 +261,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			localContent.vo=mailListHeader;
 			localContent.type=LocalContent.types.MAIL;
 			listLocalContent.add(localContent);
-
 		}
 		return listLocalContent;
 	}
@@ -265,6 +282,10 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		private String date_left="";
 		private String date_right="";
 		private CachedMailHeaderVO vo=null;
+		private long loading_totalMailCount=-1;
+		private long loading_totalCached=-1;
+		private long loading_loadingCount=-1;
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -311,10 +332,10 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		// TODO Auto-generated method stub
 		return position;
 	}
-	
+
 	@Override
 	public void notifyDataSetChanged() {
-		
+
 		try {
 			//refresh the local content list from VOs
 			this.listLocalContent = makeLocalContent(listVOs);
@@ -336,16 +357,22 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 	/** Will get invoked when the listview is scrolled to the last.
 	 * Will show a progress icon
-	 * 
+	 **
+	 * @param totalCached	How many are in cache
+	 * @param totalMails	How many many mail are there in the folder
 	 */
-	public void moreMailsLoadingAnimation() {
+	public void showMoreMailsLoadingAnimation(int loadingCount, long totalCached, long totalMails) {
 		// TODO Auto-generated method stub
-		
+
 		LocalContent localContent = new LocalContent();
 		localContent.type=LocalContent.types.LOADING_MORE_MAILS;
+		localContent.loading_totalCached=totalCached;
+		localContent.loading_totalMailCount=totalMails;
+		localContent.loading_loadingCount=loadingCount;
+
 		//no need to call  makeLocalContent(listVOs)since only when extra row will be added
 		listLocalContent.add(localContent);
 		super.notifyDataSetChanged();
-		
+
 	}
 } 

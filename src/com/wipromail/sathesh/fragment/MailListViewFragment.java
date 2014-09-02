@@ -70,6 +70,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	private SwipeRefreshLayout swipeRefreshLayout ;
 	private State newMailsThreadState;
 	private State moreMailsThreadState;
+	
+	private long totalMailsInFolder=-1;
 
 	private boolean fragmentAlreadyLoaded=false;
 	
@@ -176,7 +178,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				if(newMailsThreadState==State.UPDATING) {
 					updatingStatusUIChanges();
 				}
-
+				
+				if(moreMailsThreadState==State.WAITING || moreMailsThreadState==State.UPDATING){
+					showMoreLoadingAnimation();
+					
+				}
 				//make a refresh only once when the screen is loaded first time. make a soft refresh on config change
 				if(!fragmentAlreadyLoaded){
 					refreshList();
@@ -195,6 +201,23 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		return view;
 	}
 	
+	/** Show the more loading text with animation
+	 * 
+	 */
+	public void showMoreLoadingAnimation() {
+		// TODO Auto-generated method stub
+		int totalRecordsInCache=-1;
+		
+		//show the loading animation with the no of mails reamaining in the end of listview
+		try {
+			totalRecordsInCache = cacheAdapter.getRecordsCount(mailType, mailFolderName, mailFolderId);
+			
+		} catch (Exception e) {
+			// if exception in getting the no of mails in cache then just show loading mails symbol
+		} 
+		adapter.showMoreMailsLoadingAnimation(MORE_NO_OF_MAILS, totalRecordsInCache ,totalMailsInFolder);
+	}
+
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onActivityCreated(android.os.Bundle)
 	 */
@@ -247,7 +270,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	public void getMoreMails(){
 		if(moreMailsThreadState!=State.UPDATING){
-			adapter.moreMailsLoadingAnimation(); // shows the loading symbol in the end of list view
+			showMoreLoadingAnimation();
+			
 			//network call for getting the new mails
 			Handler getMoreMailsHandler = new GetMoreMailsHandler(this);
 			Thread t = new Thread(new GetMoreMailsRunnable(this, getMoreMailsHandler));
@@ -446,5 +470,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	public void setMoreMailsThreadState(State moreMailThreadState) {
 		this.moreMailsThreadState = moreMailThreadState;
+	}
+
+	public long getTotalMailsInFolder() {
+		return totalMailsInFolder;
+	}
+
+	public void setTotalMailsInFolder(long totalMailsInFolder) {
+		this.totalMailsInFolder = totalMailsInFolder;
 	}
 }

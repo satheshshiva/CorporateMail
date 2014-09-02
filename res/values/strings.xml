@@ -47,6 +47,9 @@
     <string name="folder_updater_updating">Updating %s</string>
     <string name="pullToRefresh_checking_big">Loading..</string>
     <string name="pullToRefresh_checking_small">Checking for mails</string>
+    <string name="mailListView_moreloading">Loading more mails...</string>
+    <string name="mailListView_moreloading_next_x">Loading %s more...</string>
+    <string name="mailListView_moreloading_remaining">%s remaining</string>
 
     <!-- Mail Notification Service -->
     <string name="mnsServiceNewMailNotification">You have %d new email</string>
