@@ -83,7 +83,7 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 						}
 						else{
 							parent.setMoreMailsThreadState(State.WAITING);
-							parent.getAdapter().moreMailsLoadingAnimation(); // shows the loading symbol in the end of list view
+							parent.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
 							if(BuildConfig.DEBUG) Log.d(TAG, this.getClass().getName() +" -> went in wait state as GetNewMails is currently updating");
 						}
 					}
