@@ -20,6 +20,7 @@ import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.fragment.MailListViewFragment.State;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 
 /**
@@ -28,11 +29,12 @@ import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
  */
 public class MailListViewFragmentListener implements  OnScrollListener, OnItemClickListener, Constants{
 	private MailListViewFragment parent;
+	private int preLast=-1;
 	
 	public MailListViewFragmentListener(MailListViewFragment parent){
 		this.parent=parent;
 	}
-	
+
 	/** LISTVIEW ONSCROLL LISTENER 
 	 * Load more mails when the last of the mail is in the list view is visible. Also some code for SwipeRefreshLayout
 	 * (non-Javadoc)
@@ -41,11 +43,12 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 	@Override
 	public void onScroll(AbsListView lw, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
+		
 		//Determine whether its our listview listener
 		switch(lw.getId()) {
 		case R.id.listView:  
-			//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
-			
+			Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+
 			//Swipe RefreshLayout code
 			//enable Swipe Refresh
 			boolean enable = false;
@@ -60,20 +63,36 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 			if(parent.getSwipeRefreshLayout()!=null)  parent.getSwipeRefreshLayout().setEnabled(enable);
 
 			//Last Item Listener - loads more mails
-			int preLast=-1;
 			
-			final int lastItem = firstVisibleItem + visibleItemCount;
-			
-			if(!parent.isLoadingSymbolShown() && lastItem == totalItemCount) {
-				if(preLast!=lastItem){ //to avoid multiple calls for last item
-					if(BuildConfig.DEBUG){
-						Log.d(TAG, "MailListViewFragment -> Last Item listener");
+			//gets the id for the last item
+			int lastItem = firstVisibleItem + visibleItemCount;
+
+			//if the last item shown is equal to the total no of items,
+			if(lastItem == totalItemCount) {
+				//to avoid multiple calls for last item
+				if(preLast!=lastItem){ 
+					//if the more mails thread is not in updating or waiting state
+					if(parent.getMoreMailsThreadState()!= State.UPDATING && parent.getMoreMailsThreadState()!= State.WAITING){
+						// if the get new mails thread is not updating
+						if(parent.getNewMailsThreadState() != State.UPDATING){
+							if(BuildConfig.DEBUG){
+								Log.d(TAG, "MailListViewFragment -> Last Item listener");
+							}
+							parent.getMoreMails();	// spawns a thread for network call
+							lastItem++;	//since loading symbol shown one extra row was added dnamically. To compensate that add 1 to the last visibile item
+						}
+						else{
+							parent.setMoreMailsThreadState(State.WAITING);
+							parent.getAdapter().moreMailsLoadingAnimation(); // shows the loading symbol in the end of list view
+							if(BuildConfig.DEBUG) Log.d(TAG, this.getClass().getName() +" -> went in wait state as GetNewMails is currently updating");
+						}
 					}
-					parent.getAdapter().scrolledToLast();
-					parent.setLoadingSymbolShown(true);
-					parent.getMoreMails();
+					if(BuildConfig.DEBUG){
+						Log.d(TAG, "PreLast "+ preLast + " Last Item "+ lastItem);
+					}
 					preLast = lastItem;
 				}
+				
 			}
 		}
 	}
@@ -86,7 +105,7 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	/** LIST VIEW ITEM CLICK LISTENER 
 	 * (non-Javadoc)
 	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)

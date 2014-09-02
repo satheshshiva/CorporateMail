@@ -79,10 +79,9 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 					//delete the old cache and updates the new cache
 					headersCacheAdapter.cacheNewData(parent.getActivity(), 
 							findResults.getItems(),parent.getMailType(), 
-							parent.getMailFolderName(), parent.getMailFolderId(), true);
+							parent.getMailFolderName(), parent.getMailFolderId(), false);	//update the new records. dont delele the old records
 				}
 				sendHandlerMsg(State.UPDATED);
-
 			}
 			catch (final NoUserSignedInException e) {
 				sendHandlerMsg(State.ERROR);
@@ -91,7 +90,6 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 			catch (UnknownHostException e) {
 				sendHandlerMsg(State.ERROR);
 				e.printStackTrace();
-
 			}
 			catch(NoInternetConnectionException nic){
 				sendHandlerMsg(State.ERROR);
