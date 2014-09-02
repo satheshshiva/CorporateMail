@@ -338,7 +338,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 * Will show a progress icon
 	 * 
 	 */
-	public void scrolledToLast() {
+	public void moreMailsLoadingAnimation() {
 		// TODO Auto-generated method stub
 		
 		LocalContent localContent = new LocalContent();

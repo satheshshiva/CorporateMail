@@ -45,7 +45,6 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 			try {
 				parent.setMoreMailsThreadState(State.UPDATED);
 				parent.softRefreshList();
-				parent.setLoadingSymbolShown(false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				Utilities.generalCatchBlock(e, this.getClass());
@@ -54,7 +53,6 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 
 		case ERROR_AUTH_FAILED:
 			parent.setMoreMailsThreadState(State.ERROR_AUTH_FAILED);
-			parent.setLoadingSymbolShown(false);	//so that the loading synmbol will be gone
 			// stop the MNS service
 			MailApplication.stopMNSService(parent.getActivity().getApplicationContext());
 			break;
@@ -62,7 +60,6 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 		case ERROR:
 			parent.setMoreMailsThreadState(State.ERROR);
 			parent.softRefreshList(); //so that the loading synmbol will be gone
-			parent.setLoadingSymbolShown(false);
 			break;
 		}
 	}

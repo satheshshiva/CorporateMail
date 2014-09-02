@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
@@ -70,7 +72,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	private State moreMailsThreadState;
 
 	private boolean fragmentAlreadyLoaded=false;
-	private boolean loadingSymbolShown;
 	
 	/**
 	 * @author sathesh
@@ -79,6 +80,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	public enum State{
 		UPDATING,
 		UPDATED,
+		WAITING,	//not the actual Thread.wait(). One thread2 will just exit and the other thread (thread1) will invoke it again once its done.
 		ERROR,
 		ERROR_AUTH_FAILED
 	}
@@ -227,6 +229,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	@Override
 	public void softRefreshList(){
+		if(BuildConfig.DEBUG){
+			Log.d(TAG,  this.getClass() + " ->  Called Soft refresh list");
+		}
 		try {
 			adapter.setListVOs(cacheAdapter.getMailHeaders(mailType, mailFolderName, mailFolderId));
 			adapter.notifyDataSetChanged();
@@ -242,6 +247,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	public void getMoreMails(){
 		if(moreMailsThreadState!=State.UPDATING){
+			adapter.moreMailsLoadingAnimation(); // shows the loading symbol in the end of list view
 			//network call for getting the new mails
 			Handler getMoreMailsHandler = new GetMoreMailsHandler(this);
 			Thread t = new Thread(new GetMoreMailsRunnable(this, getMoreMailsHandler));
@@ -269,8 +275,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			return (mailFolderName);
 		}
 	}
-
-	
 
 	/** Make UI changes for the Updating status
 	 * which includes progress bar, text switcher, swipe refresh
@@ -418,14 +422,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	public void setAdapter(MailListViewAdapter adapter) {
 		this.adapter = adapter;
-	}
-
-	public boolean isLoadingSymbolShown() {
-		return loadingSymbolShown;
-	}
-
-	public void setLoadingSymbolShown(boolean loadingSymbolShown) {
-		this.loadingSymbolShown = loadingSymbolShown;
 	}
 
 	public CachedMailHeaderCacheAdapter getMailHeadersCacheAdapter() {

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
@@ -48,6 +49,18 @@ public class GetNewMailsHandler extends Handler implements Constants {
 				parent.softRefreshList();
 				parent.getSwipeRefreshLayout().setRefreshing(false);
 				parent.getBar_progressbar().setProgress(0);
+
+				if(BuildConfig.DEBUG){
+					Log.d(TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
+				}
+				
+				//if the other thread (GetMoreMailsRunnable) is waiting for this to complete, then call it again
+				if(parent.getMoreMailsThreadState() == State.WAITING){
+					parent.getMoreMails();
+					if(BuildConfig.DEBUG){
+						Log.d(TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
+					}
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				Utilities.generalCatchBlock(e, this.getClass());
@@ -59,6 +72,10 @@ public class GetNewMailsHandler extends Handler implements Constants {
 			// for auth failed show an alert box
 			parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_auth_error));
 			NotificationProcessing.showLoginErrorNotification(parent.getActivity().getApplicationContext());
+			if(parent.getMoreMailsThreadState() == State.WAITING){
+				parent.setMoreMailsThreadState(State.ERROR_AUTH_FAILED);
+				parent.softRefreshList();
+			}
 			if(parent.isAdded()){
 				AuthFailedAlertDialog.showAlertdialog(parent.getActivity(), parent.getActivity().getApplicationContext());
 			}
@@ -71,6 +88,9 @@ public class GetNewMailsHandler extends Handler implements Constants {
 
 		case ERROR:
 			parent.setNewMailsThreadState(State.ERROR);
+			if(parent.getMoreMailsThreadState() == State.WAITING){
+				parent.getMoreMails();
+			}
 			parent.updateTextSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 			parent.getSwipeRefreshLayout().setRefreshing(false);
 			parent.getBar_progressbar().setProgress(0);
