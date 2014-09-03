@@ -147,13 +147,13 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 					moreLoadingText2View = (TextView) rowView.findViewById(R.id.loadingMore2Text);
 
 					//set the Loading more text in the big 1st text view
-					if(localContent.loading_loadingCount>0){
+					/*if(localContent.loading_loadingCount>0){
 						moreLoadingText1View.setText(context.getString(R.string.mailListView_moreloading_next_x,localContent.loading_loadingCount ));
 					}
-					else{
-						moreLoadingText1View.setText(context.getString(R.string.mailListView_moreloading));
-					}
-					
+					else{*/
+					moreLoadingText1View.setText(context.getString(R.string.mailListView_moreloading));
+					//}
+
 					//set the remaining no of mails in the second text view
 					if(localContent.loading_totalMailCount>localContent.loading_totalCached){
 						//calculate the remaining no of mails by subtracting the total no of mails in folder and in cache
@@ -318,6 +318,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
+		// code here if you want to pass the date headers or getMore listview button and identify OnListItemClick
 		if(this.listLocalContent!=null && this.listLocalContent.get(position)!=null)
 			return this.listLocalContent.get(position).vo;
 		else
