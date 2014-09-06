@@ -159,6 +159,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 						//calculate the remaining no of mails by subtracting the total no of mails in folder and in cache
 						long remaining=(localContent.loading_totalMailCount - localContent.loading_totalCached);
 						moreLoadingText2View.setText(context.getString(R.string.mailListView_moreloading_remaining, String.valueOf(remaining)));
+						moreLoadingText2View.setVisibility(View.VISIBLE);
 					}
 				}
 			}
