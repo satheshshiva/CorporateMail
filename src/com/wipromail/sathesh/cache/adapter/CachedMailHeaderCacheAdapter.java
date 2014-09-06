@@ -24,10 +24,12 @@ import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 public class CachedMailHeaderCacheAdapter {
 
 	private static MailFunctions mailFunctions;
-	private CachedMailHeaderDAO dao;
+	private static CachedMailHeaderDAO dao;
 	
 	public CachedMailHeaderCacheAdapter(Context context){
+		if(dao==null){
 		dao=new CachedMailHeaderDAO(context);
+		}
 	}
 
 	//CODE HAS TO BE UPDATE FOR
@@ -46,7 +48,7 @@ public class CachedMailHeaderCacheAdapter {
 		// TODO Auto-generated method stub
 		try {
 			if(emptyCache){
-				deleteAllByType(mailType,mailFolderName, mailFolderId);
+				deleteAll(mailType,mailFolderName, mailFolderId);
 			}
 			writeMailHeader(context, mailType, mailFolderName, mailFolderId, items);
 		} catch (Exception e) {
@@ -117,7 +119,7 @@ public class CachedMailHeaderCacheAdapter {
 	 * @throws Exception 
 	 * 
 	 */
-	private void deleteAllByType(int mailType, String mailFolderName, String mailFolderId) throws Exception {
+	private void deleteAll(int mailType, String mailFolderName, String mailFolderId) throws Exception {
 		// TODO Auto-generated method stub
 		// Pass folder id or folder name to the corresponding folder
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
@@ -126,6 +128,22 @@ public class CachedMailHeaderCacheAdapter {
 		else{
 			//by folder id
 			dao.deleteAllByFolderId(mailFolderId);
+		}
+	}
+	
+	/** Delete all the cached mail headers for this particular mail type
+	 * @throws Exception 
+	 * 
+	 */
+	public void deleteN(int mailType, String mailFolderName, String mailFolderId, int n) throws Exception {
+		// TODO Auto-generated method stub
+		// Pass folder id or folder name to the corresponding folder
+		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
+			dao.deleteNByMailType(mailType,n);
+		}
+		else{
+			//by folder id
+			dao.deleteNByFolderId(mailFolderId,n);
 		}
 	}
 	

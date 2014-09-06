@@ -225,6 +225,41 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		}
 	}
 
+	/** Delete Cache by N number
+	 * Where Clause - MailType
+	 * @param mailType
+	 * @param n -	no of mails to delete
+	 * @throws Exception
+	 */
+	public void deleteNByMailType(int mailType, int n) throws Exception {
+		
+		try{
+			String mailTypeStr = String.valueOf(mailType);
+			open();
+			database.execSQL(TableCachedMailHeader.getDeleteNQueryByMailTypeQuery(n),
+					new String[]{mailTypeStr,mailTypeStr});
+		}finally{
+			close();
+		}
+	}
+
+	/** Delete Cache by N number
+	 * Where Clause - Folder Id
+	 * @param mailFolderId
+	 * @param n - no of mails to delete
+	 * @throws Exception
+	 */
+	public void deleteNByFolderId(String mailFolderId, int n) throws Exception {
+
+		try{
+			open();
+			database.execSQL(TableCachedMailHeader.getDeleteNQueryByFolderIdQuery(n),
+					new String[]{mailFolderId,mailFolderId});
+		}finally{
+			close();
+		}
+	}
+	
 	/** private function which calls the insert query for a single VO
 	 * 
 	 */

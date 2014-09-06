@@ -54,6 +54,10 @@ public interface Constants {
 	public static final int MIN_NO_OF_MAILS = 25;
 	public static final int MORE_NO_OF_MAILS = 25;	//when the user scrolls, load this no of mails
 	
+	//this no of mails will be retained in cache on activity exit
+	public static final int MAX_MAIL_HEADERS_TO_KEEP = 50;
+	public static final int MAX_MAIL_BODY_TO_KEEP = 50;	
+	
 	public static final String INBOX_FILTER_TEXT_FROM = "(WT01"; 	//for the inbox, the From field text will be displayed only up to this text
 
 	//inbox date formats
@@ -64,14 +68,6 @@ public interface Constants {
 	public static final String INBOX_TEXT_DATE_DAY_HEADER = "EEEE";
 	public static final String INBOX_TEXT_MONTH_HEADER = "MMMM";
 	public static final String INBOX_TEXT_DATE_HEADER = "d-MMM-yy";
-
-	//Cache - MailFunctions key values in hashmap
-	public static final String MAPKEY_INBOX_CACHE_ITEMID = "itemId";
-	public static final String MAPKEY_INBOX_CACHE_FROM = "from";
-	public static final String MAPKEY_INBOX_CACHE_TO = "to";
-	public static final String MAPKEY_INBOX_CACHE_SUBJECT = "subject";
-	public static final String MAPKEY_INBOX_CACHE_DATETIMERECEIVED = "dateTimeReceived";
-	public static final String MAPKEY_INBOX_CACHE_ISREAD = "isread";
 
 	//Update MailFunctions
 	//the autosync will fetch this no. changes at a time

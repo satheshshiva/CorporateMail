@@ -49,9 +49,9 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 			//Determine whether its our listview listener
 			switch(lw.getId()) {
 			case R.id.listView:  
-				Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+				//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 
-				//Swipe RefreshLayout code
+				//SWIPE REFRESH
 				//enable Swipe Refresh
 				boolean enable = false;
 				if(lw != null && lw.getChildCount() > 0){
@@ -79,24 +79,28 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 							int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
 									, parent.getMailFolderName()
 									, parent.getMailFolderId());
-							//if the total number of cached records is less than the total mails in folder
-							//getTotalMailsInFolder() will be -1 when the GetNewMailThreads is not yet completed even for 1 time.
-							if(parent.getTotalMailsInFolder()==-1 || totalCachedRecords < parent.getTotalMailsInFolder()){
-								
-								// if the new mails thread is not updating
-								if(parent.getNewMailsThreadState() != State.UPDATING){
-									if(BuildConfig.DEBUG){
-										Log.d(TAG, "MailListViewFragment -> Last Item listener");
+							//if total cached records is less than minimum no of mails.
+							//this check is to stop initially showing the progress when there only few mails
+							if(totalCachedRecords>=MIN_NO_OF_MAILS){	
+								//if the total number of cached records is less than the total mails in folder
+								//getTotalMailsInFolder() will be -1 when the GetNewMailThreads is not yet completed even for 1 time.
+								if(parent.getTotalMailsInFolder()==-1 || totalCachedRecords < parent.getTotalMailsInFolder()){
+
+									// if the new mails thread is not updating
+									if(parent.getNewMailsThreadState() != State.UPDATING){
+										if(BuildConfig.DEBUG){
+											Log.d(TAG, "MailListViewFragment -> Last Item listener");
+										}
+										//Call the More mails thread
+										parent.getMoreMails();	// spawns a thread for network call
+										lastItem++;	//since loading symbol shown one extra row was added dnamically. To compensate that add 1 to the last visibile item
 									}
-									//Call the More mails thread
-									parent.getMoreMails();	// spawns a thread for network call
-									lastItem++;	//since loading symbol shown one extra row was added dnamically. To compensate that add 1 to the last visibile item
-								}
-								else{
-									//enter the More Loading thread in to Waiting state. Whent eh New mails thread is done it will invoke this thread again
-									parent.setMoreMailsThreadState(State.WAITING);
-									parent.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
-									if(BuildConfig.DEBUG) Log.d(TAG, this.getClass().getName() +" -> went in wait state as GetNewMails is currently updating");
+									else{
+										//enter the More Loading thread in to Waiting state. Whent eh New mails thread is done it will invoke this thread again
+										parent.setMoreMailsThreadState(State.WAITING);
+										parent.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
+										if(BuildConfig.DEBUG) Log.d(TAG, this.getClass().getName() +" -> went in wait state as GetNewMails is currently updating");
+									}
 								}
 							}
 						}
@@ -136,10 +140,10 @@ public class MailListViewFragmentListener implements  OnScrollListener, OnItemCl
 		CachedMailHeaderVO vo;
 		try{
 			if(parent1.getItemAtPosition(position)!=null){
-			vo = (CachedMailHeaderVO) parent1.getItemAtPosition(position);
-			Intent viewMailIntent = new Intent(parent.getActivity().getBaseContext(), ViewMailActivity.class);
-			viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
-			parent.getActivity().startActivity(viewMailIntent);
+				vo = (CachedMailHeaderVO) parent1.getItemAtPosition(position);
+				Intent viewMailIntent = new Intent(parent.getActivity().getBaseContext(), ViewMailActivity.class);
+				viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
+				parent.getActivity().startActivity(viewMailIntent);
 			}
 		}
 		catch(Exception e){
