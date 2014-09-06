@@ -18,6 +18,7 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.util.Utilities;
@@ -41,7 +42,8 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 
 	private int mailType ;
 	private String mailFolderName;
-	private String strFolderId="";
+	private String mailFolderId="";
+	private CachedMailHeaderCacheAdapter cacheAdapter;
 	
 	/** ON CREATE **
 	 *  Fragment : MailListViewFragment
@@ -56,7 +58,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
-		strFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
+		mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
 		mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
 
 		//load the fragment. If different fragment or layout has to be loaded for a mail type, then an "if" condition has to be given here.
@@ -66,6 +68,8 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		//actually MailListViewFragment
 		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
 				.findFragmentById(R.id.mailListViewFragment);
+		
+		cacheAdapter = new CachedMailHeaderCacheAdapter(this);
 		
 	}
 	
@@ -113,6 +117,11 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 				if(BuildConfig.DEBUG){
 					Log.d(TAG, "Deleting image cache directory " +((success)?"successful":"failed"));}
 			}
+			
+			//deleting cached mail headers
+			cacheAdapter.deleteN(mailType, mailFolderName, mailFolderId, MAX_MAIL_HEADERS_TO_KEEP);
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG){
@@ -218,7 +227,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 
 	@Override
 	public String getStrFolderId() {
-		return strFolderId;
+		return mailFolderId;
 	}
 
 	@Override

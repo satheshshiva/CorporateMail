@@ -116,6 +116,24 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 		return "DELETE from " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=?";
 	}
 	
+	/** DELETE 
+	 * WHERE CLAUSE - MAIL TYPE
+	 * @return
+	 */
+	public static String getDeleteNQueryByMailTypeQuery(int n){
+		return "DELETE from " + tableName  + " WHERE " + COLUMN_MAIL_TYPE + "=? AND " + COLUMN_ID + " NOT IN ("
+				+ " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_MAIL_TYPE + "=? LIMIT " + n + ")";
+	}
+
+	/** DELETE 
+	 * WHERE CLAUSE - FOLDER ID
+	 * @return
+	 */
+	public static String getDeleteNQueryByFolderIdQuery(int n){
+		return "DELETE from " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? AND " + COLUMN_ID + " NOT IN ("
+				+ " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? LIMIT " + n + ")";
+	}
+	
 	/* These queries will be executed when the table is newly created in the database. 
 	 * The default records which needs to be inserted can be mentioned here (like default settings record for settings table or trial data for development)
 	 * @see com.sathesh.carparking.db.DbTable#getNewTableQueries()

@@ -227,7 +227,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 					else{
 						date_right="";
 					}
-
 				}
 
 				//if the label text is same as the previous label text then do nothing and increment counter

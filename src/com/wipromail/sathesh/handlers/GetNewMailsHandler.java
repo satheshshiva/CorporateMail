@@ -53,12 +53,23 @@ public class GetNewMailsHandler extends Handler implements Constants {
 				if(BuildConfig.DEBUG){
 					Log.d(TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
 				}
-				
+
 				//if the other thread (GetMoreMailsRunnable) is waiting for this to complete, then call it again
 				if(parent.getMoreMailsThreadState() == State.WAITING){
-					parent.getMoreMails();
-					if(BuildConfig.DEBUG){
-						Log.d(TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
+					//get the total no of records in cache
+					int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
+							, parent.getMailFolderName()
+							, parent.getMailFolderId());
+					//if the total cached records is less than the total no. of mails in the folder then run the "more loading" thread 
+					//which has been waiting for this thread
+					if(totalCachedRecords < parent.getTotalMailsInFolder()){
+						parent.getMoreMails();
+						if(BuildConfig.DEBUG){
+							Log.d(TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
+						}
+					}
+					else{
+						parent.setMoreMailsThreadState(State.UPDATED);
 					}
 				}
 			} catch (Exception e) {
