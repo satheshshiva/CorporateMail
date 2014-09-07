@@ -61,7 +61,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
 		mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
 
-		//load the fragment. If different fragment or layout has to be loaded for a mail type, then an "if" condition has to be given here.
 		setContentView(R.layout.activity_mail_list_view);
 		
 		// declaring the fragment (list fragment). used for calling the refresh in the fragment

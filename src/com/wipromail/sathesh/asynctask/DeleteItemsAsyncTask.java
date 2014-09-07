@@ -9,7 +9,7 @@ import java.util.Iterator;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
@@ -23,13 +23,13 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 	public static final String STATUS_PROGRESS="PROGRESS";
 	public static final String STATUS_ERROR="ERROR";
 
-	private SherlockActivity activity;
+	private SherlockFragmentActivity activity;
 
 	private ArrayList<Item> items;
 	private GenericAsyncTask caller;
 	private boolean permanentDelete;
 
-	public DeleteItemsAsyncTask(GenericAsyncTask caller,SherlockActivity activity, Item item, boolean permanentDelete) {
+	public DeleteItemsAsyncTask(GenericAsyncTask caller,SherlockFragmentActivity activity, Item item, boolean permanentDelete) {
 		// TODO Auto-generated constructor stub
 		this.activity = activity;
 		this.items =new ArrayList<Item>();
@@ -38,7 +38,7 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 		this.permanentDelete=permanentDelete;
 	}
 
-	public DeleteItemsAsyncTask(GenericAsyncTask caller,SherlockActivity activity, ArrayList<Item> items, boolean permanentDelete) {
+	public DeleteItemsAsyncTask(GenericAsyncTask caller,SherlockFragmentActivity activity, ArrayList<Item> items, boolean permanentDelete) {
 		// TODO Auto-generated constructor stub
 		this.activity = activity;
 		this.items = items;

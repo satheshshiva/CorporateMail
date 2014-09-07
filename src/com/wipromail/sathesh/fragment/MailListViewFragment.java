@@ -32,7 +32,7 @@ import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.handlers.runnables.GetMoreMailsRunnable;
 import com.wipromail.sathesh.handlers.runnables.GetNewMailsRunnable;
-import com.wipromail.sathesh.ui.listeners.MailListViewFragmentListener;
+import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
 
 /**
@@ -225,7 +225,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	public void onActivityCreated(Bundle savedInstanceState) {
 
 		//contains all the UI listners for this fragment
-		MailListViewFragmentListener listener = new MailListViewFragmentListener(this);
+		MailListViewListener listener = new MailListViewListener(this);
 		
 		super.onActivityCreated(savedInstanceState);
 		listView.setOnScrollListener(listener);

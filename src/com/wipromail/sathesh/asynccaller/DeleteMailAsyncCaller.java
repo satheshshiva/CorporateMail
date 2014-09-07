@@ -3,7 +3,7 @@ package com.wipromail.sathesh.asynccaller;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.asynctask.DeleteItemsAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
@@ -17,11 +17,11 @@ import com.wipromail.sathesh.service.data.Item;
  */
 public class DeleteMailAsyncCaller implements Constants, GenericAsyncTask{
 
-	private SherlockActivity activity;
+	private SherlockFragmentActivity activity;
 	private Item item;
 	private boolean permanentDelete=false;
 	
-	public DeleteMailAsyncCaller(SherlockActivity activity, Item item, boolean permanentDelete){
+	public DeleteMailAsyncCaller(SherlockFragmentActivity activity, Item item, boolean permanentDelete){
 		this.activity = activity;
 		this.item = item;
 		this.permanentDelete=permanentDelete;

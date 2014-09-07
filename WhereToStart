@@ -1,4 +1,2 @@
-Last working on state mainitenance on config change
-
-Was readingg the example of Handlers in Vogella. Start with getting the GetNewMails ASync task as an 
-external handler
+Start with migrating the async, change the states to enum and maintaing the state on
+screen rotation
