@@ -69,13 +69,19 @@ public class LoadEmailRunnable implements Runnable, Constants{
 		EmailMessage message;
 		MessageBody msgBody;
 		CachedMailHeaderVO cachedMailHeaderVO;
+		CachedMailHeaderCacheAdapter mailHeaderAdapter;
 
 		try {
 			sendHandlerMsg(Status.LOADING);
 			mailFunctions = parent.getMailFunctions();
-			service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity());
+			service = EWSConnection.getServiceFromStoredCredentials(parent.getContext());
 			
 			cachedMailHeaderVO= parent.getCachedMailHeader();
+			
+			//Mark the item as read
+			//First mark it in the cache
+			mailHeaderAdapter = new CachedMailHeaderCacheAdapter(parent.getContext());
+			mailHeaderAdapter.markMailAsRead(parent.getContext(), cachedMailHeaderVO.getItem_id());
 			
 			//EWS call for loading the message
 			message=EmailMessage.bind(service, new ItemId(cachedMailHeaderVO.getItem_id()));
@@ -109,12 +115,11 @@ public class LoadEmailRunnable implements Runnable, Constants{
 			
 			sendHandlerMsg(Status.LOADED, parent.getProcessedHtml());
 			
-			//Mark the item as read
-			//First mark it in the cache
-			CachedMailHeaderCacheAdapter mailHeaderAdapter = new CachedMailHeaderCacheAdapter(parent.getActivity());
-			mailHeaderAdapter.markMailAsRead(parent.getActivity(), cachedMailHeaderVO.getItem_id());
 			// Network call to mark the item as read
-			NetworkCall.markEmailAsRead(parent.getActivity(), message);
+			if(BuildConfig.DEBUG){
+				Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
+			}
+			NetworkCall.markEmailAsRead(parent.getContext(), message);
 
 		} catch(NoUserSignedInException e) {
 			// TODO Auto-generated catch block
@@ -290,7 +295,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
 	}
 
 	private String getCacheImageDirectory(EmailMessage message) throws ServiceLocalException, Exception{
-		return CacheDirectories.getApplicationCacheDirectory(parent.getActivity())+"/" + CACHE_DIRECTORY_MAILCACHE + "/" + mailFunctions.getItemId(message);
+		return CacheDirectories.getApplicationCacheDirectory(parent.getContext())+"/" + CACHE_DIRECTORY_MAILCACHE + "/" + mailFunctions.getItemId(message);
 		//return MailApplication.getApplicationCacheDirectory(activity).toString() ;
 	}
 }

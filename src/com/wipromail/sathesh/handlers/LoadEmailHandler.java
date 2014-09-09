@@ -5,7 +5,9 @@ package com.wipromail.sathesh.handlers;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
@@ -44,6 +46,9 @@ public class LoadEmailHandler extends Handler implements Constants{
 			//Jus started loading. network call is not made yet.
 			parent.setCurrentStatus(Status.LOADING);
 			parent.getWebview().loadUrl(LOADING_HTML_URL);
+			if(BuildConfig.DEBUG){
+				Log.d(TAG, "LoadEmailHandler-> Loading");
+			}
 			break;
 		case SHOW_BODY:
 			parent.setCurrentStatus(Status.SHOW_BODY);
@@ -86,12 +91,12 @@ public class LoadEmailHandler extends Handler implements Constants{
 		if(remainingImgs>0){
 			// if only one remaining image to load then show a customized label
 			if(remainingImgs == 1){
-				parent.getProgressStatusDispBar().setText(parent.getActivity().getString(R.string.viewmail_downloading_img,
+				parent.getProgressStatusDispBar().setText(parent.getContext().getString(R.string.viewmail_downloading_img,
 						((totalImgs+1) - remainingImgs), totalImgs));
 			}
 			//if there are more no of remaining images to load then show lable " x of n"
 			else{
-				parent.getProgressStatusDispBar().setText(parent.getActivity().getString(R.string.viewmail_downloading_imgs,
+				parent.getProgressStatusDispBar().setText(parent.getContext().getString(R.string.viewmail_downloading_imgs,
 						((totalImgs+1) - remainingImgs), totalImgs));
 			}
 			//	Notifications.showToast(activity, getString(R.string.viewmail_downloading_img,no), Toast.LENGTH_SHORT);
