@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.cache.CacheDirectories;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
@@ -32,6 +33,7 @@ import com.wipromail.sathesh.service.data.ItemId;
 import com.wipromail.sathesh.service.data.MessageBody;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
+import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
 
 /**
@@ -66,14 +68,17 @@ public class LoadEmailRunnable implements Runnable, Constants{
 		List<FileAttachment> successfulCachedImages;
 		EmailMessage message;
 		MessageBody msgBody;
+		CachedMailHeaderVO cachedMailHeaderVO;
 
 		try {
 			sendHandlerMsg(Status.LOADING);
 			mailFunctions = parent.getMailFunctions();
 			service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity());
-
+			
+			cachedMailHeaderVO= parent.getCachedMailHeader();
+			
 			//EWS call for loading the message
-			message=EmailMessage.bind(service, new ItemId(parent.getItemToOpen().getItem_id()));
+			message=EmailMessage.bind(service, new ItemId(cachedMailHeaderVO.getItem_id()));
 
 			//performance improvement.. mark the item as read in cache.
 			message.setIsRead(true);
@@ -104,7 +109,11 @@ public class LoadEmailRunnable implements Runnable, Constants{
 			
 			sendHandlerMsg(Status.LOADED, parent.getProcessedHtml());
 			
-			//EWScall for markin item as read
+			//Mark the item as read
+			//First mark it in the cache
+			CachedMailHeaderCacheAdapter mailHeaderAdapter = new CachedMailHeaderCacheAdapter(parent.getActivity());
+			mailHeaderAdapter.markMailAsRead(parent.getActivity(), cachedMailHeaderVO.getItem_id());
+			// Network call to mark the item as read
 			NetworkCall.markEmailAsRead(parent.getActivity(), message);
 
 		} catch(NoUserSignedInException e) {

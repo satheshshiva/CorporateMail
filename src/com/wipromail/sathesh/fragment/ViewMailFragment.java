@@ -67,7 +67,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 	private WebView webview;
 	private ProgressDisplayNotificationBar progressStatusDispBar;
 
-	private CachedMailHeaderVO itemToOpen;
+	private CachedMailHeaderVO cachedMailHeader;
 
 	public enum Status{
 		LOADING,	// Started loading body. Network Call for loading body is in progress
@@ -164,22 +164,22 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		
 		cc_LinearLayout =(LinearLayout)view.findViewById(R.id.CC_ViewMail_LinearLayout);
 		//load email
-		itemToOpen = (CachedMailHeaderVO) activity.getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER);
+		cachedMailHeader= (CachedMailHeaderVO) activity.getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER);
 
-		if(itemToOpen!=null){
-			from = itemToOpen.getMail_from();
-			to = itemToOpen.getMail_to();
-			cc = itemToOpen.getMail_cc();
-			bcc = itemToOpen.getMail_bcc();
-			subject = itemToOpen.getMail_subject();
-			setMailType(itemToOpen.getMail_type());
+		if(cachedMailHeader!=null){
+			from = cachedMailHeader.getMail_from();
+			to = cachedMailHeader.getMail_to();
+			cc = cachedMailHeader.getMail_cc();
+			bcc = cachedMailHeader.getMail_bcc();
+			subject = cachedMailHeader.getMail_subject();
+			setMailType(cachedMailHeader.getMail_type());
 		}
 
 		if(BuildConfig.DEBUG){
 			Log.d(TAG, "ViewMailFragment -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
 		}
 		try {
-			date = itemToOpen.getMail_datetimereceived();
+			date = cachedMailHeader.getMail_datetimereceived();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -700,12 +700,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 	public void setCcShowMoreFlag(boolean ccShowMoreFlag) {
 		this.ccShowMoreFlag = ccShowMoreFlag;
 	}
-	public CachedMailHeaderVO getItemToOpen() {
-		return itemToOpen;
+	public CachedMailHeaderVO getCachedMailHeaderVO() {
+		return cachedMailHeader;
 	}
 
-	public void setItemToOpen(CachedMailHeaderVO itemToOpen) {
-		this.itemToOpen = itemToOpen;
+	public void setCachedMailHeaderVO(CachedMailHeaderVO itemToOpen) {
+		this.cachedMailHeader = itemToOpen;
 	}
 
 	public MailFunctions getMailFunctions() {
@@ -786,5 +786,13 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
 	public void setTotalInlineImages(int totalInlineImages) {
 		this.totalInlineImages = totalInlineImages;
+	}
+
+	public CachedMailHeaderVO getCachedMailHeader() {
+		return cachedMailHeader;
+	}
+
+	public void setCachedMailHeader(CachedMailHeaderVO cachedMailHeader) {
+		this.cachedMailHeader = cachedMailHeader;
 	}
 }
