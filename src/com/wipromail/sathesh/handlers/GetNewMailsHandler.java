@@ -14,7 +14,7 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.State;
+import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -34,18 +34,18 @@ public class GetNewMailsHandler extends Handler implements Constants {
 
 	@Override
 	public void handleMessage(Message msg) {
-		State state = (MailListViewFragment.State)msg.getData().getSerializable("state");
-		switch(state){
+		Status status = (MailListViewFragment.Status)msg.getData().getSerializable("state");
+		switch(status){
 
 		case UPDATING:
-			parent.setNewMailsThreadState(State.UPDATING);
+			parent.setNewMailsThreadState(Status.UPDATING);
 			parent.updatingStatusUIChanges();
 			break;
 
 		case UPDATED:
 			//successful update
 			try {
-				parent.setNewMailsThreadState(State.UPDATED);
+				parent.setNewMailsThreadState(Status.UPDATED);
 				parent.softRefreshList();
 				parent.getSwipeRefreshLayout().setRefreshing(false);
 				parent.getBar_progressbar().setProgress(0);
@@ -55,7 +55,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 				}
 
 				//if the other thread (GetMoreMailsRunnable) is waiting for this to complete, then call it again
-				if(parent.getMoreMailsThreadState() == State.WAITING){
+				if(parent.getMoreMailsThreadState() == Status.WAITING){
 					//get the total no of records in cache
 					int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
 							, parent.getMailFolderName()
@@ -69,7 +69,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 						}
 					}
 					else{
-						parent.setMoreMailsThreadState(State.UPDATED);
+						parent.setMoreMailsThreadState(Status.UPDATED);
 					}
 				}
 			} catch (Exception e) {
@@ -79,12 +79,12 @@ public class GetNewMailsHandler extends Handler implements Constants {
 			break;
 
 		case ERROR_AUTH_FAILED:
-			parent.setNewMailsThreadState(State.ERROR_AUTH_FAILED);
+			parent.setNewMailsThreadState(Status.ERROR_AUTH_FAILED);
 			// for auth failed show an alert box
 			parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_auth_error));
 			NotificationProcessing.showLoginErrorNotification(parent.getActivity().getApplicationContext());
-			if(parent.getMoreMailsThreadState() == State.WAITING){
-				parent.setMoreMailsThreadState(State.ERROR_AUTH_FAILED);
+			if(parent.getMoreMailsThreadState() == Status.WAITING){
+				parent.setMoreMailsThreadState(Status.ERROR_AUTH_FAILED);
 				parent.softRefreshList();
 			}
 			if(parent.isAdded()){
@@ -98,8 +98,8 @@ public class GetNewMailsHandler extends Handler implements Constants {
 			break;
 
 		case ERROR:
-			parent.setNewMailsThreadState(State.ERROR);
-			if(parent.getMoreMailsThreadState() == State.WAITING){
+			parent.setNewMailsThreadState(Status.ERROR);
+			if(parent.getMoreMailsThreadState() == Status.WAITING){
 				parent.getMoreMails();
 			}
 			parent.updateTextSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);

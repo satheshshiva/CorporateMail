@@ -18,7 +18,7 @@ import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.State;
+import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
@@ -56,7 +56,7 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 
 		if (parent.getActivity() != null) {
 			try {
-				sendHandlerMsg(State.UPDATING);
+				sendHandlerMsg(Status.UPDATING);
 				CachedMailHeaderCacheAdapter headersCacheAdapter = parent.getMailHeadersCacheAdapter();
 				
 				//get the total no of records in cache and get all the same number of records.
@@ -83,33 +83,33 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 					
 					parent.setTotalMailsInFolder(findResults.getTotalCount());	//set the total no of mails in this folder
 				}
-				sendHandlerMsg(State.UPDATED);
+				sendHandlerMsg(Status.UPDATED);
 			}
 			catch (final NoUserSignedInException e) {
-				sendHandlerMsg(State.ERROR);
+				sendHandlerMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 			catch (UnknownHostException e) {
-				sendHandlerMsg(State.ERROR);
+				sendHandlerMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 			catch(NoInternetConnectionException nic){
-				sendHandlerMsg(State.ERROR);
+				sendHandlerMsg(Status.ERROR);
 				nic.printStackTrace();
 			}
 			catch(HttpErrorException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
-					sendHandlerMsg(State.ERROR_AUTH_FAILED);
+					sendHandlerMsg(Status.ERROR_AUTH_FAILED);
 				}
 				else
 				{
-					sendHandlerMsg(State.ERROR);
+					sendHandlerMsg(Status.ERROR);
 				}
 				e.printStackTrace();
 			}
 			catch (Exception e) {
-				sendHandlerMsg(State.ERROR);
+				sendHandlerMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 		}
@@ -120,14 +120,14 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 
 
 	/** Private method for bundling the message and sending it to the handler
-	 * @param state
+	 * @param status
 	 */
-	private void sendHandlerMsg(State state) {
+	private void sendHandlerMsg(Status status) {
 
-		if (state!=null) {
+		if (status!=null) {
 			Message msgObj = handler.obtainMessage();
 			Bundle b = new Bundle();
-			b.putSerializable("state", state);
+			b.putSerializable("state", status);
 			msgObj.setData(b);
 			handler.sendMessage(msgObj);
 		}

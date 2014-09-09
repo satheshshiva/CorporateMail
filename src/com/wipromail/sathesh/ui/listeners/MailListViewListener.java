@@ -20,7 +20,7 @@ import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.State;
+import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -74,7 +74,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 					//to avoid multiple calls for last item
 					if(preLast!=lastItem){ 
 						//if the more mails thread is not in updating or waiting state
-						if(parent.getMoreMailsThreadState()!= State.UPDATING && parent.getMoreMailsThreadState()!= State.WAITING){
+						if(parent.getMoreMailsThreadState()!= Status.UPDATING && parent.getMoreMailsThreadState()!= Status.WAITING){
 							// if the get new mails thread is not updating
 							int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
 									, parent.getMailFolderName()
@@ -87,7 +87,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 								if(parent.getTotalMailsInFolder()==-1 || totalCachedRecords < parent.getTotalMailsInFolder()){
 
 									// if the new mails thread is not updating
-									if(parent.getNewMailsThreadState() != State.UPDATING){
+									if(parent.getNewMailsThreadState() != Status.UPDATING){
 										if(BuildConfig.DEBUG){
 											Log.d(TAG, "MailListViewFragment -> Last Item listener");
 										}
@@ -97,7 +97,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 									}
 									else{
 										//enter the More Loading thread in to Waiting state. Whent eh New mails thread is done it will invoke this thread again
-										parent.setMoreMailsThreadState(State.WAITING);
+										parent.setMoreMailsThreadState(Status.WAITING);
 										parent.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
 										if(BuildConfig.DEBUG) Log.d(TAG, this.getClass().getName() +" -> went in wait state as GetNewMails is currently updating");
 									}
