@@ -13,7 +13,7 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.State;
+import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -33,17 +33,17 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 
 	@Override
 	public void handleMessage(Message msg) {
-		State state = (MailListViewFragment.State)msg.getData().getSerializable("state");
-		switch(state){
+		Status status = (MailListViewFragment.Status)msg.getData().getSerializable("state");
+		switch(status){
 
 		case UPDATING:
-			parent.setMoreMailsThreadState(State.UPDATING);
+			parent.setMoreMailsThreadState(Status.UPDATING);
 			break;
 
 		case UPDATED:
 			//successful update
 			try {
-				parent.setMoreMailsThreadState(State.UPDATED);
+				parent.setMoreMailsThreadState(Status.UPDATED);
 				parent.softRefreshList();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -52,13 +52,13 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 			break;
 
 		case ERROR_AUTH_FAILED:
-			parent.setMoreMailsThreadState(State.ERROR_AUTH_FAILED);
+			parent.setMoreMailsThreadState(Status.ERROR_AUTH_FAILED);
 			// stop the MNS service
 			MailApplication.stopMNSService(parent.getActivity().getApplicationContext());
 			break;
 
 		case ERROR:
-			parent.setMoreMailsThreadState(State.ERROR);
+			parent.setMoreMailsThreadState(Status.ERROR);
 			parent.softRefreshList(); //so that the loading synmbol will be gone
 			break;
 		}

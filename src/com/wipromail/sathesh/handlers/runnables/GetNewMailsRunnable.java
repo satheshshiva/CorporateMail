@@ -22,7 +22,7 @@ import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.State;
+import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
@@ -64,7 +64,7 @@ public class GetNewMailsRunnable implements Runnable, Constants{
 
 		if (parent.getActivity() != null) {
 			try {
-				threadMsg(State.UPDATING);
+				threadMsg(Status.UPDATING);
 				CachedMailHeaderCacheAdapter headersCacheAdapter = parent.getMailHeadersCacheAdapter();
 				
 				//get the total no of records in cache and get all the same number of records.
@@ -94,35 +94,35 @@ public class GetNewMailsRunnable implements Runnable, Constants{
 					
 					parent.setTotalMailsInFolder(findResults.getTotalCount());	//set the total no of mails in this folder
 				}
-				threadMsg(State.UPDATED);
+				threadMsg(Status.UPDATED);
 
 			}
 			catch (final NoUserSignedInException e) {
-				threadMsg(State.ERROR);
+				threadMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 			catch (UnknownHostException e) {
-				threadMsg(State.ERROR);
+				threadMsg(Status.ERROR);
 				e.printStackTrace();
 
 			}
 			catch(NoInternetConnectionException nic){
-				threadMsg(State.ERROR);
+				threadMsg(Status.ERROR);
 				nic.printStackTrace();
 			}
 			catch(HttpErrorException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
-					threadMsg(State.ERROR_AUTH_FAILED);
+					threadMsg(Status.ERROR_AUTH_FAILED);
 				}
 				else
 				{
-					threadMsg(State.ERROR);
+					threadMsg(Status.ERROR);
 				}
 				e.printStackTrace();
 			}
 			catch (Exception e) {
-				threadMsg(State.ERROR);
+				threadMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 		}
@@ -133,14 +133,14 @@ public class GetNewMailsRunnable implements Runnable, Constants{
 
 
 	/** Private method for bundling the message and sending it to the handler
-	 * @param state
+	 * @param status
 	 */
-	private void threadMsg(State state) {
+	private void threadMsg(Status status) {
 
-		if (state!=null) {
+		if (status!=null) {
 			Message msgObj = handler.obtainMessage();
 			Bundle b = new Bundle();
-			b.putSerializable("state", state);
+			b.putSerializable("state", status);
 			msgObj.setData(b);
 			handler.sendMessage(msgObj);
 		}

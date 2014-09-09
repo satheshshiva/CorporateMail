@@ -3,19 +3,14 @@
  */
 package com.wipromail.sathesh.fragment;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,29 +32,19 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.asynccaller.DeleteMailAsyncCaller;
-import com.wipromail.sathesh.cache.CacheDirectories;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
-import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
-import com.wipromail.sathesh.ews.NetworkCall;
+import com.wipromail.sathesh.handlers.LoadEmailHandler;
+import com.wipromail.sathesh.handlers.runnables.LoadEmailRunnable;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
-import com.wipromail.sathesh.service.data.Attachment;
-import com.wipromail.sathesh.service.data.AttachmentCollection;
 import com.wipromail.sathesh.service.data.EmailAddress;
 import com.wipromail.sathesh.service.data.EmailMessage;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.FileAttachment;
-import com.wipromail.sathesh.service.data.ItemId;
 import com.wipromail.sathesh.service.data.MessageBody;
-import com.wipromail.sathesh.service.data.ServiceLocalException;
-import com.wipromail.sathesh.service.data.ServiceVersionException;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
 import com.wipromail.sathesh.ui.listeners.ViewMailListener;
-import com.wipromail.sathesh.util.Utilities;
 import com.wipromail.sathesh.web.StandardWebView;
 
 /**
@@ -84,77 +69,23 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
 	private CachedMailHeaderVO itemToOpen;
 
-	private static final String STATUS_LOADING="STATUS_LOADING";
-	private static final String STATUS_SHOW_TITLE_BODY_B4_IMG="STATUS_SHOW_TITLE_BODY_B4_IMG";
-	public static final String STATUS_DOWNLOADED_AN_IMAGE = "STATUS_DOWNLOADED_AN_IMAGE";
-	public static final String STATUS_SHOW_BODY_DOWNLOADING_IMG = "STATUS_SHOW_BODY_DOWNLOADING_IMG";
-	public static final String STATUS_SHOW_BODY_AFTER_IMG = "STATUS_SHOW_BODY_AFTER_IMG";
-	private static final String STATUS_ERROR="STATUS_ERROR";
-
-	private ExchangeService service;
+	public enum Status{
+		LOADING,	// Started loading body. Network Call for loading body is in progress
+		SHOW_BODY,	// Network call made for body and got the body. Refreshe the body in UI
+		SHOW_IMG_LOADING_PROGRESSBAR,	// Inline images are present. Show the status bar for downloading images
+		DOWNLOADED_AN_IMAGE,	// Triggered each time an image got downloaded. Body gets refreshed so that the newly downloaded image will be displayed
+		LOADED,		// Everything loaded. Will call read email network call. after this
+		ERROR	// Error
+	}
+	
 	private EmailMessage message;
-
-	public Button getToShowMoreBtn() {
-		return toShowMoreBtn;
-	}
-
-	public void setToShowMoreBtn(Button toShowMoreBtn) {
-		this.toShowMoreBtn = toShowMoreBtn;
-	}
-
-	public Button getcCShowMoreBtn() {
-		return cCShowMoreBtn;
-	}
-
-	public void setcCShowMoreBtn(Button cCShowMoreBtn) {
-		this.cCShowMoreBtn = cCShowMoreBtn;
-	}
-
-	public String getTo() {
-		return to;
-	}
-
-	public void setTo(String to) {
-		this.to = to;
-	}
-
-	public String getCc() {
-		return cc;
-	}
-
-	public void setCc(String cc) {
-		this.cc = cc;
-	}
-
-	public String getBcc() {
-		return bcc;
-	}
-
-	public void setBcc(String bcc) {
-		this.bcc = bcc;
-	}
-
-	public boolean isToShowMoreFlag() {
-		return toShowMoreFlag;
-	}
-
-	public void setToShowMoreFlag(boolean toShowMoreFlag) {
-		this.toShowMoreFlag = toShowMoreFlag;
-	}
-
-	public boolean isCcShowMoreFlag() {
-		return ccShowMoreFlag;
-	}
-
-	public void setCcShowMoreFlag(boolean ccShowMoreFlag) {
-		this.ccShowMoreFlag = ccShowMoreFlag;
-	}
 
 	private MessageBody msgBody=null;
 	private String from="", to="",cc="",bcc="", subject="";
 	private Date date;
 
 	private boolean toShowMoreFlag=false;
+
 	private boolean ccShowMoreFlag=false;
 	private String[] toReceivers;
 	private String[] ccReceivers;
@@ -163,20 +94,15 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 	private boolean isToExist=false;
 	private boolean isCCExist=false;
 	private boolean isBCCExist=false;
+
 	private int mailType;
 	private MailFunctions mailFunctions = new MailFunctionsImpl();
 
-	private AttachmentCollection attachmentCollection;
-	private String path="";
-	private File file;
-	private FileAttachment fileAttachment;
-	private FileOutputStream fos;
-	private List<FileAttachment> successfulCachedImages;
 	private int totalInlineImages;
 
 	private String processedHtml="";
 	private int remainingInlineImages=0;
-	private String currentStatus="";
+	private Status currentStatus;
 	private ViewMailListener viewMailListener;
 
 
@@ -192,6 +118,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		
 		setRetainInstance(true);
 		
+		progressStatusDispBar = new ProgressDisplayNotificationBar(activity,view);
 		//listener for this frament and activity
 		viewMailListener = new ViewMailListener(this);
 		
@@ -214,8 +141,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		webSettings.setJavaScriptEnabled(true);	//this is important
 		webSettings.setSupportZoom(true);
 		webSettings.setBuiltInZoomControls(true);
-
-		progressStatusDispBar = new ProgressDisplayNotificationBar(activity);
 
 		activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -251,7 +176,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		}
 
 		if(BuildConfig.DEBUG){
-			Log.d(TAG, "ViewMailActivity -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
+			Log.d(TAG, "ViewMailFragment -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
 		}
 		try {
 			date = itemToOpen.getMail_datetimereceived();
@@ -259,11 +184,43 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//shows the from, to etc., which we got from the intent extra 
 		showDetails();
 
-		(new LoadEmail()).execute(itemToOpen.getItem_id());
-
+		loadEmail();
+		
 		return view;
+	}
+
+	/**
+	 * 
+	 */
+	private void loadEmail() {
+		// TODO Auto-generated method stub
+		LoadEmailHandler loadEmailHandler = new LoadEmailHandler(this);
+		if(currentStatus==null){
+		Thread t = new Thread(new LoadEmailRunnable(this, loadEmailHandler));
+		t.start();
+		}
+		//when config change (Screen rotation , the activity will be recreated and the UI have to be updated based on previous activity status
+		else if(currentStatus==Status.LOADING){
+			//it wont be null when there is a config change(Screen rotation)
+			webview.loadUrl(LOADING_HTML_URL);
+		}
+		else if(currentStatus==Status.SHOW_IMG_LOADING_PROGRESSBAR 
+				|| currentStatus==Status.DOWNLOADED_AN_IMAGE
+				){
+			progressStatusDispBar.showStatusBar();
+			loadEmailHandler.updateProgressBarLabel(remainingInlineImages,totalInlineImages);
+			showBody(processedHtml);
+		}
+		else if(currentStatus==Status.LOADED){
+			showBody(processedHtml);
+		}
+		else if (currentStatus==Status.ERROR){
+			standardWebView.loadData(webview, VIEW_MAIL_ERROR_HTML);
+		}
 	}
 
 	@Override
@@ -299,10 +256,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		Log.d(TAG, "quote in ViewMaik Activiyt " + processedHtml);
 		}
 		ComposeActivityAdapter.startForward(context, ComposeActivity.PREFILL_TYPE_FORWARD, message.getId(), toBundle, ccBundle, bccBundle, replySubject, replySubject, true, processedHtml);
-
-
 	}
-
 
 	@Override
 	public void replyMail(boolean replyAll) throws Exception{
@@ -322,8 +276,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 				sContact = new ContactSerializable("", receiver, true);
 				toBundle.putSerializable(sContact.getEmail(), sContact);
 			}
-
-
 		}*/
 
 		//Prefill To
@@ -346,15 +298,15 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 						receiver = receiver.trim();
 						if(!receiver.equals(MailApplication.getUserDisplayName(context))){
 							sContact = new ContactSerializable(receiver, receiver, true);
-							Log.d(TAG, "ViewMailActivity -> Adding to as reciever" + sContact.getEmail());
+							Log.d(TAG, "ViewMailFragment -> Adding to as reciever" + sContact.getEmail());
 							ccBundle.putSerializable(sContact.getEmail(), sContact);
 						}
 						else{
-							Log.d(TAG, "ViewMailActivity -> Skipped adding the logged in user from To to CC in new mail");
+							Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user from To to CC in new mail");
 						}
 					}
 					else{
-						Log.e(TAG, "ViewMailActivity -> Receiver "+ receiver + " is null");
+						Log.e(TAG, "ViewMailFragment -> Receiver "+ receiver + " is null");
 					}
 				}
 			}
@@ -365,15 +317,15 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 						receiver = receiver.trim();
 						if(!receiver.equals(MailApplication.getUserDisplayName(context))){
 							sContact = new ContactSerializable(receiver, receiver, true);
-							Log.d(TAG, "ViewMailActivity -> Adding cc as cc reciever" + sContact.getEmail());
+							Log.d(TAG, "ViewMailFragment -> Adding cc as cc reciever" + sContact.getEmail());
 							ccBundle.putSerializable(sContact.getEmail(), sContact);
 						}else{
-							Log.d(TAG, "ViewMailActivity -> Skipped adding the logged in user from CC to CC in new mail");
+							Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user from CC to CC in new mail");
 						}
 
 					}
 					else{
-						Log.e(TAG, "ViewMailActivity -> Receiver "+ receiver + " is null");
+						Log.e(TAG, "ViewMailFragment -> Receiver "+ receiver + " is null");
 					}
 				}
 			}
@@ -388,7 +340,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 							sContact = new ContactSerializable(receiver, receiver, true);
 							bccBundle.putSerializable(sContact.getEmail(), sContact);
 						}else{
-							Log.d(TAG, "ViewMailActivity -> Skipped adding the logged in user in BCC");
+							Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user in BCC");
 						}
 					}
 					else{
@@ -460,6 +412,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		}
 
 	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -476,13 +429,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 			e.printStackTrace();
 		}*/
 	}
-	public String getCacheImageDirectory(EmailMessage message) throws ServiceLocalException, Exception{
-		return CacheDirectories.getApplicationCacheDirectory(activity)+"/" + CACHE_DIRECTORY_MAILCACHE + "/" + mailFunctions.getItemId(message);
-		//return MailApplication.getApplicationCacheDirectory(activity).toString() ;
-	}
-	public String getCacheImagePath(String directoryLoc, Attachment attachment){
-		return directoryLoc+ "/"+attachment.getName();
-	}
+	
 	public void displayEverything(){
 
 		try{
@@ -577,9 +524,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		activity.getSupportActionBar().setTitle(viewMailWebviewNoSubject);
 	}
 
-	private void showBody(String html1){
+	public void showBody(String html1){
 
 		if(null!=html1 && !(html1.equals(""))){
+			if(BuildConfig.DEBUG)
 			Log.d(TAG, "Loading html ");
 
 			//webview.loadData(dispBody, CommonWebChromeClient.MIME_TYPE_HTML,CommonWebChromeClient.ENCODING);
@@ -595,273 +543,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 	public void showFewCCReceivers(){
 		cCIdView.setText(ccReceivers[0] + "; " +ccReceivers[1] + ";...");
 	}
-	private class LoadEmail extends AsyncTask<String, String, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			//show loading progress
-			webview.loadUrl(LOADING_HTML_URL);
-			publishProgress(STATUS_LOADING, "Loading");
-
-		}
-		@Override
-		protected void onProgressUpdate(String... progress) {
-			// TODO Auto-generated method stub
-
-			if(progress[0].equals(STATUS_LOADING)){
-				currentStatus = STATUS_LOADING;
-			}
-			else if(progress[0].equals(STATUS_SHOW_TITLE_BODY_B4_IMG)){
-				currentStatus = STATUS_SHOW_TITLE_BODY_B4_IMG;
-				displayEverything();
-
-			}
-
-			else if(progress[0].equals(STATUS_SHOW_BODY_DOWNLOADING_IMG)){
-				currentStatus = STATUS_SHOW_BODY_DOWNLOADING_IMG;
-				showImgDownloadingNotification(remainingInlineImages, false);
-
-			}
-			else if(progress[0].equals(STATUS_DOWNLOADED_AN_IMAGE)){
-				//triggered when 1 image got downloaded
-				currentStatus = STATUS_DOWNLOADED_AN_IMAGE;
-				showBody(progress[1]);
-				showImgDownloadingNotification(remainingInlineImages, true);
-
-
-			}
-			else if(progress[0].equals(STATUS_SHOW_BODY_AFTER_IMG)){
-				currentStatus = STATUS_SHOW_BODY_AFTER_IMG;
-				//Triggered when all the images has been downloaded
-				//		showBody(progress[1]);
-				//	hideImgDownloadingNotification();
-
-			}
-			else if(progress[0].equals(STATUS_ERROR)){
-				currentStatus = STATUS_ERROR;
-				standardWebView.loadData(webview, VIEW_MAIL_ERROR_HTML);
-			}
-		}
-		private void hideImgDownloadingNotification() {
-			// TODO Auto-generated method stub
-
-			progressStatusDispBar.hideStatusBar();
-		}
-		private void showImgDownloadingNotification(int no, boolean onlyRefreshText) {
-			// TODO Auto-generated method stub
-
-
-			if(no>0){
-				if(!onlyRefreshText){
-
-					progressStatusDispBar.showStatusBar();
-				}
-				if(no == 1){
-					progressStatusDispBar.setText(getString(R.string.viewmail_downloading_img,((totalInlineImages+1) - no),totalInlineImages));
-				}
-				else{
-					progressStatusDispBar.setText(getString(R.string.viewmail_downloading_imgs,((totalInlineImages+1) - no),totalInlineImages));
-				}
-				//	Notifications.showToast(activity, getString(R.string.viewmail_downloading_img,no), Toast.LENGTH_SHORT);
-			}
-			else{
-				hideImgDownloadingNotification();
-			}
-		}
-		@Override
-		protected Void doInBackground(String... itemId) {
-
-
-			List<FileAttachment> successfulCachedImages;
-			try {
-				service = EWSConnection.getServiceFromStoredCredentials(context);
-
-				//EWS call for loading the message
-				message = EmailMessage.bind(service, new ItemId(itemId[0]));
-
-				//performance improvement.. mark the item as read in cache.
-				message.setIsRead(true);
-				//CODE HAS TO BE WRITTEN HERE
-				//	CacheInboxAdapter.writeCacheInboxData(activity, message, true);
-
-
-				//EWScall for markin item as read
-				NetworkCall.markEmailAsRead(activity, message);
-
-				msgBody = mailFunctions.getBody(message);
-				processedHtml = MessageBody.getStringFromMessageBody(msgBody);
-				from=mailFunctions.getFrom(message);
-				to=mailFunctions.getTo(message);
-				cc= mailFunctions.getCC(message);
-				subject=mailFunctions.getSubject(message);
-				date = mailFunctions.getDateTimeReceived(message);
-
-				publishProgress(STATUS_SHOW_TITLE_BODY_B4_IMG, "Body with no image");
-
-				attachmentCollection =message.getAttachments();
-
-				totalInlineImages= getNoOfInlineImgs(attachmentCollection);
-				remainingInlineImages= totalInlineImages;
-				if(remainingInlineImages > 0){
-					publishProgress(STATUS_SHOW_BODY_DOWNLOADING_IMG, "downloading");
-					processedHtml = processBodyHTMLWithImages();	//replace all the inline image "cid" tags with "file://" tags
-					successfulCachedImages=cacheInlineImages(attachmentCollection);		//caching images is done here. html body will be refreshed after each img download
-
-
-					if(null!=successfulCachedImages && successfulCachedImages.size()>0){
-						publishProgress(STATUS_SHOW_BODY_AFTER_IMG, processedHtml);
-					}
-					else{
-						Log.i(TAG, "No images were cached in this mail to display ");
-					}
-				}
-				else{
-					Log.d(TAG, "No inline images in this email. Inline images counter: " +remainingInlineImages);
-				}
-
-			} catch(NoUserSignedInException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				publishProgress(STATUS_ERROR, e.getMessage());
-			} catch(Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				publishProgress(STATUS_ERROR, e.getMessage());
-			}
-			return null;
-
-
-		}
-		private String processBodyHTMLWithImages() throws Exception {
-			// TODO Auto-generated method stub
-
-
-
-			String bodyWithImage=MessageBody.getStringFromMessageBody(msgBody);
-			String cid="", directoryPath="", imagePath="", imageHtmlUrl="";
-			for(Attachment attachment:  attachmentCollection){
-
-				try {
-					if(null != attachment && attachment.getIsInline() && attachment.getContentType()!=null && attachment.getContentType().contains("image")){
-						Log.d(TAG, "ViewMailActivity -> processBodyHTMLWithImages() -> Processing attachment " + attachment.getName());
-						cid="cid:"+ attachment.getContentId();
-						Log.d(TAG, "ViewMailActivity ->cid "+cid);
-						directoryPath= getCacheImageDirectory(message);
-						imagePath=getCacheImagePath(directoryPath, attachment);
-
-						imageHtmlUrl=Utilities.getHTMLImageUrl(attachment.getContentType(), imagePath);
-						Log.d(TAG, "Replacing " + cid + " in body with " + imageHtmlUrl);
-						bodyWithImage=bodyWithImage.replaceAll(cid, imageHtmlUrl);
-						//Log.d(TAG, "ViewMailActivity -> Body with image "+bodyWithImage);
-
-
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-
-			return bodyWithImage;
-
-		}
-
-		private int getNoOfInlineImgs(AttachmentCollection attachmentCollection){
-			int no=0;
-			try {
-				for(Attachment attachment:  attachmentCollection){
-					if(attachment.getIsInline() && attachment.getContentType()!=null && attachment.getContentType().contains("image") && !(attachment.getContentType().equalsIgnoreCase("message/rfc822"))){
-						no++;
-					}
-				}
-			} catch (ServiceVersionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return no;
-		}
-		private List<FileAttachment> cacheInlineImages(AttachmentCollection attachmentCollection){
-			successfulCachedImages = new ArrayList<FileAttachment>();
-			for(Attachment attachment:  attachmentCollection){
-
-				if(attachment!=null && attachment.getContentType()!= null ){
-
-					Log.d(TAG, "ViewMailActivity -> cacheInlineImages() -> Processing attachment: " + attachment.getName() + " Attachment type " + attachment.getContentType());
-					if(!(attachment.getContentType().equalsIgnoreCase("message/rfc822")) ){
-						fileAttachment=(FileAttachment)attachment;
-						/*
-				System.out.println("Is Inline " + fa.getIsInline());
-				System.out.println("Name " + fa.getName());
-				System.out.println("Size " + fa.getSize());
-				System.out.println("Content id " + fa.getContentId());
-				System.out.println("Id " + fa.getId());
-				System.out.println("Content location " + fa.getContentLocation());
-				System.out.println("content type " + fa.getContentType());
-				System.out.println("\n");
-						 */
-
-
-
-						try {
-							if(fileAttachment.getIsInline() && fileAttachment.getContentType()!=null && fileAttachment.getContentType().contains("image")){
-
-								file = new File(getCacheImageDirectory(message));
-
-								file.mkdirs();
-								path=getCacheImagePath(file.getPath(), attachment);
-
-
-								Log.d(TAG, "Caching image file " +fileAttachment.getName() );
-								if(!((new File(path)).exists())){
-									//EWS call
-									fos = new FileOutputStream(path);
-									try{
-										NetworkCall.downloadAttachment(fileAttachment, fos);
-									}
-									catch(Exception e){
-										Log.e(TAG, "ViewMailActivity -> Exception while downloading atttachment");
-										e.printStackTrace();
-									}
-								}
-								remainingInlineImages--;
-								successfulCachedImages.add(fileAttachment);
-								publishProgress(STATUS_DOWNLOADED_AN_IMAGE, processedHtml);
-							}
-							else{
-								Log.d(TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: " + fileAttachment.getFileName() + " as it is not an inline image" );
-							}
-						} catch (ServiceVersionException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (ServiceLocalException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
-					else{
-						Log.d(TAG, "ViewMailActivity -> Skipping message attachment of the content type message/rfc822");
-
-					}
-				}
-				else{
-					Log.e(TAG, "ViewMailActivity -> The attachment or its content type is null. Not processing this attachment!");
-				}
-			}
-			return successfulCachedImages;
-		}
-
-
-	}
-
-
 
 	/** Confirmation dialog shown for deleting items from Deleted Items folder
 	 * @param activity
@@ -896,7 +577,153 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		toIdView.setText(toReceivers[0] + "; " +toReceivers[1] + ";...");
 	}
 	
+
+	/*** GETTER SETTER ***/
 	
+	public String getProcessedHtml() {
+		return processedHtml;
+	}
+
+	public void setProcessedHtml(String processedHtml) {
+		this.processedHtml = processedHtml;
+	}
+
+	public int getRemainingInlineImages() {
+		return remainingInlineImages;
+	}
+
+	public void setRemainingInlineImages(int remainingInlineImages) {
+		this.remainingInlineImages = remainingInlineImages;
+	}
+
+	public Status getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(Status currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+	
+	@Override
+	public EmailMessage getMessage() {
+		return message;
+	}
+
+	public void setMessage(EmailMessage message) {
+		this.message = message;
+	}
+	
+	@Override
+	public int getMailType() {
+		return mailType;
+	}
+
+	public void setMailType(int mailType) {
+		this.mailType = mailType;
+	}
+	
+	public MessageBody getMsgBody() {
+		return msgBody;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public void setMsgBody(MessageBody msgBody) {
+		this.msgBody = msgBody;
+	}
+	public Button getToShowMoreBtn() {
+		return toShowMoreBtn;
+	}
+
+	public void setToShowMoreBtn(Button toShowMoreBtn) {
+		this.toShowMoreBtn = toShowMoreBtn;
+	}
+
+	public Button getcCShowMoreBtn() {
+		return cCShowMoreBtn;
+	}
+
+	public void setcCShowMoreBtn(Button cCShowMoreBtn) {
+		this.cCShowMoreBtn = cCShowMoreBtn;
+	}
+
+	public String getTo() {
+		return to;
+	}
+
+	public void setTo(String to) {
+		this.to = to;
+	}
+
+	public String getCc() {
+		return cc;
+	}
+
+	public void setCc(String cc) {
+		this.cc = cc;
+	}
+
+	public String getBcc() {
+		return bcc;
+	}
+
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
+	}
+
+	public boolean isToShowMoreFlag() {
+		return toShowMoreFlag;
+	}
+
+	public void setToShowMoreFlag(boolean toShowMoreFlag) {
+		this.toShowMoreFlag = toShowMoreFlag;
+	}
+
+	public boolean isCcShowMoreFlag() {
+		return ccShowMoreFlag;
+	}
+
+	public void setCcShowMoreFlag(boolean ccShowMoreFlag) {
+		this.ccShowMoreFlag = ccShowMoreFlag;
+	}
+	public CachedMailHeaderVO getItemToOpen() {
+		return itemToOpen;
+	}
+
+	public void setItemToOpen(CachedMailHeaderVO itemToOpen) {
+		this.itemToOpen = itemToOpen;
+	}
+
+	public MailFunctions getMailFunctions() {
+		return mailFunctions;
+	}
+
+	public void setMailFunctions(MailFunctions mailFunctions) {
+		this.mailFunctions = mailFunctions;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 	
 	public TextView getFromIdView() {
 		return fromIdView;
@@ -930,48 +757,34 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		this.dateIdView = dateIdView;
 	}
 
-	/*** GETTER SETTER ***/
-	
-	public String getProcessedHtml() {
-		return processedHtml;
+	public ProgressDisplayNotificationBar getProgressStatusDispBar() {
+		return progressStatusDispBar;
 	}
 
-	public void setProcessedHtml(String processedHtml) {
-		this.processedHtml = processedHtml;
+	public void setProgressStatusDispBar(
+			ProgressDisplayNotificationBar progressStatusDispBar) {
+		this.progressStatusDispBar = progressStatusDispBar;
+	}
+	public StandardWebView getStandardWebView() {
+		return standardWebView;
 	}
 
-	public int getRemainingInlineImages() {
-		return remainingInlineImages;
+	public void setStandardWebView(StandardWebView standardWebView) {
+		this.standardWebView = standardWebView;
 	}
 
-	public void setRemainingInlineImages(int remainingInlineImages) {
-		this.remainingInlineImages = remainingInlineImages;
+	public WebView getWebview() {
+		return webview;
 	}
 
-	public String getCurrentStatus() {
-		return currentStatus;
+	public void setWebview(WebView webview) {
+		this.webview = webview;
+	}
+	public int getTotalInlineImages() {
+		return totalInlineImages;
 	}
 
-	public void setCurrentStatus(String currentStatus) {
-		this.currentStatus = currentStatus;
+	public void setTotalInlineImages(int totalInlineImages) {
+		this.totalInlineImages = totalInlineImages;
 	}
-	
-	@Override
-	public EmailMessage getMessage() {
-		return message;
-	}
-
-	public void setMessage(EmailMessage message) {
-		this.message = message;
-	}
-	
-	@Override
-	public int getMailType() {
-		return mailType;
-	}
-
-	public void setMailType(int mailType) {
-		this.mailType = mailType;
-	}
-
 }

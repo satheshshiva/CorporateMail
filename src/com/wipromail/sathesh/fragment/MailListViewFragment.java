@@ -68,8 +68,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	private int totalCachedRecords=0;
 
 	private SwipeRefreshLayout swipeRefreshLayout ;
-	private State newMailsThreadState;
-	private State moreMailsThreadState;
+	private Status newMailsThreadState;
+	private Status moreMailsThreadState;
 	
 	private long totalMailsInFolder=-1;
 
@@ -79,7 +79,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 * @author sathesh
 	 *
 	 */
-	public enum State{
+	public enum Status{
 		UPDATING,
 		UPDATED,
 		WAITING,	//not the actual Thread.wait(). One thread2 will just exit and the other thread (thread1) will invoke it again once its done.
@@ -175,11 +175,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				
 				//Action
 				//if the activity is recreated, and if the thread is already updating then update the UI status
-				if(newMailsThreadState==State.UPDATING) {
+				if(newMailsThreadState==Status.UPDATING) {
 					updatingStatusUIChanges();
 				}
 				
-				if(moreMailsThreadState==State.WAITING || moreMailsThreadState==State.UPDATING){
+				if(moreMailsThreadState==Status.WAITING || moreMailsThreadState==Status.UPDATING){
 					showMoreLoadingAnimation();
 					
 				}
@@ -239,7 +239,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	@Override
 	public void refreshList(){
 
-		if(newMailsThreadState!=State.UPDATING){
+		if(newMailsThreadState!=Status.UPDATING){
 			//network call for getting the new mails
 			Handler getNewMailsHandler = new GetNewMailsHandler(this);
 			Thread t = new Thread(new GetNewMailsRunnable(this, getNewMailsHandler));
@@ -269,7 +269,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 * 
 	 */
 	public void getMoreMails(){
-		if(moreMailsThreadState!=State.UPDATING){
+		if(moreMailsThreadState!=Status.UPDATING){
 			showMoreLoadingAnimation();
 			
 			//network call for getting the new mails
@@ -384,11 +384,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	/*** GETTER SETTER PART ***/
 
-	public State getNewMailsThreadState() {
+	public Status getNewMailsThreadState() {
 		return newMailsThreadState;
 	}
 
-	public void setNewMailsThreadState(State currentStatus) {
+	public void setNewMailsThreadState(Status currentStatus) {
 		this.newMailsThreadState = currentStatus;
 	}
 	public String getMailFolderId() {
@@ -464,11 +464,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		this.mailType = mailType;
 	}
 
-	public State getMoreMailsThreadState() {
+	public Status getMoreMailsThreadState() {
 		return moreMailsThreadState;
 	}
 
-	public void setMoreMailsThreadState(State moreMailThreadState) {
+	public void setMoreMailsThreadState(Status moreMailThreadState) {
 		this.moreMailsThreadState = moreMailThreadState;
 	}
 
