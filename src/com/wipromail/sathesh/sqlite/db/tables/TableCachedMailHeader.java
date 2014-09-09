@@ -100,6 +100,14 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 		return "SELECT COUNT(*) FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? AND " + COLUMN_ISREAD + "=0";
 	}
 	
+	/** UPDATE 
+	 * Mark MAIL AS READ
+	 * @return
+	 */
+	public static String getMarkMailAsReadQuery(){
+		return "UPDATE " + tableName + " SET " + COLUMN_ISREAD + "='1' WHERE " + COLUMN_ITEM_ID + "=? "   ;
+	}
+	
 	/** DELETE 
 	 * WHERE CLAUSE - MAIL TYPE
 	 * @return

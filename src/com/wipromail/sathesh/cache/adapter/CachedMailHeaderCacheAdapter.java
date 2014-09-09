@@ -165,11 +165,26 @@ public class CachedMailHeaderCacheAdapter {
 		for(Item item : items){
 			vos.add(covertItemToVO(mailType, mailFolderName, strFolderId, item));
 		}
-		CachedMailHeaderDAO dao = new CachedMailHeaderDAO(context);
 		//call the DAO for with the list of VOs to save
 		dao.createOrUpdate(vos);
 	}
 
+	/** mark mail as read
+	 * @param context
+	 * @param strFolderId 
+	 * @param mailFolderName 
+	 * @param MailType 
+	 * @param items 
+	 * @throws ServiceLocalException
+	 * @throws Exception
+	 */
+	public synchronized void markMailAsRead(Context context, String itemId ) throws ServiceLocalException, Exception {
+		// TODO Auto-generated method stub
+
+		//call the DAO for with the list of VOs to save
+		dao.markMailAsRead(itemId);
+	}
+	
 	/** private function for converting Item to VO
 	 * @param mailFolderName 
 	 * @param MailType 

@@ -260,6 +260,21 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		}
 	}
 	
+	/** Marks mail as read
+	 * Where Clause - Item Id
+	 * @throws Exception
+	 */
+	public void markMailAsRead(String itemId) throws Exception {
+
+		try{
+			open();
+			database.execSQL(TableCachedMailHeader.getMarkMailAsReadQuery(),
+					new String[]{itemId});
+		}finally{
+			close();
+		}
+	}
+	
 	/** private function which calls the insert query for a single VO
 	 * 
 	 */
