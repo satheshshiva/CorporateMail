@@ -192,6 +192,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		
 		return view;
 	}
+	
+	@Override
+	public void onDetach()  {
+		super.onDetach();
+		System.out.println("LIFE>ON DETACH CALLED");
+	}
 
 	/**
 	 * 
@@ -794,5 +800,13 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
 	public void setCachedMailHeader(CachedMailHeaderVO cachedMailHeader) {
 		this.cachedMailHeader = cachedMailHeader;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
 	}
 }

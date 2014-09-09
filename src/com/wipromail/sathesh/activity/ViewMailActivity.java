@@ -97,6 +97,13 @@ public class ViewMailActivity extends SherlockFragmentActivity implements Consta
 
 		return true;
 	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		System.out.println("LIFE>ON DESTROY");
+	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
