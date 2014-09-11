@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="com/sathesh/exchangservertest/threads/Send.java|com/wipromail/sathesh/activity/MailListViewActivity_bck_b4_pullToRefresh.java|com/wipromail/sathesh/activity/MailListViewActivity_auto_update_bck.java|com/wipromail/sathesh/fragment/MailListViewFragment_bck_b4_pullToRefresh.java|com/wipromail/sathesh/fragment/MailListViewFragment_bck_pull.java|com/wipromail/sathesh/alarm/AppListener1.java|com/wipromail/sathesh/activity/CopyOfMailListViewActivity.java|com/wipromail/sathesh/fragment/MailListViewFragment_b4_sherlock.java|com/wipromail/sathesh/activity/ComposeActivity_b4_ToSeperateIntent.java|com/wipromail/sathesh/application/InboxUpdaterStatus.java|com/wipromail/sathesh/fragment/AnyMailListViewFragment.java|com/wipromail/sathesh/threads/InboxAutoUpdater_autosync_bck.java|com/wipromail/sathesh/threads/InboxAutoUpdater.java" kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="output" path="bin/classes"/>
-</classpath>
