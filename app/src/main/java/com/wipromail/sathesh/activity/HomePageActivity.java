@@ -92,7 +92,7 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 	private class JavaScriptInterface{
 		JavaScriptInterface() {
 		}
-        //ignore comment
+
 		private Intent intent = new Intent(activity, MailListViewActivity.class), intent1;
 
         @JavascriptInterface
