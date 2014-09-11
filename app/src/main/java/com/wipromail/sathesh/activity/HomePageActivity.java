@@ -94,7 +94,7 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 		}
 
 		private Intent intent = new Intent(activity, MailListViewActivity.class), intent1;
-
+    //ignore comment
         @JavascriptInterface
 		public void openInbox() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX);
