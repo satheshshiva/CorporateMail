@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -90,23 +91,22 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 		}
 
 		private Intent intent = new Intent(activity, MailListViewActivity.class);
-		/**
-		 * This is not called on the UI thread. Post a runnable to invoke
-		 * loadUrl on the UI thread.
-		 */
 
+        @JavascriptInterface
 		public void openOutbox() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.OUTBOX);
 			intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.Outbox.toString());
 			startActivity(intent);
 		}
 
+        @JavascriptInterface
 		public void openJunkEmail() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.JUNK_EMAIL);
 			intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.JunkEmail.toString());
 			startActivity(intent);
 		}
 
+        @JavascriptInterface
 		public void openConversationHistory() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.CONVERSATION_HISTORY);
 			intent.putExtra(MailListViewActivity.FOLDER_ID_EXTRA, conversationHistoryId);
@@ -114,6 +114,7 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 			startActivity(intent);
 		}
 
+        @JavascriptInterface
 		public void openInboxSubFolder(final String folderId , final String folderName) {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX_SUBFOLDER_WITH_ID);
 			intent.putExtra(MailListViewActivity.FOLDER_ID_EXTRA, folderId);
@@ -121,6 +122,7 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 			startActivity(intent);
 		}
 
+        @JavascriptInterface
 		public void openFolderId(final String folderId , final String folderName) {
 			mHandler.post(new Runnable() {
 				public void run() {
@@ -132,9 +134,7 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 					startActivity(intent);
 				}
 			});
-
 		}
-
 	}
 
 

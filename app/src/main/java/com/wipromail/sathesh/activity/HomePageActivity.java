@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -93,48 +94,50 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 		}
 
 		private Intent intent = new Intent(activity, MailListViewActivity.class), intent1;
-		/**
-		 * This is not called on the UI thread. Post a runnable to invoke
-		 * loadUrl on the UI thread.
-		 */
+
+        @JavascriptInterface
 		public void openInbox() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX);
 			intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.Inbox.toString());
 			startActivity(intent);
 		}
+
+        @JavascriptInterface
 		public void openDrafts() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.DRAFTS);
 			intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.Drafts.toString());
 			startActivity(intent);
 		}
+
+        @JavascriptInterface
 		public void openSentItems() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.SENT_ITEMS);
 			intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.SentItems.toString());
 			startActivity(intent);
 		}
-		public void openDeletedItems() {
 
+        @JavascriptInterface
+		public void openDeletedItems() {
 			intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA,  MailType.DELETED_ITEMS);
 			intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.DeletedItems.toString());
 			startActivity(intent);
-
 		}
+
+        @JavascriptInterface
 		public void openAllFolders() {
 			intent1=new Intent(activity, OtherFoldersPageActivity.class);
 			startActivity(intent1);
 		}
 
+        @JavascriptInterface
 		public void openSearchContacts(){
-
 			intent1=new Intent(activity, SearchContactsActivity.class);
 			startActivity(intent1);
-
 		}
 
+        @JavascriptInterface
 		public void openSignOutAlertBox(){
-
 			SignOutAlertDialog.showAlertdialog(activity, context);
-
 		}
 	}
 
