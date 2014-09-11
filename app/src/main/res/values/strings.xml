@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application -->
+    <string name="app_name">Wipro Mail</string>
+    <string name="app_version">0.2.7 alpha</string>
+
+    <!-- Login Page -->
+    <string name="login_logo_bigText">Wipro Mail</string>
+    <string name="login_logo_bigText_beta">alpha</string>
+    <string name="webmail1_url">https://webmail.wipro.com</string>
+    <string name="webmail2_url">https://webmail2.wipro.com</string>
+    <string name="webmail_url_EWS_extension">/EWS/Exchange.asmx</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Wipro Mail</string>
+    <string name="title_activity_login_page">Login</string>
+    <string name="login_user_text">Wipro AD ID</string>
+    <string name="login_pwd_text">Password</string>
+    <string name="loginact_loginbtn_text">Login</string>
+    <string name="login_username_hint">wipro\\</string>
+    <string name="alertdialog_save_lbl">Save</string>
+    <string name="alertdialog_positive_lbl">OK</string>
+    <string name="alertdialog_negative_lbl">Cancel</string>
+    <string name="settings_sign_in_text">Signed In As :</string>
+    <string name="settings_sign_in_default"></string>
+    <string name="setting_sign_out_btn">Sign Out/Reset</string>
+    <string name="setting_sign_in_btn">Sign In</string>
+    <string name="main_activity_loading_text">Loading..</string>
+
+    <!-- Mail List View -->
+    <string name="mailListView_today">Today</string>
+    <string name="mailListView_yesterday">Yesterday</string>
+    <string name="mailListView_same_month">This Month</string>
+    <string name="mailListView_1_year">Last Year</string>
+    <string name="mailListView_x_years">%s Years</string>
+    <string name="new_mail_1">1 New Mail</string>
+    <string name="new_mail_x">%s New Mails</string>
+    <string name="unread_item_1">1 Unread Item</string>
+    <string name="unread_item_x">%s Unread Items</string>
+    <string name="no_new_mail">No New Mail</string>
+    <string name="folder_updater_checking">Checking for new mails</string>
+    <string name="folder_updater_success">Done</string>
+    <string name="folder_updater_error">Update failed</string>
+    <string name="folder_auth_error">Authentication failed</string>
+    <string name="folder_checking_almostDone">Almost Done</string>
+    <string name="folder_updater_updating">Updating %s</string>
+    <string name="pullToRefresh_checking_big">Loading..</string>
+    <string name="pullToRefresh_checking_small">Checking for mails</string>
+    <string name="mailListView_moreloading">Getting few more...</string>
+    <string name="mailListView_moreloading_next_x">Loading %s more...</string>
+    <string name="mailListView_moreloading_remaining">%s remaining</string>
+
+    <!-- Mail Notification Service -->
+    <string name="mnsServiceNewMailNotification">You have %d new email</string>
+    <string name="mnsServiceNotificationWithNoSubject">(no subject)</string>
+    <string name="mnsServiceNotificationWithNullMessage">New Email</string>
+    <string name="mns_service_started">Starting Wipro Mail Notification Service..</string>
+    <string name="mns_service_stopped">Wipro Mail Notification Service Stopped</string>
+    <string name="mns_service_invalidUser_title">Error: Invalid UserName/Password</string>
+    <string name="mns_service_invalidUser_message">Have you recently changed your Wipro AD Username/Password? Please login to the application with your new Username/Password.</string>
+
+    <!-- About -->
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_please_like_my_fb_beg_you">Like our Facebook page for latest app updates.</string>
+    <string name="title_activity_Apk_download_Url">Latest Apk can be downloaded from, \n http://tiny.cc/wipromail</string>
+    <string name="title_activity_url">Like our Facebook page for latest app updates. \nApk Manual Download URL \n http://tiny.cc/wipromail</string>
+    <string name="about_activity_update_btn">Check for Updates</string>
+    <string name="about_activity_bugOrSuggestion_btn">Bugs/Suggestion</string>
+    <string name="about_activity_rate_app_btn">Rate this app</string>
+    <string name="about_activity_close_btn">Close</string>
+    <string name="playstore_not_available">Google PlayStore or similar app is not available</string>
+
+    <!-- App Updater -->
+    <string name="app_updater_error">Cannot check for app updates at this time</string>
+    <string name="app_updater_complete">Updated Successfully</string>
+    <string name="app_updater_noupdates">You have the latest version</string>
+    <string name="app_updater_installing">Installing..</string>
+    <string name="app_updater_checking">Checking for Updates..</string>
+    <string name="auto_update_check_dismiss_dialog">You can later check for updates using the \"Check For Updates\" button in the Home Page</string>
+    <string name="auto_update_check_new_update_title">Update Available</string>
+    <string name="auto_update_check_new_update_msg">New version update is available</string>
+    <string name="auto_update_check_new_update_pos_button">Continue</string>
+    <string name="auto_update_check_new_update_neg_button">Dismiss</string>
+    <string name="no_internet_connection_error_text">Connection problem</string>
+    <string name="contetn_desc_logo">Wipro Logo</string>
+
+    <!-- View Mail -->
+    <string name="viewmail_from_lbl">From:</string>
+    <string name="viewmail_to_lbl">To:</string>
+    <string name="viewmail_cc_lbl">CC:</string>
+    <string name="viewmail_date_lbl">Date:</string>
+    <string name="viewmail_showmore_lbl">Show more</string>
+    <string name="viewmail_showless_lbl">Show less</string>
+    <string name="viewmail_showmore_cc_lbl">Show more</string>
+    <string name="viewmail_showless_cc_lbl">Show less</string>
+    <string name="viewmail_downloading_imgs">Downloading %1$d of %2$d image(s)</string>
+    <string name="viewmail_downloading_img">Downloading %1$d of %2$d image(s)</string>
+    <string name="viewmail_mail_deleted">Message Deleted</string>
+
+    <!-- Contact Details -->
+    <string name="contact_details_deptLbl">Department</string>
+    <string name="contact_details_emailLbl">Email</string>
+    <string name="contact_details_workPhoneLbl">Work Phone</string>
+    <string name="contact_details_mobilePhoneLbl">Mobile Phone</string>
+    <string name="contact_details_faxLbl">Fax</string>
+    <string name="contact_details_officeLocLbl">Office Location</string>
+
+    <!-- Compose -->
+    <string name="compose_subject_lbl">Subject</string>
+    <string name="compose_to_disp_default">To: </string>
+    <string name="compose_cc_disp_default">CC: </string>
+    <string name="compose_bcc_disp_default">BCC: </string>
+    <string name="compose_to_lbl">To</string>
+    <string name="compose_to_addRecipientBtn">Add Recipient</string>
+    <string name="compose_to_no_recep">Please add atleast one recipient</string>
+    <string name="compose_resolving_names_wait">Please wait while resolving names</string>
+    <string name="compose_to_box_not_empty">Please click the Add symbol to add the To recipient</string>
+    <string name="compose_body_lbl">Message</string>
+    <string name="compose_signature_lbl">Signature</string>
+    <string name="compose_quoted_text_lbl">Quoted Text:</string>
+    <string name="compose_send_btn_lbl">Send</string>
+    <string name="compose_sending">Sending.. </string>
+    <string name="compose_msg_sent">Message Sent</string>
+    <string name="compose_msg_send_failed">Message Sending Failed</string>
+    <string name="compose_signature_default"><![CDATA[<p>---<br>Sent from my Android</p>]]></string>
+    <string name="compose_resoleNameDialog_to_title">To:</string>
+    <string name="compose_resoleNameDialog_progress">Please wait..</string>
+    <string name="compose_resoleNameDialog_error">Unknown Error Occurred</string>
+    <string name="compose_resoleNameDialog_nomatch">No match found</string>
+    <string name="compose_actionbar_send">Send</string>
+    <string name="compose_actionbar_cancel">Cancel</string>
+    <string name="compose_emptyString">(empty)</string>
+    <string name="compose_reply_subject_prefix">RE:</string>
+    <string name="compose_forward_subject_prefix">FW:</string>
+    <string name="compose_resolve_names_not_found">%s email id not found</string>
+    <string name="compose_alert_confirm_send">Confirm send?</string>
+    <string name="compose_alert_confirm_nobody_send">No message body. Send anyway?</string>
+    <string name="compose_alert_confirm_nosub_send">No subject. Send anyway?</string>
+    <string name="compose_alert_confirm_nobody_nosub_send">No subject and message body. Send anyway?</string>
+    <string name="compose_alert_confirm_title">Send</string>
+    <string name="compose_alert_confirm_cancel_title">Cancel</string>
+    <string name="compose_alert_confirm_cancel_msg">Cancel message? Message will not be saved.</string>
+
+    <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
+
+    <string name="compose_resolving_names_text">Resolving email id(s) %1$d of %2$d</string>
+    <string name="compose_resolve_notfound_warning">The email id for the following contact(s) are not resolved. Please enter the email id manually.\n%s</string>
+
+    <!-- Add Recipient -->
+    <string name="addrecipient_searchdirectory_btn_lbl">Search Directory</string>
+    <string name="addrecipient_addTo_btn_lbl">To</string>
+    <string name="addrecipient_addCC_btn_lbl">CC</string>
+    <string name="addrecipient_addBCC_btn_lbl">BCC</string>
+    <string name="addrecipient_contactSearch_hint">Enter Email Id or Search</string>
+    <string name="addrecipient_contactSearch_helptext">Please enter email id or search person and click To, CC or BCC button</string>
+    <string name="addrecipient_error">Unknown Error Occurred</string>
+    <string name="addrecipient_nomatch">No match found</string>
+    <string name="addrecipient_select_person">Please enter valid email id or select person</string>
+
+    <!-- Contacts -->
+    <string name="searchContact_textbox_hint">Contacts Search</string>
+    <string name="searchContact_searchdirectory_btn_lbl">Search Directory</string>
+    <string name="searchContact_error">Unknown Error Occurred</string>
+
+    <!-- Preferences -->
+    <string name="preferences_cache_title">Cache</string>
+    <string name="preferences_cache_summary">Stores local copy of emails for faster performance</string>
+    <string name="preference_serverurl_title">Exchange Server</string>
+    <string name="preference_general_title">General</string>
+    <string name="prefernce_serverurl_message">Connects to %s</string>
+    <string name="preference_title_notification">Notification</string>
+    <string name="preference_notification_enable_title">Notifications</string>
+    <string name="preferences_notification_type_dialog_title">Notification Type</string>
+    <string name="preferences_notification_pull_category_title">Pull</string>
+    <string name="notification_pull_frequency">Pull Frequency</string>
+    <string name="preferences_notification_type_title">Subscription Type</string>
+    <string name="preference_compose_signature_enable_ON_summary">Adds signature while composing email</string>
+    <string name="preference_compose_signature_enable_OFF_summary">Doesn\'t add signature while composing email.</string>
+    <string name="preference_notification_enable_ON_summary">Notifies about new email even during display sleep</string>
+    <string name="preference_notification_enable_OFF_summary">Doesn\'t notify incoming emails</string>
+    <string name="preference_notification_type_summary">Only Pull subscription is supported at this time</string>
+    <string name="preference_pull_ferequency_30s_summary">Polls server every 30 seconds. Longer the interval, better the battery life. </string>
+    <string name="preference_pull_ferequency_15m_summary">Polls server every 15 mins.</string>
+    <string name="preference_pull_ferequency_1h_summary">Polls server every hour. </string>
+    <string name="preference_pull_ferequency_4h_summary">Polls server every 4 hours.</string>
+    <string name="preference_pull_ferequency_12h_summary">Polls server every 12 hours. </string>
+    <string name="preferences_compose_title">Compose</string>
+    <string name="preferences_compose_signature_enable_title">Signature</string>
+    <string name="preferences_updater_title">Update</string>
+    <string name="preferences_updater_enable_autoupdate_notify">Notify App Updates</string>
+    <string name="preferences_updater_ON_autoupdate_notify_summary">Notifies when a new version update is available</string>
+    <string name="preferences_updater_OFF_autoupdate_notify_summary">Doesn\'t notify when a new version update is available</string>
+    <string name="preferences_account_title">Account Settings</string>
+    <string name="preferences_change_password_title">Change Password</string>
+    <string name="preferences_change_password_lbl">New Password</string>
+    <string name="preferences_custom_url_lbl">Webmail URL:</string>
+    <string name="preferences_change_password_summary">Changes the password which is stored locally</string>
+    <string name="preferences_signout_title">Reset/Sign Out</string>
+    <string name="preferences_signout_summary">Clears all the data and logs out</string>
+    <string name="preferences_clear_cache">Clear Cache</string>
+    <string name="preferences_clear_cache_summary">Clears all the mail offline data stored in phone</string>
+    <string name="preferences_cache_cleared_msg">Cache Cleared</string>
+    <string name="crash_toast_text">Ooooops ! Wipro Mail has just crashed. Crash log will be sent to the developer.</string>
+    <string name="app_updater_downloading">Downloading latest version..</string>
+    <string name="dialog_webmail_url_title">Webmail URL</string>
+    <string name="dialog_signout_alert_lbl">Are you sure you want to Sign Out?</string>
+    <string name="dialog_signout_alert_title">Sign Out</string>
+    <string name="dialog_signout_reset_settings_lbl">Reset All Settings</string>
+    <string name="dialog_signout_reset_settings_desc">Resets all the application settings to their defaults including signature, pull frequency etc.,</string>
+
+    <!-- Bugs/Suggestion -->
+    <string name="bugsOrSuggestion_developer_email">sathesh.shiva@wipro.com</string>
+    <string name="bugsOrSuggestion_email_subject">Wipro Mail v%s- Bugs/Suggestions</string>
+    <string name="bugsOrSuggestion_email_titlebar">Bugs/Suggestion</string>
+
+    <!-- Rate this app -->
+    <string name="rate_app_dialog_title">Rate this app</string>
+    <string name="rate_app_dialog_rate_now">Rate app</string>
+    <string name="rate_app_dialog_not_now">Not Now</string>
+    <string name="rate_app_dialog_never">Never ask again</string>
+    <string name="rate_app_msg">You have been using this app for a while. Please say thanks to the developer!</string>
+
+    <!-- ActionBar Titles -->
+    <string name="ActionBarTitle_DeletedItems">Deleted Items</string>
+    <string name="ActionBarTitle_JunkEmail">Junk Email</string>
+    <string name="ActionBarTitle_SentItems">Sent Items</string>
+    <string name="ActionBarTitle_ConversationHistory">Chat History</string>
+    <string name="ConversationHistoryFolderName">ConversationHistory</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Dialog -->
+    <string name="dialog_changepwd_title">Change Password</string>
+    <string name="dialog_changepwd_hint">New Password</string>
+    <string name="dialog_authfailed_title">Authentication Failed</string>
+    <string name="dialog_authfailed_btn_lbl">Change Password</string>
+    <string name="dialog_authfailed_lbl">Please update your password if it was changed recently</string>
+    <string name="dialog_deletemail_title">Delete Mail</string>
+    <string name="dialog_deletemail_msg">This will permanently delete this mail</string>
+
+    <!-- Title bar -->
+    <string name="title_activity_home_page">Wipro Mail</string>
+    <string name="title_activity_folders_page">Folders</string>
+    <string name="title_activity_compose">New Email</string>
+    <string name="title_activity_search_contacts">Search Contact</string>
+    <string name="title_activity_view_mail"></string>
+    <string name="title_activity_mail_list_view">Inbox</string>
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="titlebar_inbox">Inbox</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_add_recipient">Add Recipient</string>
+    <string name="title_activity_contact_details">Contact Details</string>
+    <string name="title_activity_my">MyActivity</string>
+
+</resources>

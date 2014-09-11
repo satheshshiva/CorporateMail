@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-1efde7c1bfea42c1a6f01099de3f57825c3fea99.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/classes-bc0a02126ea0a9bc951f791003445842d1ff130e.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/exploded-aar/com.actionbarsherlock/actionbarsherlock/4.4.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="af64527b748983a75de9c0756e9768b56b240a49"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/classes-85555fe59ed64f39f1eebba8a3d5b76bfb780aa7.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/commons-httpclient-105d01622a3ff6fd54669415ca35ac74ba0d1f73.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/libs/commons-httpclient.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9fe67c06f8411b5f906c0e1f84a1289d612a4b79"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.2.1-99e510b438889f52e574c3861a3fdd744d186f9d.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/libs/GoogleAdMobAdsSdk-6.2.1.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="40ffb9188343d72dc46d596836a8dd8d464b41a3"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsV2-5893d04cce91f04d151e9f40b8ff28c250e3e745.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/libs/libGoogleAnalyticsV2.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="4d946a10c0d73adf8596ab3547fb78f00346673a"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/jcifs-1.3.17-19c7ab9ffc80d2c19d78f5d760dce9764d8dcaa3.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/libs/jcifs-1.3.17.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="1a2f0e28cc9497fb4927ea2422605fb8023969b6"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-02b2c7bec49a9a36479b3102a401e0fbaf332e64.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/Java/Android/adt-bundle-mac-x86_64/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/acra-4.4.0-ded76271d414f3afdd779bdb5595606483ef911f.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/libs/acra-4.4.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="7864f0ac6c74d84e465aa5449fa14408b0a1418f"/>
+    <item
+        dex="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/build/intermediates/pre-dexed/debug/classes_repacked_v2-6a4fb935be6ffd8b6fc3183380954f1d41082574.jar"
+        jar="/Volumes/Mavericks/Users/sathesh/MyContent/workspaces/workspace_android_studio/WiproMailFree/app/libs/classes_repacked_v2.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="4f5040d53f4082980f3ebc0935ac6d7b3e273a05"/>
+
+</pre-dex-items>
