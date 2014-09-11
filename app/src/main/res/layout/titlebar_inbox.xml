@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/titlebar_logo"
+        android:contentDescription="@string/contetn_desc_logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/wipro_logo_trans" />
+
+    <TextView
+        android:id="@+id/titlebar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/titlebar_logo"
+        android:text="@string/titlebar_inbox"
+        android:textSize="13dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/titlebar_loginDisplayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/titlebar_logo"
+        android:layout_alignLeft="@+id/titlebar_title"
+        android:text=""
+        android:textSize="12dp" />
+<!-- 
+    <TextSwitcher
+        android:id="@+id/titlebar_inbox_status_textswitcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/titlebar_title"
+        android:textSize="13dp" >
+    </TextSwitcher>
+ -->
+</RelativeLayout>

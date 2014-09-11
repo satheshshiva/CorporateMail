@@ -1,0 +1,161 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="20dp" >
+
+        <ProgressBar
+            android:id="@+id/bar_progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:progressDrawable="@drawable/custom_progressbar" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/bar_progressbar"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/circle_progressbar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:padding="1dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/success_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="Successful sync"
+                android:padding="1dp"
+                android:src="@drawable/success"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/failure_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="Failure sync"
+                android:padding="1dp"
+                android:src="@drawable/failure"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/read_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="All Mails Read"
+                android:padding="1dp"
+                android:src="@drawable/ic_menu_mail_read"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/unread_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="Unread mails"
+                android:padding="1dp"
+                android:src="@drawable/ic_menu_mail_unread"
+                android:visibility="gone" />
+
+            <TextSwitcher
+                android:id="@+id/textswitcher"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp" >
+            </TextSwitcher>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:layout_weight="4" >
+            </ListView>
+
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/titlebar_background"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/maillist_refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_action_refresh"
+            android:onClick="refreshOnClick" />
+
+        <ProgressBar
+            android:id="@+id/maillist_refresh_progressbar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:visibility="gone" />
+
+        <TextSwitcher
+            android:id="@+id/titlebar_inbox_status_textswitcher"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_weight="4"
+            android:textSize="13dp" >
+        </TextSwitcher>
+
+        <ImageButton
+            android:id="@+id/maillist_compose_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_action_compose"
+            android:onClick="composeOnClick" />
+
+        <ImageButton
+            android:id="@+id/maillist_more_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_action_collapse"
+            android:onClick="moreButtonOnClick" />
+    </LinearLayout>
+    -->
+    <!--
+     <include
+        android:id="@+id/ads"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        layout="@layout/ads" />  
+    -->
+
+</LinearLayout>

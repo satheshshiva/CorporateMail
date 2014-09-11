@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<title></title>
+<link rel="stylesheet" href="../jquery/jquery.mobile.min.css" />
+<script src="../jquery/jquery.min.js">
+        </script>
+<script src="../jquery/jquery.mobile.min.js">
+        </script>
+
+
+<!-- JS FUNCTIONS -->
+<script>
+        function onClickInbox(){
+        window.homepage.openInbox();
+        }
+        function onClickDrafts(){
+        window.homepage.openDrafts();
+        }
+        function onClickSentItems(){
+        window.homepage.openSentItems();
+        }
+        function onClickDeletedItems(){
+        window.homepage.openDeletedItems();
+        }
+         function onClickDeletedItems(){
+        window.homepage.openDeletedItems();
+        }
+         function onClickAllFolders(){
+        window.homepage.openAllFolders();
+        }
+        function onClickSearchContacts(){
+        window.homepage.openSearchContacts();
+        }
+         function onClickSignOut(){
+        window.homepage.openSignOutAlertBox();
+        }
+        </script>
+
+<!-- JQUERY INITIALIZATION -->
+<script>
+            try {
+
+    $(function() {
+    /*
+$("#mailListView").append("<li data-role=\"list-divider\" role=\"heading\">Subscription</li>");
+$('#mailListView').listview('refresh');
+*/
+    });
+    
+
+  } catch (error) {
+   alert("Javascript error: " + error);
+  }
+        </script>
+</head>
+<body>
+
+	<!-- Home -->
+	<div data-role="page" id="page1">
+
+		<div data-role="content"  style="padding-top:0px">
+			<ul id="mailListView" data-role="listview" data-divider-theme="d"
+				data-inset="true">
+				<li data-role="list-divider" role="heading">Mail</li>
+				<li data-theme="d"><a href="javascript:onClickInbox();"> <img
+						src="../images/receive-icon.png" class="ui-li-icon"> <!-- <span class="ui-li-count">62</span>-->
+						Inbox
+				</a></li>
+				<li data-theme="d"><a href="javascript:onClickDrafts();"> <img
+						src="../images/drafts.png" class="ui-li-icon"> Drafts
+				</a></li>
+				<li data-theme="d"><a href="javascript:onClickSentItems();">
+						<img src="../images/mail-sent.png" class="ui-li-icon"> Sent
+						Items
+				</a></li>
+				<li data-theme="d"><a href="javascript:onClickDeletedItems();">
+						<img src="../images/trash.png" class="ui-li-icon"> Deleted
+						Items
+				</a></li>
+				<!--<li data-role="list-divider" role="heading">
+                        Folders
+                    </li>-->
+				<li><a href="javascript:onClickAllFolders();"> More
+						Folders... </a></li>
+			</ul>
+
+
+			<ul id="contactsListView" data-role="listview" data-divider-theme="d"
+				data-inset="true">
+				<li data-role="list-divider" role="heading">Contacts</li>
+				<li data-theme="d"><a
+					href="javascript:onClickSearchContacts();"> <img
+						src="../images/contacts.png" class="ui-li-icon"> <!-- <span class="ui-li-count">62</span>-->
+						Search Contact
+				</a></li>
+			</ul>
+
+			<ul id="actionsListView" data-role="listview" data-divider-theme="d"
+				data-inset="true">
+				<li data-role="list-divider" role="heading">Actions</li>
+				<li data-theme="d"><a href="javascript:onClickSignOut();">
+						<img src="../images/signout.png" class="ui-li-icon"> <!-- <span class="ui-li-count">62</span>-->
+						Sign Out
+				</a></li>
+			</ul>
+		</div>
+	</div>
+
+
+</body>
+</html>

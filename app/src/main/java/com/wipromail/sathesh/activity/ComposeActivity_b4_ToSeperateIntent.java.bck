@@ -1,0 +1,414 @@
+package com.wipromail.sathesh.activity;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
+import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
+import com.wipromail.sathesh.application.SharedPreferencesAdapter;
+import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
+import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
+import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.customui.Notifications;
+import com.wipromail.sathesh.ews.EWSConnection;
+import com.wipromail.sathesh.ews.NetworkCall;
+import com.wipromail.sathesh.service.data.ExchangeService;
+import com.wipromail.sathesh.service.data.NameResolution;
+import com.wipromail.sathesh.service.data.NameResolutionCollection;
+import com.wipromail.sathesh.service.data.ServiceLocalException;
+import com.wipromail.sathesh.ui.OptionsUIContent;
+import com.wipromail.sathesh.util.Utilities;
+
+public class ComposeActivity_b4_ToSeperateIntent extends SherlockActivity implements Constants,IResolveNames{
+
+	private Activity activity;
+	private EditText composeTo;
+	private EditText composeSubject;
+	private EditText composeBody, composeSignature;
+	private Collection<String> to;
+	private String  subject="",body="";
+	private static String STATUS_SENT="STATUS_SENT";
+	private static String STATUS_ERROR="STATUS_ERROR";
+	private ExchangeService service;
+private GeneralPreferenceAdapter generalSettings = new GeneralPreferenceAdapter();
+
+	private Intent intent;
+
+	private static CharSequence msgSendingFailedLbl="";
+	ProgressDialog dialog;
+	private TextView compose_to_disp;
+private String tempStr="";
+	private Map<Integer, String> actualToReceivers = new HashMap<Integer, String>();
+	private int actualToReceiversId=0;
+	private static final String RESOLVE_NAME_ALERT_DIALOG_TYPE_TO="RESOLVE_NAME_ALERT_DIALOG_TYPE_TO";
+	private static final String RESOLVE_NAME_ALERT_DIALOG_TYPE_CC="RESOLVE_NAME_ALERT_DIALOG_TYPE_CC";
+	private static final String RESOLVE_NAME_ALERT_DIALOG_TYPE_BCC="RESOLVE_NAME_ALERT_DIALOG_TYPE_BCC";
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		activity=this;
+		setContentView(R.layout.activity_compose);
+
+		composeTo = (EditText)findViewById(R.id.compose_to);
+		composeSubject = (EditText)findViewById(R.id.compose_subject);
+		composeBody = (EditText)findViewById(R.id.compose_body);
+
+		composeSignature = (EditText)findViewById(R.id.compose_signature);
+		compose_to_disp = (TextView)findViewById(R.id.compose_to_disp);
+
+		msgSendingFailedLbl=activity.getText(R.string.compose_msg_send_failed);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		try {
+			service = EWSConnection.getServiceFromStoredCredentials(this);}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		actualToReceiversId=0;
+	}
+
+	@Override
+	public void onPause(){
+	super.onPause();
+	
+	if(generalSettings.isComposeSignatureEnabled(activity)){
+	try {
+		
+		//store signature
+		SharedPreferencesAdapter.storeComposeSignature(activity, Utilities.convertEditableToHTML(composeSignature.getText()));
+	} catch (Exception e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	}
+	}
+	
+	@Override
+	public void onResume(){
+		
+	super.onResume();
+	
+	if(generalSettings.isComposeSignatureEnabled(activity)){
+	try {
+		tempStr=SharedPreferencesAdapter.getComposeSignature(activity);
+		tempStr=Utilities.convertHTMLToText(tempStr);
+		//restore signature
+		composeSignature.setText(tempStr);
+	} catch (Exception e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	}
+	else{
+		composeSignature.setVisibility(View.GONE);
+	}
+		
+	}
+	public void sendBtnOnClick(View view){
+
+		sendMail();
+	}
+
+
+	public void toAddOnClick(View view){
+		addToRecipient(composeTo.getText().toString(), composeTo.getText().toString());
+
+	}
+
+	public void addToRecipient(String toRecipientDisp, String toRecipientEmail){
+		compose_to_disp.setText(compose_to_disp.getText().toString()+ toRecipientDisp+ EMAIL_DELIMITER_DISP);
+		actualToReceivers.put(++actualToReceiversId, toRecipientEmail);
+		composeTo.setText("");
+		Log.d(TAG, "actualToReceivers "+actualToReceivers );
+	}
+	private void sendMail() {
+		// TODO Auto-generated method stub
+
+		if( composeTo.getText().toString().equals("")){
+			if(null != actualToReceivers && (actualToReceivers.size()>0 )){
+
+				//send mail
+				new Send().execute();
+			}
+			else{
+				//To is null
+				Notifications.showToast(activity, activity.getText(R.string.compose_to_no_recep), Toast.LENGTH_LONG);
+			}
+		}
+		else
+		{
+
+
+			Notifications.showToast(activity, activity.getText(R.string.compose_to_box_not_empty), Toast.LENGTH_LONG);
+
+		}
+
+	}
+
+	public void toSearchOnClick(View view){
+
+		if( null!=composeTo.getText() && null!=composeTo.getText().toString() && !(composeTo.getText().toString().equals(""))){
+
+			//EWS Call
+
+			new ResolveNames(this,this,service,composeTo.getText().toString(),true,getText(R.string.compose_resoleNameDialog_progress).toString(),RESOLVE_NAME_ALERT_DIALOG_TYPE_TO).execute();
+
+		}
+	}
+
+	public class Send extends AsyncTask<Void, String, Boolean>{
+
+		private ExchangeService service;
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+
+			try {
+				dialog = ProgressDialog.show(activity, "", 
+						activity.getString(R.string.compose_sending), true);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.e(TAG, "Exception occured on preexecute");
+			}
+
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... paramArrayOfParams) {
+			// TODO Auto-generated method stub
+
+			try {
+
+				service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
+
+				to=actualToReceivers.values();
+				subject=composeSubject.getText().toString();
+				body=Utilities.convertEditableToHTML(composeBody.getText());
+				if(generalSettings.isComposeSignatureEnabled(activity)){
+					body=appendSignature(body);
+				}
+				
+				if(to !=null && to.size()>0){
+					//EWS call
+					NetworkCall.sendMail(activity, service, to, subject, body);
+					publishProgress(STATUS_SENT, "");
+
+				}
+				else{
+					publishProgress(STATUS_ERROR, getText(R.string.compose_to_no_recep).toString());
+
+				}
+
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				Log.e(TAG, "Malformed Webmail URL");
+				publishProgress(STATUS_ERROR, "Message not sent!\n\nDetails: Malformed Webmail URL " );
+			}
+			catch(com.wipromail.sathesh.service.data.HttpErrorException e){
+				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
+					Log.e(TAG, "Authentication Failed!\nDetails: " + e.getMessage());
+					publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails: Authentication Failed ");
+				}
+				else
+				{
+					Log.e(TAG, "Error Occured!\nDetails:" + e.getMessage());
+					e.printStackTrace();
+					publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails:" + e.getMessage());
+				}
+			}
+
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+
+				Log.e(TAG, "Error Occured!\nDetails:" + e.getMessage());
+				e.printStackTrace();
+				publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails:" + e.getMessage());
+			}
+
+
+			return true;
+		}
+
+		private String appendSignature(String body) {
+			// TODO Auto-generated method stub
+			body=body+Utilities.convertEditableToHTML(composeSignature.getText());
+			return body;
+		}
+
+		@Override
+		protected void onProgressUpdate(String... progress) {
+
+			if(progress[0].equalsIgnoreCase(STATUS_ERROR)){
+				dialog.dismiss();
+				Notifications.showAlert(activity, progress[1]);
+			}else if(progress[0].equalsIgnoreCase(STATUS_SENT)){
+				dialog.dismiss();
+				activity.finish();
+				Notifications.showToast(activity, activity.getText(R.string.compose_msg_sent), Toast.LENGTH_SHORT);
+			}
+		}
+
+
+	}
+	@Override
+	public void handleResolveNamesOutput(
+			final NameResolutionCollection outputCollection, String extra1) {
+		// TODO Auto-generated method stub
+
+		Log.d(TAG, "handle called "+ outputCollection);
+		try {
+			if(outputCollection!=null && outputCollection.getCount()>0){
+
+				List<String> dispNameList = new ArrayList<String>();
+				final Map<Integer, NameResolution> dispMap = new HashMap<Integer, NameResolution>();
+				int resolveNameIndex=0;
+				for(NameResolution nameResolution : outputCollection)
+				{
+					if(nameResolution!=null && null!=nameResolution.getContact() && null!=nameResolution.getContact().getDisplayName()){
+						dispNameList.add(nameResolution.getContact().getDisplayName());
+						dispMap.put(resolveNameIndex++, nameResolution);
+					}
+				}
+				Log.d(TAG, "dispNameList "+dispNameList);
+				Log.d(TAG, "dispMap" +dispMap);
+				ListAdapter adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_single_choice,dispNameList);
+
+
+
+				if(extra1.equals(RESOLVE_NAME_ALERT_DIALOG_TYPE_TO)){
+					new AlertDialog.Builder(this)
+					.setTitle(R.string.compose_resoleNameDialog_to_title)
+					.setSingleChoiceItems(adapter, Integer.parseInt((String) getText(R.integer.compose_resoleNameDialog_to_defaultChecked)), new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							/* User clicked on a radio button do some stuff */
+							Log.d(TAG, "which button "+whichButton);
+
+
+							NameResolution clickedName=dispMap.get(whichButton);
+							try {
+								if(clickedName!=null && clickedName.getContact()!=null && clickedName.getContact().getDisplayName()!=null && clickedName.getMailbox()!=null){
+									addToRecipient(clickedName.getContact().getDisplayName(), clickedName.getMailbox().getAddress());
+								}
+							} catch (ServiceLocalException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							dialog.dismiss();
+
+						}})
+						/*
+				.setPositiveButton(R.string.alertdialog_positive_lbl, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+
+						// User clicked Yes so do some stuff 
+
+						//this always returns -1.. bug? hence cant use ok buttn
+						Log.d(TAG, "which button "+whichButton);
+
+					}
+
+				})
+				.setNegativeButton(R.string.alertdialog_negative_lbl, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+
+						// User clicked No so do some stuff 
+					}
+				})
+						 */
+						.show();
+				}
+			}
+			else{
+				Notifications.showToast(this, getText(R.string.compose_resoleNameDialog_nomatch), Toast.LENGTH_SHORT);
+			}
+		} catch (ServiceLocalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void handleResolveNamesOutputError(
+			NameResolutionCollection outputCollection, String extra1, Exception pE) {
+		// TODO Auto-generated method stub
+
+		Notifications.showToast(this, getText(R.string.compose_resoleNameDialog_error), Toast.LENGTH_SHORT);
+
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+//
+//		//Submenu
+//		SubMenu subMenu = menu.addSubMenu("");
+//
+//		subMenu
+//		.add(ACTIONBAR_SETTINGS)
+//		.setIcon(OptionsUIContent.getSettingsIcon())
+//		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//
+//
+//		subMenu
+//		.add(ACTIONBAR_ABOUT)
+//		.setIcon(OptionsUIContent.getAboutIcon())
+//		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//
+//
+//		//Overflow submenu icon
+//		MenuItem subMenuItem = subMenu.getItem();
+//		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
+//		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+
+		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if(item!=null && item.getItemId()==android.R.id.home){
+			finish();
+		}
+		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
+			Intent intent = new Intent(this, PreferencesActivity.class);
+			startActivity(intent);
+		}
+		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
+			Intent intent = new Intent(this, AboutActivity.class);
+			startActivity(intent);
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+}
+
+
