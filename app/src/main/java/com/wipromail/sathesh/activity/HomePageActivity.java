@@ -19,13 +19,10 @@ import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
-import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.ui.SignOutAlertDialog;
-import com.wipromail.sathesh.update.AutoUpdater;
 
 public class HomePageActivity extends SherlockActivity implements Constants{
 
