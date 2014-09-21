@@ -234,7 +234,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	}
 	
 	/** Refreshes the list from network
-	 * @param showPulltoRefresh: Either show the big pull to refresh label while refreshing
 	 */
 	@Override
 	public void refreshList(){

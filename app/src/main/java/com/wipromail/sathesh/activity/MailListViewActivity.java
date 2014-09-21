@@ -57,6 +57,8 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        Intent intent = getIntent();
+
 		mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
 		mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
 		mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
