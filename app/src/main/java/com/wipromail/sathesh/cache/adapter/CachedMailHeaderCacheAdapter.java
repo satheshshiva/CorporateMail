@@ -151,8 +151,7 @@ public class CachedMailHeaderCacheAdapter {
 	 * @param context
 	 * @param strFolderId 
 	 * @param mailFolderName 
-	 * @param MailType 
-	 * @param items 
+	 * @param items
 	 * @throws ServiceLocalException
 	 * @throws Exception
 	 */
@@ -171,10 +170,6 @@ public class CachedMailHeaderCacheAdapter {
 
 	/** mark mail as read
 	 * @param context
-	 * @param strFolderId 
-	 * @param mailFolderName 
-	 * @param MailType 
-	 * @param items 
 	 * @throws ServiceLocalException
 	 * @throws Exception
 	 */
@@ -187,8 +182,7 @@ public class CachedMailHeaderCacheAdapter {
 	
 	/** private function for converting Item to VO
 	 * @param mailFolderName 
-	 * @param MailType 
-	 * 
+	 *
 	 */
 	private CachedMailHeaderVO covertItemToVO(int mailType, String mailFolderName,  String strFolderId, Item item) throws ServiceLocalException, Exception{
 		// TODO Auto-generated method stub
