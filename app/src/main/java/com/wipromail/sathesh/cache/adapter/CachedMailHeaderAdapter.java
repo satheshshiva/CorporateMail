@@ -3,9 +3,6 @@
  */
 package com.wipromail.sathesh.cache.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 
 import com.wipromail.sathesh.BuildConfig;
@@ -17,16 +14,19 @@ import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author sathesh
  *
  */
-public class CachedMailHeaderCacheAdapter {
+public class CachedMailHeaderAdapter {
 
 	private static MailFunctions mailFunctions;
 	private static CachedMailHeaderDAO dao;
 	
-	public CachedMailHeaderCacheAdapter(Context context){
+	public CachedMailHeaderAdapter(Context context){
 		if(dao==null){
 		dao=new CachedMailHeaderDAO(context);
 		}
@@ -48,9 +48,9 @@ public class CachedMailHeaderCacheAdapter {
 		// TODO Auto-generated method stub
 		try {
 			if(emptyCache){
-				deleteAll(mailType,mailFolderName, mailFolderId);
+				deleteAll(mailType, mailFolderId);
 			}
-			writeMailHeader(context, mailType, mailFolderName, mailFolderId, items);
+			writeMailHeader( mailType, mailFolderName, mailFolderId, items);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG)
@@ -61,7 +61,7 @@ public class CachedMailHeaderCacheAdapter {
 	/** This method will return all the cached mail header data list of VOs for the particular mail type given
 	 * @return
 	 */
-	public List<CachedMailHeaderVO> getMailHeaders(int mailType, String mailFolderName, String mailFolderId){
+	public List<CachedMailHeaderVO> getMailHeaders(int mailType, String mailFolderId){
 		List<CachedMailHeaderVO> mailListHeaderData=null;
 		try {
 			// mail type 8 and 9 have folder id. The rest can be determined by the mailType
@@ -85,7 +85,7 @@ public class CachedMailHeaderCacheAdapter {
 	 * @throws Exception 
 	 * 
 	 */
-	public int getRecordsCount(int mailType, String mailFolderName, String mailFolderId) throws Exception {
+	public int getRecordsCount(int mailType, String mailFolderId) throws Exception {
 		// TODO Auto-generated method stub
 		int totalCachedRecords;
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
@@ -102,7 +102,7 @@ public class CachedMailHeaderCacheAdapter {
 	 * @throws Exception 
 	 * 
 	 */
-	public int getUnreadMailCount(int mailType, String mailFolderName, String mailFolderId) throws Exception {
+	public int getUnreadMailCount(int mailType, String mailFolderId) throws Exception {
 		// TODO Auto-generated method stub
 		int totalUnread;
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
@@ -119,7 +119,7 @@ public class CachedMailHeaderCacheAdapter {
 	 * @throws Exception 
 	 * 
 	 */
-	private void deleteAll(int mailType, String mailFolderName, String mailFolderId) throws Exception {
+	private void deleteAll(int mailType, String mailFolderId) throws Exception {
 		// TODO Auto-generated method stub
 		// Pass folder id or folder name to the corresponding folder
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
@@ -130,12 +130,15 @@ public class CachedMailHeaderCacheAdapter {
 			dao.deleteAllByFolderId(mailFolderId);
 		}
 	}
-	
-	/** Delete all the cached mail headers for this particular mail type
-	 * @throws Exception 
-	 * 
-	 */
-	public void deleteN(int mailType, String mailFolderName, String mailFolderId, int n) throws Exception {
+
+    /** Delete records leaving "n" no of records on top
+     *
+     * @param mailType
+     * @param mailFolderId
+     * @param n - no of records to keep on top
+     * @throws Exception
+     */
+	public void deleteN(int mailType, String mailFolderId, int n) throws Exception {
 		// TODO Auto-generated method stub
 		// Pass folder id or folder name to the corresponding folder
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
@@ -148,14 +151,13 @@ public class CachedMailHeaderCacheAdapter {
 	}
 	
 	/** writes the given arraylist of exchange items to cache
-	 * @param context
-	 * @param strFolderId 
+	 * @param strFolderId
 	 * @param mailFolderName 
 	 * @param items
 	 * @throws ServiceLocalException
 	 * @throws Exception
 	 */
-	public synchronized void writeMailHeader(Context context, int mailType, String mailFolderName, String strFolderId, ArrayList<Item> items ) throws ServiceLocalException, Exception {
+	public synchronized void writeMailHeader(int mailType, String mailFolderName, String strFolderId, ArrayList<Item> items ) throws ServiceLocalException, Exception {
 		// TODO Auto-generated method stub
 
 		List<CachedMailHeaderVO> vos = new ArrayList<CachedMailHeaderVO>();
@@ -169,11 +171,10 @@ public class CachedMailHeaderCacheAdapter {
 	}
 
 	/** mark mail as read
-	 * @param context
 	 * @throws ServiceLocalException
 	 * @throws Exception
 	 */
-	public synchronized void markMailAsRead(Context context, String itemId ) throws ServiceLocalException, Exception {
+	public synchronized void markMailAsRead(String itemId ) throws Exception {
 		// TODO Auto-generated method stub
 
 		//call the DAO for with the list of VOs to save

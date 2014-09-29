@@ -1,14 +1,10 @@
 package com.wipromail.sathesh.ews;
 
+import com.wipromail.sathesh.service.data.Item;
+import com.wipromail.sathesh.service.data.ServiceLocalException;
+
 import java.text.ParseException;
 import java.util.Date;
-
-import com.wipromail.sathesh.service.data.EmailMessage;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.FindItemsResults;
-import com.wipromail.sathesh.service.data.Item;
-import com.wipromail.sathesh.service.data.MessageBody;
-import com.wipromail.sathesh.service.data.ServiceLocalException;
 
 
 public interface MailFunctions {
@@ -31,6 +27,6 @@ public interface MailFunctions {
 	
 	public String getItemId(Item item) throws ServiceLocalException, Exception;
 	
-	public MessageBody getBody(EmailMessage message) throws ServiceLocalException;
+	public String getBody(Item item) throws ServiceLocalException, Exception;
 
 }

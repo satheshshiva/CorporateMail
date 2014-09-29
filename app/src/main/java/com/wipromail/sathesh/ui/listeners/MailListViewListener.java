@@ -3,9 +3,7 @@
  */
 package com.wipromail.sathesh.ui.listeners;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -17,7 +15,6 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
-import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
@@ -77,7 +74,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 						if(parent.getMoreMailsThreadState()!= Status.UPDATING && parent.getMoreMailsThreadState()!= Status.WAITING){
 							// if the get new mails thread is not updating
 							int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
-									, parent.getMailFolderName()
 									, parent.getMailFolderId());
 							//if total cached records is less than minimum no of mails.
 							//this check is to stop initially showing the progress when there only few mails

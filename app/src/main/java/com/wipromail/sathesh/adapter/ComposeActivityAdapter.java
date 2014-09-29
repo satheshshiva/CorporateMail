@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.wipromail.sathesh.activity.ComposeActivity;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.service.data.ItemId;
 
 public class ComposeActivityAdapter implements Constants{
 
@@ -58,12 +57,12 @@ public class ComposeActivityAdapter implements Constants{
 	 * @param setFocusOnBody - Boolean.. on true will focus on the body on load instead of Subject
 	 * @param quoteHtml - quoted text in reply
 	 */
-	public static void startReply(Context context, int type,ItemId itemId,Bundle toBundle,  Bundle ccBundle, Bundle bccBundle, String subject, String titleBar, boolean setFocusOnBody, String quoteHtml){
+	public static void startReply(Context context, int type,String itemId,Bundle toBundle,  Bundle ccBundle, Bundle bccBundle, String subject, String titleBar, boolean setFocusOnBody, String quoteHtml){
 		//the prefill data for the compose activity before starting the intent
 		Intent intent = new Intent(context,ComposeActivity.class);
 		intent.putExtra(ComposeActivity.PREFILL_DATA_EXTRA, true);
 		intent.putExtra(ComposeActivity.PREFILL_DATA_TYPE_EXTRA, type);
-		intent.putExtra(ComposeActivity.PREFILL_DATA_REPL_ITEMID, itemId.getUniqueId());
+		intent.putExtra(ComposeActivity.PREFILL_DATA_REPL_ITEMID, itemId);
 		
 		if(null != toBundle && !(toBundle.isEmpty())){
 			intent.putExtra(ComposeActivity.PREFILL_DATA_TO_EXTRA, toBundle);
@@ -96,12 +95,12 @@ public class ComposeActivityAdapter implements Constants{
 	 * @param setFocusOnBody - Boolean.. on true will focus on the body on load instead of Subject
 	 * @param quoteHtml - quoted text in reply
 	 */
-	public static void startForward(Context context, int type,ItemId itemId,Bundle toBundle,  Bundle ccBundle, Bundle bccBundle, String subject, String titleBar, boolean setFocusOnBody, String quoteHtml){
+	public static void startForward(Context context, int type,String itemId,Bundle toBundle,  Bundle ccBundle, Bundle bccBundle, String subject, String titleBar, boolean setFocusOnBody, String quoteHtml){
 		//the prefill data for the compose activity before starting the intent
 		Intent intent = new Intent(context,ComposeActivity.class);
 		intent.putExtra(ComposeActivity.PREFILL_DATA_EXTRA, true);
 		intent.putExtra(ComposeActivity.PREFILL_DATA_TYPE_EXTRA, type);
-		intent.putExtra(ComposeActivity.PREFILL_DATA_REPL_ITEMID, itemId.getUniqueId());
+		intent.putExtra(ComposeActivity.PREFILL_DATA_REPL_ITEMID, itemId);
 		
 		if(null != toBundle && !(toBundle.isEmpty())){
 			intent.putExtra(ComposeActivity.PREFILL_DATA_TO_EXTRA, toBundle);

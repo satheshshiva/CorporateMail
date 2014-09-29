@@ -1,13 +1,14 @@
 package com.wipromail.sathesh.ews;
 
+import com.wipromail.sathesh.service.data.EmailMessage;
+import com.wipromail.sathesh.service.data.Item;
+import com.wipromail.sathesh.service.data.ServiceLocalException;
+import com.wipromail.sathesh.util.Utilities;
+
 import java.text.ParseException;
 import java.util.Date;
 
-import com.wipromail.sathesh.service.data.EmailMessage;
-import com.wipromail.sathesh.service.data.Item;
-import com.wipromail.sathesh.service.data.MessageBody;
-import com.wipromail.sathesh.service.data.ServiceLocalException;
-import com.wipromail.sathesh.util.Utilities;
+import static com.wipromail.sathesh.service.data.MessageBody.getStringFromMessageBody;
 
 
 public class MailFunctionsImpl implements MailFunctions{
@@ -81,9 +82,9 @@ public class MailFunctionsImpl implements MailFunctions{
 	}
 
 	@Override
-	public MessageBody getBody(EmailMessage message) throws ServiceLocalException{
+	public String getBody(Item item) throws ServiceLocalException, Exception{
 		// TODO Auto-generated method stub
-		return message.getBody();
+		return getStringFromMessageBody(item.getBody());
 	}
 
 	public static MailFunctions getInbox() {

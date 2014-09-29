@@ -26,7 +26,7 @@ import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
-import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
@@ -64,7 +64,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	private ProgressBar bar_progressbar;
 	private ListView listView;
-	private CachedMailHeaderCacheAdapter cacheAdapter;
+	private CachedMailHeaderAdapter cacheAdapter;
 	private int totalCachedRecords=0;
 
 	private SwipeRefreshLayout swipeRefreshLayout ;
@@ -98,7 +98,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		activityDataPasser = (MailListActivityDataPasser)getActivity();
 		
 		if (cacheAdapter==null){
-			cacheAdapter = new CachedMailHeaderCacheAdapter(context);
+			cacheAdapter = new CachedMailHeaderAdapter(context);
 		}
 		setRetainInstance(true);
 		
@@ -151,7 +151,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 				if(adapter==null){	//on config change it wont be null
 					//initialize the adapter
-					adapter = new MailListViewAdapter(context, cacheAdapter.getMailHeaders(mailType, mailFolderName, mailFolderId));
+					adapter = new MailListViewAdapter(context, cacheAdapter.getMailHeaders(mailType, mailFolderId));
 				}
 
 				// initializes the list view with the adapter. also will place all the cached mails in list view initially
@@ -210,7 +210,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		
 		//show the loading animation with the no of mails reamaining in the end of listview
 		try {
-			totalRecordsInCache = cacheAdapter.getRecordsCount(mailType, mailFolderName, mailFolderId);
+			totalRecordsInCache = cacheAdapter.getRecordsCount(mailType, mailFolderId);
 			
 		} catch (Exception e) {
 			// if exception in getting the no of mails in cache then just show loading mails symbol
@@ -255,7 +255,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			Log.d(TAG,  this.getClass() + " ->  Called Soft refresh list");
 		}
 		try {
-			adapter.setListVOs(cacheAdapter.getMailHeaders(mailType, mailFolderName, mailFolderId));
+			adapter.setListVOs(cacheAdapter.getMailHeaders(mailType, mailFolderId));
 			adapter.notifyDataSetChanged();
 			updateTextSwitcherWithMailCount();
 		} catch (Exception e) {
@@ -311,7 +311,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			//swipe refresh layout - visible
 			swipeRefreshLayout.setRefreshing(true);
 			//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
-			totalCachedRecords = cacheAdapter.getRecordsCount(mailType, mailFolderName, mailFolderId);
+			totalCachedRecords = cacheAdapter.getRecordsCount(mailType, mailFolderId);
 			if(totalCachedRecords>0){
 				textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
 			}
@@ -336,7 +336,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	public void updateTextSwitcherWithMailCount() throws Exception {
 		//get the unread emails count
-		int totalUnread = cacheAdapter.getUnreadMailCount(mailType, mailFolderName, mailFolderId);
+		int totalUnread = cacheAdapter.getUnreadMailCount(mailType, mailFolderId);
 		String successMsg="";
 		//more than 1 unread email 
 		if(totalUnread>1){
@@ -447,11 +447,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		this.adapter = adapter;
 	}
 
-	public CachedMailHeaderCacheAdapter getMailHeadersCacheAdapter() {
+	public CachedMailHeaderAdapter getMailHeadersCacheAdapter() {
 		return cacheAdapter;
 	}
 
-	public void setMailHeadersCacheAdapter(CachedMailHeaderCacheAdapter mailHeadersCacheAdapter) {
+	public void setMailHeadersCacheAdapter(CachedMailHeaderAdapter mailHeadersCacheAdapter) {
 		this.cacheAdapter = mailHeadersCacheAdapter;
 	}
 

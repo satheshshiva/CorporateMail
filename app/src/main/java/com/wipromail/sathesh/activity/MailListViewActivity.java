@@ -1,7 +1,5 @@
 package com.wipromail.sathesh.activity;
 
-import java.io.File;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,10 +16,12 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
-import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.util.Utilities;
+
+import java.io.File;
 
 /** This Activity is the one which shows the mail list.
  * 
@@ -43,7 +43,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	private int mailType ;
 	private String mailFolderName;
 	private String mailFolderId="";
-	private CachedMailHeaderCacheAdapter cacheAdapter;
+	private CachedMailHeaderAdapter cacheAdapter;
 	
 	/** ON CREATE **
 	 *  Fragment : MailListViewFragment
@@ -57,7 +57,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        Intent intent = getIntent();
 
 		mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
 		mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
@@ -70,7 +69,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
 				.findFragmentById(R.id.mailListViewFragment);
 		
-		cacheAdapter = new CachedMailHeaderCacheAdapter(this);
+		cacheAdapter = new CachedMailHeaderAdapter(this);
 		
 	}
 	
@@ -120,7 +119,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 			}
 			
 			//deleting cached mail headers
-			cacheAdapter.deleteN(mailType, mailFolderName, mailFolderId, MAX_MAIL_HEADERS_TO_KEEP);
+			cacheAdapter.deleteN(mailType, mailFolderId, MAX_MAIL_HEADERS_TO_KEEP);
 			
 			
 		} catch (Exception e) {

@@ -1,10 +1,5 @@
 package com.wipromail.sathesh.ews;
 
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -40,6 +35,11 @@ import com.wipromail.sathesh.service.data.ResponseMessage;
 import com.wipromail.sathesh.service.data.SearchFilter;
 import com.wipromail.sathesh.service.data.SyncFolderItemsScope;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
+
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class NetworkCall implements Constants{
 
@@ -366,7 +366,6 @@ public class NetworkCall implements Constants{
 
 
 	/** This method deletes the particular item whether its mail or anything and sends to deleted items, 
-	 * @param service
 	 * @param item
 	 * @throws Exception
 	 */
@@ -377,7 +376,6 @@ public class NetworkCall implements Constants{
 	}
 
 	/** This method deletes the particular item whether its mail or anything and deletes it permanently, 
-	 * @param service
 	 * @param item
 	 * @throws Exception
 	 */

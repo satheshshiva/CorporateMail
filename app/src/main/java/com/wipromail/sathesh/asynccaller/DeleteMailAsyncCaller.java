@@ -34,7 +34,6 @@ public class DeleteMailAsyncCaller implements Constants, GenericAsyncTask{
 			activity.finish();
 			new DeleteItemsAsyncTask(this, activity, item, permanentDelete).execute();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "DeleteMailAsyncTaskCaller -> Error while calling async task");
 			e.printStackTrace();
 		}
@@ -42,19 +41,14 @@ public class DeleteMailAsyncCaller implements Constants, GenericAsyncTask{
 	
 	@Override
 	public void activity_OnPreExecute() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void activity_onProgressUpdate(String... progress) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void activity_OnPostExecute() {
-		// TODO Auto-generated method stub
 		Notifications.showToast(activity, activity.getString(R.string.viewmail_mail_deleted), Toast.LENGTH_SHORT);
 	}
 
