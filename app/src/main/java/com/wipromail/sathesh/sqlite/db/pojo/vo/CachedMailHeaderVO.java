@@ -5,9 +5,6 @@ import java.util.Date;
 
 public class CachedMailHeaderVO implements PojoVO, Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -913385326556905939L;
 	
 	private String folder_id;

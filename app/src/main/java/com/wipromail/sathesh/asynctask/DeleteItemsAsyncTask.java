@@ -1,11 +1,5 @@
 package com.wipromail.sathesh.asynctask;
 
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -15,6 +9,12 @@ import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.service.data.Item;
+
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> implements Constants{
 
@@ -103,9 +103,6 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 
 	}
 
-
-
-
 	@Override
 	protected void onProgressUpdate(String... progress) {
 		super.onProgressUpdate(progress);
@@ -114,11 +111,7 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 
 	@Override
 	protected void onPostExecute(String str) {
-		// TODO Auto-generated method stub
-
 		caller.activity_OnPostExecute();
-
-
 	}
 
 }

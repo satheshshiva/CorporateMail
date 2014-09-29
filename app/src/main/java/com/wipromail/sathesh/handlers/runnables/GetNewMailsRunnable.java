@@ -3,19 +3,13 @@
  */
 package com.wipromail.sathesh.handlers.runnables;
 
-import java.net.UnknownHostException;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 
 import com.wipromail.sathesh.BuildConfig;
-import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.application.MailApplication;
-import com.wipromail.sathesh.application.NotificationProcessing;
-import com.wipromail.sathesh.cache.adapter.CachedMailHeaderCacheAdapter;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
@@ -28,8 +22,8 @@ import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
-import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
-import com.wipromail.sathesh.util.Utilities;
+
+import java.net.UnknownHostException;
 
 /** This Runnable will load the new set of mails from the network asynchronously for the particular mail type
  * Handler: GetMoreMailsHandler
@@ -65,10 +59,10 @@ public class GetNewMailsRunnable implements Runnable, Constants{
 		if (parent.getActivity() != null) {
 			try {
 				threadMsg(Status.UPDATING);
-				CachedMailHeaderCacheAdapter headersCacheAdapter = parent.getMailHeadersCacheAdapter();
+				CachedMailHeaderAdapter headersCacheAdapter = parent.getMailHeadersCacheAdapter();
 				
 				//get the total no of records in cache and get all the same number of records.
-				totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType(), parent.getMailFolderName(), parent.getMailFolderId());
+				totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType(), parent.getMailFolderId());
 				
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 

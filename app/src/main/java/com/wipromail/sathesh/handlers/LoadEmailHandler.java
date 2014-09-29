@@ -40,7 +40,6 @@ public class LoadEmailHandler extends Handler implements Constants{
 	 * 
 	 */
 	public void handleStatusMessage(Status status, String message) {
-		// TODO Auto-generated method stub
 		switch (status){
 		case LOADING:
 			//Jus started loading. network call is not made yet.
@@ -83,10 +82,8 @@ public class LoadEmailHandler extends Handler implements Constants{
 	/** shows a status bar showing the lable "Downloading remainingImgs of totalImgs images
 	 * @param remainingImgs - remaining no. of images to load
 	 * @param totalImgs - total no. of inline images in email
-	 * @param loadStatusView - loads and shows the bar. Call it only for the first time we
 	 */
 	public void updateProgressBarLabel(int remainingImgs, int totalImgs) {
-		// TODO Auto-generated method stub
 
 		if(remainingImgs>0){
 			// if only one remaining image to load then show a customized label

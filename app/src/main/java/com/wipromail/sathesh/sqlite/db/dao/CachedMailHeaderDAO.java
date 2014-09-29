@@ -1,9 +1,6 @@
 
 package com.wipromail.sathesh.sqlite.db.dao;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +10,8 @@ import com.wipromail.sathesh.sqlite.db.DbConstants;
 import com.wipromail.sathesh.sqlite.db.DbHelper;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.sqlite.db.tables.TableCachedMailHeader;
+
+import java.util.List;
 
 /** DAO for the Table CACHED_MAIL_HEADERS
  * @author sathesh
@@ -33,8 +32,9 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		dbHelper = DbHelper.getInstance(context);
 	}
 
+    /*** CREATE QUERIES ***/
+
 	/** New records
-	 * @param vo
 	 * @return
 	 */
 	public long createOrUpdate(List<CachedMailHeaderVO> vos) throws Exception {
@@ -50,6 +50,8 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		}
 		return insertId;
 	}
+
+    /*** SELECT QUERIES ***/
 
 	/** Get all records
 	 * Where Clause - Mail Type
@@ -190,7 +192,26 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		return count;
 	}
 
-	
+    /*** UPDATE QUERIES ***/
+
+    /** Marks mail as read
+     * Where Clause - Item Id
+     * @throws Exception
+     */
+    public void markMailAsRead(String itemId) throws Exception {
+
+        try{
+            open();
+            database.execSQL(TableCachedMailHeader.getMarkMailAsReadQuery(),
+                    new String[]{itemId});
+        }finally{
+            close();
+        }
+    }
+
+
+	/*** DELETE QUERIES ***/
+
 	/** Delete Cache
 	 * Where Clause - MailType
 	 * @param 
@@ -259,22 +280,9 @@ public class CachedMailHeaderDAO extends BaseDAO{
 			close();
 		}
 	}
-	
-	/** Marks mail as read
-	 * Where Clause - Item Id
-	 * @throws Exception
-	 */
-	public void markMailAsRead(String itemId) throws Exception {
 
-		try{
-			open();
-			database.execSQL(TableCachedMailHeader.getMarkMailAsReadQuery(),
-					new String[]{itemId});
-		}finally{
-			close();
-		}
-	}
-	
+    /*** PRIVATE METHODS ***/
+
 	/** private function which calls the insert query for a single VO
 	 * 
 	 */
@@ -283,11 +291,6 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		ContentValues values = autoMapVoToContentValues(vo,tableClass);
 		return database.insertWithOnConflict(DbConstants.table.CACHED_MAIL_HEADERS, null,
 				values,SQLiteDatabase.CONFLICT_REPLACE);
-	}
-	
-	public CachedMailHeaderVO autoMapCursorToVOAtPoisition(Cursor cursor, int position) throws Exception{
-		CachedMailHeaderVO vo= (CachedMailHeaderVO)processCursorToVOAtPosition(cursor,position,voClass);
-		return vo;
 	}
 	
 }

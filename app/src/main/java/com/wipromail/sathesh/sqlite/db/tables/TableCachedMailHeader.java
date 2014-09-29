@@ -1,9 +1,9 @@
 package com.wipromail.sathesh.sqlite.db.tables;
 
-import java.util.List;
-
 import com.wipromail.sathesh.sqlite.db.DbConstants;
 import com.wipromail.sathesh.sqlite.db.DbTable;
+
+import java.util.List;
 
 /**  Table to store the cached mail headers
  * @author sathesh
@@ -46,12 +46,9 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 				+ COLUMN_HAS_ATTACHMENTS + " TEXT"
 				+");";
 	}
-	
-	@Override
-	public String getOnUpgradeDropQuery(){
-		return "DROP TABLE IF EXISTS " + tableName;
-	}
-	
+
+    /*** SELECT QUERIES ***/
+
 	/** SELECT QUERY
 	 * WHERE CLAUSE - MAIL TYPE
 	 * @return
@@ -99,7 +96,9 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 	public static String getUnreadCountByFolderIdQuery(){
 		return "SELECT COUNT(*) FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? AND " + COLUMN_ISREAD + "=0";
 	}
-	
+
+    /*** UPDATE QUERIES ***/
+
 	/** UPDATE 
 	 * Mark MAIL AS READ
 	 * @return
@@ -107,8 +106,10 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 	public static String getMarkMailAsReadQuery(){
 		return "UPDATE " + tableName + " SET " + COLUMN_ISREAD + "='1' WHERE " + COLUMN_ITEM_ID + "=? "   ;
 	}
-	
-	/** DELETE 
+
+    /*** DELETE QUERIES ***/
+
+	/** DELETE by MailType
 	 * WHERE CLAUSE - MAIL TYPE
 	 * @return
 	 */
@@ -116,7 +117,7 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 		return "DELETE from " + tableName  + " WHERE " + COLUMN_MAIL_TYPE + "=?";
 	}
 
-	/** DELETE 
+	/** DELETE by Folder Id
 	 * WHERE CLAUSE - FOLDER ID
 	 * @return
 	 */
@@ -124,24 +125,29 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 		return "DELETE from " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=?";
 	}
 	
-	/** DELETE 
-	 * WHERE CLAUSE - MAIL TYPE
-	 * @return
-	 */
+    /** DELETE by MailType
+     * WHERE CLAUSE - MailType
+     * @param n - no of records to keep on top
+     * @return
+     */
 	public static String getDeleteNQueryByMailTypeQuery(int n){
 		return "DELETE from " + tableName  + " WHERE " + COLUMN_MAIL_TYPE + "=? AND " + COLUMN_ID + " NOT IN ("
 				+ " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_MAIL_TYPE + "=? LIMIT " + n + ")";
 	}
 
-	/** DELETE 
+	/** DELETE by Folder Id
 	 * WHERE CLAUSE - FOLDER ID
+     * @param n - no of records to keep on top
 	 * @return
 	 */
 	public static String getDeleteNQueryByFolderIdQuery(int n){
 		return "DELETE from " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? AND " + COLUMN_ID + " NOT IN ("
 				+ " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? LIMIT " + n + ")";
 	}
-	
+
+
+    /*** APPLICATION LEVEL QUERIES ***/
+
 	/* These queries will be executed when the table is newly created in the database. 
 	 * The default records which needs to be inserted can be mentioned here (like default settings record for settings table or trial data for development)
 	 * @see com.sathesh.carparking.db.DbTable#getNewTableQueries()
@@ -151,5 +157,11 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+    @Override
+    public String getOnUpgradeDropQuery(){
+        return "DROP TABLE IF EXISTS " + tableName;
+    }
+
+
 }

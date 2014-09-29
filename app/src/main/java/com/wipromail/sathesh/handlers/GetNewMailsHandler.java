@@ -58,7 +58,6 @@ public class GetNewMailsHandler extends Handler implements Constants {
 				if(parent.getMoreMailsThreadState() == Status.WAITING){
 					//get the total no of records in cache
 					int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
-							, parent.getMailFolderName()
 							, parent.getMailFolderId());
 					//if the total cached records is less than the total no. of mails in the folder then run the "more loading" thread 
 					//which has been waiting for this thread

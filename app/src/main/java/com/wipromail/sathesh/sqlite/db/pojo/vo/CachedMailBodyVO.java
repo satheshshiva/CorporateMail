@@ -1,7 +1,8 @@
 package com.wipromail.sathesh.sqlite.db.pojo.vo;
 
-public class CachedMailBodyVO {
-	private String folder_id;
+public class CachedMailBodyVO implements PojoVO{
+    private int mail_type;
+    private String folder_id;
 	private String folder_name;
 	private String item_id;
 	private String mail_body;
@@ -30,4 +31,10 @@ public class CachedMailBodyVO {
 	public void setMail_body(String mail_body) {
 		this.mail_body = mail_body;
 	}
+    public int getMail_type() {
+        return mail_type;
+    }
+    public void setMail_type(int mail_type) {
+        this.mail_type = mail_type;
+    }
 }
