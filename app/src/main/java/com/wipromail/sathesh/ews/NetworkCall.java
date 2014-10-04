@@ -3,6 +3,7 @@ package com.wipromail.sathesh.ews;
 import android.content.Context;
 import android.util.Log;
 
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.application.Utils;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
@@ -95,6 +96,17 @@ public class NetworkCall implements Constants{
 		else{	throw new NoInternetConnectionException(); }
 	}
 
+    public static void markEmailAsRead(ExchangeService service, Context context, String itemId) throws NoInternetConnectionException, Exception{
+        if(Utils.checkInternetConnection(context)){
+            ItemId _itemId = ItemId.getItemIdFromString(itemId);
+            EmailMessage item=(EmailMessage)Item.bind(service, _itemId);
+
+            item.setIsRead(true);
+            item.update(ConflictResolutionMode.AutoResolve);
+        }
+        else{	throw new NoInternetConnectionException(); }
+    }
+
 	/** Send an Email
 	 * @param context
 	 * @param service
@@ -110,7 +122,9 @@ public class NetworkCall implements Constants{
 			EmailMessage msg= new EmailMessage(service);
 			msg.setSubject(subject); 
 			msg.setBody(MessageBody.getMessageBodyFromText(body));
-			Log.d(TAG, "To receipients for sending email " + to);
+            if(BuildConfig.DEBUG) {
+                Log.d(TAG, "To receipients for sending email " + to);
+            }
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
 					Log.d(TAG, "adding " + tempRecipient);
@@ -282,13 +296,11 @@ public class NetworkCall implements Constants{
 	}
 
 	public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception {
-		// TODO Auto-generated method stub
 		NameResolutionCollection nameResolutions = service.resolveName(username,ResolveNameSearchLocation.DirectoryOnly, retrieveContactDetails);
 		return nameResolutions;
 
 	}
 	public static NameResolutionCollection resolveName_LocalThenDirectory(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception {
-		// TODO Auto-generated method stub
 		NameResolutionCollection nameResolutions = service.resolveName(username,ResolveNameSearchLocation.ContactsThenDirectory, retrieveContactDetails);
 		return nameResolutions;
 
@@ -301,8 +313,6 @@ public class NetworkCall implements Constants{
 	 * @throws Exception
 	 */
 	public static void downloadAttachment(FileAttachment fileAttachment, OutputStream fos) throws NoInternetConnectionException, Exception {
-		// TODO Auto-generated method stub
-
 		fileAttachment.load(fos);
 	}
 
@@ -375,14 +385,34 @@ public class NetworkCall implements Constants{
 
 	}
 
+    /** This method deletes the particular item whether its mail or anything and sends to deleted items,
+     * @param itemId - String
+     * @throws Exception
+     */
+    public static void deleteItemId(ExchangeService service, String itemId) throws Exception{
+        ItemId _itemId = ItemId.getItemIdFromString(itemId);
+        Item item=Item.bind(service, _itemId);
+        item.delete(DeleteMode.MoveToDeletedItems);
+
+    }
+
 	/** This method deletes the particular item whether its mail or anything and deletes it permanently, 
 	 * @param item
 	 * @throws Exception
 	 */
 	public static void deleteItemPermanent(Item item) throws Exception{
-
 		item.delete(DeleteMode.HardDelete);
 
 	}
 
+    /** This method deletes the particular item whether its mail or anything and sends to deleted items,
+     * @param itemId - String
+     * @throws Exception
+     */
+    public static void deleteItemIdPermanent(ExchangeService service, String itemId) throws Exception{
+        ItemId _itemId = ItemId.getItemIdFromString(itemId);
+        Item item=Item.bind(service, _itemId);
+        item.delete(DeleteMode.HardDelete);
+
+    }
 }

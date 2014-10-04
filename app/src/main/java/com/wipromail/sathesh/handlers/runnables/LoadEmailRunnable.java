@@ -21,6 +21,8 @@ import com.wipromail.sathesh.fragment.ViewMailFragment;
 import com.wipromail.sathesh.fragment.ViewMailFragment.Status;
 import com.wipromail.sathesh.service.data.Attachment;
 import com.wipromail.sathesh.service.data.AttachmentCollection;
+import com.wipromail.sathesh.service.data.EmailAddress;
+import com.wipromail.sathesh.service.data.EmailAddressCollection;
 import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FileAttachment;
@@ -99,11 +101,11 @@ public class LoadEmailRunnable implements Runnable, Constants{
 
             msgBody=mailFunctions.getBody(message);
             parent.setProcessedHtml(mailFunctions.getBody(message));
-/*            parent.setFrom(mailFunctions.getFrom(message));
-            parent.setTo(mailFunctions.getTo(message));
-            parent.setCc(mailFunctions.getCC(message));
-            parent.setSubject(mailFunctions.getSubject(message));
-            parent.setDate(mailFunctions.getDateTimeReceived(message));
+            parent.setTo(getAddressString(message.getToRecipients()));
+            parent.setFrom(getAddressString(message.getFrom()));
+            parent.setCc(getAddressString(message.getCcRecipients()));
+            parent.setBcc(getAddressString(message.getBccRecipients()));
+/*
             parent.setMessage(message);*/
             parent.setMsgBody(msgBody);
             sendHandlerMsg(Status.SHOW_BODY);	//shows the headers and body
@@ -112,8 +114,8 @@ public class LoadEmailRunnable implements Runnable, Constants{
             parent.setRemainingInlineImages(parent.getTotalInlineImages());
             if(parent.getRemainingInlineImages() > 0){
                 sendHandlerMsg(Status.SHOW_IMG_LOADING_PROGRESSBAR);
-                parent.setProcessedHtml(processBodyHTMLWithImages(attachmentCollection));	//replace all the inline image "cid" tags with "file://" tags
-                successfulCachedImages=cacheInlineImages(attachmentCollection);		//caching images is done here. html body will be refreshed after each img download
+                parent.setProcessedHtml(processBodyHTMLWithImages(attachmentCollection, cachedMailHeaderVO));	//replace all the inline image "cid" tags with "file://" tags
+                successfulCachedImages=cacheInlineImages(attachmentCollection, cachedMailHeaderVO);		//caching images is done here. html body will be refreshed after each img download
             }
             else{
                 if(BuildConfig.DEBUG)
@@ -138,13 +140,43 @@ public class LoadEmailRunnable implements Runnable, Constants{
         }
     }
 
+    /** Gives the delimited String from EmailAddressCollection which can be stored in the cache db
+     *
+     * @param recipients -EmailAddressCollection obj
+     * @return - delimited String
+     */
+    private String getAddressString(EmailAddressCollection recipients) {
+        StringBuffer str=new StringBuffer();
+        for(EmailAddress recipient : recipients){
+            str.append(recipient.getName())
+                    .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                    .append(recipient.getAddress())
+                    .append(EMAIL_STORAGE_DELIM);
+        }
+        return str.toString();
+    }
+
+    /** Gives the delimited String from EmailAddress which can be stored in the cache db
+     *
+     * @param recipient -EmailAddress obj
+     * @return - delimited String
+     */
+    private String getAddressString(EmailAddress recipient) {
+        StringBuffer str=new StringBuffer();
+            str.append(recipient.getName())
+                    .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                    .append(recipient.getAddress())
+                    .append(EMAIL_STORAGE_DELIM);
+        return str.toString();
+    }
+
     /** Replaces the body String "cid:contentid" wih "file:filename". Does only the string change.
      *
      * @param attachmentCollection
      * @return
      * @throws Exception
      */
-    private String processBodyHTMLWithImages(AttachmentCollection attachmentCollection) throws Exception {
+    private String processBodyHTMLWithImages(AttachmentCollection attachmentCollection, CachedMailHeaderVO cachedMailHeaderVO) throws Exception {
 
         String bodyWithImage=parent.getMsgBody();
         String cid="", directoryPath="", imagePath="", imageHtmlUrl="";
@@ -159,7 +191,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
                     if(BuildConfig.DEBUG){
                         Log.d(TAG, "ViewMailActivity ->cid "+cid);
                     }
-                    directoryPath= getCacheImageDirectory(parent.getMessage());
+                    directoryPath= getCacheImageDirectory(cachedMailHeaderVO.getItem_id());
                     imagePath=getCacheImagePath(directoryPath, attachment);
 
                     imageHtmlUrl=Utilities.getHTMLImageUrl(attachment.getContentType(), imagePath);
@@ -191,7 +223,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
         return no;
     }
 
-    private List<FileAttachment> cacheInlineImages(AttachmentCollection attachmentCollection){
+    private List<FileAttachment> cacheInlineImages(AttachmentCollection attachmentCollection, CachedMailHeaderVO cachedMailHeaderVO){
         successfulCachedImages = new ArrayList<FileAttachment>();
         for(Attachment attachment:  attachmentCollection){
 
@@ -215,7 +247,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
                     try {
                         if(fileAttachment.getIsInline() && fileAttachment.getContentType()!=null && fileAttachment.getContentType().contains("image")){
 
-                            file = new File(getCacheImageDirectory(parent.getMessage()));
+                            file = new File(getCacheImageDirectory(cachedMailHeaderVO.getItem_id()));
 
                             file.mkdirs();
                             path=getCacheImagePath(file.getPath(), attachment);
@@ -283,7 +315,6 @@ public class LoadEmailRunnable implements Runnable, Constants{
      * @param status
      */
     private void sendHandlerMsg(Status status, String msg) {
-
         if (status!=null) {
             Message msgObj = handler.obtainMessage();
             Bundle b = new Bundle();
@@ -292,15 +323,14 @@ public class LoadEmailRunnable implements Runnable, Constants{
             msgObj.setData(b);
             handler.sendMessage(msgObj);
         }
-
     }
 
     private String getCacheImagePath(String directoryLoc, Attachment attachment){
         return directoryLoc+ "/"+attachment.getName();
     }
 
-    private String getCacheImageDirectory(EmailMessage message) throws ServiceLocalException, Exception{
-        return CacheDirectories.getApplicationCacheDirectory(parent.getContext())+"/" + CACHE_DIRECTORY_MAILCACHE + "/" + mailFunctions.getItemId(message);
+    private String getCacheImageDirectory(String itemId) throws ServiceLocalException, Exception{
+        return CacheDirectories.getApplicationCacheDirectory(parent.getContext())+"/" + CACHE_DIRECTORY_MAILCACHE + "/" + itemId;
         //return MailApplication.getApplicationCacheDirectory(activity).toString() ;
     }
 }

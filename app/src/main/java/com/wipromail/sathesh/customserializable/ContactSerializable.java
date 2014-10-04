@@ -1,7 +1,5 @@
 package com.wipromail.sathesh.customserializable;
 
-import java.io.Serializable;
-
 import android.util.Log;
 
 import com.wipromail.sathesh.constants.Constants;
@@ -9,6 +7,8 @@ import com.wipromail.sathesh.service.data.Contact;
 import com.wipromail.sathesh.service.data.PhoneNumberKey;
 import com.wipromail.sathesh.service.data.PhysicalAddressKey;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
+
+import java.io.Serializable;
 
 public class ContactSerializable implements Serializable, Constants{
 
@@ -27,6 +27,7 @@ public class ContactSerializable implements Serializable, Constants{
 	private String officeLocation_state="";
 	private String officeLocation_countryOrRegion="";
 	private String officeLocation_postalCode="";
+    private boolean resolveOnLoad=false;        //if set to true then the contact will be resolved on load on opening the contact
 	private boolean tryResolveNamesInDirectory=false;		//if set to true then the contact will be resolved on ComposeActivity
 
 	
@@ -40,7 +41,6 @@ public class ContactSerializable implements Serializable, Constants{
 	}
 
 	public static ContactSerializable  getContactSerializableFromContact(Contact contact, String email) throws ServiceLocalException {
-		// TODO Auto-generated method stub
 		ContactSerializable sContact = new ContactSerializable();
 		if(contact!=null){
 		sContact.setDisplayName(contact.getDisplayName());
@@ -56,7 +56,6 @@ public class ContactSerializable implements Serializable, Constants{
 					sContact.setWorkphone(contact.getPhoneNumbers().getPhoneNumber(PhoneNumberKey.BusinessPhone));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 			//Setting mobile phone
@@ -218,7 +217,15 @@ public class ContactSerializable implements Serializable, Constants{
 		this.tryResolveNamesInDirectory = tryResolveNamesInDirectory;
 	}
 
-	@Override
+    public boolean isResolveOnLoad() {
+        return resolveOnLoad;
+    }
+
+    public void setResolveOnLoad(boolean resolveOnLoad) {
+        this.resolveOnLoad = resolveOnLoad;
+    }
+
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ContactSerializable [displayName=");

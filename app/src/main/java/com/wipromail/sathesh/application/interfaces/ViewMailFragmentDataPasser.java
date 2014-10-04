@@ -3,6 +3,7 @@
  */
 package com.wipromail.sathesh.application.interfaces;
 
+import com.wipromail.sathesh.fragment.ViewMailFragment;
 import com.wipromail.sathesh.service.data.EmailMessage;
 
 /**
@@ -37,6 +38,10 @@ public interface ViewMailFragmentDataPasser {
 	 * @return
 	 */
 	public int getMailType();
+
+    public String getItemId();
+
+    public ViewMailFragment.Status getCurrentStatus();
 
 
 }

@@ -96,6 +96,8 @@ public interface Constants {
 	----------------------------------  Compose ----------------------------------------------
 	--------------------------------------------------------------------------------------*/
 	public static final String EMAIL_DELIMITER_DISP=";";
+    public static final String EMAIL_NAMEEMAIL_STORAGE_DELIM="#%!";
+    public static final String EMAIL_STORAGE_DELIM =";";
 	public static final boolean SEND_EMAIL_SAVE_COPY_IN_SENT=true;
 
 	/* -------------------------------------------------------------------------------------
@@ -114,13 +116,7 @@ public interface Constants {
 	public static String ACTIONBAR_SETTINGS = "Settings";
 	public static String ACTIONBAR_REFRESH = "Refresh";
 	public static String ACTIONBAR_COMPOSE = "Compose";
-	public static String ACTIONBAR_DELETE = "Delete";
-	public static String ACTIONBAR_ATTACHMENT = "Attachment";
-	public static String ACTIONBAR_REPLY = "Reply";
-	public static String ACTIONBAR_REPLYALL = "Reply All";
-	public static String ACTIONBAR_FORWARD = "Forward";
 	public static String ACTIONBAR_ABOUT = "About";
-	public static String ACTIONBAR_SENDMAIL = "Send Mail";
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  UI TEXTS -------------------------------------------

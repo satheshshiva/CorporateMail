@@ -1,21 +1,21 @@
 package com.wipromail.sathesh.asynctask;
 
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
+
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 /**
  * @author Sathesh
@@ -41,7 +41,6 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 	private boolean showProgressDialog;
 	
 	public ResolveNamesAsyncTask(IResolveNames caller, Activity activity,ExchangeService service, String searchString,boolean showProgressDialog, String progressDialogString, String extra1) {
-		// TODO Auto-generated constructor stub
 		this.caller=caller;
 		this.activity = activity;
 		this.service=service;
@@ -55,8 +54,6 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
-
 		try {
 			if(showProgressDialog){
 			dialog = ProgressDialog.show(activity, "", 
@@ -64,7 +61,6 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 			}
 			publishProgress(STATUS_CHECKING, "Checking");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.e(TAG, "Exception occured on preexecute");
 		}
@@ -72,10 +68,6 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 	}
 	@Override
 	protected String doInBackground(String... str) {
-
-		
-		
-
 		try {
 			outputCollection=MailApplication.resolveName_LocalThenDirectory(service, searchString, true);
 			publishProgress(STATUS_DONE,"Done");
@@ -109,9 +101,6 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 		return null;
 	}
 
-
-
-
 	@Override
 	protected void onProgressUpdate(String... progress) {
 		super.onProgressUpdate(progress);
@@ -130,25 +119,17 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 				caller.handleResolveNamesOutput(outputCollection,extra1);
 			}
 			else if(progress[0].equals(STATUS_ERROR)){
-				System.out.println("dismissing dialog");
 				if(showProgressDialog){
 				dialog.dismiss();
 				}
-				System.out.println("after dismissing dialog");
-				System.out.println("exception name "+pE);
-				System.out.println("exceiption type "+ pE.getMessage());
-				Log.d(TAG, "exception name " + pE.getMessage());
+				if(BuildConfig.DEBUG) {
+                    Log.d(TAG, "exception name " + pE.getMessage());
+                }
 				caller.handleResolveNamesOutputError(outputCollection,extra1,pE);
-				
 			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-		
-
 }

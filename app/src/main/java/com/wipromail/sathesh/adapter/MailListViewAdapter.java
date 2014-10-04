@@ -1,9 +1,5 @@
 package com.wipromail.sathesh.adapter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -23,6 +19,10 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class MailListViewAdapter extends BaseAdapter implements Constants{
 	private final Context context;
 
@@ -34,9 +34,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 	/** Constructor
 	 * @param context
-	 * @param mailItemIds
-	 * @param mailListHeaderData
-	 * @param MailType
 	 */
 	public MailListViewAdapter(Context context, List<CachedMailHeaderVO>  listVOs) {
 		this.context = context;
@@ -50,7 +47,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			this.listLocalContent = makeLocalContent(listVOs);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
 	}
@@ -166,14 +162,12 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 		} 
 		catch (ArrayIndexOutOfBoundsException e1) {
-			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG){
 				Log.e(TAG, "MailListViewAdapter - arrayindex out of bounds");
 				e1.printStackTrace();
 			}
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG){
 				e.printStackTrace();
 				Log.e(TAG, "MailListViewAdapter - Cannot get details for the item");
@@ -195,7 +189,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 */
 	@SuppressLint("UseSparseArrays")
 	private List<LocalContent> makeLocalContent(List<CachedMailHeaderVO> mailListHeaderData) throws Exception{
-		// TODO Auto-generated method stub
 		Date thisDate,prevDate=null;
 		List<String> dateHeaderList;
 		String date_left="", date_right="", prev_date_left="",prev_date_right="";
@@ -305,7 +298,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 */
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		if(this.listLocalContent!=null )
 			return this.listLocalContent.size();
 		else
@@ -317,12 +309,13 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 */
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		// code here if you want to pass the date headers or getMore listview button and identify OnListItemClick
-		if(this.listLocalContent!=null && this.listLocalContent.get(position)!=null)
-			return this.listLocalContent.get(position).vo;
-		else
-			return null;
+		if(this.listLocalContent!=null && this.listLocalContent.get(position)!=null) {
+            return this.listLocalContent.get(position).vo;
+        }
+		else {
+            return null;
+        }
 	}
 
 	/* (non-Javadoc)
@@ -330,7 +323,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 */
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 
@@ -341,7 +333,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			//refresh the local content list from VOs
 			this.listLocalContent = makeLocalContent(listVOs);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
 		super.notifyDataSetChanged();
@@ -363,8 +354,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 	 * @param totalMails	How many many mail are there in the folder
 	 */
 	public void showMoreMailsLoadingAnimation(int loadingCount, long totalCached, long totalMails) {
-		// TODO Auto-generated method stub
-
 		LocalContent localContent = new LocalContent();
 		localContent.type=LocalContent.types.LOADING_MORE_MAILS;
 		localContent.loading_totalCached=totalCached;

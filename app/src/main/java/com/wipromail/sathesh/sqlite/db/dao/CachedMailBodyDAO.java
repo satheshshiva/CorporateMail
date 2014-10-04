@@ -43,11 +43,11 @@ public class CachedMailBodyDAO extends BaseDAO{
     public long createOrUpdate(CachedMailBodyVO vo) throws Exception {
         long insertId=0;
         try{
-            open();
+            open(dbHelper);
             insertId= saveVOInDB(vo);
         }
         finally{
-            try{close();}catch(Exception e){}
+            try{close(dbHelper);}catch(Exception e){}
         }
         return insertId;
     }
@@ -63,13 +63,13 @@ public class CachedMailBodyDAO extends BaseDAO{
     public List<CachedMailBodyVO> getAllRecordsByItemId(String itemId) throws Exception {
         List<CachedMailBodyVO> returnList =null;
         try{
-            open();
+            open(dbHelper);
             //call the select query with the where clause mail type
             Cursor cursor = database.rawQuery(TableCachedMailBody.getAllRecordsByItemIdQuery(),
                     new String[]{itemId});
             returnList =(List)autoMapCursorToVo(cursor,voClass);
         }finally{
-            close();
+            close(dbHelper);
         }
         return returnList;
     }
@@ -85,11 +85,11 @@ public class CachedMailBodyDAO extends BaseDAO{
 
         try{
             String mailTypeStr = String.valueOf(mailType);
-            open();
+            open(dbHelper);
             database.execSQL(TableCachedMailBody.getDeleteAllQueryByMailTypeQuery(),
                     new String[]{mailTypeStr});
         }finally{
-            close();
+            close(dbHelper);
         }
     }
 
@@ -102,11 +102,11 @@ public class CachedMailBodyDAO extends BaseDAO{
     public void deleteAllByFolderId(String mailFolderId) throws Exception {
 
         try{
-            open();
+            open(dbHelper);
             database.execSQL(TableCachedMailBody.getDeleteAllQueryByFolderIdQuery(),
                     new String[]{mailFolderId});
         }finally{
-            close();
+            close(dbHelper);
         }
     }
 
@@ -120,11 +120,11 @@ public class CachedMailBodyDAO extends BaseDAO{
 
         try{
             String mailTypeStr = String.valueOf(mailType);
-            open();
+            open(dbHelper);
             database.execSQL(TableCachedMailBody.getDeleteNQueryByMailTypeQuery(n),
                     new String[]{mailTypeStr,mailTypeStr});
         }finally{
-            close();
+            close(dbHelper);
         }
     }
 
@@ -137,11 +137,11 @@ public class CachedMailBodyDAO extends BaseDAO{
     public void deleteNByFolderId(String mailFolderId, int n) throws Exception {
 
         try{
-            open();
+            open(dbHelper);
             database.execSQL(TableCachedMailBody.getDeleteNQueryByFolderIdQuery(n),
                     new String[]{mailFolderId,mailFolderId});
         }finally{
-            close();
+            close(dbHelper);
         }
     }
 

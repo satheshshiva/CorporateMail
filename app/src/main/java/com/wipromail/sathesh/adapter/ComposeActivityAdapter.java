@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.activity.ComposeActivity;
 import com.wipromail.sathesh.constants.Constants;
 
@@ -77,7 +78,9 @@ public class ComposeActivityAdapter implements Constants{
 		intent.putExtra(ComposeActivity.PREFILL_DATA_SUBJECT_EXTRA, subject);
 		intent.putExtra(ComposeActivity.PREFILL_DATA_TITLEBAR_EXTRA, titleBar);
 		intent.putExtra(ComposeActivity.PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA, setFocusOnBody);
-		Log.d(TAG, "quoteHTMl in composeactivity adapter " + quoteHtml);
+        if(BuildConfig.DEBUG) {
+            Log.d(TAG, "quoteHTMl in composeactivity adapter " + quoteHtml);
+        }
 		intent.putExtra(ComposeActivity.PREFILL_DATA_QUOTE_HTML, quoteHtml);
 		
 		//open the Compose activity to send email to developer
