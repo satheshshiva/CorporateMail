@@ -32,8 +32,11 @@ import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.handlers.runnables.GetMoreMailsRunnable;
 import com.wipromail.sathesh.handlers.runnables.GetNewMailsRunnable;
+import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
+
+import java.util.List;
 
 /**
  * @author sathesh
@@ -150,8 +153,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				//get the cursor
 
 				if(adapter==null){	//on config change it wont be null
+                    List<CachedMailHeaderVO> listVOs = cacheAdapter.getMailHeaders(mailType, mailFolderId);
 					//initialize the adapter
-					adapter = new MailListViewAdapter(context, cacheAdapter.getMailHeaders(mailType, mailFolderId));
+					adapter = new MailListViewAdapter(context, listVOs);
 				}
 
 				// initializes the list view with the adapter. also will place all the cached mails in list view initially
@@ -194,7 +198,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				fragmentAlreadyLoaded=true; //tracks config change(screen rotation)
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				Utilities.generalCatchBlock(e, this.getClass());
 			}
 		}
@@ -205,7 +208,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 * 
 	 */
 	public void showMoreLoadingAnimation() {
-		// TODO Auto-generated method stub
 		int totalRecordsInCache=-1;
 		
 		//show the loading animation with the no of mails reamaining in the end of listview
@@ -224,7 +226,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 
-		//contains all the UI listners for this fragment
+		//contains all the UI listeners for this fragment
 		MailListViewListener listener = new MailListViewListener(this);
 		
 		super.onActivityCreated(savedInstanceState);
@@ -259,7 +261,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			adapter.notifyDataSetChanged();
 			updateTextSwitcherWithMailCount();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
 	}
@@ -284,7 +285,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 * @return
 	 */
 	private String getMailFolderDisplayName(int mailType) {
-		// TODO Auto-generated method stub
 		switch(mailType){
 		case (MailType.SENT_ITEMS):
 			return (activity.getString(R.string.ActionBarTitle_SentItems));
@@ -304,7 +304,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 * 
 	 */
 	public void updatingStatusUIChanges() {
-		// TODO Auto-generated method stub
 		try {
 			//progress bar - visible
 			bar_progressbar.setVisibility(View.VISIBLE);
@@ -323,7 +322,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			//progress bar at 40
 			bar_progressbar.setProgress(40);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
 	}

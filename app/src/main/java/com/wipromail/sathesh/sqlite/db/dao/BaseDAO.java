@@ -3,14 +3,6 @@
  */
 package com.wipromail.sathesh.sqlite.db.dao;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,20 +18,28 @@ import com.wipromail.sathesh.sqlite.db.DbHelper;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.PojoVO;
 import com.wipromail.sathesh.util.Utilities;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author sathesh
  *
  */
 public class BaseDAO implements Constants{
 
-	protected Context context;
-	protected SQLiteDatabase database;
-	protected DbHelper dbHelper;
+	protected static Context context;
+	protected static SQLiteDatabase database;
+    protected static DbHelper dbHelper;
 
 	/** opens the db helper for writing. the file(db file) is initialized in the helper.
 	 * @throws SQLException
 	 */
-	protected void open()  {
+	protected void open(DbHelper dbHelper)  {
 		database = dbHelper.getWritableDatabase();
 	}
 
@@ -47,7 +47,7 @@ public class BaseDAO implements Constants{
 	/** closes the db
 	 * 
 	 */
-	protected void close() {
+	protected void close(DbHelper dbHelper) {
 		dbHelper.close();
 	}
 
@@ -56,7 +56,6 @@ public class BaseDAO implements Constants{
 	 * Maps the Pojo Objects(VO) to the content values. It should be called before insert query
 	 * First gets the column name from the Table class in which the columns are defined as static variables with name "COLUMN_ActualColumnName" 
 	 * It gets the ActualColumnName and matches with the "setActualColumnName" in the VO Object class
-	 * @param contentValues
 	 * @param vo
 	 */
 	protected ContentValues autoMapVoToContentValues( PojoVO vo, Class tableClass){
@@ -130,7 +129,6 @@ public class BaseDAO implements Constants{
 
 	/** This calls processCursorToVOAtPosition() but porcesses list of VOs
 	 * @param cursor
-	 * @param vo
 	 * @return list - list of VOs
 	 */
 	protected List<PojoVO> autoMapCursorToVo(Cursor cursor,Class voClass){
@@ -207,6 +205,11 @@ public class BaseDAO implements Constants{
 								{
 									method.invoke(vo,cursor.getString(columnIndex));
 								}
+                                //target set method's data type is int
+                                else if(setParameterType.equals("int"))
+                                {
+                                    method.invoke(vo,cursor.getInt(columnIndex));
+                                }
 								//target set method's data type is boolean
 								else if (setParameterType.equals("boolean"))
 								{
@@ -238,6 +241,7 @@ public class BaseDAO implements Constants{
 										}
 									}
 								}
+                                //HAVE TO BE CODED IF NEEDED FOR LONG AND OTHER DATA TYPES
 
 							}
 							else{

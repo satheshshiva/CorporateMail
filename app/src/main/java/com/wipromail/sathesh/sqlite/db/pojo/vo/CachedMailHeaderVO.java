@@ -94,30 +94,23 @@ public class CachedMailHeaderVO implements PojoVO, Serializable{
 	public void setMail_has_attachments(boolean mail_has_attachments) {
 		this.mail_has_attachments = mail_has_attachments;
 	}
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("CachedMailHeaderVO [folder_id=");
-		builder.append(folder_id);
-		builder.append(", folder_name=");
-		builder.append(folder_name);
-		builder.append(", item_id=");
-		builder.append(item_id);
-		builder.append(", mail_from=");
-		builder.append(mail_from);
-		builder.append(", mail_to=");
-		builder.append(mail_to);
-		builder.append(", mail_cc=");
-		builder.append(mail_cc);
-		builder.append(", mail_subject=");
-		builder.append(mail_subject);
-		builder.append(", mail_datetimereceived=");
-		builder.append(mail_datetimereceived);
-		builder.append(", mail_isread=");
-		builder.append(mail_isread);
-		builder.append(", mail_has_attachments=");
-		builder.append(mail_has_attachments);
-		builder.append("]");
-		return builder.toString();
-	}
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CachedMailHeaderVO{");
+        sb.append("folder_id='").append(folder_id).append('\'');
+        sb.append(", folder_name='").append(folder_name).append('\'');
+        sb.append(", item_id='").append(item_id).append('\'');
+        sb.append(", mail_type=").append(mail_type);
+        sb.append(", mail_from='").append(mail_from).append('\'');
+        sb.append(", mail_to='").append(mail_to).append('\'');
+        sb.append(", mail_subject='").append(mail_subject).append('\'');
+        sb.append(", mail_cc='").append(mail_cc).append('\'');
+        sb.append(", mail_bcc='").append(mail_bcc).append('\'');
+        sb.append(", mail_datetimereceived=").append(mail_datetimereceived);
+        sb.append(", mail_isread=").append(mail_isread);
+        sb.append(", mail_has_attachments=").append(mail_has_attachments);
+        sb.append('}');
+        return sb.toString();
+    }
 }

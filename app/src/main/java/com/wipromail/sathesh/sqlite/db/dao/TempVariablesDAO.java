@@ -1,8 +1,5 @@
 package com.wipromail.sathesh.sqlite.db.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,8 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.wipromail.sathesh.sqlite.db.DbConstants;
 import com.wipromail.sathesh.sqlite.db.DbHelper;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.PojoVO;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.TempVariablesVO;
+
+import java.util.List;
 
 /** DAO for the Table TEMP_VARIABLES
  * @author sathesh
@@ -35,25 +33,23 @@ public class TempVariablesDAO extends BaseDAO{
 
 
 	/** New record 
-	 * @param location
 	 * @return
 	 */
 	public long createOrUpdate(TempVariablesVO vo) throws Exception {
 		long insertId=0;
 		ContentValues values = autoMapVoToContentValues(vo,tableClass);
 		try{
-			open();
+			open(dbHelper);
 			insertId = database.insertWithOnConflict(DbConstants.table.TEMP_VARIABLES, null,
 					values,SQLiteDatabase.CONFLICT_REPLACE);
 		}
 		finally{
-			try{close();}catch(Exception e){}
+			try{close(dbHelper);}catch(Exception e){}
 		}
 		return insertId;
 	}
 	
 	/** Get all records
-	 * @param location
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -61,12 +57,12 @@ public class TempVariablesDAO extends BaseDAO{
 		
 		List<TempVariablesVO> returnList =null;
 		try{
-		open();
+		open(dbHelper);
 		Cursor cursor = database.query(DbConstants.table.TEMP_VARIABLES,
 				null, null, null, null, null, null);
 		returnList =(List)autoMapCursorToVo(cursor,voClass);
 		}finally{
-		close();
+		close(dbHelper);
 		}
 		return returnList;
 	}

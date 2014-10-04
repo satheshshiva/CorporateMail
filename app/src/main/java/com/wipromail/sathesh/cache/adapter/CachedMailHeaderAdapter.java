@@ -45,14 +45,12 @@ public class CachedMailHeaderAdapter {
 	 * @param emptyCache - Empties the cache before writing
 	 */
 	public void cacheNewData(Context context, ArrayList<Item> items, int mailType, String mailFolderName, String mailFolderId, boolean emptyCache)  {
-		// TODO Auto-generated method stub
 		try {
 			if(emptyCache){
 				deleteAll(mailType, mailFolderId);
 			}
 			writeMailHeader( mailType, mailFolderName, mailFolderId, items);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG)
 				e.printStackTrace();
 		}	
@@ -73,7 +71,6 @@ public class CachedMailHeaderAdapter {
 				mailListHeaderData = dao.getAllRecordsByFolderId(mailFolderId);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG)
 				e.printStackTrace();
 		}
@@ -86,7 +83,6 @@ public class CachedMailHeaderAdapter {
 	 * 
 	 */
 	public int getRecordsCount(int mailType, String mailFolderId) throws Exception {
-		// TODO Auto-generated method stub
 		int totalCachedRecords;
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			totalCachedRecords=dao.getRecordsCountByMailType(mailType);
@@ -103,7 +99,6 @@ public class CachedMailHeaderAdapter {
 	 * 
 	 */
 	public int getUnreadMailCount(int mailType, String mailFolderId) throws Exception {
-		// TODO Auto-generated method stub
 		int totalUnread;
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			totalUnread=dao.getUnreadByMailType(mailType);
@@ -120,7 +115,6 @@ public class CachedMailHeaderAdapter {
 	 * 
 	 */
 	private void deleteAll(int mailType, String mailFolderId) throws Exception {
-		// TODO Auto-generated method stub
 		// Pass folder id or folder name to the corresponding folder
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			dao.deleteAllByMailType(mailType);
@@ -139,7 +133,6 @@ public class CachedMailHeaderAdapter {
      * @throws Exception
      */
 	public void deleteN(int mailType, String mailFolderId, int n) throws Exception {
-		// TODO Auto-generated method stub
 		// Pass folder id or folder name to the corresponding folder
 		if(mailType!=MailType.FOLDER_WITH_ID && mailType!=MailType.INBOX_SUBFOLDER_WITH_ID){
 			dao.deleteNByMailType(mailType,n);
@@ -158,8 +151,6 @@ public class CachedMailHeaderAdapter {
 	 * @throws Exception
 	 */
 	public synchronized void writeMailHeader(int mailType, String mailFolderName, String strFolderId, ArrayList<Item> items ) throws ServiceLocalException, Exception {
-		// TODO Auto-generated method stub
-
 		List<CachedMailHeaderVO> vos = new ArrayList<CachedMailHeaderVO>();
 		
 		//convert the list of Item to List of VO
@@ -175,8 +166,6 @@ public class CachedMailHeaderAdapter {
 	 * @throws Exception
 	 */
 	public synchronized void markMailAsRead(String itemId ) throws Exception {
-		// TODO Auto-generated method stub
-
 		//call the DAO for with the list of VOs to save
 		dao.markMailAsRead(itemId);
 	}
@@ -186,7 +175,6 @@ public class CachedMailHeaderAdapter {
 	 *
 	 */
 	private CachedMailHeaderVO covertItemToVO(int mailType, String mailFolderName,  String strFolderId, Item item) throws ServiceLocalException, Exception{
-		// TODO Auto-generated method stub
 		CachedMailHeaderVO vo = new CachedMailHeaderVO();
 		mailFunctions = MailFunctionsImpl.getInbox();
 		

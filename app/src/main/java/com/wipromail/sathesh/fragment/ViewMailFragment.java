@@ -35,7 +35,6 @@ import com.wipromail.sathesh.ews.MailFunctionsImpl;
 import com.wipromail.sathesh.handlers.LoadEmailHandler;
 import com.wipromail.sathesh.handlers.runnables.LoadEmailRunnable;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
-import com.wipromail.sathesh.service.data.EmailAddress;
 import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
@@ -43,7 +42,9 @@ import com.wipromail.sathesh.ui.listeners.ViewMailListener;
 import com.wipromail.sathesh.web.StandardWebView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author sathesh
@@ -64,6 +65,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private LinearLayout cc_LinearLayout;
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
+    private EmailMessage message;
 
     private CachedMailHeaderVO mailHeader;
 
@@ -76,8 +78,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         ERROR	// Error
     }
 
-    private EmailMessage message;
-
     private String msgBody=null;
     private String from="", to="",cc="",bcc="", subject="", itemId="";
     private String mailFolderName="";
@@ -87,9 +87,9 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private boolean toShowMoreFlag=false;
 
     private boolean ccShowMoreFlag=false;
-    private String[] toReceivers;
-    private String[] ccReceivers;
-    private String[] bccReceivers;
+    private List<ContactSerializable> toReceivers;
+    private List<ContactSerializable> ccReceivers;
+    private List<ContactSerializable> bccReceivers;
 
     private boolean isToExist=false;
     private boolean isCCExist=false;
@@ -187,7 +187,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
 
         //shows the from, to etc., which we got from the intent extra
-        showDetails();
+        showHeaders();
 
         loadEmail();
 
@@ -260,46 +260,39 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     @Override
     public void replyMail(boolean replyAll) throws Exception{
-        ContactSerializable sContact;
         Bundle toBundle = new Bundle();
         Bundle ccBundle = new Bundle();
         Bundle bccBundle = new Bundle();
-
-        String replySubject="";
-
-        // prefill to
-		/*if(isToExist){
-
-			for(String receiver : toReceivers){
-				sContact = new ContactSerializable("", receiver, true);
-				toBundle.putSerializable(sContact.getEmail(), sContact);
-			}
-		}*/
+        String replySubject="", displayName="";
 
         //Prefill To
-
-        EmailAddress sender =message.getSender();
-
-        if(sender != null){
-            sContact = new ContactSerializable(sender.getAddress(), sender.getName(), true);
-            toBundle.putSerializable(sContact.getEmail(), sContact);
+        ContactSerializable fromContact=null;
+        //prepare the toBundle for reply with the "from" String
+        List<ContactSerializable> fromList = getContactsFromString(from);
+        if(fromList.size() > 0 ) {
+            fromContact = fromList.get(0);
         }
-        //Prefill cc
+        toBundle.putSerializable(fromContact.getEmail(), fromContact);  //key,value
+
+        //Prefill CC with to
         if(replyAll){
             if(isToExist){
-                Log.d(TAG, "toReceivers");
-                Log.d(TAG, toReceivers.toString());
+                //prepare the ccBundle for reply with the "to" String
+                if(BuildConfig.DEBUG) {
+                    Log.d(TAG, "toReceivers");
+                    Log.d(TAG, toReceivers.toString());
+                }
                 //if there are more than 1 To receivers then add them to CC except the same person
-                for(String receiver : toReceivers){
-                    Log.d(TAG, receiver);
-                    if(receiver!=null){
-                        receiver = receiver.trim();
-                        if(!receiver.equals(MailApplication.getUserDisplayName(context))){
-                            sContact = new ContactSerializable(receiver, receiver, true);
-                            if(BuildConfig.DEBUG) {
-                                Log.d(TAG, "ViewMailFragment -> Adding to as reciever" + sContact.getEmail());
-                            }
-                            ccBundle.putSerializable(sContact.getEmail(), sContact);
+                for(ContactSerializable toContact : toReceivers){
+                    displayName = toContact.getDisplayName();
+                    if(BuildConfig.DEBUG) {
+                        Log.d(TAG, "ViewMailFragment -> Receiver " + displayName);
+                    }
+                    if(displayName!=null){
+                        displayName = displayName.trim();
+                        //if the "to" has the same logged in person then skip it
+                        if(!displayName.equals(MailApplication.getUserDisplayName(context))){
+                            ccBundle.putSerializable(toContact.getEmail(), toContact);  //key,value
                         }
                         else{
                             if(BuildConfig.DEBUG) {
@@ -308,41 +301,41 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                         }
                     }
                     else{
-                        Log.e(TAG, "ViewMailFragment -> Receiver "+ receiver + " is null");
+                        Log.e(TAG, "ViewMailFragment -> Receiver " + displayName + " is null");
                     }
                 }
             }
-            if(isCCExist){
 
-                for(String receiver : ccReceivers){
-                    if(receiver!=null){
-                        receiver = receiver.trim();
-                        if(!receiver.equals(MailApplication.getUserDisplayName(context))){
-                            sContact = new ContactSerializable(receiver, receiver, true);
-                            Log.d(TAG, "ViewMailFragment -> Adding cc as cc reciever" + sContact.getEmail());
-                            ccBundle.putSerializable(sContact.getEmail(), sContact);
+            //Prefill CC with cc
+            //add ccBundle from String "cc"
+            if(isCCExist){
+                for(ContactSerializable ccContact : ccReceivers){
+                    displayName = ccContact.getDisplayName();
+                    if(displayName!=null){
+                        displayName = displayName.trim();
+                        if(!displayName.equals(MailApplication.getUserDisplayName(context))){
+                            ccBundle.putSerializable(ccContact.getEmail(), ccContact);  //key,value
                         }else{
                             if(BuildConfig.DEBUG) {
                                 Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user from CC to CC in new mail");
                             }
-                            }
-
+                        }
                     }
                     else{
-                        Log.e(TAG, "ViewMailFragment -> Receiver "+ receiver + " is null");
+                        Log.e(TAG, "ViewMailFragment -> Receiver "+ displayName + " is null");
                     }
                 }
             }
 
-            //Prefill bcc
+            //Prefill BCC
+            //prepare bccBundle from string "bcc"
             if(isBCCExist){
-
-                for(String receiver : bccReceivers){
-                    if(receiver!=null){
-                        receiver = receiver.trim();
-                        if(!receiver.equals(MailApplication.getUserDisplayName(context))){
-                            sContact = new ContactSerializable(receiver, receiver, true);
-                            bccBundle.putSerializable(sContact.getEmail(), sContact);
+                for(ContactSerializable bccContact : bccReceivers){
+                    displayName = bccContact.getDisplayName();
+                    if(displayName!=null){
+                        displayName = displayName.trim();
+                        if(!displayName.equals(MailApplication.getUserDisplayName(context))){
+                            bccBundle.putSerializable(displayName, bccContact);
                         }else{
                             if(BuildConfig.DEBUG) {
                                 Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user in BCC");
@@ -350,7 +343,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                         }
                     }
                     else{
-                        Log.e(TAG, "ViewMailFragment -> Receiver "+ receiver + " is null");
+                        Log.e(TAG, "ViewMailFragment -> Receiver "+ displayName + " is null");
                     }
                 }
             }
@@ -366,12 +359,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 replySubject = subject;
             }
 
-
             if(subject.toUpperCase().startsWith(getString(R.string.compose_forward_subject_prefix).toUpperCase())){
                 //if subject starts with FW: then replace with RE:
                 replySubject =getString(R.string.compose_reply_subject_prefix) + subject.substring(3); //will eliminate the FW: text since this is reply
             }
-
         }
 
         if(BuildConfig.DEBUG) {
@@ -435,10 +426,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 		}*/
     }
 
-    public void displayEverything(){
+    public void displayHeadersAndBody(){
 
         try{
-            showDetails();
+            showHeaders();
 
             //body
             showBody(msgBody);
@@ -451,19 +442,18 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     /** Private method - Displays the Headers from, to,etc.,
      *
      */
-    private void showDetails() {
+    private void showHeaders() {
 
         if(to!=null && !(to.equals(""))){
             isToExist=true;
-            toReceivers= to.split(";");
-
+            toReceivers= getContactsFromString(to);
         }
         else{
             isToExist=false;
         }
         if(cc!=null && !(cc.equals(""))){
             isCCExist=true;
-            ccReceivers= cc.split(";");
+            ccReceivers= getContactsFromString(cc);
             cc_LinearLayout.setVisibility(View.VISIBLE);
         }
         else{
@@ -471,7 +461,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
         if(bcc!=null && !(bcc.equals(""))){
             isBCCExist=true;
-            bccReceivers= bcc.split(";");
+            bccReceivers= getContactsFromString(bcc);
             //	BCC_ViewMail_LinearLayout.setVisibility(View.VISIBLE);
         }
         else{
@@ -493,7 +483,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             //to
             if(isToExist){
                 //limit the number of receivers in To if there are more
-                if(toReceivers.length > MAX_TO_RECEIVERS_TO_DISPLAY){
+                if(toReceivers.size() > MAX_TO_RECEIVERS_TO_DISPLAY){
                     //reduce the no. of To: receivers and hide thmem with show more button
                     showFewToReceivers();
                     toShowMoreBtn.setVisibility(View.VISIBLE);
@@ -505,7 +495,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             if(isCCExist){
                 //cc
                 //limit the number of receivers in CC if there are more
-                if(ccReceivers.length > MAX_TO_RECEIVERS_TO_DISPLAY){
+                if(ccReceivers.size() > MAX_TO_RECEIVERS_TO_DISPLAY){
                     //reduce the no. of CC receivers and hide them with show more button
                     showFewCCReceivers();
                     cCShowMoreBtn.setVisibility(View.VISIBLE);
@@ -547,7 +537,47 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     }
 
     public void showFewCCReceivers(){
-        cCIdView.setText(ccReceivers[0] + "; " +ccReceivers[1] + ";...");
+        cCIdView.setText(ccReceivers.get(0).getDisplayName() + "; "
+                +ccReceivers.get(1).getDisplayName() + ";...");
+    }
+
+    /** Returns the list of ContactSerializables from the gven string which was separated by delimiters
+     *
+     * @param str
+     * @return
+     */
+    private List<ContactSerializable> getContactsFromString(String str){
+        List<ContactSerializable> list = new ArrayList<ContactSerializable>();
+        String[] nameEmailArray, addressArray;
+        ContactSerializable contact ;
+
+        //split the email addesses sperator (;) and put in array
+        addressArray = str.split(EMAIL_DELIMITER_DISP);
+        for(String address : addressArray){
+            // check whether each entry has name and email seprated with delim(#$%)
+            if(address.contains(EMAIL_NAMEEMAIL_STORAGE_DELIM)){
+                nameEmailArray=address.split(EMAIL_NAMEEMAIL_STORAGE_DELIM);
+                contact = new ContactSerializable();
+                if(nameEmailArray.length>0) {
+                    contact.setDisplayName(nameEmailArray[0]);
+                    //if the email is present
+                    if(nameEmailArray.length>1) {
+                        contact.setEmail(nameEmailArray[1]);
+                        contact.setResolveOnLoad(true); // on load of the contact load the full contact
+                    }
+                    contact.setTryResolveNamesInDirectory(false);
+                }
+            }
+            //if the delim (#%!) is not there then only name is present for the entry
+            else{
+                contact = new ContactSerializable();
+                contact.setDisplayName(address);
+                contact.setTryResolveNamesInDirectory(true);
+            }
+            //add to the return list
+            list.add(contact);
+        }
+        return list;
     }
 
     /** Confirmation dialog shown for deleting items from Deleted Items folder
@@ -563,7 +593,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 .setMessage(R.string.dialog_deletemail_msg)
                 .setPositiveButton(R.string.alertdialog_positive_lbl, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        DeleteMailAsyncCaller deleteCaller = new DeleteMailAsyncCaller(_acivity, message, true);
+                        DeleteMailAsyncCaller deleteCaller;
+                        deleteCaller = new DeleteMailAsyncCaller(_acivity, message, itemId, true);
                         deleteCaller.startDeleteMailAsyncTask();
                     }
                 })
@@ -578,7 +609,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     }
 
     public void showFewToReceivers(){
-        toIdView.setText(toReceivers[0] + "; " +toReceivers[1] + ";...");
+        toIdView.setText(toReceivers.get(0).getDisplayName() + "; "
+                + toReceivers.get(1).getDisplayName() + ";...");
     }
 
 
@@ -600,21 +632,13 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.remainingInlineImages = remainingInlineImages;
     }
 
+    @Override
     public Status getCurrentStatus() {
         return currentStatus;
     }
 
     public void setCurrentStatus(Status currentStatus) {
         this.currentStatus = currentStatus;
-    }
-
-    @Override
-    public EmailMessage getMessage() {
-        return message;
-    }
-
-    public void setMessage(EmailMessage message) {
-        this.message = message;
     }
 
     @Override
@@ -821,5 +845,22 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     public void setMailFolderName(String mailFolderName) {
         this.mailFolderName = mailFolderName;
+    }
+
+    @Override
+    public EmailMessage getMessage() {
+        return message;
+    }
+
+    public void setMessage(EmailMessage message) {
+        this.message = message;
+    }
+
+    @Override
+    public String getItemId() {
+        return itemId;
+    }
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 }

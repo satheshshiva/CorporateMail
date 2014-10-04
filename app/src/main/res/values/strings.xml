@@ -252,4 +252,13 @@
     <string name="title_activity_contact_details">Contact Details</string>
     <string name="title_activity_my">MyActivity</string>
 
+    <!-- Action Bar -->
+    <string name="actionBar_Delete">Delete</string>
+    <string name="actionBar_Attachment">Attachment</string>
+    <string name="actionBar_Reply">Reply</string>
+    <string name="actionBar_Reply_All">Reply All</string>
+    <string name="actionBar_Forward">Forward</string>
+    <string name="actionBar_Send_Mail">Send Mail</string>
+    <string name="actionBar_Submenu_Reply_Options">Rely Options</string>
+    <string name="actionBar_Submenu_Others">Others</string>
 </resources>

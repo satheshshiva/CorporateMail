@@ -381,17 +381,11 @@ public class MailApplication implements Constants {
 
 	}
 	public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception{
-		// TODO Auto-generated method stub
-
 		return NetworkCall.resolveName(service, username, retrieveContactDetails);
-
 	}
 
 	public static NameResolutionCollection resolveName_LocalThenDirectory(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception{
-		// TODO Auto-generated method stub
-
 		return NetworkCall.resolveName_LocalThenDirectory(service, username, retrieveContactDetails);
-
 	}
 
 	/** gets the logged in user diaplay name
@@ -404,15 +398,12 @@ public class MailApplication implements Constants {
 	}
 
 	public static void openPlayStoreLink(Context context) throws Exception{
-		// TODO Auto-generated method stub
-
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse("market://details?id=" + context.getPackageName()));
 		context.startActivity(i);
 	}
 
 	public static void showRateAppDialog(final Activity activity) {
-		// TODO Auto-generated method stub
 		// if the counter is greater than a limit then show a dialog to rate the app
 		//Building Rate App Dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);

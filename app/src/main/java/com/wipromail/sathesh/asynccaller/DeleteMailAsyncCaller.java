@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.asynctask.DeleteItemIdsAsyncTask;
 import com.wipromail.sathesh.asynctask.DeleteItemsAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
@@ -19,11 +20,13 @@ public class DeleteMailAsyncCaller implements Constants, GenericAsyncTask{
 
 	private SherlockFragmentActivity activity;
 	private Item item;
+    private String itemId="";
 	private boolean permanentDelete=false;
 	
-	public DeleteMailAsyncCaller(SherlockFragmentActivity activity, Item item, boolean permanentDelete){
+	public DeleteMailAsyncCaller(SherlockFragmentActivity activity, Item item, String itemId, boolean permanentDelete){
 		this.activity = activity;
 		this.item = item;
+        this.itemId=itemId;
 		this.permanentDelete=permanentDelete;
 	}
 	
@@ -32,7 +35,12 @@ public class DeleteMailAsyncCaller implements Constants, GenericAsyncTask{
 		try {
 			//calling the actual async task
 			activity.finish();
-			new DeleteItemsAsyncTask(this, activity, item, permanentDelete).execute();
+            if(item!=null){
+                new DeleteItemsAsyncTask(this, activity, item, permanentDelete).execute();
+            }
+            else if(itemId!=null && !itemId.equals("")){
+                new DeleteItemIdsAsyncTask(this, activity, itemId, permanentDelete).execute();
+            }
 		} catch (Exception e) {
 			Log.e(TAG, "DeleteMailAsyncTaskCaller -> Error while calling async task");
 			e.printStackTrace();

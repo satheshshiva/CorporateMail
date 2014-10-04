@@ -154,7 +154,6 @@ public class TableCachedMailHeader implements DbConstants, DbTable{
 	 */
 	@Override
 	public List<String> getNewTableQueries() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

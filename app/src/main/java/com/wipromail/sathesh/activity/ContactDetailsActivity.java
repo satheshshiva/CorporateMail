@@ -8,12 +8,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.R.id;
-import com.wipromail.sathesh.R.layout;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
-import com.wipromail.sathesh.ui.OptionsUIContent;
 
 public class ContactDetailsActivity extends SherlockActivity implements Constants {
 //test msg
@@ -99,7 +96,6 @@ public class ContactDetailsActivity extends SherlockActivity implements Constant
 
 	//if the dispaly name is null then use the email
 	private String getCustomDisplayName(ContactSerializable sContact) {
-		// TODO Auto-generated method stub
 		if(sContact.getDisplayName() ==null || sContact.getDisplayName().equals("")){
 			return sContact.getEmail();
 		}
@@ -111,7 +107,7 @@ public class ContactDetailsActivity extends SherlockActivity implements Constant
 
 		if(showSendMailBtn){
 		//Always Visible menu
-		menu.add(ACTIONBAR_SENDMAIL)
+		menu.add(this.getString(R.string.actionBar_Send_Mail))
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		}
 		return true;
@@ -123,15 +119,13 @@ public class ContactDetailsActivity extends SherlockActivity implements Constant
 		if(item!=null && item.getItemId()==android.R.id.home){
 			finish();
 		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_SENDMAIL))
+		else if(item!=null && item.getTitle().equals(this.getString(R.string.actionBar_Send_Mail)))
 		{
 			if(sContact!= null ){
 				MailApplication.composeEmailForContact(this, ComposeActivity.PREFILL_TYPE_CONTACT_DETAILS_BTN, sContact);
 			}
 
 		}
-
-
 		return super.onOptionsItemSelected(item);
 	}
 }
