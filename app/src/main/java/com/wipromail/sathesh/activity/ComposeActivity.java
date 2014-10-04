@@ -839,19 +839,24 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
                         Log.d(TAG, "id" + id);
                     }
                     if(type == TYPE_TO){
-                        Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE TO; Id:" + id);
-
+                        if(BuildConfig.DEBUG) {
+                            Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE TO; Id:" + id);
+                        }
                         actualToReceivers.put(id, ContactSerializable.getContactSerializableFromContact(contact,email ));
                         refreshDisplayString(compose_to_disp,actualToReceivers,TYPE_TO);
 
                     }
                     if(type== TYPE_CC){
-                        Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE CC; Id:" + id);
+                        if(BuildConfig.DEBUG) {
+                            Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE CC; Id:" + id);
+                        }
                         actualCCReceivers.put(id, ContactSerializable.getContactSerializableFromContact(contact,email ));
                         refreshDisplayString(compose_cc_disp,actualCCReceivers,TYPE_CC);
                     }
                     if(type == TYPE_BCC){
-                        Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE BCC; Id:" + id);
+                        if(BuildConfig.DEBUG) {
+                            Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE BCC; Id:" + id);
+                        }
                         actualBCCReceivers.put(id, ContactSerializable.getContactSerializableFromContact(contact,email ));
                         refreshDisplayString(compose_bcc_disp,actualBCCReceivers,TYPE_BCC);
                     }

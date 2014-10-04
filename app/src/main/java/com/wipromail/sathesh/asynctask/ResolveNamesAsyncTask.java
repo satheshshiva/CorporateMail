@@ -95,9 +95,7 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 			//should not display any url to user
 			pE=e;
 			publishProgress(STATUS_ERROR, e.getMessage());
-			
 		}
-		
 		return null;
 	}
 
@@ -115,7 +113,9 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 				if(showProgressDialog){
 				dialog.dismiss();
 				}
-				Log.d(TAG, "Resolve names -> got the output. returning to caller " + caller.getClass().getName());
+                if(BuildConfig.DEBUG) {
+                    Log.d(TAG, "Resolve names -> got the output. returning to caller " + caller.getClass().getName());
+                }
 				caller.handleResolveNamesOutput(outputCollection,extra1);
 			}
 			else if(progress[0].equals(STATUS_ERROR)){
