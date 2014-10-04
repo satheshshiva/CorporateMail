@@ -1,10 +1,5 @@
 package com.wipromail.sathesh.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +29,11 @@ import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.ui.UIutilities;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SearchContactsActivity extends SherlockActivity  implements Constants,IResolveNames{
 
@@ -96,14 +96,12 @@ public class SearchContactsActivity extends SherlockActivity  implements Constan
 	}
 	@Override
 	public void handleResolvingNames() {
-		// TODO Auto-generated method stub
 		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	@Override
 	public void handleResolveNamesOutput(
 			NameResolutionCollection outputCollection, String extra1) {
-		// TODO Auto-generated method stub
 
 		ContactSerializable sContact;
 		dispNameList.clear();		// this holds the name list to be displayed in listview
