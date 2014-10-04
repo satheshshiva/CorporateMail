@@ -467,7 +467,6 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
         if(actualReceivers.size() !=0){
             SpannableStringBuilder sBuilder =buildDisplayString(actualReceivers, type);
 
-
             disp.setText(sBuilder);
             disp.setMovementMethod(LinkMovementMethod.getInstance()); 	//this line will make the links to work
         }
