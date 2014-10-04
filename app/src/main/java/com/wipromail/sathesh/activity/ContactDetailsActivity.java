@@ -74,15 +74,27 @@ public class ContactDetailsActivity extends SherlockActivity implements Constant
     protected void onResume() {
         super.onResume();
         ExchangeService service;
-
+        // resolve the contact if it is set in the flag
         if(sContact!=null){
             //if the resolveOnLoad flag is set to true then resolve the ontact
-            if(sContact.isResolveOnLoad() && sContact.getEmail()!=null && !sContact.getEmail().equals("")) {
+            if(sContact.isResolveOnLoad() ) {
                 try {
                     //make the network call by calling the async task
                     service = EWSConnection.getServiceFromStoredCredentials(this);
-                    new ResolveNamesAsyncTask(this, this, service, sContact.getDisplayName().toString(), false, "", "").execute();
-                } catch (Exception e) {
+                    //if the email is not empty then resolve the name with the email
+                    if(sContact.getEmail()!=null && !sContact.getEmail().equals("")) {
+                        new ResolveNamesAsyncTask(this, this, service, sContact.getEmail().toString(), false, "", "").execute();
+                    }
+                    // if the display name is not null then resolve with the display name
+                    // Bummer: For some persons there may be 2 or more emails ids with the same display name
+                    //          At that time it just prints error in the log and does not resolve. But mostly
+                    //          we will send the email
+
+                    else if(sContact.getDisplayName()!=null && !sContact.getDisplayName().equals("")){
+                        new ResolveNamesAsyncTask(this, this, service, sContact.getDisplayName().toString(), false, "", "").execute();
+                    }
+                }
+                catch (Exception e) {
                     Utilities.generalCatchBlock(e,this.getClass());
                 }
             }
@@ -187,7 +199,8 @@ public class ContactDetailsActivity extends SherlockActivity implements Constant
             }
             else{
                 //if more than 1 contact is returned then do nothing
-                Log.e(TAG, "ContactDetailsActivity -> outputCollection is null or more than 1. outputCollection=" + outputCollection);
+                Log.e(TAG, "ContactDetailsActivity -> outputCollection is null or more than 1.");
+                Log.e(TAG , "outputCollection Count " + ((outputCollection!=null)?outputCollection.getCount() : outputCollection).toString());
             }
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this.getClass());
