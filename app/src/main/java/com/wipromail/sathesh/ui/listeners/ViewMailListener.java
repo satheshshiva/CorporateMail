@@ -25,8 +25,6 @@ public class ViewMailListener implements OnClickListener{
 	 */
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
-
 		switch(view.getId()){
 		case R.id.ViewMailToShowMoreBtn:
 			showMoreToBtnOnClick(view);
@@ -41,7 +39,8 @@ public class ViewMailListener implements OnClickListener{
 
 	public void showMoreToBtnOnClick(View view) {
 		if(parent.isToShowMoreFlag() ==false){
-			parent.getToIdView().setText(parent.getTo());
+            //show all contacts
+            parent.buildHeaderText(parent.getToIdView(), parent.getToReceivers(), null);  //param null will display all contacts
 			parent.getToShowMoreBtn().setText(parent.getString(R.string.viewmail_showless_lbl));
 			parent.setToShowMoreFlag(true);
 		}
@@ -50,14 +49,12 @@ public class ViewMailListener implements OnClickListener{
 			parent.getToShowMoreBtn().setText(parent.getString(R.string.viewmail_showmore_lbl));
 			parent.setToShowMoreFlag(false);
 		}
-
 	}
 
 	public void showMoreCCBtnOnClick(View view) {
 		if(parent.isCcShowMoreFlag() ==false){
-			parent.getcCIdView().setText(parent.getCc());
+            parent.buildHeaderText(parent.getCcIdView(), parent.getCcReceivers(), null); //param null will display all contacts
 			parent.getcCShowMoreBtn().setText(parent.getString(R.string.viewmail_showless_cc_lbl));
-
 			parent.setCcShowMoreFlag(true);
 		}
 		else{

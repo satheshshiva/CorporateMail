@@ -6,8 +6,13 @@ package com.wipromail.sathesh.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +27,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.ComposeActivity;
+import com.wipromail.sathesh.activity.ContactDetailsActivity;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
@@ -39,6 +45,7 @@ import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
 import com.wipromail.sathesh.ui.listeners.ViewMailListener;
+import com.wipromail.sathesh.util.Utilities;
 import com.wipromail.sathesh.web.StandardWebView;
 
 import java.text.SimpleDateFormat;
@@ -57,7 +64,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     private TextView fromIdView ;
     private TextView toIdView ;
-    private TextView cCIdView ;
+    private TextView ccIdView;
     private TextView dateIdView;
     private Button toShowMoreBtn;
     private Button cCShowMoreBtn;
@@ -87,6 +94,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private boolean toShowMoreFlag=false;
 
     private boolean ccShowMoreFlag=false;
+    private List<ContactSerializable> fromReceivers;
     private List<ContactSerializable> toReceivers;
     private List<ContactSerializable> ccReceivers;
     private List<ContactSerializable> bccReceivers;
@@ -128,7 +136,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
         fromIdView = (TextView)view.findViewById(R.id.ViewMailFromId);
         toIdView = (TextView)view.findViewById(R.id.ViewMailToId);
-        cCIdView = (TextView)view.findViewById(R.id.ViewMailCCId);
+        ccIdView = (TextView)view.findViewById(R.id.ViewMailCCId);
         dateIdView = (TextView)view.findViewById(R.id.ViewMailDateId);
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
 
@@ -444,30 +452,39 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
      */
     private void showHeaders() {
 
-        if(to!=null && !(to.equals(""))){
-            isToExist=true;
-            toReceivers= getContactsFromString(to);
-        }
-        else{
-            isToExist=false;
-        }
-        if(cc!=null && !(cc.equals(""))){
-            isCCExist=true;
-            ccReceivers= getContactsFromString(cc);
-            cc_LinearLayout.setVisibility(View.VISIBLE);
-        }
-        else{
-            isCCExist=false;
-        }
-        if(bcc!=null && !(bcc.equals(""))){
-            isBCCExist=true;
-            bccReceivers= getContactsFromString(bcc);
-            //	BCC_ViewMail_LinearLayout.setVisibility(View.VISIBLE);
-        }
-        else{
-            isBCCExist=false;
-        }
         try {
+            //convert "from" delimitered text to from list of ContactSerializable
+            if(from!=null && !(from.equals(""))){
+                isToExist=true;
+                fromReceivers= getContactsFromString(from);
+            }
+
+            //convert "to" delimitered text to "to" list of ContactSerializable
+            if(to!=null && !(to.equals(""))){
+                isToExist=true;
+                toReceivers= getContactsFromString(to);
+            }
+            else{
+                isToExist=false;
+            }
+
+            //convert "cc" delimitered text to "cc" list of ContactSerializable
+            if(cc!=null && !(cc.equals(""))){
+                isCCExist=true;
+                ccReceivers= getContactsFromString(cc);
+            }
+            else{
+                isCCExist=false;
+            }
+            if(bcc!=null && !(bcc.equals(""))){
+                isBCCExist=true;
+                bccReceivers= getContactsFromString(bcc);
+                //	BCC_ViewMail_LinearLayout.setVisibility(View.VISIBLE);
+            }
+            else{
+                isBCCExist=false;
+            }
+
             //subject
             if(subject!=null && !(subject.equals(""))){
                 //activity.setTitle(subject);
@@ -477,39 +494,45 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 //activity.setTitle(VIEW_MAIL_WEBVIEW_NO_SUBJECT);
                 displaySubject(VIEW_MAIL_WEBVIEW_NO_SUBJECT);
             }
-            //from
-            fromIdView.setText(from);
+            // From
+            buildHeaderText(fromIdView, fromReceivers, null);
 
-            //to
+            // To
             if(isToExist){
                 //limit the number of receivers in To if there are more
                 if(toReceivers.size() > MAX_TO_RECEIVERS_TO_DISPLAY){
                     //reduce the no. of To: receivers and hide thmem with show more button
-                    showFewToReceivers();
+                    buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
                     toShowMoreBtn.setVisibility(View.VISIBLE);
                 }
                 else{
-                    toIdView.setText(to);
+                    //show all To contacts
+                    buildHeaderText(toIdView, toReceivers, null);
                 }
             }
+
+            //CC
             if(isCCExist){
                 //cc
                 //limit the number of receivers in CC if there are more
                 if(ccReceivers.size() > MAX_TO_RECEIVERS_TO_DISPLAY){
                     //reduce the no. of CC receivers and hide them with show more button
-                    showFewCCReceivers();
+                    buildHeaderText(ccIdView, ccReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
                     cCShowMoreBtn.setVisibility(View.VISIBLE);
                 }
                 else{
-                    cCIdView.setText(cc);
+                    // show all CC contacts
+                    buildHeaderText(ccIdView, ccReceivers, null);
                 }
+
+                cc_LinearLayout.setVisibility(View.VISIBLE);
             }
             //date
             if(date!=null){
                 dateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
             }
         }catch(Exception e){
-            e.printStackTrace();
+            Utilities.generalCatchBlock(e, this.getClass());
         }
 
     }
@@ -536,9 +559,18 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
     }
 
+    /** Invokedby click of the Show few To Receivers button
+     *
+     */
+    public void showFewToReceivers(){
+        buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
+    }
+
+    /** Invokedby click of the Show few CC Receivers button
+     *
+     */
     public void showFewCCReceivers(){
-        cCIdView.setText(ccReceivers.get(0).getDisplayName() + "; "
-                +ccReceivers.get(1).getDisplayName() + ";...");
+        buildHeaderText(ccIdView, ccReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
     }
 
     /** Returns the list of ContactSerializables from the gven string which was separated by delimiters
@@ -608,11 +640,71 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         alertDialog.show();
     }
 
-    public void showFewToReceivers(){
-        toIdView.setText(toReceivers.get(0).getDisplayName() + "; "
-                + toReceivers.get(1).getDisplayName() + ";...");
-    }
+    /** Build the headers display with links
+     *
+     * @param textView  - TextView
+     * @param contacts  - list of ContactSerializables to display
+     * @param max   - the no of entries to display
+     */
+    public void buildHeaderText(TextView textView, List<ContactSerializable> contacts, Integer max) {
+        SpannableStringBuilder sBuilder = new SpannableStringBuilder();
+        int initLength=0;
+        int counter = 0;
+        String nonLinkText="";
+        //get the current status whether the mails is in loading state
+        boolean statusLoadedMail= (currentStatus!=null &&
+                    currentStatus != Status.LOADING
+                    && currentStatus != Status.ERROR)
+                    ? true : false;
 
+        //loop thorugh each contact
+        while(counter<contacts.size()){
+            final ContactSerializable contact = contacts.get(counter);
+            initLength = sBuilder.length();
+
+            //if the mail is loaded then build the link for the contact
+            if(statusLoadedMail) {
+                sBuilder.append(contact.getDisplayName() + EMAIL_DELIMITER_DISP);
+
+                //click action to perform when clicked
+                sBuilder.setSpan(new ClickableSpan() {
+                    //on click of the link open the Contacts display
+                    @Override
+                    public void onClick(View arg0) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, contact + " clicked");
+                        }
+                        Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
+                        contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
+                        startActivity(contactDetailsIntent);
+                    }
+                }, initLength, sBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                   //length determines the length of string to make as clickables
+            }
+            //if the mail is in loading or error state then just display the contact witout link
+            else{
+                nonLinkText = contact.getDisplayName() + EMAIL_DELIMITER_DISP;
+            }
+
+            counter++;
+
+            //if the max no of contacts is given then break out of the loop
+            if (max != null && counter >= max) {
+                break;
+            }
+        }   //end while loop
+        //set the textview with the StringBuilder
+
+        //loads the text link in to textview
+        if(statusLoadedMail) {
+           textView.setText(sBuilder);
+           textView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+        //loads the text in to textview
+        else{
+           textView.setText(nonLinkText);
+        }
+    }
 
     /*** GETTER SETTER ***/
 
@@ -769,12 +861,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.toIdView = toIdView;
     }
 
-    public TextView getcCIdView() {
-        return cCIdView;
+    public TextView getCcIdView() {
+        return ccIdView;
     }
 
-    public void setcCIdView(TextView cCIdView) {
-        this.cCIdView = cCIdView;
+    public void setCcIdView(TextView ccIdView) {
+        this.ccIdView = ccIdView;
     }
 
     public TextView getDateIdView() {
@@ -862,5 +954,37 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     }
     public void setItemId(String itemId) {
         this.itemId = itemId;
+    }
+
+    public List<ContactSerializable> getToReceivers() {
+        return toReceivers;
+    }
+
+    public void setToReceivers(List<ContactSerializable> toReceivers) {
+        this.toReceivers = toReceivers;
+    }
+
+    public List<ContactSerializable> getCcReceivers() {
+        return ccReceivers;
+    }
+
+    public void setCcReceivers(List<ContactSerializable> ccReceivers) {
+        this.ccReceivers = ccReceivers;
+    }
+
+    public List<ContactSerializable> getBccReceivers() {
+        return bccReceivers;
+    }
+
+    public void setBccReceivers(List<ContactSerializable> bccReceivers) {
+        this.bccReceivers = bccReceivers;
+    }
+
+    public List<ContactSerializable> getFromReceivers() {
+        return fromReceivers;
+    }
+
+    public void setFromReceivers(List<ContactSerializable> fromReceivers) {
+        this.fromReceivers = fromReceivers;
     }
 }

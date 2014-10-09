@@ -105,8 +105,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
             parent.setFrom(getAddressString(message.getFrom()));
             parent.setCc(getAddressString(message.getCcRecipients()));
             parent.setBcc(getAddressString(message.getBccRecipients()));
-/*
-            parent.setMessage(message);*/
+
             parent.setMsgBody(msgBody);
             sendHandlerMsg(Status.SHOW_BODY);	//shows the headers and body
             attachmentCollection= message.getAttachments();
@@ -118,9 +117,10 @@ public class LoadEmailRunnable implements Runnable, Constants{
                 successfulCachedImages=cacheInlineImages(attachmentCollection, cachedMailHeaderVO);		//caching images is done here. html body will be refreshed after each img download
             }
             else{
-                if(BuildConfig.DEBUG)
+                if(BuildConfig.DEBUG) {
                     Log.d(TAG, "No inline images in this email. Inline images counter: "
-                            +parent.getRemainingInlineImages());
+                            + parent.getRemainingInlineImages());
+                }
             }
 
             sendHandlerMsg(Status.LOADED, parent.getProcessedHtml());

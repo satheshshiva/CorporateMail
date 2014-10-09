@@ -503,7 +503,6 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
                                 .setItems(R.array.compose_email_link, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
 
-								/* User clicked so do some stuff */
                                         String[] items = getResources().getStringArray(R.array.compose_email_link);
 
                                         if(which ==0){
