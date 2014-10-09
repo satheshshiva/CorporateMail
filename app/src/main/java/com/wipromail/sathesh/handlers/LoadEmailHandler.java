@@ -52,7 +52,9 @@ public class LoadEmailHandler extends Handler implements Constants{
 		case SHOW_BODY:
 			parent.setCurrentStatus(Status.SHOW_BODY);
 			parent.displayHeadersAndBody();
-            parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            if(parent.getActivity()!=null) {    //activity will be null when exit
+                parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            }
 			break;
 
 		case SHOW_IMG_LOADING_PROGRESSBAR:
@@ -71,12 +73,18 @@ public class LoadEmailHandler extends Handler implements Constants{
 		case LOADED:
 			//the mail has been displayed fully
 			parent.setCurrentStatus(Status.LOADED);
-            parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            if(parent.getActivity()!=null) {    //activity will be null when exit
+                parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            }
 			break;
 		case ERROR:
 			parent.setCurrentStatus(Status.ERROR);
-			parent.getStandardWebView().loadData(parent.getWebview(), VIEW_MAIL_ERROR_HTML);
-            parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            if(parent.getStandardWebView() !=null){
+            parent.getStandardWebView().loadData(parent.getWebview(), VIEW_MAIL_ERROR_HTML);
+            }
+            if(parent.getActivity()!=null) {    //activity will be null when exit
+                parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            }
 			break;
 		}
 	}

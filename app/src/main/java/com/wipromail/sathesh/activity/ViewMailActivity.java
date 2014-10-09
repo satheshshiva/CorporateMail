@@ -40,7 +40,8 @@ public class ViewMailActivity extends SherlockFragmentActivity implements Consta
         MenuItem subMenuItem;
 
         //if the current status is not loading or error states then show the menus
-        if(viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.LOADING
+        if(viewMailFragment.getCurrentStatus() != null
+                && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.LOADING
                 && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.ERROR) {
             //Reply submenu
             SubMenu subMenuReply = menu.addSubMenu(this.getString(R.string.actionBar_Submenu_Reply_Options));
