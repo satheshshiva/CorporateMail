@@ -43,7 +43,6 @@ public class BaseDAO implements Constants{
 		database = dbHelper.getWritableDatabase();
 	}
 
-
 	/** closes the db
 	 * 
 	 */
@@ -172,7 +171,6 @@ public class BaseDAO implements Constants{
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	protected PojoVO processCursorToVOAtPosition(Cursor cursor, int i, Class voClass) throws Exception {
-		// TODO Auto-generated method stub
 		PojoVO vo;
 		int columnIndex;
 		cursor.moveToPosition(i);
@@ -234,7 +232,6 @@ public class BaseDAO implements Constants{
 										Date date = dt.parse(strDateValue);
 										method.invoke(vo,date);
 									} catch (Exception e) {
-										// TODO Auto-generated catch block
 										if(BuildConfig.DEBUG){
 											Log.w(TAG, "BaseDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
 											e.printStackTrace();
@@ -289,7 +286,6 @@ public class BaseDAO implements Constants{
 	 * @return
 	 */
 	private static boolean isRightColumnName(String name) {
-		// TODO Auto-generated method stub
 		if(name!=null)
 			return name.startsWith("COLUMN_");
 		else

@@ -29,6 +29,7 @@ import com.wipromail.sathesh.service.data.FileAttachment;
 import com.wipromail.sathesh.service.data.ItemId;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
+import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailBodyVO;
 import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -68,10 +69,10 @@ public class LoadEmailRunnable implements Runnable, Constants{
 
         List<FileAttachment> successfulCachedImages;
         EmailMessage message;
-        String msgBody;
         CachedMailHeaderVO cachedMailHeaderVO;
         CachedMailHeaderAdapter cacheMailHeaderAdapter;
         CachedMailBodyAdapter cacheMailBodyAdapter;
+        String from_delimited="",to_delimited="", cc_delimited="", bcc_delimited="";
 
         try {
             sendHandlerMsg(Status.LOADING);
@@ -87,49 +88,97 @@ public class LoadEmailRunnable implements Runnable, Constants{
             //First mark it in the cache
             cacheMailHeaderAdapter.markMailAsRead(cachedMailHeaderVO.getItem_id());
 
-            //EWS call for loading the message
-            message=EmailMessage.bind(service, new ItemId(cachedMailHeaderVO.getItem_id()));
+            // get the cached body items by passing item id
+            List<CachedMailBodyVO> bodyVOList = cacheMailBodyAdapter.getMailBody(parent.getItemId());
 
-            //performance improvement.. mark the item as read in cache.
-            message.setIsRead(true);
+            if(bodyVOList!=null && bodyVOList.size()>0){
+            //cache exist
+                CachedMailBodyVO bodyVO = bodyVOList.get(0);
+                parent.setProcessedHtml(bodyVO.getMail_body());
+                parent.setTo(bodyVO.getMail_to_delimited());
+                parent.setFrom(bodyVO.getMail_from_delimited());
+                parent.setCc(bodyVO.getMail_cc_delimited());
+                parent.setBcc(bodyVO.getMail_bcc_delimited());
 
-            //Caching the downloaded mail body
-            cacheMailBodyAdapter.cacheNewData(message,
-                    parent.getMailType(),
-                    parent.getMailFolderName(),
-                    parent.getMailFolderId());
+                sendHandlerMsg(Status.SHOW_BODY);	//shows the headers and body
+                sendHandlerMsg(Status.LOADED);      //sets the status message to mail loaded completely
 
-            msgBody=mailFunctions.getBody(message);
-            parent.setProcessedHtml(mailFunctions.getBody(message));
-            parent.setTo(getAddressString(message.getToRecipients()));
-            parent.setFrom(getAddressString(message.getFrom()));
-            parent.setCc(getAddressString(message.getCcRecipients()));
-            parent.setBcc(getAddressString(message.getBccRecipients()));
-
-            parent.setMsgBody(msgBody);
-            sendHandlerMsg(Status.SHOW_BODY);	//shows the headers and body
-            attachmentCollection= message.getAttachments();
-            parent.setTotalInlineImages(getNoOfInlineImgs(attachmentCollection));
-            parent.setRemainingInlineImages(parent.getTotalInlineImages());
-            if(parent.getRemainingInlineImages() > 0){
-                sendHandlerMsg(Status.SHOW_IMG_LOADING_PROGRESSBAR);
-                parent.setProcessedHtml(processBodyHTMLWithImages(attachmentCollection, cachedMailHeaderVO));	//replace all the inline image "cid" tags with "file://" tags
-                successfulCachedImages=cacheInlineImages(attachmentCollection, cachedMailHeaderVO);		//caching images is done here. html body will be refreshed after each img download
-            }
-            else{
-                if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "No inline images in this email. Inline images counter: "
-                            + parent.getRemainingInlineImages());
+                // Network call to mark the item as read
+                if(BuildConfig.DEBUG){
+                    Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
                 }
-            }
 
-            sendHandlerMsg(Status.LOADED, parent.getProcessedHtml());
-
-            // Network call to mark the item as read
-            if(BuildConfig.DEBUG){
-                Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
+                NetworkCall.markEmailAsRead(service, parent.getContext(), parent.getItemId());
             }
-            NetworkCall.markEmailAsRead(parent.getContext(), message);
+            else {
+            //cache does NOT exist
+                //EWS Call - Load the mail from EWS
+                message = EmailMessage.bind(service, new ItemId(cachedMailHeaderVO.getItem_id()));
+
+                parent.setProcessedHtml(mailFunctions.getBody(message));
+
+                from_delimited =getAddressString(message.getFrom());
+                to_delimited =getAddressString(message.getToRecipients());
+                cc_delimited =getAddressString(message.getCcRecipients());
+                bcc_delimited =getAddressString(message.getBccRecipients());
+
+                parent.setFrom(from_delimited);
+                parent.setTo(to_delimited);
+                parent.setCc(cc_delimited);
+                parent.setBcc(bcc_delimited);
+
+                sendHandlerMsg(Status.SHOW_BODY);    //shows the headers and body
+                attachmentCollection = message.getAttachments();
+                parent.setTotalInlineImages(getNoOfInlineImgs(attachmentCollection));
+                parent.setRemainingInlineImages(parent.getTotalInlineImages());
+
+                //creating a CachedMailBodyVO to write to cache db
+                CachedMailBodyVO vo = new CachedMailBodyVO();
+                vo.setItem_id(parent.getItemId());
+                vo.setFolder_name(parent.getMailFolderName());
+                vo.setFolder_id(parent.getMailFolderId());
+                vo.setMail_type(parent.getMailType());
+                vo.setMail_from_delimited(from_delimited);
+                vo.setMail_to_delimited(to_delimited);
+                vo.setMail_cc_delimited(cc_delimited);
+                vo.setMail_bcc_delimited(bcc_delimited);
+
+                //if inline images present
+                if (parent.getRemainingInlineImages() > 0) {
+                    //replace all the inline image "cid" tags with "file://" tags
+                    String bodyWithImg = processBodyHTMLWithImages(attachmentCollection, cachedMailHeaderVO);
+
+                    //setting the processed html in the VO cache
+                    vo.setMail_body(bodyWithImg);
+                    //writing VO to cache
+                    cacheMailBodyAdapter.cacheNewData(vo);
+
+                    sendHandlerMsg(Status.SHOW_IMG_LOADING_PROGRESSBAR);
+                    parent.setProcessedHtml(bodyWithImg);
+
+                    // download and cache images. html body will be refreshed after each img download to show the imgs
+                    successfulCachedImages = cacheInlineImages(attachmentCollection, cachedMailHeaderVO);
+                }
+                //no inline images
+                else {
+                    vo.setMail_body(parent.getProcessedHtml()); //this is actually the normal html that comes with the item
+                    //Caching the downloaded mail body
+                    cacheMailBodyAdapter.cacheNewData(vo);
+
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "No inline images in this email. Inline images counter: "
+                                + parent.getRemainingInlineImages());
+                    }
+                }
+
+                sendHandlerMsg(Status.LOADED);
+
+                // Network call to mark the item as read
+                if(BuildConfig.DEBUG){
+                    Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
+                }
+                NetworkCall.markEmailAsRead(parent.getContext(), message);
+            } // end else cache NOT exist
 
         } catch(NoUserSignedInException e) {
             e.printStackTrace();
@@ -163,10 +212,10 @@ public class LoadEmailRunnable implements Runnable, Constants{
      */
     private String getAddressString(EmailAddress recipient) {
         StringBuffer str=new StringBuffer();
-            str.append(recipient.getName())
-                    .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
-                    .append(recipient.getAddress())
-                    .append(EMAIL_STORAGE_DELIM);
+        str.append(recipient.getName())
+                .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                .append(recipient.getAddress())
+                .append(EMAIL_STORAGE_DELIM);
         return str.toString();
     }
 
@@ -178,7 +227,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
      */
     private String processBodyHTMLWithImages(AttachmentCollection attachmentCollection, CachedMailHeaderVO cachedMailHeaderVO) throws Exception {
 
-        String bodyWithImage=parent.getMsgBody();
+        String bodyWithImage=parent.getProcessedHtml();
         String cid="", directoryPath="", imagePath="", imageHtmlUrl="";
         for(Attachment attachment:  attachmentCollection){
 

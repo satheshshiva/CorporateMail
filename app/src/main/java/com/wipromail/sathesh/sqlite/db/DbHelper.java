@@ -1,14 +1,14 @@
 package com.wipromail.sathesh.sqlite.db;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.wipromail.sathesh.constants.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper implements Constants, DbConstants{
 
@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper implements Constants, DbConstants
 	public static DbHelper getInstance(Context context){
 		
 		if(dbHelper==null){
-			dbHelper = new DbHelper(context);
+			dbHelper = new DbHelper(context.getApplicationContext());
 		}
 		return dbHelper;
 	}
