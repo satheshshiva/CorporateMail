@@ -19,7 +19,12 @@ public class TableCachedMailBody implements DbConstants, DbTable{
 	public static final String COLUMN_FOLDER_NAME = "FOLDER_NAME";
 	public static final String COLUMN_ITEM_ID = "ITEM_ID";
 	public static final String COLUMN_BODY = "MAIL_BODY";
-	
+    public static final String COLUMN_FROM_DELIMITED = "MAIL_FROM_DELIMITED";
+    public static final String COLUMN_TO_DELIMITED = "MAIL_TO_DELIMITED";
+    public static final String COLUMN_CC_DELIMITED = "MAIL_CC_DELIMITED";
+    public static final String COLUMN_BCC_DELIMITED = "MAIL_BCC_DELIMITED";
+    public static final String COLUMN_HAS_INLINE_IMGS = "HAS_INLINE_IMGS";
+
 	@Override
 	public String getCreateQuery(){
 		return "CREATE TABLE "
@@ -29,7 +34,12 @@ public class TableCachedMailBody implements DbConstants, DbTable{
 				+ COLUMN_FOLDER_ID + " TEXT,"
 				+ COLUMN_FOLDER_NAME + " TEXT,"
 				+ COLUMN_ITEM_ID + " TEXT UNIQUE NOT NULL ON CONFLICT REPLACE,"
-				+ COLUMN_BODY + " TEXT"
+				+ COLUMN_BODY + " TEXT,"
+                + COLUMN_FROM_DELIMITED + " TEXT,"
+                + COLUMN_TO_DELIMITED + " TEXT,"
+                + COLUMN_CC_DELIMITED + " TEXT,"
+                + COLUMN_BCC_DELIMITED + " TEXT,"
+                + COLUMN_HAS_INLINE_IMGS + " TEXT"
 				+");";
 	}
 
@@ -93,7 +103,6 @@ public class TableCachedMailBody implements DbConstants, DbTable{
 	 */
 	@Override
 	public List<String> getNewTableQueries() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

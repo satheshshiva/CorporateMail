@@ -85,7 +85,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         ERROR	// Error
     }
 
-    private String msgBody=null;
     private String from="", to="",cc="",bcc="", subject="", itemId="";
     private String mailFolderName="";
     private String mailFolderId="";
@@ -146,6 +145,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         webSettings.setAllowFileAccess(true);
 
         webSettings.setJavaScriptEnabled(true);	//this is important
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);    //no caches
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
 
@@ -440,7 +440,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             showHeaders();
 
             //body
-            showBody(msgBody);
+            showBody(processedHtml);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -546,7 +546,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
         if(null!=html1 && !(html1.equals(""))){
             if(BuildConfig.DEBUG) {
-                Log.d(TAG, "Loading html ");
+                Log.d(TAG, "Loading html " + html1);
             }
 
             //webview.loadData(dispBody, CommonWebChromeClient.MIME_TYPE_HTML,CommonWebChromeClient.ENCODING);
@@ -742,10 +742,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.mailType = mailType;
     }
 
-    public String getMsgBody() {
-        return msgBody;
-    }
-
     public String getFrom() {
         return from;
     }
@@ -762,9 +758,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.subject = subject;
     }
 
-    public void setMsgBody(String msgBody) {
-        this.msgBody = msgBody;
-    }
     public Button getToShowMoreBtn() {
         return toShowMoreBtn;
     }
