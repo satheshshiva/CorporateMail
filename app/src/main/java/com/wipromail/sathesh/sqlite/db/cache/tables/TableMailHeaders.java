@@ -1,15 +1,15 @@
-package com.wipromail.sathesh.sqlite.db.tables;
+package com.wipromail.sathesh.sqlite.db.cache.tables;
 
 import java.util.List;
 
-import com.wipromail.sathesh.sqlite.db.DbConstants;
-import com.wipromail.sathesh.sqlite.db.DbTable;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
+import com.wipromail.sathesh.sqlite.db.cache.DbTable;
 
 /**  Table to store the cached mail headers
  * @author sathesh
  *
  */
-public class TableMailHeaders implements DbConstants, DbTable{
+public class TableMailHeaders implements CacheDbConstants, DbTable{
 
 	private String tableName = table.CACHED_MAIL_HEADERS;
 	

@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.sqlite.db;
+package com.wipromail.sathesh.sqlite.db.cache;
 
 import java.util.List;
 

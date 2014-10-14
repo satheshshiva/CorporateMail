@@ -18,7 +18,7 @@ import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
 
 /**

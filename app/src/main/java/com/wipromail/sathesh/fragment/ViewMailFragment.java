@@ -42,7 +42,7 @@ import com.wipromail.sathesh.handlers.LoadEmailHandler;
 import com.wipromail.sathesh.handlers.runnables.LoadEmailRunnable;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
 import com.wipromail.sathesh.service.data.EmailMessage;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
 import com.wipromail.sathesh.ui.listeners.ViewMailListener;
 import com.wipromail.sathesh.util.Utilities;

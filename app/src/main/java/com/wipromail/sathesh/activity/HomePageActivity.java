@@ -184,8 +184,6 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-
-
 		if(item!=null && item.getTitle().equals(ACTIONBAR_COMPOSE)){
 			intent = new Intent(this, ComposeActivity.class);
 			startActivity(intent);
@@ -214,7 +212,6 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 	 * @throws Exception
 	 */
 	public static CharSequence getTitleBarDisplayName(Context context) throws Exception {
-		// TODO Auto-generated method stub
 
 		String username = MailApplication.getUserDisplayName(context);
 		if(username != null && username.length() >= TITLEBAR_NO_OF_CHARS_DISP_NAME){

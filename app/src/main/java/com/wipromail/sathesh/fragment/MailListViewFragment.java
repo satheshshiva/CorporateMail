@@ -32,7 +32,7 @@ import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.handlers.runnables.GetMoreMailsRunnable;
 import com.wipromail.sathesh.handlers.runnables.GetNewMailsRunnable;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
 

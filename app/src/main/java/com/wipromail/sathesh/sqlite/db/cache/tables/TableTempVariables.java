@@ -1,18 +1,18 @@
-package com.wipromail.sathesh.sqlite.db.tables;
+package com.wipromail.sathesh.sqlite.db.cache.tables;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wipromail.sathesh.sqlite.db.DbConstants;
-import com.wipromail.sathesh.sqlite.db.DbTable;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
+import com.wipromail.sathesh.sqlite.db.cache.DbTable;
 
 /** Table to store the temporary variables used in the app
  * @author sathesh
  *
  */
-public class TableTempVariables implements DbConstants, DbTable{
+public class TableTempVariables implements CacheDbConstants, DbTable{
 
-	private String tableName = DbConstants.table.TEMP_VARIABLES;
+	private String tableName = CacheDbConstants.table.TEMP_VARIABLES;
 	
 	//the column is mapped to VO by, COLUMN_FIELDNAME in here as FIELDNAME in VO. 
 	//COLUMN_FIELDNAME=FIELDNAME=Actual database column name = vo.variable_name

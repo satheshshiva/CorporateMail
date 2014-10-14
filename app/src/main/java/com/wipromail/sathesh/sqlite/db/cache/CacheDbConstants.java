@@ -1,8 +1,8 @@
-package com.wipromail.sathesh.sqlite.db;
+package com.wipromail.sathesh.sqlite.db.cache;
 
-public interface DbConstants {
+public interface CacheDbConstants {
 
-	public static final String DATABASE_NAME = "Main.db";
+	public static final String DATABASE_NAME = "Cache.db";
 	public static final int DATABASE_VERSION = 2;
 	
 	public interface table{

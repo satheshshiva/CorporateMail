@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.sqlite.db.pojo.vo;
+package com.wipromail.sathesh.sqlite.db.cache.vo;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wipromail.sathesh.sqlite.db.pojo.vo;
+package com.wipromail.sathesh.sqlite.db.cache.vo;
 
 /**
  * @author sathesh

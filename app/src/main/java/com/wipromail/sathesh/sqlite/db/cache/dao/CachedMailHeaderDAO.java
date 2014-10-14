@@ -1,15 +1,15 @@
 
-package com.wipromail.sathesh.sqlite.db.dao;
+package com.wipromail.sathesh.sqlite.db.cache.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.wipromail.sathesh.sqlite.db.DbConstants;
-import com.wipromail.sathesh.sqlite.db.DbHelper;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
-import com.wipromail.sathesh.sqlite.db.tables.TableCachedMailHeader;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailHeader;
 
 import java.util.List;
 
@@ -18,18 +18,18 @@ import java.util.List;
  *
  */
 
-public class CachedMailHeaderDAO extends BaseDAO{
+public class CachedMailHeaderDAO extends BaseCacheDAO {
 
 	//All the DAOs should have fully qualified class names of table class and vo class for auto wiring
-	private Class tableClass=com.wipromail.sathesh.sqlite.db.tables.TableCachedMailHeader.class;
-	private Class voClass=com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO.class;
+	private Class tableClass= com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailHeader.class;
+	private Class voClass= com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO.class;
 
 	/** Constructor for the DAO. initializes the Database helper
 	 * @param context
 	 */
 	public CachedMailHeaderDAO(Context context) {
 		this.context = context;
-		this.dbHelper = DbHelper.getInstance(context);
+		this.cacheDbHelper = CacheDbHelper.getInstance(context);
 	}
 
     /*** CREATE QUERIES ***/
@@ -40,13 +40,13 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	public long createOrUpdate(List<CachedMailHeaderVO> vos) throws Exception {
 		long insertId=0;
 		try{
-			open(dbHelper);
+			open(cacheDbHelper);
 			for(CachedMailHeaderVO vo: vos){
 				insertId= saveVOInDB(vo);
 			}
 		}
 		finally{
-			try{close(dbHelper);}catch(Exception e){}
+			try{close(cacheDbHelper);}catch(Exception e){}
 		}
 		return insertId;
 	}
@@ -65,13 +65,13 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		if(mailType>0){
 			String mailTypeStr = String.valueOf(mailType);
 			try{
-				open(dbHelper);
+				open(cacheDbHelper);
 				//call the select query with the where clause mail type
 				Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
 						new String[]{mailTypeStr});
 				returnList =(List)autoMapCursorToVo(cursor,voClass);
 			}finally{
-				close(dbHelper);
+				close(cacheDbHelper);
 			}
 		}
 		return returnList;
@@ -87,13 +87,13 @@ public class CachedMailHeaderDAO extends BaseDAO{
 
 		List<CachedMailHeaderVO> returnList =null;
 		try{
-			open(dbHelper);
+			open(cacheDbHelper);
 			//call the select query with where clause as folder id
 			Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
 					new String[]{folderId});
 			returnList =(List)autoMapCursorToVo(cursor,voClass);
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 		return returnList;
 	}
@@ -109,7 +109,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		if(mailType>0){
 			String mailTypeStr = String.valueOf(mailType);
 			try{
-				open(dbHelper);
+				open(cacheDbHelper);
 				Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsCountByMailTypeQuery(), 
 						new String[]{mailTypeStr});
 				if(cursor!=null){
@@ -117,7 +117,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 					count=cursor.getInt(0);
 				}
 			}finally{
-				close(dbHelper);
+				close(cacheDbHelper);
 			}
 		}
 		return count;
@@ -132,7 +132,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 
 		int count=-1;
 		try{
-			open(dbHelper);
+			open(cacheDbHelper);
 			Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsCountByFolderIdQuery(), 
 					new String[]{folderId});
 			if(cursor!=null){
@@ -140,7 +140,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 				count=cursor.getInt(0);
 			}
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 		return count;
 	}
@@ -156,7 +156,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		if(mailType>0){
 			String mailTypeStr = String.valueOf(mailType);
 			try{
-				open(dbHelper);
+				open(cacheDbHelper);
 				Cursor cursor = database.rawQuery(TableCachedMailHeader.getUnreadByMailTypeQuery(), 
 						new String[]{mailTypeStr});
 				if(cursor!=null){
@@ -164,7 +164,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 					count=cursor.getInt(0);
 				}
 			}finally{
-				close(dbHelper);
+				close(cacheDbHelper);
 			}
 		}
 		return count;
@@ -179,7 +179,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 
 		int count=-1;
 		try{
-			open(dbHelper);
+			open(cacheDbHelper);
 			Cursor cursor = database.rawQuery(TableCachedMailHeader.getUnreadCountByFolderIdQuery(), 
 					new String[]{folderId});
 			if(cursor!=null){
@@ -187,7 +187,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 				count=cursor.getInt(0);
 			}
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 		return count;
 	}
@@ -201,11 +201,11 @@ public class CachedMailHeaderDAO extends BaseDAO{
     public void markMailAsRead(String itemId) throws Exception {
 
         try{
-            open(dbHelper);
+            open(cacheDbHelper);
             database.execSQL(TableCachedMailHeader.getMarkMailAsReadQuery(),
                     new String[]{itemId});
         }finally{
-            close(dbHelper);
+            close(cacheDbHelper);
         }
     }
 
@@ -221,11 +221,11 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		
 		try{
 			String mailTypeStr = String.valueOf(mailType);
-			open(dbHelper);
+			open(cacheDbHelper);
 			database.execSQL(TableCachedMailHeader.getDeleteAllQueryByMailTypeQuery(),
 					new String[]{mailTypeStr});
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 	}
 
@@ -238,11 +238,11 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	public void deleteAllByFolderId(String mailFolderId) throws Exception {
 
 		try{
-			open(dbHelper);
+			open(cacheDbHelper);
 			database.execSQL(TableCachedMailHeader.getDeleteAllQueryByFolderIdQuery(),
 					new String[]{mailFolderId});
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 	}
 
@@ -256,11 +256,11 @@ public class CachedMailHeaderDAO extends BaseDAO{
 		
 		try{
 			String mailTypeStr = String.valueOf(mailType);
-			open(dbHelper);
+			open(cacheDbHelper);
 			database.execSQL(TableCachedMailHeader.getDeleteNQueryByMailTypeQuery(n),
 					new String[]{mailTypeStr,mailTypeStr});
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 	}
 
@@ -273,11 +273,11 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	public void deleteNByFolderId(String mailFolderId, int n) throws Exception {
 
 		try{
-			open(dbHelper);
+			open(cacheDbHelper);
 			database.execSQL(TableCachedMailHeader.getDeleteNQueryByFolderIdQuery(n),
 					new String[]{mailFolderId,mailFolderId});
 		}finally{
-			close(dbHelper);
+			close(cacheDbHelper);
 		}
 	}
 
@@ -288,7 +288,7 @@ public class CachedMailHeaderDAO extends BaseDAO{
 	 */
 	private long saveVOInDB(CachedMailHeaderVO vo) {
 		ContentValues values = autoMapVoToContentValues(vo,tableClass);
-		return database.insertWithOnConflict(DbConstants.table.CACHED_MAIL_HEADERS, null,
+		return database.insertWithOnConflict(CacheDbConstants.table.CACHED_MAIL_HEADERS, null,
 				values,SQLiteDatabase.CONFLICT_REPLACE);
 	}
 	

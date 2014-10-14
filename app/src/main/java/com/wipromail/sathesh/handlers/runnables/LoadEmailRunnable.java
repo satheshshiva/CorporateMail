@@ -29,8 +29,8 @@ import com.wipromail.sathesh.service.data.FileAttachment;
 import com.wipromail.sathesh.service.data.ItemId;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailBodyVO;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailBodyVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.io.File;

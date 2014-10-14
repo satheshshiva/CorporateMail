@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wipromail.sathesh.sqlite.db.dao;
+package com.wipromail.sathesh.sqlite.db.cache.dao;
 
 import android.annotation.TargetApi;
 import android.content.ContentValues;
@@ -14,8 +14,8 @@ import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.sqlite.db.DbHelper;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.PojoVO;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
+import com.wipromail.sathesh.sqlite.db.cache.vo.PojoVO;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.lang.reflect.Field;
@@ -30,24 +30,24 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class BaseDAO implements Constants{
+public class BaseCacheDAO implements Constants{
 
 	protected static Context context;
 	protected static SQLiteDatabase database;
-    protected static DbHelper dbHelper;
+    protected static CacheDbHelper cacheDbHelper;
 
 	/** opens the db helper for writing. the file(db file) is initialized in the helper.
 	 * @throws SQLException
 	 */
-	protected void open(DbHelper dbHelper)  {
-		database = dbHelper.getWritableDatabase();
+	protected void open(CacheDbHelper cacheDbHelper)  {
+		database = cacheDbHelper.getWritableDatabase();
 	}
 
 	/** closes the db
 	 * 
 	 */
-	protected void close(DbHelper dbHelper) {
-		dbHelper.close();
+	protected void close(CacheDbHelper cacheDbHelper) {
+		cacheDbHelper.close();
 	}
 
 	/** VO to DB TABLE(ContentValue)
@@ -221,7 +221,7 @@ public class BaseDAO implements Constants{
 									}
 									else{
 										if(BuildConfig.DEBUG)
-											Log.w(TAG, "BaseDAO -> the VO set parameter is of type boolean but the value is not of type boolean");
+											Log.w(TAG, "BaseCacheDAO -> the VO set parameter is of type boolean but the value is not of type boolean");
 									}
 								}
 								else if(setParameterType.equals("java.util.Date"))
@@ -233,7 +233,7 @@ public class BaseDAO implements Constants{
 										method.invoke(vo,date);
 									} catch (Exception e) {
 										if(BuildConfig.DEBUG){
-											Log.w(TAG, "BaseDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
+											Log.w(TAG, "BaseCacheDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
 											e.printStackTrace();
 										}
 									}
@@ -243,7 +243,7 @@ public class BaseDAO implements Constants{
 							}
 							else{
 								if(BuildConfig.DEBUG){
-									Log.w(TAG, "BaseDAO -> the VO set parameter has more than 1 parameter types");
+									Log.w(TAG, "BaseCacheDAO -> the VO set parameter has more than 1 parameter types");
 								}
 							}
 

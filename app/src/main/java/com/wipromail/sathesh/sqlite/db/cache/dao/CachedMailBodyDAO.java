@@ -1,14 +1,14 @@
-package com.wipromail.sathesh.sqlite.db.dao;
+package com.wipromail.sathesh.sqlite.db.cache.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.wipromail.sathesh.sqlite.db.DbConstants;
-import com.wipromail.sathesh.sqlite.db.DbHelper;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailBodyVO;
-import com.wipromail.sathesh.sqlite.db.tables.TableCachedMailBody;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailBodyVO;
+import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailBody;
 
 import java.util.List;
 
@@ -17,11 +17,11 @@ import java.util.List;
  *
  */
 
-public class CachedMailBodyDAO extends BaseDAO{
+public class CachedMailBodyDAO extends BaseCacheDAO {
 
     //All the DAOs should have fully qualified class names of table class and vo class for auto wiring
-    private Class tableClass=com.wipromail.sathesh.sqlite.db.tables.TableCachedMailBody.class;
-    private Class voClass=com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailBodyVO.class;
+    private Class tableClass= com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailBody.class;
+    private Class voClass= com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailBodyVO.class;
 
 
     /** Constructor for the DAO. initializes the Database helper
@@ -29,7 +29,7 @@ public class CachedMailBodyDAO extends BaseDAO{
      */
     public CachedMailBodyDAO(Context context) {
         this.context = context;
-        dbHelper = DbHelper.getInstance(context);
+        cacheDbHelper = CacheDbHelper.getInstance(context);
     }
 
     /*** CREATE QUERIES ***/
@@ -43,11 +43,11 @@ public class CachedMailBodyDAO extends BaseDAO{
     public long createOrUpdate(CachedMailBodyVO vo) throws Exception {
         long insertId=0;
         try{
-            open(dbHelper);
+            open(cacheDbHelper);
             insertId= saveVOInDB(vo);
         }
         finally{
-            try{close(dbHelper);}catch(Exception e){}
+            try{close(cacheDbHelper);}catch(Exception e){}
         }
         return insertId;
     }
@@ -63,13 +63,13 @@ public class CachedMailBodyDAO extends BaseDAO{
     public List<CachedMailBodyVO> getAllRecordsByItemId(String itemId) throws Exception {
         List<CachedMailBodyVO> returnList =null;
         try{
-            open(dbHelper);
+            open(cacheDbHelper);
             //call the select query with the where clause mail type
             Cursor cursor = database.rawQuery(TableCachedMailBody.getAllRecordsByItemIdQuery(),
                     new String[]{itemId});
             returnList =(List)autoMapCursorToVo(cursor,voClass);
         }finally{
-            close(dbHelper);
+            close(cacheDbHelper);
         }
         return returnList;
     }
@@ -85,11 +85,11 @@ public class CachedMailBodyDAO extends BaseDAO{
 
         try{
             String mailTypeStr = String.valueOf(mailType);
-            open(dbHelper);
+            open(cacheDbHelper);
             database.execSQL(TableCachedMailBody.getDeleteAllQueryByMailTypeQuery(),
                     new String[]{mailTypeStr});
         }finally{
-            close(dbHelper);
+            close(cacheDbHelper);
         }
     }
 
@@ -102,11 +102,11 @@ public class CachedMailBodyDAO extends BaseDAO{
     public void deleteAllByFolderId(String mailFolderId) throws Exception {
 
         try{
-            open(dbHelper);
+            open(cacheDbHelper);
             database.execSQL(TableCachedMailBody.getDeleteAllQueryByFolderIdQuery(),
                     new String[]{mailFolderId});
         }finally{
-            close(dbHelper);
+            close(cacheDbHelper);
         }
     }
 
@@ -120,11 +120,11 @@ public class CachedMailBodyDAO extends BaseDAO{
 
         try{
             String mailTypeStr = String.valueOf(mailType);
-            open(dbHelper);
+            open(cacheDbHelper);
             database.execSQL(TableCachedMailBody.getDeleteNQueryByMailTypeQuery(n),
                     new String[]{mailTypeStr,mailTypeStr});
         }finally{
-            close(dbHelper);
+            close(cacheDbHelper);
         }
     }
 
@@ -137,11 +137,11 @@ public class CachedMailBodyDAO extends BaseDAO{
     public void deleteNByFolderId(String mailFolderId, int n) throws Exception {
 
         try{
-            open(dbHelper);
+            open(cacheDbHelper);
             database.execSQL(TableCachedMailBody.getDeleteNQueryByFolderIdQuery(n),
                     new String[]{mailFolderId,mailFolderId});
         }finally{
-            close(dbHelper);
+            close(cacheDbHelper);
         }
     }
 
@@ -152,7 +152,7 @@ public class CachedMailBodyDAO extends BaseDAO{
      */
     private long saveVOInDB(CachedMailBodyVO vo) {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
-        return database.insertWithOnConflict(DbConstants.table.CACHED_MAIL_BODY, null,
+        return database.insertWithOnConflict(CacheDbConstants.table.CACHED_MAIL_BODY, null,
                 values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 }

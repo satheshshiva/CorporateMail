@@ -1,11 +1,9 @@
 package com.wipromail.sathesh.activity;
 
 import java.net.URISyntaxException;
-import java.util.Date;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,8 +29,6 @@ import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
-import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 
 public class LoginPageActivity extends SherlockActivity implements Constants {
