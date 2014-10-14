@@ -93,12 +93,16 @@ public class LoadEmailRunnable implements Runnable, Constants{
 
             if(bodyVOList!=null && bodyVOList.size()>0){
             //cache exist
+                //get the first body record from the list of body for the item id. there must be only one record
                 CachedMailBodyVO bodyVO = bodyVOList.get(0);
-                parent.setProcessedHtml(bodyVO.getMail_body());
+                // restoring the body, from, to etc., from the cache
+                parent.setProcessedHtml(bodyVO.getMail_body()); //body
                 parent.setTo(bodyVO.getMail_to_delimited());
                 parent.setFrom(bodyVO.getMail_from_delimited());
                 parent.setCc(bodyVO.getMail_cc_delimited());
                 parent.setBcc(bodyVO.getMail_bcc_delimited());
+
+                // the  image cache are handled by the Android System Webview Cache
 
                 sendHandlerMsg(Status.SHOW_BODY);	//shows the headers and body
                 sendHandlerMsg(Status.LOADED);      //sets the status message to mail loaded completely
