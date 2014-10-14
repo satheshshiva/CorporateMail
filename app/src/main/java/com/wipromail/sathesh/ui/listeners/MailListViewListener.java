@@ -48,19 +48,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 			case R.id.listView:  
 				//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 
-				//SWIPE REFRESH
-				//enable Swipe Refresh
-				boolean enable = false;
-				if(lw != null && lw.getChildCount() > 0){
-					// check if the first item of the list is visible
-					boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
-					// check if the top of the first item is visible
-					boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
-					// enabling or disabling the refresh layout
-					enable = firstItemVisible && topOfFirstItemVisible;
-				}
-				if(parent.getSwipeRefreshLayout()!=null)  parent.getSwipeRefreshLayout().setEnabled(enable);
-
 				//Last Item Listener - loads more mails
 
 				//gets the id for the last item

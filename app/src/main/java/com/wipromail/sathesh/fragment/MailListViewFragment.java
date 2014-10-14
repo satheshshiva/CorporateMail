@@ -163,7 +163,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 				//Initialize SwipeRefreshLayout
 				swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-				// the refresh listner. this would be called when the layout is pulled down
+				// the refresh listener. this would be called when the layout is pulled down
 				swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 					@Override
 					public void onRefresh() {
@@ -185,7 +185,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				
 				if(moreMailsThreadState==Status.WAITING || moreMailsThreadState==Status.UPDATING){
 					showMoreLoadingAnimation();
-					
 				}
 				//make a refresh only once when the screen is loaded first time. make a soft refresh on config change
 				if(!fragmentAlreadyLoaded){
@@ -257,9 +256,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			Log.d(TAG,  this.getClass() + " ->  Called Soft refresh list");
 		}
 		try {
+            //update the list view
 			adapter.setListVOs(cacheAdapter.getMailHeaders(mailType, mailFolderId));
 			adapter.notifyDataSetChanged();
-			updateTextSwitcherWithMailCount();
+
+            //update the text switcher
+            updateTextSwitcherWithMailCount(totalCachedRecords);
+
 		} catch (Exception e) {
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
@@ -326,18 +329,24 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		}
 	}
 
-	
-
 	/** Updates the Text Switcher with the unread mail count. 
 	 * usually called after successful update
 	 * 
 	 */
-	public void updateTextSwitcherWithMailCount() throws Exception {
+	public void updateTextSwitcherWithMailCount(int totalCachedRecords) throws Exception {
 		//get the unread emails count
+        totalCachedRecords = cacheAdapter.getRecordsCount(mailType, mailFolderId);
 		int totalUnread = cacheAdapter.getUnreadMailCount(mailType, mailFolderId);
 		String successMsg="";
-		//more than 1 unread email 
-		if(totalUnread>1){
+
+        //no email
+        if(totalCachedRecords<1){
+            successMsg=getString(R.string.no_mail);
+            //update icon
+            updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
+        }
+		//more than 1 unread email
+		else if(totalUnread>1){
 			//update text in text switcher. for inbox alone show as "new mail" for other folders show "unread"
 			successMsg = (mailType==MailType.INBOX || mailType==MailType.INBOX_SUBFOLDER_WITH_ID) ?
 					getString(R.string.new_mail_x,totalUnread):
@@ -424,7 +433,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	public SwipeRefreshLayout getSwipeRefreshLayout() {
 		return swipeRefreshLayout;
-	}
+    }
 
 	public void setSwipeRefreshLayout(SwipeRefreshLayout swipeRefreshLayout) {
 		this.swipeRefreshLayout = swipeRefreshLayout;

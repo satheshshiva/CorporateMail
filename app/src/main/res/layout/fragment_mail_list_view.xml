@@ -97,9 +97,9 @@
                 android:layout_height="0dip"
                 android:layout_weight="4" >
             </ListView>
-
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <!--
     <LinearLayout
         android:layout_width="fill_parent"
