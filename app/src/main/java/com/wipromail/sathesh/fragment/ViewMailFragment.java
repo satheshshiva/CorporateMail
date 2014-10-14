@@ -145,7 +145,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         webSettings.setAllowFileAccess(true);
 
         webSettings.setJavaScriptEnabled(true);	//this is important
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);    //no caches
+        // The Android system will hanldle image caches for the webview
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
 
