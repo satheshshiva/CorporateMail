@@ -194,7 +194,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	/** ON RESUME **/
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 
 		try {
@@ -202,7 +201,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 			NotificationProcessing.cancelAllNotifications(this);
 			mailListViewFragment.softRefreshList();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
