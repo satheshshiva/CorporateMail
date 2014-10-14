@@ -47,7 +47,6 @@ public class SignOut implements Constants{
 			
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
 			Log.e(TAG, "SignOut -> Error occured : signOutAndResetAllSettings :" + e.getMessage());
 			e.printStackTrace();
 			return false;
@@ -70,7 +69,6 @@ public class SignOut implements Constants{
 			return true;
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			Log.e(TAG, "SignOut -> Error occured : signOutAndRetainSettings :" + e.getMessage());
 			e.printStackTrace();
 			return false;
@@ -95,8 +93,7 @@ public class SignOut implements Constants{
 
 	
 	private void restartApp(Activity activity, Context context) {
-		// TODO Auto-generated method stub
-		
+
 		activity.finish();
 		
 		Intent mStartActivity = new Intent(context, MailApplication.mainApplicationActivity());

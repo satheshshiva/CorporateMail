@@ -120,10 +120,8 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 			
 			//deleting cached mail headers
 			cacheAdapter.deleteN(mailType, mailFolderId, MAX_MAIL_HEADERS_TO_KEEP);
-			
-			
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			if(BuildConfig.DEBUG){
 				Log.d(TAG, "Exception while deleting cache" + e.getMessage());
 				e.printStackTrace();

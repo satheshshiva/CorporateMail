@@ -1,6 +1,4 @@
-package com.wipromail.sathesh.sqlite.db.pojo.vo;
-
-import com.wipromail.sathesh.sqlite.db.tables.TableTempVariables;
+package com.wipromail.sathesh.sqlite.db.cache.vo;
 
 
 /** This holds the VO for the records returned from the database.

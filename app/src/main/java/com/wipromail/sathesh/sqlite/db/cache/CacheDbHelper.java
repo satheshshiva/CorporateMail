@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.sqlite.db;
+package com.wipromail.sathesh.sqlite.db.cache;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,10 +10,10 @@ import com.wipromail.sathesh.constants.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbHelper extends SQLiteOpenHelper implements Constants, DbConstants{
+public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheDbConstants {
 
-	private static DbHelper dbHelper;
-	public DbHelper(Context context) {
+	private static CacheDbHelper cacheDbHelper;
+	public CacheDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 	
@@ -21,12 +21,12 @@ public class DbHelper extends SQLiteOpenHelper implements Constants, DbConstants
 	 * @param context
 	 * @return
 	 */
-	public static DbHelper getInstance(Context context){
+	public static CacheDbHelper getInstance(Context context){
 		
-		if(dbHelper==null){
-			dbHelper = new DbHelper(context.getApplicationContext());
+		if(cacheDbHelper ==null){
+			cacheDbHelper = new CacheDbHelper(context.getApplicationContext());
 		}
-		return dbHelper;
+		return cacheDbHelper;
 	}
 
 	@Override
@@ -56,4 +56,12 @@ public class DbHelper extends SQLiteOpenHelper implements Constants, DbConstants
 		}
 		onCreate(db);
 	}
+
+    /** Deletes this database
+     * 
+     * @param context
+     */
+    public static void deleteDatabase(Context context){
+        context.deleteDatabase(DATABASE_NAME);
+    }
 }

@@ -1,7 +1,7 @@
-package com.wipromail.sathesh.sqlite.db.tables;
+package com.wipromail.sathesh.sqlite.db.cache.tables;
 
-import com.wipromail.sathesh.sqlite.db.DbConstants;
-import com.wipromail.sathesh.sqlite.db.DbTable;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
+import com.wipromail.sathesh.sqlite.db.cache.DbTable;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class TableCachedMailHeader implements DbConstants, DbTable{
+public class TableCachedMailHeader implements CacheDbConstants, DbTable{
 
-	private static String tableName = DbConstants.table.CACHED_MAIL_HEADERS;
+	private static String tableName = CacheDbConstants.table.CACHED_MAIL_HEADERS;
 	
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_MAIL_TYPE = "MAIL_TYPE";

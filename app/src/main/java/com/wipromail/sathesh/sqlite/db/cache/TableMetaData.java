@@ -1,10 +1,10 @@
-package com.wipromail.sathesh.sqlite.db;
+package com.wipromail.sathesh.sqlite.db.cache;
 
 import java.util.ArrayList;
 
-import com.wipromail.sathesh.sqlite.db.tables.TableCachedMailBody;
-import com.wipromail.sathesh.sqlite.db.tables.TableCachedMailHeader;
-import com.wipromail.sathesh.sqlite.db.tables.TableTempVariables;
+import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailBody;
+import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailHeader;
+import com.wipromail.sathesh.sqlite.db.cache.tables.TableTempVariables;
 
 /** When a new table is added, add it here to get initialized in DbHelper. 
  * Start from here for adding a new table.

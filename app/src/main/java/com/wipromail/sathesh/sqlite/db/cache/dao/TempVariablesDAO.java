@@ -1,13 +1,13 @@
-package com.wipromail.sathesh.sqlite.db.dao;
+package com.wipromail.sathesh.sqlite.db.cache.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.wipromail.sathesh.sqlite.db.DbConstants;
-import com.wipromail.sathesh.sqlite.db.DbHelper;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.TempVariablesVO;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
+import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
+import com.wipromail.sathesh.sqlite.db.cache.vo.TempVariablesVO;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ import java.util.List;
  *
  */
 
-public class TempVariablesDAO extends BaseDAO{
+public class TempVariablesDAO extends BaseCacheDAO {
 
 	//All the DAOs should have fully qualified class names of table class and vo class for auto wiring
-	private Class tableClass=com.wipromail.sathesh.sqlite.db.tables.TableTempVariables.class;
-	private Class voClass=com.wipromail.sathesh.sqlite.db.pojo.vo.TempVariablesVO.class;
+	private Class tableClass= com.wipromail.sathesh.sqlite.db.cache.tables.TableTempVariables.class;
+	private Class voClass= com.wipromail.sathesh.sqlite.db.cache.vo.TempVariablesVO.class;
 
 
 	/** Constructor for the DAO. initializes the Database helper
@@ -28,7 +28,7 @@ public class TempVariablesDAO extends BaseDAO{
 	 */
 	public TempVariablesDAO(Context context) {
 		this.context = context;
-		dbHelper = DbHelper.getInstance(context);
+		cacheDbHelper = CacheDbHelper.getInstance(context);
 	}
 
 
@@ -39,12 +39,12 @@ public class TempVariablesDAO extends BaseDAO{
 		long insertId=0;
 		ContentValues values = autoMapVoToContentValues(vo,tableClass);
 		try{
-			open(dbHelper);
-			insertId = database.insertWithOnConflict(DbConstants.table.TEMP_VARIABLES, null,
+			open(cacheDbHelper);
+			insertId = database.insertWithOnConflict(CacheDbConstants.table.TEMP_VARIABLES, null,
 					values,SQLiteDatabase.CONFLICT_REPLACE);
 		}
 		finally{
-			try{close(dbHelper);}catch(Exception e){}
+			try{close(cacheDbHelper);}catch(Exception e){}
 		}
 		return insertId;
 	}
@@ -57,12 +57,12 @@ public class TempVariablesDAO extends BaseDAO{
 		
 		List<TempVariablesVO> returnList =null;
 		try{
-		open(dbHelper);
-		Cursor cursor = database.query(DbConstants.table.TEMP_VARIABLES,
+		open(cacheDbHelper);
+		Cursor cursor = database.query(CacheDbConstants.table.TEMP_VARIABLES,
 				null, null, null, null, null, null);
 		returnList =(List)autoMapCursorToVo(cursor,voClass);
 		}finally{
-		close(dbHelper);
+		close(cacheDbHelper);
 		}
 		return returnList;
 	}

@@ -21,7 +21,6 @@ import android.util.Log;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.security.EncryptionDecryption;
-import com.wipromail.sathesh.sqlite.db.dao.BaseDAO;
 
 /**
  * @author Sathesh

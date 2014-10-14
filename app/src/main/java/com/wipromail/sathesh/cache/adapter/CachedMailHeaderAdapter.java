@@ -11,8 +11,8 @@ import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
-import com.wipromail.sathesh.sqlite.db.dao.CachedMailHeaderDAO;
-import com.wipromail.sathesh.sqlite.db.pojo.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.sqlite.db.cache.dao.CachedMailHeaderDAO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 
 import java.util.ArrayList;
 import java.util.List;
