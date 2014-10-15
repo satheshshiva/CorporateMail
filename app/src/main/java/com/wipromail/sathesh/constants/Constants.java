@@ -44,7 +44,7 @@ public interface Constants {
 	--------------------------------------------------------------------------------------*/
 	public static final String CACHE_INBOX_FILENAME = "cacheInbox.txt";
 	public static final String CACHE_INBOX_LASTSYNCDATE_FILENAME = "InboxLastSyncDate.txt";
-	public static final String CACHE_DIRECTORY_MAILCACHE = "mailCache";
+	public static final String CACHE_DIRECTORY_INLINE_IMGS = "inlineImgs";
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  INBOX ----------------------------------------------
@@ -55,8 +55,8 @@ public interface Constants {
 	public static final int MORE_NO_OF_MAILS = 25;	//when the user scrolls, load this no of mails
 	
 	//this no of mails will be retained in cache on activity exit
-	public static final int MAX_MAIL_HEADERS_TO_KEEP = 50;
-	public static final int MAX_MAIL_BODY_TO_KEEP = 50;	
+	public static final int CACHE_MAX_MAIL_HEADERS_TO_KEEP = 50;
+	public static final int CACHE_MAX_MAIL_BODY_TO_KEEP = 50;
 	
 	public static final String INBOX_FILTER_TEXT_FROM = "(WT01"; 	//for the inbox, the From field text will be displayed only up to this text
 

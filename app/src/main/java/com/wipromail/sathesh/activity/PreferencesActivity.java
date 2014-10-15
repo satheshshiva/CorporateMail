@@ -25,7 +25,7 @@ import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
-import com.wipromail.sathesh.tools.ClearCache;
+import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.ChangePasswordDialog;
 
 import java.util.Calendar;
@@ -121,7 +121,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
         //initializing the click event for Clear Cache button
         clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                ClearCache.clearFullCacheAndDbDir(activity);
+                CacheClear.clearFullCacheAndDbDir(activity);
                 Notifications.showToast(activity, activity.getString(R.string.preferences_cache_cleared_msg) , Toast.LENGTH_SHORT);
                 return true;
             }

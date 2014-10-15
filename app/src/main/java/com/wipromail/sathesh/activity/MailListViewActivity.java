@@ -16,12 +16,9 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
-import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.OptionsUIContent;
-import com.wipromail.sathesh.util.Utilities;
-
-import java.io.File;
 
 /** This Activity is the one which shows the mail list.
  * 
@@ -43,8 +40,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	private int mailType ;
 	private String mailFolderName;
 	private String mailFolderId="";
-	private CachedMailHeaderAdapter cacheAdapter;
-	
+
 	/** ON CREATE **
 	 *  Fragment : MailListViewFragment
 	 * Gets the mailType folder id and folder name from the intent params. 
@@ -68,9 +64,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 		//actually MailListViewFragment
 		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
 				.findFragmentById(R.id.mailListViewFragment);
-		
-		cacheAdapter = new CachedMailHeaderAdapter(this);
-		
+
 	}
 	
 	/** ON START **
@@ -108,22 +102,14 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	public void onDestroy() {
 		super.onDestroy();
 
-		//deleting cache mail images
-		boolean success=false;
 		try {
-			File cacheDir = new File(MailApplication.getMailCacheImageDirectory(this.getApplicationContext()));
-			if(cacheDir.exists()){
-				success=Utilities.deleteDirectory(cacheDir);
-				if(BuildConfig.DEBUG){
-					Log.d(TAG, "Deleting image cache directory " +((success)?"successful":"failed"));}
-			}
-			
-			//deleting cached mail headers
-			cacheAdapter.deleteN(mailType, mailFolderId, MAX_MAIL_HEADERS_TO_KEEP);
+            //clears cache destined for this actvity exit. clears the inline imgs, keeps the top 100 mail headers and body
+                CacheClear cacheClear = new CacheClear();
+                cacheClear.mailListViewClearCache(this,mailType, mailFolderId);
 
 		} catch (Exception e) {
 			if(BuildConfig.DEBUG){
-				Log.d(TAG, "Exception while deleting cache" + e.getMessage());
+				Log.d(TAG, "MailListViewActivity -> Exception while deleting cache" + e.getMessage());
 				e.printStackTrace();
 			}
 		}

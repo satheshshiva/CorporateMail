@@ -500,20 +500,8 @@ public class MailApplication implements Constants {
 			ChangePasswordDialog.showAlertdialog(activity, context);
 		}
 	}
-	
-
-	/** Gets the cache image directory
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	public static String getMailCacheImageDirectory(Context context) throws Exception{
-		return CacheDirectories.getApplicationCacheDirectory(context)+"/" + CACHE_DIRECTORY_MAILCACHE ;
-		//return MailApplication.getApplicationCacheDirectory(activity).toString() ;
-	}
 
 	/** Gets SwipeRefreshLayout color resources
-	 * @param context
 	 * @return
 	 * @throws Exception
 	 */

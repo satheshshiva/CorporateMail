@@ -81,7 +81,8 @@ public class TableCachedMailBody implements CacheDbConstants, DbTable{
      */
     public static String getDeleteNQueryByMailTypeQuery(int n){
         return "DELETE from " + tableName  + " WHERE " + COLUMN_MAIL_TYPE + "=? AND " + COLUMN_ID + " NOT IN ("
-                + " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_MAIL_TYPE + "=? LIMIT " + n + ")";
+                + " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_MAIL_TYPE + "=? "
+                + " ORDER BY " + COLUMN_ID + " DESC LIMIT " + n + ")";  //latest will be in the bottom. so delete from top
     }
 
     /** DELETE by Folder Id
@@ -91,7 +92,8 @@ public class TableCachedMailBody implements CacheDbConstants, DbTable{
      */
     public static String getDeleteNQueryByFolderIdQuery(int n){
         return "DELETE from " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? AND " + COLUMN_ID + " NOT IN ("
-                + " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? LIMIT " + n + ")";
+                + " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? "
+                + " ORDER BY " + COLUMN_ID + " DESC LIMIT " + n + ")";  //latest will be in the bottom. so delete from top
     }
 
 

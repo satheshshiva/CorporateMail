@@ -201,10 +201,12 @@ public class LoadEmailRunnable implements Runnable, Constants{
     private String getAddressString(EmailAddressCollection recipients) {
         StringBuffer str=new StringBuffer();
         for(EmailAddress recipient : recipients){
-            str.append(recipient.getName())
-                    .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
-                    .append(recipient.getAddress())
-                    .append(EMAIL_STORAGE_DELIM);
+            if(recipient!=null) {
+                str.append(recipient.getName())
+                        .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                        .append(recipient.getAddress())
+                        .append(EMAIL_STORAGE_DELIM);
+            }
         }
         return str.toString();
     }
@@ -216,10 +218,12 @@ public class LoadEmailRunnable implements Runnable, Constants{
      */
     private String getAddressString(EmailAddress recipient) {
         StringBuffer str=new StringBuffer();
-        str.append(recipient.getName())
-                .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
-                .append(recipient.getAddress())
-                .append(EMAIL_STORAGE_DELIM);
+        if(recipient!=null) {
+            str.append(recipient.getName())
+                    .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                    .append(recipient.getAddress())
+                    .append(EMAIL_STORAGE_DELIM);
+        }
         return str.toString();
     }
 
@@ -383,7 +387,6 @@ public class LoadEmailRunnable implements Runnable, Constants{
     }
 
     private String getCacheImageDirectory(String itemId) throws ServiceLocalException, Exception{
-        return CacheDirectories.getApplicationCacheDirectory(parent.getContext())+"/" + CACHE_DIRECTORY_MAILCACHE + "/" + itemId;
-        //return MailApplication.getApplicationCacheDirectory(activity).toString() ;
+        return CacheDirectories.getMailCacheImageDirectory(parent.getContext()) + "/" + itemId;
     }
 }

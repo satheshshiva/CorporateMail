@@ -82,7 +82,7 @@ public class SignOut implements Constants{
 	private void signOutGeneralActions(Context context){
 		
 		//clear cache
-		ClearCache.clearFullCacheAndDbDir(context);
+		CacheClear.clearFullCacheAndDbDir(context);
 
 		//stop the MNS service
 		MailApplication.stopMNSService(context);

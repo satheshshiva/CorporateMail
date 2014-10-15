@@ -48,6 +48,24 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 			case R.id.listView:  
 				//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 
+				//SWIPE REFRESH
+				//enable Swipe Refresh
+				boolean enable = false;
+
+                //if there are no items in the list view then enable Swipe Refresh layout
+                if(totalItemCount==0){
+                    enable=true;
+                }
+                else if(lw != null && lw.getChildCount() > 0){
+					// check if the first item of the list is visible
+					boolean firstItemVisible = lw.getFirstVisiblePosition() == 0;
+					// check if the top of the first item is visible
+					boolean topOfFirstItemVisible = lw.getChildAt(0).getTop() == 0;
+					// enabling or disabling the refresh layout
+					enable = firstItemVisible && topOfFirstItemVisible;
+				}
+				if(parent.getSwipeRefreshLayout()!=null)  parent.getSwipeRefreshLayout().setEnabled(enable);
+
 				//Last Item Listener - loads more mails
 
 				//gets the id for the last item
@@ -96,7 +114,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Utilities.generalCatchBlock(e, this.getClass());
 		}
 	}
@@ -106,7 +123,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 	 */
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -117,7 +133,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 	@Override
 	public void onItemClick(AdapterView<?> parent1, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
 
 		//the pull to refresh list view starts from instead of 0.. fix for that
 		CachedMailHeaderVO vo;
