@@ -32,30 +32,60 @@ public class CachedMailHeaderAdapter {
 		}
 	}
 
-	//CODE HAS TO BE UPDATE FOR
-	//VIEW MAIL ACTIVITY
-	//POLLSERVERMNS.java
-	
+    /** CREATE QUERIES **/
+
+    /** Writes the array List of items to cache
+     * @param item  - The item to write to cache
+     * @param mailType - the folder. Depending upon the mail type it will use folder name or folder id
+     * @param mailFolderName
+     * @param mailFolderId
+     */
+    public void cacheNewData(Item item, int mailType, String mailFolderName, String mailFolderId)  {
+        CachedMailHeaderVO vo = new CachedMailHeaderVO();
+        try {
+
+            //convert the Item to List of VO
+            vo = covertItemToVO(mailType, mailFolderName, mailFolderId, item);
+
+            //call the DAO for with VO to save
+            dao.createOrUpdate(vo);
+
+        } catch (Exception e) {
+            if(BuildConfig.DEBUG)
+                e.printStackTrace();
+        }
+    }
+
 	/** Writes the array List of items to cache
-	 * @param context
 	 * @param items
 	 * @param mailType - the folder. Depending upon the mail type it will use folder name or folder id
 	 * @param mailFolderName
 	 * @param mailFolderId
 	 * @param emptyCache - Empties the cache before writing
 	 */
-	public void cacheNewData(Context context, ArrayList<Item> items, int mailType, String mailFolderName, String mailFolderId, boolean emptyCache)  {
-		try {
+	public void cacheNewData(ArrayList<Item> items, int mailType, String mailFolderName, String mailFolderId, boolean emptyCache)  {
+        List<CachedMailHeaderVO> vos = new ArrayList<CachedMailHeaderVO>();
+        try {
+            //empties the cache before writing new records
 			if(emptyCache){
 				deleteAll(mailType, mailFolderId);
 			}
-			writeMailHeader( mailType, mailFolderName, mailFolderId, items);
+            //convert the list of Item to List of VO
+            for(Item item : items){
+                vos.add(covertItemToVO(mailType, mailFolderName, mailFolderId, item));
+            }
+            //call the DAO for with the list of VOs to save
+            dao.createOrUpdate(vos);
+
 		} catch (Exception e) {
 			if(BuildConfig.DEBUG)
 				e.printStackTrace();
 		}	
 	}
-	
+
+
+    /** SELECT QUERIES **/
+
 	/** This method will return all the cached mail header data list of VOs for the particular mail type given
 	 * @return
 	 */
@@ -110,6 +140,8 @@ public class CachedMailHeaderAdapter {
 		return totalUnread;
 	}
 
+    /** DELETE QUERIES **/
+
 	/** Delete all the cached mail headers for this particular mail type
 	 * @throws Exception 
 	 * 
@@ -142,24 +174,8 @@ public class CachedMailHeaderAdapter {
 			dao.deleteNByFolderId(mailFolderId,n);
 		}
 	}
-	
-	/** writes the given arraylist of exchange items to cache
-	 * @param strFolderId
-	 * @param mailFolderName 
-	 * @param items
-	 * @throws ServiceLocalException
-	 * @throws Exception
-	 */
-	public synchronized void writeMailHeader(int mailType, String mailFolderName, String strFolderId, ArrayList<Item> items ) throws ServiceLocalException, Exception {
-		List<CachedMailHeaderVO> vos = new ArrayList<CachedMailHeaderVO>();
-		
-		//convert the list of Item to List of VO
-		for(Item item : items){
-			vos.add(covertItemToVO(mailType, mailFolderName, strFolderId, item));
-		}
-		//call the DAO for with the list of VOs to save
-		dao.createOrUpdate(vos);
-	}
+
+    /** UPDATE QUERIES **/
 
 	/** mark mail as read
 	 * @throws ServiceLocalException
@@ -169,7 +185,9 @@ public class CachedMailHeaderAdapter {
 		//call the DAO for with the list of VOs to save
 		dao.markMailAsRead(itemId);
 	}
-	
+
+    /** PRIVATE METHODS **/
+
 	/** private function for converting Item to VO
 	 * @param mailFolderName 
 	 *

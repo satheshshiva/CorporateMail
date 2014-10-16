@@ -231,16 +231,26 @@ public class Utilities implements Constants {
 	 * @param thisClass - pass this.getClass()
 	 * @param e
 	 */
-	public static void generalCatchBlock( Exception e , Class thisClass){
-		Log.e(TAG, "Exception Occured ");
-		Log.e(TAG, new StringBuffer()
-		.append(e.getClass().getName()).append(":").append(e.getMessage())
-		.append(" on ")
-		.append(thisClass.getName()).append(":").append(e.getStackTrace()[0].getLineNumber())
-		.toString());
-		if(BuildConfig.DEBUG)
-			e.printStackTrace();
-	}
+	public static void generalCatchBlock( Exception e , Class thisClass) {
+        generalCatchBlock(e, null, thisClass);
+    }
+    /** generic catch block which will log the exception
+     * @param thisClass - pass this.getClass()
+     * @param e
+     */
+    public static void generalCatchBlock( Exception e, String additionalMsg, Class thisClass){
+        Log.e(TAG, "Exception Occured ");
+        if(additionalMsg!=null && !additionalMsg.equals("")){
+            Log.e(TAG, additionalMsg);
+        }
+        Log.e(TAG, new StringBuffer()
+                .append(e.getClass().getName()).append(":").append(e.getMessage())
+                .append(" on ")
+                .append(thisClass.getName()).append(":").append(e.getStackTrace()[0].getLineNumber())
+                .toString());
+        if(BuildConfig.DEBUG)
+            e.printStackTrace();
+    }
 
 
 }

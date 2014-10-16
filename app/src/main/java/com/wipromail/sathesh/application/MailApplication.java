@@ -1,14 +1,5 @@
 package com.wipromail.sathesh.application;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -23,7 +14,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockActivity;
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MainActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
@@ -35,13 +28,31 @@ import com.wipromail.sathesh.customexceptions.StoredDateIsNullException;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.ews.NetworkCall;
+import com.wipromail.sathesh.fragment.ViewMailFragment;
+import com.wipromail.sathesh.handlers.runnables.LoadEmailRunnable;
 import com.wipromail.sathesh.service.MailNotificationService;
+import com.wipromail.sathesh.service.data.Attachment;
+import com.wipromail.sathesh.service.data.AttachmentCollection;
+import com.wipromail.sathesh.service.data.EmailAddress;
+import com.wipromail.sathesh.service.data.EmailAddressCollection;
 import com.wipromail.sathesh.service.data.ExchangeService;
+import com.wipromail.sathesh.service.data.FileAttachment;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
+import com.wipromail.sathesh.service.data.ServiceVersionException;
 import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
 import com.wipromail.sathesh.ui.ChangePasswordDialog;
 import com.wipromail.sathesh.update.AutoUpdater;
 import com.wipromail.sathesh.util.Utilities;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author sathesh
@@ -131,8 +142,7 @@ public class MailApplication implements Constants {
 
 
 	/** Gets the external storage directory
-	 * @param context
-	 * @return 
+	 * @return
 	 */
 	public static File getExternalStorageDirectory(){
 		//this does not retrieve the directory of SD card alone. it will return internal storage
@@ -160,11 +170,7 @@ public class MailApplication implements Constants {
 	 * @throws NameNotFoundException 
 	 */
 	public static int getAppVersionCode(Context context) throws NameNotFoundException{
-
-
 		return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-
-
 	}
 
 	/**
@@ -177,15 +183,13 @@ public class MailApplication implements Constants {
 
 		//for the inbox, the From field text will be filtered out after "(WT01" text
 		return ((null != from) && (from.lastIndexOf(INBOX_FILTER_TEXT_FROM)>0)) ? from.substring(0, from.lastIndexOf(INBOX_FILTER_TEXT_FROM)):from;
-
 	}
 
 	/**
-	 * @param dateTimeReceived
 	 * @return Customized Date field string to be displayed in mail list view  for mails
 	 */
 	public static CharSequence getCustomizedInboxDate(Date dDate) {
-		// TODO Auto-generated method stub
+
 		String strDate="";
 
 		if (null != dDate){
@@ -200,17 +204,15 @@ public class MailApplication implements Constants {
 			{
 				strDate = (new SimpleDateFormat(INBOX_TEXT_DATE)).format(dDate.getTime());
 			}
-
 		}
 		return strDate;
 	}
 
 	/**
-	 * @param dateTimeReceived
 	 * @return Customized Date field string to be displayed in mail list view for Header
 	 */
 	public static List<String> getCustomizedInboxDateHeader(Context context, Date dDate) {
-		// TODO Auto-generated method stub
+
 		List<String> returnStr=null;
 		if (null != dDate){
 			returnStr= new ArrayList<String>();
@@ -281,8 +283,6 @@ public class MailApplication implements Constants {
 		return returnStr;
 	}
 
-
-
 	public static boolean isSatisfyingMinInterval(Date date)
 			throws StoredDateIsNullException
 	{
@@ -312,7 +312,6 @@ public class MailApplication implements Constants {
 	public static Class mainApplicationActivity(){
 		return MainActivity.class;
 	}
-
 
 	/** check user settings and decide to give vibrate for notification
 	 * @param notification
@@ -344,7 +343,6 @@ public class MailApplication implements Constants {
 	 * @param context
 	 */
 	public static void startMNSService(final Context context) {
-		// TODO Auto-generated method stub
 
 		if(generalSettings.isNotificationEnabled(context)){
 			//not creating a log here since this iscalled everytime when opening inbox
@@ -353,33 +351,24 @@ public class MailApplication implements Constants {
 		else{
 			Log.e(TAG, "Notification not enabled in prefernce. Hence cant start Mail Notification Service.");
 		}
-
 	}
-
 
 	/** This method will stop the MNS service, the alarm for polling and subscription and clear any notification messages
 	 * @param context
 	 */
 	public static void stopMNSService(final Context context) {
-		// TODO Auto-generated method stub
 
 		Log.d(TAG, "Stopping service");
 		context.stopService(new Intent(context,MailNotificationService.class));
-
-
 	}
 
 	/** When pull duration for PullMNS is changed, call this to update the time in thread
-	 * @param context
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void onChangeMNSResetPullDuration() throws Exception {
-		// TODO Auto-generated method stub
-
 		PullMailNotificationServiceThread.resetAlarm();
-
-
 	}
+
 	public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception{
 		return NetworkCall.resolveName(service, username, retrieveContactDetails);
 	}
@@ -418,7 +407,6 @@ public class MailApplication implements Constants {
 					Notifications.showToast(activity, activity.getText(R.string.playstore_not_available), Toast.LENGTH_SHORT);
 				}
 				catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -437,7 +425,6 @@ public class MailApplication implements Constants {
 				try {
 					SharedPreferencesAdapter.storeDoNotRateApp(activity, true);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -452,7 +439,6 @@ public class MailApplication implements Constants {
 	}
 
 	/** starts composing email for the given email id
-	 * @param email
 	 */
 	public static void composeEmailForContact(Context context, int type, ContactSerializable sContact){
 		//create a ContactSerializable to hold the To value of the developer
@@ -493,7 +479,6 @@ public class MailApplication implements Constants {
 	}
 
 	public void onEveryAppOpen(SherlockActivity activity, Context context) {
-		// TODO Auto-generated method stub
 		//checking updates
 		AutoUpdater.autoCheckForUpdates(activity);
 		if(getInstance().isWrongPwd()){
@@ -511,5 +496,213 @@ public class MailApplication implements Constants {
 				R.color.Pallete_Yellow,
 				R.color.Pallete_Violet};
 	}
-	
+
+    /** Returns the list of ContactSerializables from the given string which was separated by delimiters
+     * The list of From, To etc., address are stored in cache as delimited strings
+     *
+     * @param str
+     * @return
+     */
+    public static List<ContactSerializable> getContactsFromDelimitedString(String str){
+        List<ContactSerializable> list = new ArrayList<ContactSerializable>();
+        String[] nameEmailArray, addressArray;
+        ContactSerializable contact ;
+
+        //split the email addesses sperator (;) and put in array
+        addressArray = str.split(EMAIL_DELIMITER_DISP);
+        for(String address : addressArray){
+            // check whether each entry has name and email seprated with delim(#$%)
+            if(address.contains(EMAIL_NAMEEMAIL_STORAGE_DELIM)){
+                nameEmailArray=address.split(EMAIL_NAMEEMAIL_STORAGE_DELIM);
+                contact = new ContactSerializable();
+                if(nameEmailArray.length>0) {
+                    contact.setDisplayName(nameEmailArray[0]);
+                    //if the email is present
+                    if(nameEmailArray.length>1) {
+                        contact.setEmail(nameEmailArray[1]);
+                        contact.setResolveOnLoad(true); // on load of the contact load the full contact
+                    }
+                    contact.setTryResolveNamesInDirectory(false);
+                }
+            }
+            //if the delim (#%!) is not there then only name is present for the entry
+            else{
+                contact = new ContactSerializable();
+                contact.setDisplayName(address);
+                contact.setTryResolveNamesInDirectory(true);
+            }
+            //add to the return list
+            list.add(contact);
+        }
+        return list;
+    }
+
+    /** Gives the delimited String from EmailAddressCollection which can be stored in the cache db
+     *
+     * @param recipients -EmailAddressCollection obj
+     * @return - delimited String
+     */
+    public static String getDelimitedAddressString(EmailAddressCollection recipients) {
+        StringBuffer str=new StringBuffer();
+        for(EmailAddress recipient : recipients){
+            if(recipient!=null) {
+                str.append(recipient.getName())
+                        .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                        .append(recipient.getAddress())
+                        .append(EMAIL_STORAGE_DELIM);
+            }
+        }
+        return str.toString();
+    }
+
+    /** Gives the delimited String from EmailAddress which can be stored in the cache db
+     *
+     * @param recipient -EmailAddress obj
+     * @return - delimited String
+     */
+    public static String getDelimitedAddressString(EmailAddress recipient) {
+        StringBuffer str=new StringBuffer();
+        if(recipient!=null) {
+            str.append(recipient.getName())
+                    .append(EMAIL_NAMEEMAIL_STORAGE_DELIM)
+                    .append(recipient.getAddress())
+                    .append(EMAIL_STORAGE_DELIM);
+        }
+        return str.toString();
+    }
+
+    /** Replaces the body String "cid:contentid" wih "file:filename". Does only the string change.
+     *
+     * @param context
+     * @param body - body string to make the change
+     * @param attachmentCollection
+     * @param itemId
+     * @param thisClass - for writing in exception
+     * @return
+     * @throws Exception
+     */
+    public static String getBodyWithImgHtml(Context context, String body, AttachmentCollection attachmentCollection, String itemId, Class thisClass) throws Exception {
+
+        String bodyWithImage=body;
+        String cid="", imagePath="", imageHtmlUrl="";
+        for(Attachment attachment:  attachmentCollection){
+
+            try {
+                //if(null != attachment && attachment.getIsInline() && attachment.getContentType()!=null && attachment.getContentType().contains("image")){
+                if(null != attachment && attachment.getIsInline()){
+                    if(BuildConfig.DEBUG){
+                        Log.d(TAG, "ViewMailActivity -> processBodyHTMLWithImages() -> Processing attachment " + attachment.getName());
+                    }
+                    cid="cid:"+ attachment.getContentId();
+                    if(BuildConfig.DEBUG){
+                        Log.d(TAG, "ViewMailActivity ->cid "+cid);
+                    }
+                    imagePath=CacheDirectories.getMailCacheImageDirectory(context) + "/" + itemId + "/"+attachment.getName();
+
+                    imageHtmlUrl=Utilities.getHTMLImageUrl(attachment.getContentType(), imagePath);
+                    if(BuildConfig.DEBUG){
+                        Log.d(TAG, "Replacing " + cid + " in body with " + imageHtmlUrl);
+                    }
+                    bodyWithImage=bodyWithImage.replaceAll(cid, imageHtmlUrl);
+                }
+            } catch (Exception e) {
+                Utilities.generalCatchBlock(e, thisClass);
+            }
+        }
+
+        return bodyWithImage;
+    }
+
+    /** Returns the no of inline images
+     *
+     * @param attachmentCollection
+     * @return
+     */
+    public static int getTotalNoOfInlineImgs(AttachmentCollection attachmentCollection, Class thisClass){
+        int no=0;
+        try {
+            for(Attachment attachment:  attachmentCollection){
+                //if(attachment.getIsInline() && attachment.getContentType()!=null && attachment.getContentType().contains("image") && !(attachment.getContentType().equalsIgnoreCase("message/rfc822"))){
+                if(attachment.getIsInline() && !(attachment.getContentType()!=null && attachment.getContentType().equalsIgnoreCase("message/rfc822"))){
+                    no++;
+                }
+            }
+        } catch (ServiceVersionException e) {
+            Utilities.generalCatchBlock(e, thisClass);
+        }
+        return no;
+    }
+
+
+    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailRunnable loadEmailRunnable, Class thisClass){
+        String path="";
+        File file;
+        FileAttachment fileAttachment;
+        FileOutputStream fos;
+
+        for(Attachment attachment:  attachmentCollection){
+
+            if(attachment!=null ){
+                if(BuildConfig.DEBUG){
+                    Log.d(TAG, "LoadEmailRunnable -> cacheInlineImages() -> Processing attachment: " + attachment.getName() + " Attachment type " + attachment.getContentType());
+                }
+                //if(!(attachment.getContentType().equalsIgnoreCase("message/rfc822")) ){
+                if(!(attachment.getContentType()!=null && attachment.getContentType().equalsIgnoreCase("message/rfc822")) ){
+                    fileAttachment=(FileAttachment)attachment;
+					/*
+			System.out.println("Is Inline " + fa.getIsInline());
+			System.out.println("Name " + fa.getName());
+			System.out.println("Size " + fa.getSize());
+			System.out.println("Content id " + fa.getContentId());
+			System.out.println("Id " + fa.getId());
+			System.out.println("Content location " + fa.getContentLocation());
+			System.out.println("content type " + fa.getContentType());
+			System.out.println("\n");
+					 */
+
+                    try {
+                        //if(fileAttachment.getIsInline() && fileAttachment.getContentType()!=null && fileAttachment.getContentType().contains("image")){
+                        if(fileAttachment.getIsInline()){
+                            file = new File(CacheDirectories.getMailCacheImageDirectory(context) + "/" + itemId);
+
+                            file.mkdirs();
+                            path=file.getPath() + "/" + attachment.getName();
+
+                            if(BuildConfig.DEBUG){
+                                Log.d(TAG, "Caching image file " +fileAttachment.getName() );
+                            }
+                            if(!((new File(path)).exists())){
+                                //EWS call
+                                fos = new FileOutputStream(path);
+                                try{
+                                    NetworkCall.downloadAttachment(fileAttachment, fos);
+                                }
+                                catch(Exception e){
+                                    Log.e(TAG, "ViewMailActivity -> Exception while downloading attachment");
+                                    e.printStackTrace();
+                                }
+                            }
+                            if(loadEmailRunnable!=null ) {
+                                loadEmailRunnable.getParent().setRemainingInlineImages(loadEmailRunnable.getParent().getRemainingInlineImages() - 1);
+                                loadEmailRunnable.sendHandlerMsg(ViewMailFragment.Status.DOWNLOADED_AN_IMAGE, body);
+                            }
+                        }
+                        else{
+                            Log.d(TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: " + fileAttachment.getFileName() + " as it is not an inline image" );
+                        }
+                    } catch (Exception e) {
+                        Utilities.generalCatchBlock(e, thisClass);
+                    }
+
+                }
+                else{
+                    Log.d(TAG, "ViewMailActivity -> Skipping message attachment of the content type message/rfc822");
+                }
+            }
+            else{
+                Log.e(TAG, "ViewMailActivity -> The attachment or its content type is null. Not processing this attachment!");
+            }
+        }
+    }
+
 }

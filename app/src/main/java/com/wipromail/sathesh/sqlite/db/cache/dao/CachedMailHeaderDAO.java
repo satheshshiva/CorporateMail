@@ -51,6 +51,21 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
 		return insertId;
 	}
 
+    /** New record
+     * @return
+     */
+    public long createOrUpdate(CachedMailHeaderVO vo) throws Exception {
+        long insertId=0;
+        try{
+            open(cacheDbHelper);
+            insertId= saveVOInDB(vo);
+        }
+        finally{
+            try{close(cacheDbHelper);}catch(Exception e){}
+        }
+        return insertId;
+    }
+
     /*** SELECT QUERIES ***/
 
 	/** Get all records

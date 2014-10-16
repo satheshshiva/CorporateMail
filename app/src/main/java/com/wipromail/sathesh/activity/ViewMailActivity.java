@@ -93,6 +93,7 @@ public class ViewMailActivity extends SherlockFragmentActivity implements Consta
     {
         super.onDestroy();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

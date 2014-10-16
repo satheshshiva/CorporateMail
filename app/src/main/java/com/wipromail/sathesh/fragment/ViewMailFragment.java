@@ -49,7 +49,6 @@ import com.wipromail.sathesh.util.Utilities;
 import com.wipromail.sathesh.web.StandardWebView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -276,7 +275,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //Prefill To
         ContactSerializable fromContact=null;
         //prepare the toBundle for reply with the "from" String
-        List<ContactSerializable> fromList = getContactsFromString(from);
+        List<ContactSerializable> fromList = MailApplication.getContactsFromDelimitedString(from);
         if(fromList.size() > 0 ) {
             fromContact = fromList.get(0);
         }
@@ -456,13 +455,13 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             //convert "from" delimitered text to from list of ContactSerializable
             if(from!=null && !(from.equals(""))){
                 isToExist=true;
-                fromReceivers= getContactsFromString(from);
+                fromReceivers= MailApplication.getContactsFromDelimitedString(from);
             }
 
             //convert "to" delimitered text to "to" list of ContactSerializable
             if(to!=null && !(to.equals(""))){
                 isToExist=true;
-                toReceivers= getContactsFromString(to);
+                toReceivers= MailApplication.getContactsFromDelimitedString(to);
             }
             else{
                 isToExist=false;
@@ -471,14 +470,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             //convert "cc" delimitered text to "cc" list of ContactSerializable
             if(cc!=null && !(cc.equals(""))){
                 isCCExist=true;
-                ccReceivers= getContactsFromString(cc);
+                ccReceivers= MailApplication.getContactsFromDelimitedString(cc);
             }
             else{
                 isCCExist=false;
             }
             if(bcc!=null && !(bcc.equals(""))){
                 isBCCExist=true;
-                bccReceivers= getContactsFromString(bcc);
+                bccReceivers= MailApplication.getContactsFromDelimitedString(bcc);
                 //	BCC_ViewMail_LinearLayout.setVisibility(View.VISIBLE);
             }
             else{
@@ -571,45 +570,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
      */
     public void showFewCCReceivers(){
         buildHeaderText(ccIdView, ccReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
-    }
-
-    /** Returns the list of ContactSerializables from the gven string which was separated by delimiters
-     *
-     * @param str
-     * @return
-     */
-    private List<ContactSerializable> getContactsFromString(String str){
-        List<ContactSerializable> list = new ArrayList<ContactSerializable>();
-        String[] nameEmailArray, addressArray;
-        ContactSerializable contact ;
-
-        //split the email addesses sperator (;) and put in array
-        addressArray = str.split(EMAIL_DELIMITER_DISP);
-        for(String address : addressArray){
-            // check whether each entry has name and email seprated with delim(#$%)
-            if(address.contains(EMAIL_NAMEEMAIL_STORAGE_DELIM)){
-                nameEmailArray=address.split(EMAIL_NAMEEMAIL_STORAGE_DELIM);
-                contact = new ContactSerializable();
-                if(nameEmailArray.length>0) {
-                    contact.setDisplayName(nameEmailArray[0]);
-                    //if the email is present
-                    if(nameEmailArray.length>1) {
-                        contact.setEmail(nameEmailArray[1]);
-                        contact.setResolveOnLoad(true); // on load of the contact load the full contact
-                    }
-                    contact.setTryResolveNamesInDirectory(false);
-                }
-            }
-            //if the delim (#%!) is not there then only name is present for the entry
-            else{
-                contact = new ContactSerializable();
-                contact.setDisplayName(address);
-                contact.setTryResolveNamesInDirectory(true);
-            }
-            //add to the return list
-            list.add(contact);
-        }
-        return list;
     }
 
     /** Confirmation dialog shown for deleting items from Deleted Items folder
