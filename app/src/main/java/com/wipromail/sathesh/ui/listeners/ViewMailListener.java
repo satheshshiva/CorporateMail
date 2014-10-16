@@ -7,13 +7,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
 
 /**
  * @author sathesh
  *
  */
-public class ViewMailListener implements OnClickListener{
+public class ViewMailListener implements OnClickListener, Constants {
 
 	private ViewMailFragment parent;
 
@@ -45,7 +46,7 @@ public class ViewMailListener implements OnClickListener{
 			parent.setToShowMoreFlag(true);
 		}
 		else{
-			parent.showFewToReceivers();
+            parent.buildHeaderText(parent.getToIdView(), parent.getToReceivers(), MAX_TO_RECEIVERS_DISPLAY);
 			parent.getToShowMoreBtn().setText(parent.getString(R.string.viewmail_showmore_lbl));
 			parent.setToShowMoreFlag(false);
 		}
@@ -58,7 +59,7 @@ public class ViewMailListener implements OnClickListener{
 			parent.setCcShowMoreFlag(true);
 		}
 		else{
-			parent.showFewCCReceivers();
+            parent.buildHeaderText(parent.getCcIdView(), parent.getCcReceivers(), MAX_CC_RECEIVERS_DISPLAY);
 			parent.getcCShowMoreBtn().setText(parent.getString(R.string.viewmail_showmore_cc_lbl));
 			parent.setCcShowMoreFlag(false);
 		}

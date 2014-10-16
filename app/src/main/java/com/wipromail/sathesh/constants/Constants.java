@@ -85,8 +85,8 @@ public interface Constants {
 	----------------------------------  View Mail ----------------------------------------------
 	--------------------------------------------------------------------------------------*/
 
-	public static final int MAX_TO_RECEIVERS_TO_DISPLAY=2; //if the no. of To receivers is more than while opening email it will be hidedn with a button
-	public static final int MAX_TO_RECEIVERS_CC_DISPLAY=2;
+	public static final int MAX_TO_RECEIVERS_DISPLAY =2; //if the no. of To receivers is more than while opening email it will be hidedn with a button
+	public static final int MAX_CC_RECEIVERS_DISPLAY =2;
 
 	public static final String VIEW_MAIL_DATE_FORMAT="E d-MMM-yy h:mm a";
 	public static final String VIEW_MAIL_ERROR_HTML="<span style=\"{color:red}\">Cannot load email. Please try again later.</span>";
