@@ -77,8 +77,7 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 
 				if(findResults!=null){
 					//delete the old cache and updates the new cache
-					headersCacheAdapter.cacheNewData(parent.getActivity(), 
-							findResults.getItems(),parent.getMailType(), 
+					headersCacheAdapter.cacheNewData(findResults.getItems(),parent.getMailType(),
 							parent.getMailFolderName(), parent.getMailFolderId(), false);	//update the new records. dont delele the old records
 					
 					parent.setTotalMailsInFolder(findResults.getTotalCount());	//set the total no of mails in this folder

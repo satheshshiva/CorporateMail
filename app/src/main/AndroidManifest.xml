@@ -8,11 +8,8 @@
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="20" />
-    <!-- setting target sdk to 10 to have the overflow menu button on ICS tablets -->
-
 
     <!-- Allow Internet Access to the application -->
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.INTERNET" />

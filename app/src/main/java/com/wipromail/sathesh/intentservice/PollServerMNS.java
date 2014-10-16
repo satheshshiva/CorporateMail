@@ -1,8 +1,5 @@
 package com.wipromail.sathesh.intentservice;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,28 +13,34 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
+import com.wipromail.sathesh.cache.adapter.CachedMailBodyAdapter;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
+import com.wipromail.sathesh.ews.MailFunctions;
+import com.wipromail.sathesh.ews.MailFunctionsImpl;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.service.MailNotificationService;
+import com.wipromail.sathesh.service.data.AttachmentCollection;
 import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.service.data.EventType;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.GetEventsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
-import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.ItemEvent;
 import com.wipromail.sathesh.service.data.PullSubscription;
 import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
+import com.wipromail.sathesh.util.Utilities;
+
+import java.net.UnknownHostException;
 
 public class PollServerMNS extends WakefulIntentService implements Constants{
 
 
 	public PollServerMNS() {
 		super("PollServerMNS");
-		// TODO Auto-generated constructor stub
 	}
 
 	private ExchangeService service;
@@ -53,6 +56,9 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 	private NotificationManager mNM ;
 	private static AlarmManager alarmManager;
 	private static 	PendingIntent pendingIntent;
+    public static CachedMailHeaderAdapter cachedMailHeaderAdapter;
+    public static CachedMailBodyAdapter cachedMailBodyAdapter;
+    private MailFunctions mailFunctions = new MailFunctionsImpl();
 	private EmailMessage message;
 	private int thisnewMailCounter=0;	// this will reset for every poll
 
@@ -64,6 +70,9 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 
 		try{
 			this.context=this;
+            cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
+            cachedMailBodyAdapter = new CachedMailBodyAdapter(context);
+
 			pollSound = MediaPlayer.create(context, R.raw.sound);
 			alarmManager = PullMailNotificationServiceThread.getAlarmManager();
 			pendingIntent=PullMailNotificationServiceThread.getPendingIntent();
@@ -79,24 +88,16 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 						//pollSound.start();
 					}
 				}
-
 				pollServer();
-
-
-
 			}
 			else{
 				Log.e(TAG, "PollServerMNS -> Subscription is null. Probably an application upgrade. Calling subscripyion thread by starting service  ");
 				MailApplication.startMNSService(context);
 			}
-
 		}
 		catch(NoUserSignedInException ne){
-
 			Log.e(TAG_MNS, "PollServerMNS -> No User has signed in");
-
 			handleGeneralException(ne);
-
 
 		}
 
@@ -127,30 +128,19 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 			}
 		}
 
-
 		catch(Exception e){
 			Log.e(TAG_MNS, "PollServerMNS -> " + e.getMessage());
 			handleGeneralException(e);
-
-
 		}
-
 	}
 
-
 	private void showLoginErrorNotification() {
-		// TODO Auto-generated method stub
 		NotificationProcessing.showLoginErrorNotification(context);
 	}
 
-
 	private void pollServer() throws Exception {
-		// TODO Auto-generated method stub
-
 
 		events = NetworkCall.pullSubscriptionPoll(context,subscription);
-
-
 
 		// Loop through all item-related events.
 		for(final ItemEvent itemEvent : events.getItemEvents())      
@@ -163,19 +153,16 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
 						try {
 							message = NetworkCall.bindEmailMessage(context, service, itemEvent);
 							thisnewMailCounter++;	// new mails in this poll
 							MailNotificationService.newMailNotificationCounter++;	//total new mails
 
-							ArrayList<Item> cacheItem= new ArrayList<Item>();
-							cacheItem.add(message);
-							//CODE HAS TO BE WRITTEN TO UPDATE THE CACHE
-							//CacheInboxAdapter.writeCacheInboxData(context, cacheItem,false);	//cache the new mail header
+							if(null!= message){
 
-							if(null!= message){					        
+                              writeToCache(message);
 
+                                //show notification only if its not read
 								if(!(message.getIsRead())){
 
 									if( null !=  message.getSender() && null !=  message.getSender().getName() && null !=   message.getSubject()){
@@ -194,24 +181,18 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 									Log.d(TAG, "PollServerMNS -> Message already read. Not showing alert");
 								}
 							}
-
 							else
 							{
 								showNewMailNotification(context.getText(R.string.mnsServiceNotificationWithNullMessage).toString());
 							}
 						} 
 						catch(NoUserSignedInException ne){
-
 							Log.e(TAG_MNS, "PollServerMNS -> No User has signed in");
-
 							handleGeneralException(ne);
-
-
 						}
 
 						catch (UnknownHostException e) {
 							Log.e(TAG_MNS, "PollServerMNS -> " + e.getMessage());
-
 						}
 						catch(NoInternetConnectionException nic){
 							Log.e(TAG_MNS, "PollServerMNS -> " + nic);
@@ -237,53 +218,72 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 							}
 						}
 
-
 						catch(Exception e){
 							Log.e(TAG_MNS, "PollServerMNS -> " + e.getMessage());
 							handleGeneralException(e);
-
-
 						}
-
 					}
 
 					private void showNewMailNotification(String... args) {
-						// TODO Auto-generated method stub
-
 						NotificationProcessing.showNewMailNotification(context, thisnewMailCounter, MailNotificationService.newMailNotificationCounter, args);
-
 					}
 				}.run();
-
-
-
 			}
 		}
-
-
 	}
 
+    /** Writes the message item to cache
+     *
+     * @param message
+     */
+    private void writeToCache(EmailMessage message) {
+        AttachmentCollection attachmentCollection;
+        int totalInlineImgs =0;
 
+        //CACHING MAIL HEADER
+        try {
+            //caching mail header
+            cachedMailHeaderAdapter.cacheNewData(message, MailType.INBOX, "Inbox", "");
+        } catch (Exception e) {
+            Utilities.generalCatchBlock(e,"Exception while caching mail header during notifications processing", this.getClass());
+        }
 
+        //CACHING MAIL BODY
+        try {
+            attachmentCollection = message.getAttachments();
 
+            //get the total number of inline images
+            totalInlineImgs = MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this.getClass());
 
-	private void handleGeneralException(Exception ne) {
-		// TODO Auto-generated method stub
+            //INLINE IMGS PRESENT
+            if (totalInlineImgs > 0) {
+               //replace all the inline image "cid" tags with "file://" tags
+                String bodyWithImg = MailApplication.getBodyWithImgHtml(context, mailFunctions.getBody(message) , attachmentCollection, mailFunctions.getItemId(message), this.getClass());
+
+                //writing VO to cache with the custom body
+                cachedMailBodyAdapter.cacheNewData(message,bodyWithImg, MailType.INBOX, "Inbox", "" );
+
+                // download and cache images. html body will be refreshed after each img download to show the imgs
+                MailApplication.cacheInlineImages(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this.getClass());
+            }
+            //NO INLINE IMGS
+            else {
+                //writing VO to cache
+                cachedMailBodyAdapter.cacheNewData(message, MailType.INBOX, "Inbox", "");
+
+            }
+        } catch (Exception e) {
+            Utilities.generalCatchBlock(e, "Exception while caching mail body during notifications processing", this.getClass());
+        }
+
+    }
+
+    private void handleGeneralException(Exception ne) {
 		ne.printStackTrace();
 		Log.e(TAG_MNS, "PollServerMNS -> Exception " + ne.getMessage());
 		//renew subscrption when exception is related to subscription
 			if(ne!=null && ne.getMessage()!=null && ne.getMessage().equalsIgnoreCase("subscription")){
 				MailNotificationService.notifyMNSThread();
 			}
-		
-
 	}
-
-
-
-
-
-
-
-
 }

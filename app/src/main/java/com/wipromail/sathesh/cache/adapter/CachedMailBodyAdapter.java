@@ -6,9 +6,11 @@ package com.wipromail.sathesh.cache.adapter;
 import android.content.Context;
 
 import com.wipromail.sathesh.BuildConfig;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants.MailType;
 import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
+import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.sqlite.db.cache.dao.CachedMailBodyDAO;
@@ -31,35 +33,23 @@ public class CachedMailBodyAdapter {
         }
     }
 
-    //CODE HAS TO BE UPDATE FOR
-    //VIEW MAIL ACTIVITY
-    //POLLSERVERMNS.java
-
     /*** CREATE QUERIES ***/
 
-    /** Writes the VO to cache
+    /** Writes the Item to body cache
      *
-     * @param vo - VO to write to cache
-     */
-    public void cacheNewData(CachedMailBodyVO vo)  {
-        try {
-            dao.createOrUpdate(vo);
-        } catch (Exception e) {
-            if(BuildConfig.DEBUG)
-                e.printStackTrace();
-        }
-    }
-
-    /** Writes the Item to cache
-     *
-     * @param item
+     * @param message
      * @param mailType - the folder. Depending upon the mail type it will use folder name or folder id
      * @param mailFolderName
      * @param mailFolderId
      */
-    public void cacheNewData(Item item, int mailType, String mailFolderName, String mailFolderId, String from_delimited, String to_delimited, String cc_delimited, String bcc_delimited)  {
+    public void cacheNewData(EmailMessage message, int mailType, String mailFolderName, String mailFolderId)  {
         try {
-            CachedMailBodyVO vo = covertItemToVO(mailType, item, mailFolderName, mailFolderId, from_delimited,
+            String from_delimited = MailApplication.getDelimitedAddressString(message.getFrom());
+            String to_delimited = MailApplication.getDelimitedAddressString(message.getToRecipients());
+            String cc_delimited = MailApplication.getDelimitedAddressString(message.getCcRecipients());
+            String bcc_delimited = MailApplication.getDelimitedAddressString(message.getBccRecipients());
+
+            CachedMailBodyVO vo = covertItemToVO(mailType, message, mailFolderName, mailFolderId, from_delimited,
                     to_delimited,
                     cc_delimited,
                     bcc_delimited);
@@ -70,17 +60,22 @@ public class CachedMailBodyAdapter {
         }
     }
 
-    /** Writes the String Body record to cache. The body is a customized body msg
+    /** Writes the body record to cache. Receives custom body html instead of taking from the Item
      *
-     * @param item
+     * @param message
      * @param body - custom body apart from body get from the item
      * @param mailType - the folder. Depending upon the mail type it will use folder name or folder id
      * @param mailFolderName
      * @param mailFolderId
      */
-    public void cacheNewData(Item item, String body, int mailType, String mailFolderName, String mailFolderId, String from_delimited, String to_delimited, String cc_delimited, String bcc_delimited)  {
+    public void cacheNewData(EmailMessage message, String body, int mailType, String mailFolderName, String mailFolderId)  {
         try {
-            CachedMailBodyVO vo = covertItemToVO(mailType, item, mailFolderName, mailFolderId, from_delimited,
+            String from_delimited = MailApplication.getDelimitedAddressString(message.getFrom());
+            String to_delimited = MailApplication.getDelimitedAddressString(message.getToRecipients());
+            String cc_delimited = MailApplication.getDelimitedAddressString(message.getCcRecipients());
+            String bcc_delimited = MailApplication.getDelimitedAddressString(message.getBccRecipients());
+
+            CachedMailBodyVO vo = covertItemToVO(mailType, message, mailFolderName, mailFolderId, from_delimited,
                     to_delimited,
                     cc_delimited,
                     bcc_delimited);

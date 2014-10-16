@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
@@ -18,8 +17,15 @@ public class NotificationProcessing implements Constants{
 	private static Notification notification;
 	private static PendingIntent pendingIntent;
 	private static CharSequence title = "" , message="";
-	
-	public static void showNewMailNotification(Context context, int thisnewMailCounter, int totNewMailNotificationCounter, String... args) {
+
+    /** New Mail Notificaion
+     *
+     * @param context
+     * @param thisnewMailCounter
+     * @param totNewMailNotificationCounter
+     * @param args
+     */
+    public static void showNewMailNotification(Context context, int thisnewMailCounter, int totNewMailNotificationCounter, String... args) {
 
 		NotificationManager mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
 
@@ -72,12 +78,14 @@ public class NotificationProcessing implements Constants{
 	}
 	
 	private static CharSequence getScrollingText() {
-		// TODO Auto-generated method stub
 		return title.toString() +"\n"+ message.toString();
 	}
 
-	public static void showLoginErrorNotification(Context context) {
-		// TODO Auto-generated method stub
+    /** Login Error Notification
+     *
+     * @param context
+     */
+    public static void showLoginErrorNotification(Context context) {
 
 		MailApplication mailApplication = MailApplication.getInstance();
 		/*will be true when the the password is wrong which is set by (NotificationProcessing.showLoginErrorNotification()). This will be set back to false when the user saves a 
@@ -106,8 +114,12 @@ public class NotificationProcessing implements Constants{
 				context.getString(R.string.mns_service_invalidUser_message), pendingIntent);
 		mNM.notify(0, notification);
 	}
-	
-	public static void cancelAllNotifications(Context context){
+
+    /** Cancels all the current notifications
+     *
+     * @param context
+     */
+    public static void cancelAllNotifications(Context context){
 		MailNotificationService.newMailNotificationCounter=0;
 		NotificationManager mNM = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNM.cancelAll();
