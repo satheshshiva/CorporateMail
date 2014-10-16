@@ -67,7 +67,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	private ProgressBar bar_progressbar;
 	private ListView listView;
-	private CachedMailHeaderAdapter cacheAdapter;
+	private CachedMailHeaderAdapter cacheMailHeaderAdapter;
 	private int totalCachedRecords=0;
 
 	private SwipeRefreshLayout swipeRefreshLayout ;
@@ -100,8 +100,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		context = (SherlockFragmentActivity) getActivity();
 		activityDataPasser = (MailListActivityDataPasser)getActivity();
 		
-		if (cacheAdapter==null){
-			cacheAdapter = new CachedMailHeaderAdapter(context);
+		if (cacheMailHeaderAdapter ==null){
+			cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
 		}
 		setRetainInstance(true);
 		
@@ -153,7 +153,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				//get the cursor
 
 				if(adapter==null){	//on config change it wont be null
-                    List<CachedMailHeaderVO> listVOs = cacheAdapter.getMailHeaders(mailType, mailFolderId);
+                    List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
 					//initialize the adapter
 					adapter = new MailListViewAdapter(context, listVOs);
 				}
@@ -211,7 +211,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		
 		//show the loading animation with the no of mails reamaining in the end of listview
 		try {
-			totalRecordsInCache = cacheAdapter.getRecordsCount(mailType, mailFolderId);
+			totalRecordsInCache = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
 			
 		} catch (Exception e) {
 			// if exception in getting the no of mails in cache then just show loading mails symbol
@@ -257,7 +257,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		}
 		try {
             //update the list view
-			adapter.setListVOs(cacheAdapter.getMailHeaders(mailType, mailFolderId));
+			adapter.setListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
 			adapter.notifyDataSetChanged();
 
             //update the text switcher
@@ -313,7 +313,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			//swipe refresh layout - visible
 			swipeRefreshLayout.setRefreshing(true);
 			//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
-			totalCachedRecords = cacheAdapter.getRecordsCount(mailType, mailFolderId);
+			totalCachedRecords = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
 			if(totalCachedRecords>0){
 				textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
 			}
@@ -335,8 +335,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	public void updateTextSwitcherWithMailCount(int totalCachedRecords) throws Exception {
 		//get the unread emails count
-        totalCachedRecords = cacheAdapter.getRecordsCount(mailType, mailFolderId);
-		int totalUnread = cacheAdapter.getUnreadMailCount(mailType, mailFolderId);
+        totalCachedRecords = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
+		int totalUnread = cacheMailHeaderAdapter.getUnreadMailCount(mailType, mailFolderId);
 		String successMsg="";
 
         //no email
@@ -455,11 +455,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	}
 
 	public CachedMailHeaderAdapter getMailHeadersCacheAdapter() {
-		return cacheAdapter;
+		return cacheMailHeaderAdapter;
 	}
 
 	public void setMailHeadersCacheAdapter(CachedMailHeaderAdapter mailHeadersCacheAdapter) {
-		this.cacheAdapter = mailHeadersCacheAdapter;
+		this.cacheMailHeaderAdapter = mailHeadersCacheAdapter;
 	}
 
 	public int getMailType() {

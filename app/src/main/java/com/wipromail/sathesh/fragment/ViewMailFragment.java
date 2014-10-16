@@ -499,9 +499,9 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             // To
             if(isToExist){
                 //limit the number of receivers in To if there are more
-                if(toReceivers.size() > MAX_TO_RECEIVERS_TO_DISPLAY){
+                if(toReceivers.size() > MAX_TO_RECEIVERS_DISPLAY){
                     //reduce the no. of To: receivers and hide thmem with show more button
-                    buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
+                    buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_DISPLAY);
                     toShowMoreBtn.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -514,9 +514,9 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             if(isCCExist){
                 //cc
                 //limit the number of receivers in CC if there are more
-                if(ccReceivers.size() > MAX_TO_RECEIVERS_TO_DISPLAY){
+                if(ccReceivers.size() > MAX_CC_RECEIVERS_DISPLAY){
                     //reduce the no. of CC receivers and hide them with show more button
-                    buildHeaderText(ccIdView, ccReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
+                    buildHeaderText(ccIdView, ccReceivers, MAX_CC_RECEIVERS_DISPLAY);
                     cCShowMoreBtn.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -556,20 +556,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             //webvew.loadData(VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT, StandardWebView.MIME_TYPE_HTML,StandardWebView.ENCODING);
             standardWebView.loadData(webview, VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT);
         }
-    }
-
-    /** Invokedby click of the Show few To Receivers button
-     *
-     */
-    public void showFewToReceivers(){
-        buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
-    }
-
-    /** Invokedby click of the Show few CC Receivers button
-     *
-     */
-    public void showFewCCReceivers(){
-        buildHeaderText(ccIdView, ccReceivers, MAX_TO_RECEIVERS_TO_DISPLAY);
     }
 
     /** Confirmation dialog shown for deleting items from Deleted Items folder

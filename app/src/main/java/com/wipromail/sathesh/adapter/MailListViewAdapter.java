@@ -26,7 +26,6 @@ import java.util.List;
 public class MailListViewAdapter extends BaseAdapter implements Constants{
 	private final Context context;
 
-	private int mailType;
 	private List<CachedMailHeaderVO> listVOs;
 	private CachedMailHeaderVO mailListHeader;
 	private LayoutInflater inflater;
@@ -116,7 +115,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 
 					//From
 					// for sent items and drafts, display To instead of From..
-					if(mailType == MailType.SENT_ITEMS || mailType == MailType.DRAFTS){
+					if(mailListHeader.getMail_type() == MailType.SENT_ITEMS || mailListHeader.getMail_type() == MailType.DRAFTS){
 						fromView.setText(MailApplication.getCustomizedInboxFrom(mailListHeader.getMail_to()));
 					}
 					else{

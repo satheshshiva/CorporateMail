@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_from_lbl"
-                 android:textSize="16sp"
+                android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
 
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textSize="14sp"
-                    android:paddingLeft="5dp"
+                android:paddingLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_to_lbl"
-                 android:textSize="16sp"
+                android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
 
@@ -56,9 +56,9 @@
                 android:id="@+id/ViewMailToId"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:textSize="14sp"
-                    android:paddingLeft="5dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <Button
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_cc_lbl"
-                 android:textSize="16sp"
+                android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
 
@@ -94,9 +94,10 @@
                 android:id="@+id/ViewMailCCId"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
+                android:paddingBottom="12dp"
                 android:text=""
                 android:textSize="14sp"
-                    android:paddingLeft="5dp"
+                android:paddingLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <Button
