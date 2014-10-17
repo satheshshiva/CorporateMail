@@ -1,8 +1,6 @@
 package com.wipromail.sathesh.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -11,9 +9,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -36,6 +31,9 @@ import java.util.Calendar;
  *
  */
 public class PreferencesActivity extends SherlockPreferenceActivity implements Constants ,OnSharedPreferenceChangeListener{
+
+    public static int OFFICE365_URL_POSITION = 2;
+    public static int CUSTOM_URL_POSITION = 3;
 
     public final static String KEY_WEBMAIL_SERVER="webmail_server";
     public final static String KEY_COMPOSE_SIGNATURE_ENABLE="compose_signature_enable";
@@ -139,7 +137,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
 
 
     private void updatePullDurationPrefernceSummary() {
-        // TODO Auto-generated method stub
         if(sharedPref.getNotificationPullFrequency(this)==30000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_30s_summary));
         }
@@ -158,12 +155,10 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
     }
 
     private void updateSubscriptionTypePrefernceSummary() {
-        // TODO Auto-generated method stub
         subscrpyionType.setSummary(getString(R.string.preference_notification_type_summary));
     }
 
     private void updateNotificationEnablePrefernceSummary() {
-        // TODO Auto-generated method stub
         if(sharedPref.isNotificationEnabled(this)){
             notificationEnable.setSummary(getString(R.string.preference_notification_enable_ON_summary));
         }else{
@@ -172,7 +167,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
     }
 
     private void updateAutoUpdateNotifySummary() {
-        // TODO Auto-generated method stub
         if(sharedPref.isAutoUdpateNotifyEnabled(this)){
             autoUpdateNotifyEnable.setSummary(getString(R.string.preferences_updater_ON_autoupdate_notify_summary));
         }else{
@@ -198,7 +192,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
         return super.onOptionsItemSelected(item);
     }
     private void updateComposeSignatureEnablePrefernceSummary() {
-        // TODO Auto-generated method stub
         if(sharedPref.isComposeSignatureEnabled(this)){
             composeSignatureEnable.setSummary(getString(R.string.preference_compose_signature_enable_ON_summary));
         }else{
@@ -226,7 +219,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences pref, String key) {
-        // TODO Auto-generated method stub
         if(key.equals(KEY_WEBMAIL_SERVER)){
             try {
                 Calendar now = Calendar.getInstance();
@@ -237,10 +229,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
                 else{
                     Log.i(TAG, "PreferenceActivity -> Last prefernce save was save less than 2 secs. So url changing fn not invoked");
                 }
-
-
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -266,22 +255,18 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
                 MailApplication.onChangeMNSResetPullDuration();
                 updatePullDurationPrefernceSummary();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
         else if(key.equals(KEY_AUTO_UPDATE_NOTIFY)){
             updateAutoUpdateNotifySummary();
         }
-
-
     }
 
     /** called on oncreate. reads the webmail URL from storage
      *
      */
     private void oncreateWebmailServerFromSummary() {
-        // TODO Auto-generated method stub
         webMailServer.setSummary(sharedPref.getServerURL(context));
     }
 
@@ -289,55 +274,19 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
      *
      */
     private void updateWebmailServerPrefernceSummary() {
-        // TODO Auto-generated method stub
 
         String[] serversText = getResources().getStringArray(R.array.preferences_serverlist_text);
         // for the primary and secondary URLs
         for(int i=0; i<serversText.length; i++){
-            if(i!=2){	//i=2 means the user clicked Custom URL 3rd option. It is handled in WebmailURLPreference.java
+            if(i!=CUSTOM_URL_POSITION){	//i=3 means the user clicked Custom URL 4th option. It is handled in WebmailURLPreference.java
                 if(serversText[i].equalsIgnoreCase(webMailServer.getEntry().toString())){
                     webMailServer.setSummary(getResources().getStringArray(R.array.preferences_serverlist_values)[i]);
                 }
             }
         }
-
     }
 
-    public void showCustomServerURLDialog(){
 
-        //build the dialog for change password using the xml layout
-        LayoutInflater factory = LayoutInflater.from(context);
-        final View textEntryView = factory.inflate(R.layout.dialog_webmail_url, null);
-
-        //update the passowrd field with the old password
-        final EditText changeURLEdit = (EditText)textEntryView.findViewById(R.id.url_edit);
-
-        final Context _context = context;
-
-        changeURLEdit.setText(sharedPref.getServerURL(context));
-
-        //build the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dialog_webmail_url_title)
-                .setView(textEntryView)
-                .setPositiveButton(R.string.alertdialog_save_lbl, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String _url = changeURLEdit.getText().toString();
-                        PreferencesActivity.timeOfLastCustomURL = Calendar.getInstance();		//will prevent from invoking the code inside OnSharedPreferenceChange event again, which will be invoked on next line while saving the shared prefs
-                        GeneralPreferenceAdapter.storeServerURL(_context, _url);
-                        webMailServer.setSummary(_url);
-                    }
-                })
-                .setNegativeButton(R.string.alertdialog_negative_lbl, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                })
-                .create();
-        AlertDialog webmailURL = builder.create();
-        webmailURL.show();
-
-    }
     //Google Analytics
     @Override
     public void onStart() {

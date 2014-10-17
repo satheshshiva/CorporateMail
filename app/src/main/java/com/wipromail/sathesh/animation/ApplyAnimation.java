@@ -49,4 +49,8 @@ public class ApplyAnimation {
 	public static Animation getDownloadingImagesLblOutAnim(Activity activity){
 		return  AnimationUtils.loadAnimation(activity, R.anim.slide_out_to_top);
 	}
+
+    public static Animation getLoginPageTextViewShakeAnim(Activity activity){
+        return  AnimationUtils.loadAnimation(activity, R.anim.shake);
+    }
 }

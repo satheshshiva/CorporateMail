@@ -10,6 +10,8 @@
     <string name="login_logo_bigText_beta">alpha</string>
     <string name="webmail1_url">https://webmail.wipro.com</string>
     <string name="webmail2_url">https://webmail2.wipro.com</string>
+    <string name="webmail_365_url">https://outlook.office365.com</string>
+    <string name="webmail_365_username_append">\u0040wipro.com</string>
     <string name="webmail_url_EWS_extension">/EWS/Exchange.asmx</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -19,6 +21,7 @@
     <string name="login_pwd_text">Password</string>
     <string name="loginact_loginbtn_text">Login</string>
     <string name="login_username_hint">wipro\\</string>
+    <string name="login_username_office365_hint">\u0040wipro.com</string>
     <string name="alertdialog_save_lbl">Save</string>
     <string name="alertdialog_positive_lbl">OK</string>
     <string name="alertdialog_negative_lbl">Cancel</string>

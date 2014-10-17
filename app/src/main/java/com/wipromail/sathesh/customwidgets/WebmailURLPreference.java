@@ -1,21 +1,16 @@
 package com.wipromail.sathesh.customwidgets;
 
-import java.util.Calendar;
-
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 
-import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.activity.PreferencesActivity;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 
 public class WebmailURLPreference extends ListPreference implements Constants{
@@ -24,25 +19,31 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 
 	public WebmailURLPreference(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	public WebmailURLPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
+    private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
 
 	@Override
 	protected void onPrepareDialogBuilder(Builder builder) {
 
 		//   super.onPrepareDialogBuilder(builder);
-
+        String value="";
 		if (getEntries() == null || getEntryValues() == null) {
 			throw new IllegalStateException(
 					"ListPreference requires an entries array and an entryValues array.");
 		}
 
-		mClickedDialogEntryIndex = findIndexOfValue(getValue());
+        //get the stored preference value
+        value=sharedPref.getServerURL(this.getContext());
+
+        //get the index of the stored value
+		mClickedDialogEntryIndex = findIndexOfValue(value);
+
+        //build the single choice items dialog
 		builder.setSingleChoiceItems(getEntries(), mClickedDialogEntryIndex, 
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -63,11 +64,9 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 		 * press 'Ok'.
 		 */
 		builder.setPositiveButton(null, null);
-
-
 	}
 
-	/* i have overridden this so that clicking the 3rd option in webmail server url drop down will open the custom dialog
+	/* I have overridden this so that clicking the 3rd option in webmail server url drop down will open the custom dialog
 	 * 
 	 * (non-Javadoc)
 	 * @see android.preference.ListPreference#onDialogClosed(boolean)
@@ -75,17 +74,19 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		// super.onDialogClosed(positiveResult);
-		Log.i(TAG, "WebmailURLPreference -> Called Ondialog Closed");
+        if(BuildConfig.DEBUG) {
+            Log.i(TAG, "WebmailURLPreference -> Called Ondialog Closed");
+        }
 		if (positiveResult && mClickedDialogEntryIndex >= 0 && getEntryValues() != null) {
 			String value = getEntryValues()[mClickedDialogEntryIndex].toString();
 			if (callChangeListener(value)) {
-				if(mClickedDialogEntryIndex!=2){
+				if(mClickedDialogEntryIndex!=(PreferencesActivity.CUSTOM_URL_POSITION)){
 					setValue(value);
 				}
 
 				else{
-					//the Custom URL option is clicked
-					new PreferencesActivity().showCustomServerURLDialog();
+					//the Custom URL option is clicked.. open the Custom Url Dialog
+					MailApplication.showCustomServerURLDialog(getContext(), this, null);
 				}
 			}
 		}
@@ -93,7 +94,7 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 	
 	/* i have overridden this so that default value index 2 will be returned when there is no match for the value.
 	 * i.e. when the user saves the custom url, while opening the list preference, there wont be any match for the custom url to highlight in the options. 
-	 * So in that time instead of not highlighting anyone by returning -1 we return 2 to highliht ustom url option.
+	 * So in that time instead of not highlighting anyone by returning -1 we return 2 to highliht custom url option.
 	 * 
 	 * (non-Javadoc)
 	 * @see android.preference.ListPreference#onDialogClosed(boolean)
@@ -108,7 +109,7 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 	            }
 	        }
 	        //high light custom url option if no match is found
-	        return 2;
+	        return (PreferencesActivity.CUSTOM_URL_POSITION);
 	    }
 }
 

@@ -1,22 +1,15 @@
 package com.wipromail.sathesh.ews;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-import android.view.View;
 
-import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
-import com.wipromail.sathesh.service.data.ExchangeCredentials;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.WebCredentials;
+
+import java.net.URI;
+import java.util.Map;
 
 public class EWSConnection implements Constants{
 
@@ -36,7 +29,6 @@ public class EWSConnection implements Constants{
 			//service.setUrl(new URI("https://mail.cognizant.com/EWS/Exchange.asmx"));
 			//service.setTraceEnabled(true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			throw e;
 		}
 		return service;

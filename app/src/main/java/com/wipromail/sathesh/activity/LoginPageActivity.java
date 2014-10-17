@@ -1,21 +1,23 @@
 package com.wipromail.sathesh.activity;
 
-import java.net.URISyntaxException;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
+import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.constants.Constants;
@@ -30,6 +32,9 @@ import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.ui.OptionsUIContent;
+import com.wipromail.sathesh.ui.listeners.LoginPageListener;
+
+import java.net.URISyntaxException;
 
 public class LoginPageActivity extends SherlockActivity implements Constants {
 
@@ -37,45 +42,58 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 	private Intent intent;
 	//	private  boolean customTitleSupported = false;
 	private Activity activity;
+    private Context context;
+    private EditText login_username;
+    private EditText login_passwd;
+    private Spinner serverSpinner;
+    private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
+    private TextView urlDisp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		activity = this;
+        context=this;
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.activity_login_page);
+        login_username = (EditText)findViewById(R.id.login_username);
+        login_passwd = (EditText)findViewById(R.id.login_passwd);
+        serverSpinner = (Spinner)findViewById(R.id.serverSpinner);
+        serverSpinner.setOnItemSelectedListener(new LoginPageListener(activity, this));
+        urlDisp = (TextView) findViewById(R.id.serverURLDisp);
+
+        //Reset the URL preference to default one. Since we have to manually update the spinner if it ws changed
+        sharedPref.storeServerURL(context, MailApplication.getDefaultWebmailURL(context));
+
+        //show the current url in display
+        urlDisp.setText(sharedPref.getServerURL(context));
+
 		//testingdb(activity);
 		/* if(customTitleSupported)
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getInboxTitleBarLayout());*/
 	}
 
-
-	@Override
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
 		//Always Visible menu
-		menu.add(ACTIONBAR_SETTINGS)
-		.setIcon(OptionsUIContent.getSettingsIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(ACTIONBAR_LOGIN)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		menu.add(ACTIONBAR_ABOUT)
+        menu.add(ACTIONBAR_ABOUT)
 		.setIcon(OptionsUIContent.getAboutIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		return true;
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-
-		if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			Intent intent = new Intent(this, PreferencesActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
+        if(item!=null && item.getTitle().equals(ACTIONBAR_LOGIN)){
+            loginButtonClicked();
+        }
+        else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
 			Intent intent = new Intent(this, AboutActivity.class);
 			startActivity(intent);
 		}
@@ -83,52 +101,56 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 		return super.onOptionsItemSelected(item);
 	}
 
+    /**Called when the login button is clicked
+     *
+     */
+    private void loginButtonClicked() {
+        username = login_username.getText().toString();
+        password = login_passwd.getText().toString();
 
-	public void onClickLogin(View view) {
-		EditText login_username = (EditText)findViewById(R.id.login_username);
-		username = login_username.getText().toString();
+        //validate user name
+        if(username==null || username.equalsIgnoreCase("")) {
+            //if user name is null then shake the edit text
+            login_username.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim(activity));
+            return;
+        }
 
-		EditText login_passwd = (EditText)findViewById(R.id.login_passwd);
-		password = login_passwd.getText().toString();
+        //validate password
+        if(password==null || password.equalsIgnoreCase("")) {
+            //if password is null then shake the edit text
+            login_passwd.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim(activity));
+            return;
+        }
 
-		new Login().execute(username, password);
+        // for office 365 URL append "@wipro.com" to the username
+        if(serverSpinner.getSelectedItemPosition() == PreferencesActivity.OFFICE365_URL_POSITION){
+            username+=getString(R.string.webmail_365_username_append);
+        }
+        Log.d(TAG, "USERNAME " + username + " PASSWORD " + password);
+        //Validation successful. Login
+        new Login().execute(username, password);
+    }
 
-	}
-	
-	public void textView5OnClick(View view) {
-		EditText login_username = (EditText)findViewById(R.id.login_username);
-		login_username.requestFocus();
-	}
-
-	public void textView2OnClick(View view) {
-		EditText login_passwd = (EditText)findViewById(R.id.login_passwd);
-		login_passwd.requestFocus();
-	}
-	
-	private class Login extends AsyncTask<String, String, Long>{
+    private class Login extends AsyncTask<String, String, Long>{
 
 		private ExchangeService service;
 		ProgressDialog dialog;
 
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
 
 			try {
 				dialog = ProgressDialog.show(LoginPageActivity.this, "Logging in", 
 						"", true);
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Log.e(TAG, "Exception occured on preexecute");
 			}
-
 		}
 
 		@Override
 		protected Long doInBackground(String... paramArrayOfParams) {
-			// TODO Auto-generated method stub
 
 			try {
 
@@ -160,7 +182,6 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 					publishProgress("0" ,"ERROR", "Check your Internet Connection\n\nDetails:NPE"  );
 			}
 			catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				publishProgress("0" ,"ERROR", MALFORMED_WEBMAIL_URL_TEXT);
 			}
 			catch(HttpErrorException e){
@@ -174,7 +195,6 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 			}
 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " +e.getMessage());
 			}
 
@@ -183,7 +203,6 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 		}
 
 		private void retrieveAndStoreUserDetails(ExchangeService service, String username) throws NoInternetConnectionException, Exception {
-			// TODO Auto-generated method stub
 
 			//EWS call
 			NameResolutionCollection nameResolutions = MailApplication.resolveName(service, username, false);
@@ -231,14 +250,12 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 				try {
 					dialog.dismiss();	//gives this exception "View not attached to window manager" on a mobile
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				try {
 					saveCredentials(username, password);
 				//	MailApplication.onFirstTimeSuccessfulLogin(activity);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					onProgressUpdate("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
 				}
@@ -256,7 +273,6 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 		}
 
 		private void saveCredentials(String username, String password) throws Exception {
-			// TODO Auto-generated method stub
 			SharedPreferencesAdapter.storeCredentials(LoginPageActivity.this.getApplicationContext(), username, password);
 		}
 
@@ -264,7 +280,22 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 		protected void onPostExecute(Long nl) {
 
 		}
-	}
+	}   //end async task
+
+    /** Private method which updates the Server Spinner selection based on the stored preference value
+     * For Custom URL it wont switch to Custom URL because when Custom URL option is selcted it wont trigger the dialog
+     *
+     */
+    private void updateServerSpinnerSelection() {
+        String[] serversText = getResources().getStringArray(R.array.preferences_serverlist_values);
+        String storedServerURL=sharedPref.getServerURL(activity);
+        // for the primary and secondary URLs
+        for(int i=0; i<serversText.length; i++){
+            if(serversText[i].equalsIgnoreCase(storedServerURL)){	//i=3 means the user clicked Custom URL 4th option. It is handled in WebmailURLPreference.java
+                serverSpinner.setSelection(i);
+            }
+        }
+    }
 
 	//Google Analytics
 	@Override
@@ -279,5 +310,13 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 		EasyTracker.getInstance().activityStop(this); // Add this method.
 	}
 
-	
+	/** GETTER AND SETTER **/
+    public TextView getUrlDisp() {
+        return urlDisp;
+    }
+
+    public void setUrlDisp(TextView urlDisp) {
+        this.urlDisp = urlDisp;
+    }
+
 }
