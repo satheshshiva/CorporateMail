@@ -3,10 +3,10 @@ package com.wipromail.sathesh.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.PreferencesActivity;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 /**
  * @author Sathesh
@@ -25,7 +25,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	public String getServerURL(Context context){
 		loadPreference(context);
 		//the second param specifies the value which will be the default when the fetch to the shared preference fails.
-		return sharedPreferences.getString(PreferencesActivity.KEY_WEBMAIL_SERVER, context.getString(R.string.webmail1_url));
+		return sharedPreferences.getString(PreferencesActivity.KEY_WEBMAIL_SERVER, MailApplication.getDefaultWebmailURL(context));
 	}
 
 	/** This will store the given URL to use as the webmail url in the application. Warning: calling this function will trigger the OnSharedPreferenceschangeListener in the PrefernecesActivity
@@ -54,7 +54,6 @@ public class GeneralPreferenceAdapter implements Constants{
 
 	/** store signatre
 	 * @param context
-	 * @param syncState
 	 * @throws Exception
 	 */
 	public synchronized void storeComposeSignature(Context context, String text) throws Exception{ 

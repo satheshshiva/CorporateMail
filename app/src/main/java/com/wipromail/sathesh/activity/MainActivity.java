@@ -1,8 +1,4 @@
 package com.wipromail.sathesh.activity;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,6 +15,9 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.Item;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends Activity implements Constants{
 
@@ -61,7 +60,6 @@ public class MainActivity extends Activity implements Constants{
 
 		@Override
 		protected Void doInBackground(Void... paramArrayOfParams) {
-			// TODO Auto-generated method stub
 			try {
 
 				Map<String, String> storedCredentials = new HashMap<String, String>();
@@ -101,7 +99,6 @@ public class MainActivity extends Activity implements Constants{
 				catch (final Exception e) {
 				MainActivity.this.runOnUiThread(new Runnable() {
 					public void run() {
-						// TODO Auto-generated catch block
 						Notifications.showAlert( MainActivity.this, "Error Occured!\n\nDetails: " +e.getMessage());
 
 					}});

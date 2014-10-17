@@ -12,13 +12,19 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.ListPreference;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MainActivity;
+import com.wipromail.sathesh.activity.PreferencesActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.cache.CacheDirectories;
@@ -703,6 +709,67 @@ public class MailApplication implements Constants {
                 Log.e(TAG, "ViewMailActivity -> The attachment or its content type is null. Not processing this attachment!");
             }
         }
+    }
+
+    /**Builds and shows a CustomServer URL dialog for entering a manual URL.
+     * Called by WebMailURLPreference and LoginPageListener
+     *
+     * @param context
+     * @param listPreference - Component of PreferenceActivity. Pass null for other activities
+     * @param textView - Component of LoginPageActivity. Pass null for other activities
+     */
+    public static void showCustomServerURLDialog(final Context context , final ListPreference listPreference, final TextView textView){
+
+        //build the dialog for change password using the xml layout
+        LayoutInflater factory = LayoutInflater.from(context);
+        final View textEntryView = factory.inflate(R.layout.dialog_webmail_url, null);
+
+        //update the passowrd field with the old password
+        final EditText changeURLEdit = (EditText)textEntryView.findViewById(R.id.url_edit);
+
+        changeURLEdit.setText(generalSettings.getServerURL(context));
+
+        //build the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.dialog_webmail_url_title)
+                .setView(textEntryView)
+                .setPositiveButton(R.string.alertdialog_save_lbl, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String _url = changeURLEdit.getText().toString();
+                        PreferencesActivity.timeOfLastCustomURL = Calendar.getInstance();        //will prevent from invoking the code inside OnSharedPreferenceChange event again, which will be invoked on next line while saving the shared prefs
+                        GeneralPreferenceAdapter.storeServerURL(context, _url);
+                        if (listPreference !=null){             //component of PreferenceActivity
+                            listPreference.setSummary(_url);
+                        }
+                        if(textView!=null){                     //component of LoginPageActivity
+                            textView.setText(_url);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.alertdialog_negative_lbl, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
+        AlertDialog webmailURL = builder.create();
+        webmailURL.show();
+    }
+
+    /**Returns the default webmail URL
+     *
+     * @return
+     */
+    public static String getDefaultWebmailURL(Context context){
+        return context.getString(R.string.webmail1_url);
+    }
+
+    /**Returns the Office 365 Server URL
+     *
+     * @return
+     */
+    public static String getOffice365URL(Context context){
+        return context.getString(R.string.webmail_365_url);
     }
 
 }

@@ -57,7 +57,7 @@
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:paddingBottom="12dp"
+                android:paddingBottom="15dp"
                 android:paddingLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 

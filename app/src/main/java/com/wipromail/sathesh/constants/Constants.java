@@ -117,6 +117,7 @@ public interface Constants {
 	public static String ACTIONBAR_REFRESH = "Refresh";
 	public static String ACTIONBAR_COMPOSE = "Compose";
 	public static String ACTIONBAR_ABOUT = "About";
+    public static String ACTIONBAR_LOGIN = "Login";
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  UI TEXTS -------------------------------------------
