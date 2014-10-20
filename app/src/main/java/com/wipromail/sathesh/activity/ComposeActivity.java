@@ -243,7 +243,6 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
         if(null!=prefill_cc && !(prefill_cc.equals(""))){
             ContactSerializable prefill_sCC;
             for(String a:prefill_cc.keySet()){
-                Log.d(TAG, "prefile_cc " +prefill_cc.keySet());
                 prefill_sCC = (ContactSerializable)prefill_cc.get(a);
                 addCCRecipient(prefill_sCC);
             }
@@ -353,7 +352,6 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
                 StringBuilder extraMessage = new StringBuilder();
                 extraMessage.append(TYPE_TO);
                 extraMessage.append(actualToReceiversId);
-                Log.d(TAG, "ComposeActivity -> addTorecipient() -> Extramessage " + extraMessage.toString());
                 if(null!= contact.getEmail() && (!(contact.getEmail().equals("")))){
                     new ResolveNamesAsyncTask(this,this,service,contact.getEmail().toString(),false,"",extraMessage.toString()).execute();
                 }
@@ -425,14 +423,12 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
 
             refreshDisplayString(compose_bcc_disp,actualBCCReceivers,TYPE_BCC);
             bccLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "actualBCCReceivers "+actualBCCReceivers );
 
             //if the contact is set to resolve names in directory flag then do that now.
             if(contact.isTryResolveNamesInDirectory()){
                 StringBuilder extraMessage = new StringBuilder();
                 extraMessage.append(TYPE_BCC);
                 extraMessage.append(actualBCCReceiversId);
-                Log.d(TAG, "ComposeActivity -> addBCCrecipient() -> Extramessage " + extraMessage.toString());
                 if(null!= contact.getEmail() && (!(contact.getEmail().equals("")))){
                     new ResolveNamesAsyncTask(this,this,service,contact.getEmail().toString(),false,"",extraMessage.toString()).execute();
                 }

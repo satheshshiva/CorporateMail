@@ -44,7 +44,6 @@ import com.wipromail.sathesh.update.CheckLatestVersion;
 public class AboutActivity extends SherlockActivity implements Constants{
 
 	private static Activity activity;
-
 	private WebView wv;
 
 	private ExchangeService service;
@@ -52,7 +51,6 @@ public class AboutActivity extends SherlockActivity implements Constants{
 	public static String CHECK_UPDATES_ONLOAD_EXTRA ="CHECK_UPDATES_ONLOAD_EXTRA";
 
 	private PackageInfo pInfo ;
-
 	private Button bugOrSuggestionBtn;
 
 	@Override
@@ -110,7 +108,6 @@ public class AboutActivity extends SherlockActivity implements Constants{
 				bugOrSuggestionBtn.setVisibility(View.GONE);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -119,12 +116,9 @@ public class AboutActivity extends SherlockActivity implements Constants{
 	public void onResume(){
 		super.onResume();
 
-
-
 		if(checkUpdatesOnload){
 			checkUpdates();
 		}
-
 	}
 
 	@Override
@@ -133,8 +127,6 @@ public class AboutActivity extends SherlockActivity implements Constants{
 		if(item!=null && item.getItemId()==android.R.id.home){
 			finish();
 		}
-
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -149,13 +141,9 @@ public class AboutActivity extends SherlockActivity implements Constants{
 
 	        menu.add("Search")
 	            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-
 		 */
 		return true;
 	}
-
-
 
 	public void onClickChkUpdate(View view) {
 		checkUpdates();
@@ -163,7 +151,6 @@ public class AboutActivity extends SherlockActivity implements Constants{
 
 
 	private void checkUpdates() {
-		// TODO Auto-generated method stub
 				new CheckLatestVersion(this,wv).startAsyncCheck();
 	}
 
@@ -176,19 +163,16 @@ public class AboutActivity extends SherlockActivity implements Constants{
 			Notifications.showToast(this, getText(R.string.playstore_not_available), Toast.LENGTH_SHORT);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public static void downloadAndUpdate() {
-		// TODO Auto-generated method stub
 		if (BuildConfig.DEBUG){
 			new DownloadAndUpdateAppAsyncTask(activity).execute(APPLICATION_APK_DOWNLOAD_URL1_DEV);
 		}
 		else {
 			new DownloadAndUpdateAppAsyncTask(activity).execute(APPLICATION_APK_DOWNLOAD_URL1_REL);	
-
 		}
 	}
 	
@@ -209,7 +193,6 @@ public class AboutActivity extends SherlockActivity implements Constants{
 		}catch(Exception e){e.printStackTrace();}
 	}
 
-	
 	public void onClose(View view){
 		finish();
 	}
@@ -236,10 +219,7 @@ public class AboutActivity extends SherlockActivity implements Constants{
 				getString(R.string.bugsOrSuggestion_email_subject, pInfo.versionName),
 				getString(R.string.bugsOrSuggestion_email_titlebar), 
 				true);
-
 	}
-
-
 
 	//Google Analytics
 	@Override

@@ -1,7 +1,5 @@
 package com.wipromail.sathesh.update;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,6 +17,8 @@ import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.util.Utilities;
+
+import java.util.Date;
 
 
 /** This class will be used for checking the app version updates for the user.
@@ -71,12 +71,10 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * 
 	 */
 	private static void startUpdateCheck() {
-		// TODO Auto-generated method stub
 		try {
 			//calling the actual async task
 			new UpdateCheckerAsyncTask(new AutoUpdater(), activity, MailApplication.getAppVersionCode(activity)).execute();
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "AutoUpdater -> Error getting  existing version");
 			e.printStackTrace();
 		}
@@ -88,7 +86,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 */
 	@Override
 	public void activity_OnPreExecute() {
-		// TODO Auto-generated method stub
 	}
 
 	/* The async task will call this on progress update
@@ -97,17 +94,14 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 */
 	@Override
 	public void activity_onProgressUpdate(String... progress) {
-		// TODO Auto-generated method stub
 
 		if(progress[0].equals(UpdateCheckerAsyncTask.STATUS_CHECKING)){
 		}
 		else if(progress[0].equals(UpdateCheckerAsyncTask.STATUS_UPDATE_AVAILABLE)){
 			updateAvailable(activity);
-
 		}
 		else if(progress[0].equals(UpdateCheckerAsyncTask.STATUS_NO_UPDATE)){
 			noUpdateAvailable(activity);
-
 		}
 		else if(progress[0].equals(UpdateCheckerAsyncTask.STATUS_ERROR)){
 			Log.e(TAG, "AutoUpdater -> Error occured while checking for updates");
@@ -116,7 +110,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 
 	@Override
 	public void activity_OnPostExecute() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -126,9 +119,8 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * @param activity
 	 */
 	public void noUpdateAvailable(SherlockActivity activity) {
-		// TODO Auto-generated method stub
 
-		Log.i(TAG, "AutoUpdater -> no update availble");
+		Log.i(TAG, "AutoUpdater -> no update available");
 		storeUpdateCheckTime(new Date());
 	}
 
@@ -137,7 +129,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * @param activity
 	 */
 	public void updateAvailable(SherlockActivity activity) {
-		// TODO Auto-generated method stub
 
 		final Activity _activity = activity;
 		Log.i(TAG, "AutoUpdater -> update availble");
@@ -150,7 +141,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 					_activity.getString(R.string.auto_update_check_new_update_neg_button)
 					);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "Error occured while showing the alert box that a new update is avialble ");
 			e.printStackTrace();
 		}
@@ -168,7 +158,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 				Log.e(TAG, "Last auto update check time is not stored due to error: Date is null");
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "Last auto update check time is not stored due to error " + e.getMessage());
 		}
 	}
@@ -183,7 +172,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 		try {
 			dateStr=SharedPreferencesAdapter.getLastautoUpdateCheck(activity);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "Last auto update check time is not retrieved due to error " + e.getMessage());
 		}
 		if(!dateStr.equals("")){
@@ -195,7 +183,6 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	}
 
 	/** builds the alert dialog to display in screen to show that there is an udpate avialble
-	 * @param context
 	 * @param title
 	 * @param message
 	 * @param positiveMsg

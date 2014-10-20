@@ -3,7 +3,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,7 +43,6 @@ public class MainActivity extends Activity implements Constants{
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.d(TAG, "check login onstart");
 		(new CheckLogin()).execute();
 		EasyTracker.getInstance().activityStart(this); // Add this method.
 
@@ -75,7 +73,6 @@ public class MainActivity extends Activity implements Constants{
 				
 				if (null != SignedInAccUser && !(SignedInAccUser.equals(USERNAME_NULL)) && !(SignedInAccPassword.equals(PASSWORD_NULL))){
 					//user signed in
-					Log.d(TAG, "MainActivity -> starting intent");
 					Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
 					startActivity(intent);
 
@@ -93,7 +90,6 @@ public class MainActivity extends Activity implements Constants{
 
 				}
 				MainActivity.this.finish();
-				Log.d(TAG, "MainActivity -> Main activity finished");
 			}
 			//catch (final Exception e) {
 				catch (final Exception e) {
