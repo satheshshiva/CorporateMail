@@ -27,20 +27,16 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 	String releaseType="";
 
 	public CheckLatestVersion(SherlockActivity activity, WebView wv) {
-		// TODO Auto-generated constructor stub
 		this.activity = activity;
 		this.wv=wv;
 	}
 
 	public void startAsyncCheck(){
 
-		// TODO Auto-generated method stub
-
 		try {
 			//calling the actual async task
 			new UpdateCheckerAsyncTask(this, activity, MailApplication.getAppVersionCode(activity)).execute();
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "CheckLatestVersion -> Error getting  existing version");
 			e.printStackTrace();
 		}
@@ -48,7 +44,6 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 
 	@Override
 	public void activity_OnPreExecute() {
-		// TODO Auto-generated method stub
 
 		try {
 			activity.setSupportProgressBarIndeterminateVisibility(true);
@@ -56,7 +51,6 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 					activity.getString(R.string.app_updater_checking), true);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Log.e(TAG, "Exception occured on preexecute");
 		}
@@ -90,17 +84,14 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 	}
 
 	public void noUpdateAvailable(SherlockActivity activity) {
-		// TODO Auto-generated method stub
 		activity.setSupportProgressBarIndeterminateVisibility(false);
 		dialog.dismiss();
 		Notifications.showToast(activity,  activity.getText(R.string.app_updater_noupdates), Toast.LENGTH_SHORT);
 	}
 
 	public void updateAvailable(SherlockActivity activity) {
-		// TODO Auto-generated method stub
-		
+
 		dialog.dismiss();
-		Log.d(TAG, "CheckLatestVersion -> showing loading progress for change log page");
 		wv.loadUrl(LOADING_HTML_URL);
 		//wait for a sec for the above img to load properly. otherwise it wont be displayed..	
 		try {
@@ -123,7 +114,6 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 
 	@Override
 	public void activity_OnPostExecute() {
-		// TODO Auto-generated method stub
 
 	}
 

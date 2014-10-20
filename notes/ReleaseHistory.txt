@@ -16,3 +16,4 @@ VERSION NAME	CODE	DATE
 0.2.5 alpha 	12		18Nov13 (delete on deleted items)
 0.2.6 alpha 	13		6Apr14 (auto update "user agent" on tiny.cc)
 0.2.7 alpha 	14		25June14 (EWS1.2 upgrade, min sdk 9)
+0.3 alpha       15      20Oct14 (Sqlite, orientation fixes. Will be the last version update for Gingerbread and Honeycomb)

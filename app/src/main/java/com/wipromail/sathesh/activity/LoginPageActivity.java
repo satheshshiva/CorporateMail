@@ -126,7 +126,7 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
         if(serverSpinner.getSelectedItemPosition() == PreferencesActivity.OFFICE365_URL_POSITION){
             username+=getString(R.string.webmail_365_username_append);
         }
-        Log.d(TAG, "USERNAME " + username + " PASSWORD " + password);
+        //Log.d(TAG, "USERNAME " + username + " PASSWORD " + password);
         //Validation successful. Login
         new Login().execute(username, password);
     }
