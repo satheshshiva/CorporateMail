@@ -1,14 +1,17 @@
 package com.wipromail.sathesh.activity;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,10 +19,6 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
@@ -41,9 +40,9 @@ import com.wipromail.sathesh.update.CheckLatestVersion;
  * @author sathesh
  *
  */
-public class AboutActivity extends SherlockActivity implements Constants{
+public class AboutActivity extends ActionBarActivity implements Constants{
 
-	private static Activity activity;
+	private static ActionBarActivity activity;
 	private WebView wv;
 
 	private ExchangeService service;

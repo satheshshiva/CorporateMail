@@ -263,6 +263,6 @@
     <string name="actionBar_Reply_All">Reply All</string>
     <string name="actionBar_Forward">Forward</string>
     <string name="actionBar_Send_Mail">Send Mail</string>
-    <string name="actionBar_Submenu_Reply_Options">Rely Options</string>
+    <string name="actionBar_Submenu_Reply_Options">Reply Options</string>
     <string name="actionBar_Submenu_Others">Others</string>
 </resources>

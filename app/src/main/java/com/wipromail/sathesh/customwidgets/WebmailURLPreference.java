@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
-import com.wipromail.sathesh.activity.PreferencesActivity;
+import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
@@ -80,7 +80,7 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 		if (positiveResult && mClickedDialogEntryIndex >= 0 && getEntryValues() != null) {
 			String value = getEntryValues()[mClickedDialogEntryIndex].toString();
 			if (callChangeListener(value)) {
-				if(mClickedDialogEntryIndex!=(PreferencesActivity.CUSTOM_URL_POSITION)){
+				if(mClickedDialogEntryIndex!=(MyPreferencesActivity.CUSTOM_URL_POSITION)){
 					setValue(value);
 				}
 
@@ -109,7 +109,7 @@ public class WebmailURLPreference extends ListPreference implements Constants{
 	            }
 	        }
 	        //high light custom url option if no match is found
-	        return (PreferencesActivity.CUSTOM_URL_POSITION);
+	        return (MyPreferencesActivity.CUSTOM_URL_POSITION);
 	    }
 }
 

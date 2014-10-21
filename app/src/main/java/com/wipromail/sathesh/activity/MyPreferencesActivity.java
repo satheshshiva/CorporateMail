@@ -8,12 +8,12 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
@@ -30,7 +30,7 @@ import java.util.Calendar;
  * @author Sathesh
  *
  */
-public class PreferencesActivity extends SherlockPreferenceActivity implements Constants ,OnSharedPreferenceChangeListener{
+public class MyPreferencesActivity extends PreferenceActivity implements Constants ,OnSharedPreferenceChangeListener{
 
     public static int OFFICE365_URL_POSITION = 2;
     public static int CUSTOM_URL_POSITION = 3;
@@ -54,7 +54,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
     private static ListPreference subscrpyionType;
     private static ListPreference pullDuration;
     public static Calendar timeOfLastCustomURL;
-    private PreferencesActivity activity;
+    private MyPreferencesActivity activity;
     private static Context context;
 
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
@@ -96,7 +96,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
         updateSubscriptionTypePrefernceSummary();
         updatePullDurationPrefernceSummary();
         updateAutoUpdateNotifySummary();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // TODO Set the action bar as up enabled
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeEventsForAccount();
 
@@ -222,7 +223,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements C
         if(key.equals(KEY_WEBMAIL_SERVER)){
             try {
                 Calendar now = Calendar.getInstance();
-                if( !(PreferencesActivity.timeOfLastCustomURL!=null && ((now.getTimeInMillis() - PreferencesActivity.timeOfLastCustomURL.getTimeInMillis() ) < 2000))){
+                if( !(MyPreferencesActivity.timeOfLastCustomURL!=null && ((now.getTimeInMillis() - MyPreferencesActivity.timeOfLastCustomURL.getTimeInMillis() ) < 2000))){
                     //when the custom url is saved, this event will be invoked again. so to preven that, the last custom url save shld be > than 2secs.
                     updateWebmailServerPrefernceSummary();
                 }

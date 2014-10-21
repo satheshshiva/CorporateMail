@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -23,7 +24,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.ComposeActivity;
@@ -58,7 +58,7 @@ import java.util.List;
  */
 public class ViewMailFragment extends Fragment implements Constants, ViewMailFragmentDataPasser{
 
-    public SherlockFragmentActivity activity ;
+    public ActionBarActivity activity ;
     private Context context ;
 
     private TextView fromIdView ;
@@ -119,8 +119,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         View view = inflater.inflate(R.layout.fragment_view_mail,
                 container, false);
 
-        activity = (SherlockFragmentActivity) getActivity();
-        context = (SherlockFragmentActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
+        context = (ActionBarActivity) getActivity();
 
         setRetainInstance(true);
 
@@ -563,7 +563,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     @Override
     public void showAlertdialogPermanentDelete(){
 
-        final SherlockFragmentActivity _acivity=activity;
+        final ActionBarActivity _acivity=activity;
 
         //build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

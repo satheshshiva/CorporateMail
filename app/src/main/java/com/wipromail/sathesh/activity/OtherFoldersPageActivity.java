@@ -5,22 +5,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
-import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.constants.Constants.MailType;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
@@ -31,7 +31,7 @@ import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 
-public class OtherFoldersPageActivity extends SherlockActivity implements Constants{
+public class OtherFoldersPageActivity extends ActionBarActivity implements Constants{
 
 	private WebView webview;
 	private Handler mHandler = new Handler();
@@ -143,13 +143,11 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 
 		@Override
 		protected Void doInBackground(Void... paramArrayOfParams) {
-			// TODO Auto-generated method stub
 
 			/*
 			try {
 				conversationHistoryId = getConversationHistoryFolderId(service);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -164,7 +162,6 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 				recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot), false);
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			/*
@@ -174,7 +171,6 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 				//recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.SentItems));
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -184,7 +180,6 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 				//recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.SentItems));
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			 */
@@ -193,7 +188,6 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 
 
 		private  void recursivePopulateFolders( ExchangeService service, FolderId folderId, boolean isInboxSubfolder) throws Exception{
-			// TODO Auto-generated method stub
 			//EWS call
 			if(BuildConfig.DEBUG){
 				Log.i(TAG, "OtherFoldersPageActivity -> EWS Call");
@@ -281,26 +275,26 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
+        MenuItem menuItem;
 
-		//Submenu
+        //Submenu
 		SubMenu subMenu = menu.addSubMenu("");
-		subMenu
+		menuItem = subMenu
 		.add(ACTIONBAR_SETTINGS)
-		.setIcon(OptionsUIContent.getSettingsIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getSettingsIcon());
 
+        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		subMenu
-		.add(ACTIONBAR_ABOUT)
-		.setIcon(OptionsUIContent.getAboutIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menuItem = subMenu
+                        .add(ACTIONBAR_ABOUT)
+                        .setIcon(OptionsUIContent.getAboutIcon());
 
+        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		//Overflow submenu icon
 		MenuItem subMenuItem = subMenu.getItem();
 		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
+        MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		return true;
 	}
@@ -314,7 +308,7 @@ public class OtherFoldersPageActivity extends SherlockActivity implements Consta
 			finish();
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			intent = new Intent(this, PreferencesActivity.class);
+			intent = new Intent(this, MyPreferencesActivity.class);
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){

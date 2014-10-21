@@ -6,14 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
@@ -36,7 +37,7 @@ import com.wipromail.sathesh.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;
 
-public class LoginPageActivity extends SherlockActivity implements Constants {
+public class LoginPageActivity extends ActionBarActivity implements Constants {
 
 	private String username=USERNAME_NULL, password=PASSWORD_NULL;
 	private Intent intent;
@@ -68,6 +69,7 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
         //show the current url in display
         urlDisp.setText(sharedPref.getServerURL(context));
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		//testingdb(activity);
 		/* if(customTitleSupported)
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getInboxTitleBarLayout());*/
@@ -77,13 +79,15 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		//Always Visible menu
-        menu.add(ACTIONBAR_LOGIN)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        MenuItem menuItem;
 
-        menu.add(ACTIONBAR_ABOUT)
-		.setIcon(OptionsUIContent.getAboutIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		//Always Visible menu
+        menuItem=menu.add(ACTIONBAR_LOGIN);
+        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menuItem=menu.add(ACTIONBAR_ABOUT)
+                .setIcon(OptionsUIContent.getAboutIcon());
+        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		return true;
 	}
@@ -123,7 +127,7 @@ public class LoginPageActivity extends SherlockActivity implements Constants {
         }
 
         // for office 365 URL append "@wipro.com" to the username
-        if(serverSpinner.getSelectedItemPosition() == PreferencesActivity.OFFICE365_URL_POSITION){
+        if(serverSpinner.getSelectedItemPosition() == MyPreferencesActivity.OFFICE365_URL_POSITION){
             username+=getString(R.string.webmail_365_username_append);
         }
         //Log.d(TAG, "USERNAME " + username + " PASSWORD " + password);

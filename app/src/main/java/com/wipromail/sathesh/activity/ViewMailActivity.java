@@ -2,12 +2,13 @@ package com.wipromail.sathesh.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
@@ -16,7 +17,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 
-public class ViewMailActivity extends SherlockFragmentActivity implements Constants{
+public class ViewMailActivity extends ActionBarActivity implements Constants{
 
     private ViewMailFragmentDataPasser viewMailFragment;
     /** ON CREATE **
@@ -37,6 +38,7 @@ public class ViewMailActivity extends SherlockFragmentActivity implements Consta
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
+        MenuItem menuItem;
         MenuItem subMenuItem;
 
         //if the current status is not loading or error states then show the menus
@@ -45,30 +47,30 @@ public class ViewMailActivity extends SherlockFragmentActivity implements Consta
                 && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.ERROR) {
             //Reply submenu
             SubMenu subMenuReply = menu.addSubMenu(this.getString(R.string.actionBar_Submenu_Reply_Options));
-            subMenuReply
+            menuItem=subMenuReply
                     .add(this.getString(R.string.actionBar_Reply))
-                    .setIcon(OptionsUIContent.getReplyIcon())
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    .setIcon(OptionsUIContent.getReplyIcon());
+            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-            subMenuReply
+            menuItem=subMenuReply
                     .add(this.getString(R.string.actionBar_Reply_All))
-                    .setIcon(OptionsUIContent.getReplyAllIcon())
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    .setIcon(OptionsUIContent.getReplyAllIcon());
+            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-            subMenuReply
+            menuItem=subMenuReply
                     .add(this.getString(R.string.actionBar_Forward))
-                    .setIcon(OptionsUIContent.getForwardIcon())
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    .setIcon(OptionsUIContent.getForwardIcon());
+            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
             //Setting icons and settings to Reply Submenu
             subMenuItem = subMenuReply.getItem();
             subMenuItem.setIcon(OptionsUIContent.getReplyIcon());
-            subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
             //Adding Delete Icon to Main Menu
-            menu.add(this.getString(R.string.actionBar_Delete))
-                    .setIcon(OptionsUIContent.getDeleteIcon())
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuItem=menu.add(this.getString(R.string.actionBar_Delete))
+                    .setIcon(OptionsUIContent.getDeleteIcon());
+            MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         }
         // Attachment main menu
@@ -141,7 +143,7 @@ public class ViewMailActivity extends SherlockFragmentActivity implements Consta
         }
 
         else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-            Intent intent = new Intent(this, PreferencesActivity.class);
+            Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
         }
         else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){

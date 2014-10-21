@@ -2,13 +2,14 @@ package com.wipromail.sathesh.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.Window;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
-import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
@@ -27,7 +28,7 @@ import com.wipromail.sathesh.ui.OptionsUIContent;
  * @author sathesh
  *
  */
-public class MailListViewActivity extends SherlockFragmentActivity implements Constants,MailListActivityDataPasser{
+public class MailListViewActivity extends ActionBarActivity implements Constants,MailListActivityDataPasser{
 
 	private MailListFragmentDataPasser mailListViewFragment;
 
@@ -85,7 +86,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	/** ON STOP  **
 	 * Google Analytics
 	 *  (non-Javadoc)
-	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onStop()
 	 */
 	@Override
 	public void onStop() {
@@ -96,7 +96,6 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	/** ON DESTROY **
 	 * Delete the cached images 
 	 * (non-Javadoc)
-	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onDestroy()
 	 */
 	@Override
 	public void onDestroy() {
@@ -120,33 +119,36 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
+        MenuItem menuItem;
+
 		//Always Visible menu
-		menu.add(ACTIONBAR_COMPOSE)
-		.setIcon(OptionsUIContent.getComposeIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menuItem=menu.add(ACTIONBAR_COMPOSE)
+		.setIcon(OptionsUIContent.getComposeIcon());
+        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		//Submenu
-		SubMenu subMenu = menu.addSubMenu("");
+        //Submenu
+        SubMenu subMenu = menu.addSubMenu("");
 
-		subMenu.add(ACTIONBAR_REFRESH)
-		.setIcon(OptionsUIContent.getRefreshIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menuItem=subMenu.add(ACTIONBAR_REFRESH)
+		.setIcon(OptionsUIContent.getRefreshIcon());
+        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		subMenu
+        menuItem=subMenu
 		.add(ACTIONBAR_SETTINGS)
-		.setIcon(OptionsUIContent.getSettingsIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getSettingsIcon());
+        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		subMenu
+        menuItem=subMenu
 		.add(ACTIONBAR_ABOUT)
-		.setIcon(OptionsUIContent.getAboutIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getAboutIcon());
+        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		//Overflow submenu icon
 		MenuItem subMenuItem = subMenu.getItem();
 		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		return true;
+        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        return true;
 	}
 	
 	/** OPTION ITEM SELECTED **/
@@ -167,7 +169,7 @@ public class MailListViewActivity extends SherlockFragmentActivity implements Co
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			Intent intent = new Intent(this, PreferencesActivity.class);
+			Intent intent = new Intent(this, MyPreferencesActivity.class);
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){

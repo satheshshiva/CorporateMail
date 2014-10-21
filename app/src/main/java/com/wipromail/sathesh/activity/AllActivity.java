@@ -1,6 +1,4 @@
 package com.wipromail.sathesh.activity;
-import java.net.URISyntaxException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,10 +14,7 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.R.layout;
-import com.wipromail.sathesh.R.menu;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FindItemsResults;
@@ -27,6 +22,8 @@ import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.MessageBody;
 import com.wipromail.sathesh.threads.Inbox;
+
+import java.net.URISyntaxException;
 
 public class AllActivity extends Activity implements Constants{
 
@@ -43,8 +40,8 @@ public class AllActivity extends Activity implements Constants{
 		Intent intent = new Intent(this, LoginPageActivity.class);
 		startActivity(intent);
 		credStorage = getSharedPreferences(CRED_PREFS_NAME, 0);
-		Log.d(TAG, "Username : " + credStorage.getString(CRED_PREFS_USERNAME, ""));
-		Log.d(TAG, "Password : " + credStorage.getString(CRED_PREFS_PASSWORD,""));
+		//Log.d(TAG, "Username : " + credStorage.getString(CRED_PREFS_USERNAME, ""));
+		//Log.d(TAG, "Password : " + credStorage.getString(CRED_PREFS_PASSWORD,""));
 		setContentView(R.layout.activity_main);
 		/*  progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         progressBar.setVisibility(View.INVISIBLE);
@@ -119,7 +116,6 @@ public class AllActivity extends Activity implements Constants{
 					}
 				} 
 				catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					progressBar.setVisibility(View.INVISIBLE);
 					textView1.setText("Error Occured\nDetails: " + e.getMessage());
@@ -153,13 +149,11 @@ public class AllActivity extends Activity implements Constants{
 
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
 
 			try {
 				progressBar.setVisibility(View.VISIBLE);
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Log.e(TAG, "Exception occured on preexecute");
 			}
@@ -168,7 +162,6 @@ public class AllActivity extends Activity implements Constants{
 
 		@Override
 		protected Long doInBackground(Void... paramArrayOfParams) {
-			// TODO Auto-generated method stub
 
 			try {
 
@@ -188,7 +181,6 @@ public class AllActivity extends Activity implements Constants{
 				publishProgress("7" ,"COMPLETED", "Mail Sent!");
 			}
 			catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				publishProgress("0" ,"ERROR", "Malformed Webmail URL");
 			}
 			catch(HttpErrorException e){
@@ -202,7 +194,6 @@ public class AllActivity extends Activity implements Constants{
 			}
 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
 				publishProgress("0" ,"ERROR", "Error Occured!\nDetails: " +e.getMessage());
 			}
 

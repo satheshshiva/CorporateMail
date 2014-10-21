@@ -1,8 +1,5 @@
 package com.wipromail.sathesh.activity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +12,9 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SettingsActivity extends Activity implements Constants {
 
@@ -29,14 +29,12 @@ public class SettingsActivity extends Activity implements Constants {
         try {
 			refreshSignedIn();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
      //   getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void refreshSignedIn() throws Exception {
-		// TODO Auto-generated method stub
     	Map<String, String> storedCredentials = new HashMap<String, String>();
     	storedCredentials = MailApplication.getStoredCredentials(this);
     	

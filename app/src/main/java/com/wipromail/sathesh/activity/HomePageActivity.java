@@ -4,18 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
-import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
@@ -24,11 +25,11 @@ import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.ui.SignOutAlertDialog;
 
-public class HomePageActivity extends SherlockActivity implements Constants{
+public class HomePageActivity extends ActionBarActivity implements Constants{
 
 	private WebView webview;
 	private Handler mHandler = new Handler();
-	private SherlockActivity activity;
+	private ActionBarActivity activity;
 	private Context context;
 	private Intent intent;
 	private ActionBar myActionBar;
@@ -80,7 +81,6 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "Error while setting up the Disply name in title bar");
 			e.printStackTrace();
 		}
@@ -142,41 +142,52 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
+        MenuItem menuItem;
+
 		//Always Visible menu
-		menu.add(ACTIONBAR_COMPOSE)
-		.setIcon(OptionsUIContent.getComposeIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menuItem=menu.add(ACTIONBAR_COMPOSE)
+		.setIcon(OptionsUIContent.getComposeIcon());
+
+        MenuItemCompat.setShowAsAction(menuItem,
+                MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		//Submenu
 		SubMenu subMenu = menu.addSubMenu("");
 
-		subMenu
+        menuItem=subMenu
 		.add(ACTIONBAR_COMPOSE)
-		.setIcon(OptionsUIContent.getComposeIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getComposeIcon());
 
-		subMenu
+        MenuItemCompat.setShowAsAction(menuItem,
+                MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        menuItem=subMenu
 		.add(ACTIONBAR_SETTINGS)
-		.setIcon(OptionsUIContent.getSettingsIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getSettingsIcon());
 
-		subMenu
+        MenuItemCompat.setShowAsAction(menuItem,
+                MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        menuItem=subMenu
 		.add(ACTIONBAR_CHECK_FOR_UPDATES)
-		.setIcon(OptionsUIContent.getUpdatesIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getUpdatesIcon());
 
+        MenuItemCompat.setShowAsAction(menuItem,
+                MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		subMenu
+        menuItem=subMenu
 		.add(ACTIONBAR_ABOUT)
-		.setIcon(OptionsUIContent.getAboutIcon())
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setIcon(OptionsUIContent.getAboutIcon());
 
+        MenuItemCompat.setShowAsAction(menuItem,
+                MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		//Overflow submenu icon
 		MenuItem subMenuItem = subMenu.getItem();
 		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
+        MenuItemCompat.setShowAsAction(menuItem,
+                MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		return true;
 	}
@@ -194,7 +205,7 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			intent = new Intent(this, PreferencesActivity.class);
+			intent = new Intent(this, MyPreferencesActivity.class);
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
@@ -229,11 +240,8 @@ public class HomePageActivity extends SherlockActivity implements Constants{
 		
 		MailApplication mailappln = MailApplication.getInstance();
 		mailappln.onEveryAppOpen(activity, context);
-		
 	}
 
-	
-		
 	@Override
 	public void onStop() {
 		super.onStop();

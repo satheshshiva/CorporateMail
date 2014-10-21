@@ -1,9 +1,9 @@
 package com.wipromail.sathesh.asynctask;
 
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
@@ -23,15 +23,14 @@ public class DeleteItemIdsAsyncTask extends AsyncTask<String, String, String> im
     public static final String STATUS_PROGRESS="PROGRESS";
     public static final String STATUS_ERROR="ERROR";
 
-    private SherlockFragmentActivity activity;
+    private ActionBarActivity activity;
 
     private ArrayList<String> itemIds;
     private GenericAsyncTask caller;
     private boolean permanentDelete;
     private ExchangeService service;
 
-    public DeleteItemIdsAsyncTask(GenericAsyncTask caller, SherlockFragmentActivity activity, String itemId, boolean permanentDelete) {
-        // TODO Auto-generated constructor stub
+    public DeleteItemIdsAsyncTask(GenericAsyncTask caller, ActionBarActivity activity, String itemId, boolean permanentDelete) {
         this.activity = activity;
         this.itemIds =new ArrayList<String>();
         this.itemIds.add(itemId);
@@ -39,8 +38,7 @@ public class DeleteItemIdsAsyncTask extends AsyncTask<String, String, String> im
         this.permanentDelete=permanentDelete;
     }
 
-    public DeleteItemIdsAsyncTask(GenericAsyncTask caller, SherlockFragmentActivity activity, ArrayList<String> itemIds, boolean permanentDelete) {
-        // TODO Auto-generated constructor stub
+    public DeleteItemIdsAsyncTask(GenericAsyncTask caller, ActionBarActivity activity, ArrayList<String> itemIds, boolean permanentDelete) {
         this.activity = activity;
         this.itemIds = itemIds;
         this.caller = caller;
@@ -50,8 +48,6 @@ public class DeleteItemIdsAsyncTask extends AsyncTask<String, String, String> im
 
     @Override
     protected void onPreExecute() {
-        // TODO Auto-generated method stub
-
         caller.activity_OnPreExecute();
 
     }

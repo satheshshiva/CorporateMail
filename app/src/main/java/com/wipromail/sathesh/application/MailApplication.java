@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.ListPreference;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MainActivity;
-import com.wipromail.sathesh.activity.PreferencesActivity;
+import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.cache.CacheDirectories;
@@ -484,7 +484,7 @@ public class MailApplication implements Constants {
 		return mailApplication;
 	}
 
-	public void onEveryAppOpen(SherlockActivity activity, Context context) {
+	public void onEveryAppOpen(ActionBarActivity activity, Context context) {
 		//checking updates
 		AutoUpdater.autoCheckForUpdates(activity);
 		if(getInstance().isWrongPwd()){
@@ -736,7 +736,7 @@ public class MailApplication implements Constants {
                 .setPositiveButton(R.string.alertdialog_save_lbl, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String _url = changeURLEdit.getText().toString();
-                        PreferencesActivity.timeOfLastCustomURL = Calendar.getInstance();        //will prevent from invoking the code inside OnSharedPreferenceChange event again, which will be invoked on next line while saving the shared prefs
+                        MyPreferencesActivity.timeOfLastCustomURL = Calendar.getInstance();        //will prevent from invoking the code inside OnSharedPreferenceChange event again, which will be invoked on next line while saving the shared prefs
                         GeneralPreferenceAdapter.storeServerURL(context, _url);
                         if (listPreference !=null){             //component of PreferenceActivity
                             listPreference.setSummary(_url);
