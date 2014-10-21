@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,8 +19,6 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
@@ -49,7 +49,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	// This class is meant to be sub-classed and allows you to quickly build up list interfaces
 	// in your app.
 	private MailListActivityDataPasser activityDataPasser ;
-	public SherlockFragmentActivity activity ;
+	public ActionBarActivity activity ;
 	private Context context ;
 
 	private MailListViewAdapter adapter;
@@ -96,8 +96,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		View view = inflater.inflate(R.layout.fragment_mail_list_view,
 				container, false);
 
-		activity = (SherlockFragmentActivity) getActivity();
-		context = (SherlockFragmentActivity) getActivity();
+		activity = (ActionBarActivity) getActivity();
+		context = (ActionBarActivity) getActivity();
 		activityDataPasser = (MailListActivityDataPasser)getActivity();
 		
 		if (cacheMailHeaderAdapter ==null){

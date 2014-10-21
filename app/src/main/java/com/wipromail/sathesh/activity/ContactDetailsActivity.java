@@ -1,13 +1,14 @@
 package com.wipromail.sathesh.activity;
 
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
@@ -20,7 +21,7 @@ import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.util.Utilities;
 
-public class ContactDetailsActivity extends SherlockActivity implements Constants,IResolveNames {
+public class ContactDetailsActivity extends ActionBarActivity implements Constants,IResolveNames {
     //test msg
     public static final String CONTACT_SERIALIZABLE_EXTRA ="CONTACT_SERIALIZABLE_EXTRA";
     private TextView displayName;
@@ -157,8 +158,10 @@ public class ContactDetailsActivity extends SherlockActivity implements Constant
 
         if(showSendMailBtn){
             //Always Visible menu
-            menu.add(this.getString(R.string.actionBar_Send_Mail))
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            MenuItem menuItem;
+            menuItem=menu.add(this.getString(R.string.actionBar_Send_Mail));
+            MenuItemCompat.setShowAsAction(menuItem,
+                     MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
         return true;
     }

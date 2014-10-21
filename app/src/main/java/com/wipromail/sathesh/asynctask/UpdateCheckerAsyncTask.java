@@ -1,11 +1,13 @@
 package com.wipromail.sathesh.asynctask;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.Properties;
+import android.os.AsyncTask;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+
+import com.wipromail.sathesh.BuildConfig;
+import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
+import com.wipromail.sathesh.constants.Constants;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,14 +15,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.wipromail.sathesh.BuildConfig;
-import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
-import com.wipromail.sathesh.constants.Constants;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.Properties;
 
 public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> implements Constants{
 
@@ -30,15 +30,14 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 
 	public static final String STATUS_ERROR="ERROR";
 	private GenericAsyncTask caller;
-	private SherlockActivity activity;
+	private ActionBarActivity activity;
 	private InputStream input;
 
 	private String LatestVersionName="";
 	private String LatestVersionCode="";
 	private int currentVersionCode=0;
 
-	public UpdateCheckerAsyncTask(GenericAsyncTask caller, SherlockActivity activity,int currentVersionCode) {
-		// TODO Auto-generated constructor stub
+	public UpdateCheckerAsyncTask(GenericAsyncTask caller, ActionBarActivity activity,int currentVersionCode) {
 		this.caller=caller;
 		this.activity = activity;
 		this.currentVersionCode=currentVersionCode;
@@ -46,8 +45,6 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
-
 		caller.activity_OnPreExecute();
 
 	}

@@ -3,8 +3,12 @@ package com.wipromail.sathesh.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -13,10 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
+import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SearchContactsActivity extends SherlockActivity  implements Constants,IResolveNames{
+public class SearchContactsActivity extends ActionBarActivity implements Constants,IResolveNames{
 
 	private EditText contactSearch;
 	private ExchangeService service;
@@ -91,7 +92,6 @@ public class SearchContactsActivity extends SherlockActivity  implements Constan
 			finish();
 		}
 
-
 		return super.onOptionsItemSelected(item);
 	}
 	@Override
@@ -108,7 +108,9 @@ public class SearchContactsActivity extends SherlockActivity  implements Constan
 		dispMap.clear();			// map containing the name resolution
 		dispContactsMap.clear();		// map containing ContactSerializable which can be passed to next intent
 
-		Log.d(TAG, "handle called "+ outputCollection);
+        if(BuildConfig.DEBUG) {
+            Log.d(TAG, "handle called " + outputCollection);
+        }
 		try {
 			if(outputCollection!=null && outputCollection.getCount()>0){
 
@@ -127,9 +129,11 @@ public class SearchContactsActivity extends SherlockActivity  implements Constan
 						dispContactsMap.put(resolveNameIndex, sContact);
 					}
 				}
-				Log.d(TAG, "dispNameList "+dispNameList);
-				Log.d(TAG, "dispMap" +dispMap);
-				Log.d(TAG, "dispContactsMap" +dispContactsMap);
+                if(BuildConfig.DEBUG) {
+                    Log.d(TAG, "dispNameList " + dispNameList);
+                    Log.d(TAG, "dispMap" + dispMap);
+                    Log.d(TAG, "dispContactsMap" + dispContactsMap);
+                }
 				ListAdapter adapter = new ArrayAdapter<String>(this,R.layout.simple_list_item_1,dispNameList);
 				listView.setAdapter(adapter);
 				
@@ -157,7 +161,6 @@ public class SearchContactsActivity extends SherlockActivity  implements Constan
 				Notifications.showToast(this, getText(R.string.addrecipient_nomatch), Toast.LENGTH_SHORT);
 			}
 		} catch (ServiceLocalException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setSupportProgressBarIndeterminateVisibility(false);
@@ -167,8 +170,6 @@ public class SearchContactsActivity extends SherlockActivity  implements Constan
 	public void handleResolveNamesOutputError(
 			NameResolutionCollection outputCollection, String extra1,
 			Exception pE) {
-		// TODO Auto-generated method stub
-
 		Notifications.showToast(this, getText(R.string.addrecipient_error), Toast.LENGTH_SHORT);
 		setSupportProgressBarIndeterminateVisibility(false);
 	}

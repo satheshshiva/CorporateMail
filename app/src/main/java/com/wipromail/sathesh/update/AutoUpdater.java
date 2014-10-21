@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.AboutActivity;
 import com.wipromail.sathesh.application.MailApplication;
@@ -27,13 +27,13 @@ import java.util.Date;
  */
 public class AutoUpdater implements Constants, GenericAsyncTask{
 
-	private static SherlockActivity activity;
+	private static ActionBarActivity activity;
 
 	/** This is the entry point for auto check updater. this will check for time difference between 
 	 * the last successful update check and will procees when it exceed the specified no of day limit
 	 * @param activity
 	 */
-	public  static void autoCheckForUpdates(SherlockActivity activity){
+	public  static void autoCheckForUpdates(ActionBarActivity activity){
 
 		AutoUpdater.activity=activity;
 		Date date;
@@ -118,7 +118,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * 
 	 * @param activity
 	 */
-	public void noUpdateAvailable(SherlockActivity activity) {
+	public void noUpdateAvailable(ActionBarActivity activity) {
 
 		Log.i(TAG, "AutoUpdater -> no update available");
 		storeUpdateCheckTime(new Date());
@@ -128,7 +128,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * 
 	 * @param activity
 	 */
-	public void updateAvailable(SherlockActivity activity) {
+	public void updateAvailable(ActionBarActivity activity) {
 
 		final Activity _activity = activity;
 		Log.i(TAG, "AutoUpdater -> update availble");

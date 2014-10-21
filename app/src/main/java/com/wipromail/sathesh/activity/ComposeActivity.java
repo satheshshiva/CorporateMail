@@ -9,22 +9,23 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
@@ -54,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ComposeActivity extends SherlockActivity implements Constants,IResolveNames{
+public class ComposeActivity extends ActionBarActivity implements Constants,IResolveNames{
 
     private  static Activity activity;
     //making this change
@@ -720,14 +721,15 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        //Always Visible menu
-        menu.add(getText(R.string.compose_actionbar_send))
+            MenuItem menuItem;
 
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuItem = menu.add(getText(R.string.compose_actionbar_send));
+            MenuItemCompat.setShowAsAction(menuItem,
+                    MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(getText(R.string.compose_actionbar_cancel))
-
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuItem = menu.add(getText(R.string.compose_actionbar_cancel));
+            MenuItemCompat.setShowAsAction(menuItem,
+                    MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		/*
 				//Submenu
@@ -767,7 +769,7 @@ public class ComposeActivity extends SherlockActivity implements Constants,IReso
             cancelPage();
         }
 		/*else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			Intent intent = new Intent(this, PreferencesActivity.class);
+			Intent intent = new Intent(this, MyPreferencesActivity.class);
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){

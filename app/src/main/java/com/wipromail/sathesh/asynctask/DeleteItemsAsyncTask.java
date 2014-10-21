@@ -1,9 +1,9 @@
 package com.wipromail.sathesh.asynctask;
 
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
@@ -23,14 +23,13 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 	public static final String STATUS_PROGRESS="PROGRESS";
 	public static final String STATUS_ERROR="ERROR";
 
-	private SherlockFragmentActivity activity;
+	private ActionBarActivity activity;
 
 	private ArrayList<Item> items;
 	private GenericAsyncTask caller;
 	private boolean permanentDelete;
 
-	public DeleteItemsAsyncTask(GenericAsyncTask caller,SherlockFragmentActivity activity, Item item, boolean permanentDelete) {
-		// TODO Auto-generated constructor stub
+	public DeleteItemsAsyncTask(GenericAsyncTask caller,ActionBarActivity activity, Item item, boolean permanentDelete) {
 		this.activity = activity;
 		this.items =new ArrayList<Item>();
 		this.items.add(item);
@@ -38,8 +37,7 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 		this.permanentDelete=permanentDelete;
 	}
 
-	public DeleteItemsAsyncTask(GenericAsyncTask caller,SherlockFragmentActivity activity, ArrayList<Item> items, boolean permanentDelete) {
-		// TODO Auto-generated constructor stub
+	public DeleteItemsAsyncTask(GenericAsyncTask caller,ActionBarActivity activity, ArrayList<Item> items, boolean permanentDelete) {
 		this.activity = activity;
 		this.items = items;
 		this.caller = caller;
@@ -49,8 +47,6 @@ public class DeleteItemsAsyncTask extends AsyncTask<String, String, String> impl
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
-
 		caller.activity_OnPreExecute();
 
 	}

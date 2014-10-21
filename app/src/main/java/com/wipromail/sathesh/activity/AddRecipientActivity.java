@@ -1,26 +1,21 @@
 package com.wipromail.sathesh.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
@@ -36,7 +31,12 @@ import com.wipromail.sathesh.service.data.ServiceLocalException;
 import com.wipromail.sathesh.ui.UIutilities;
 import com.wipromail.sathesh.util.Utilities;
 
-public class AddRecipientActivity extends SherlockActivity implements Constants,IResolveNames {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class AddRecipientActivity extends ActionBarActivity implements Constants,IResolveNames {
 
 	private EditText contactSearch;
 	private ExchangeService service;
@@ -90,9 +90,6 @@ public class AddRecipientActivity extends SherlockActivity implements Constants,
 	}
 
 	private ArrayList<ContactSerializable> getCheckedItems() {
-		// TODO Auto-generated method stub
-
-
 		int cntChoice = listView.getCount();
 		selectedList.clear();
 		SparseBooleanArray sparseBooleanArray = listView.getCheckedItemPositions();
@@ -218,8 +215,6 @@ public class AddRecipientActivity extends SherlockActivity implements Constants,
 	@Override
 	public void handleResolveNamesOutput(
 			NameResolutionCollection outputCollection, String extra1)  {
-		// TODO Auto-generated method stub
-
 
 		ContactSerializable sContact;
 
@@ -254,7 +249,6 @@ public class AddRecipientActivity extends SherlockActivity implements Constants,
 				Notifications.showToast(this, getText(R.string.addrecipient_nomatch), Toast.LENGTH_SHORT);
 			}
 		} catch (ServiceLocalException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setSupportProgressBarIndeterminateVisibility(false);
@@ -267,7 +261,6 @@ public class AddRecipientActivity extends SherlockActivity implements Constants,
 	public void handleResolveNamesOutputError(
 			NameResolutionCollection outputCollection, String extra1,
 			Exception pE) {
-		// TODO Auto-generated method stub
 
 		Notifications.showToast(this, getText(R.string.searchContact_error), Toast.LENGTH_SHORT);
 		setSupportProgressBarIndeterminateVisibility(false);
@@ -275,7 +268,6 @@ public class AddRecipientActivity extends SherlockActivity implements Constants,
 
 	@Override
 	public void handleResolvingNames() {
-		// TODO Auto-generated method stub
 		setSupportProgressBarIndeterminateVisibility(true);
 	}
 	//Google Analytics

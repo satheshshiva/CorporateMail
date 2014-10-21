@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.activity.PreferencesActivity;
+import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 /**
@@ -25,7 +25,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	public String getServerURL(Context context){
 		loadPreference(context);
 		//the second param specifies the value which will be the default when the fetch to the shared preference fails.
-		return sharedPreferences.getString(PreferencesActivity.KEY_WEBMAIL_SERVER, MailApplication.getDefaultWebmailURL(context));
+		return sharedPreferences.getString(MyPreferencesActivity.KEY_WEBMAIL_SERVER, MailApplication.getDefaultWebmailURL(context));
 	}
 
 	/** This will store the given URL to use as the webmail url in the application. Warning: calling this function will trigger the OnSharedPreferenceschangeListener in the PrefernecesActivity
@@ -37,7 +37,7 @@ public class GeneralPreferenceAdapter implements Constants{
 		_sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		//the second param specifies the value which will be the default when the fetch to the shared preference fails.
 		SharedPreferences.Editor editor =_sharedPreferences.edit();
-		editor.putString(PreferencesActivity.KEY_WEBMAIL_SERVER, url);
+		editor.putString(MyPreferencesActivity.KEY_WEBMAIL_SERVER, url);
 		editor.commit();
 	}
 	
@@ -48,7 +48,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public String getComposeSignature(Context context) throws Exception{
 		loadPreference(context);
-		return sharedPreferences.getString(PreferencesActivity.COMPOSE_SIGNATURE, context.getString(R.string.compose_signature_default));
+		return sharedPreferences.getString(MyPreferencesActivity.COMPOSE_SIGNATURE, context.getString(R.string.compose_signature_default));
 	}
 
 
@@ -61,7 +61,7 @@ public class GeneralPreferenceAdapter implements Constants{
 		SharedPreferences _sharedPreferences ;
 		_sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = _sharedPreferences.edit();
-		editor.putString(PreferencesActivity.COMPOSE_SIGNATURE, text);
+		editor.putString(MyPreferencesActivity.COMPOSE_SIGNATURE, text);
 
 		editor.commit();
 
@@ -73,7 +73,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public boolean isNotificationEnabled(Context context){
 		loadPreference(context);
-		return sharedPreferences.getBoolean(PreferencesActivity.KEY_NOTIFICATION_ENABLE, true);
+		return sharedPreferences.getBoolean(MyPreferencesActivity.KEY_NOTIFICATION_ENABLE, true);
 	}
 	
 	/** gets whether Compose Signature is enabled
@@ -82,7 +82,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public boolean isComposeSignatureEnabled(Context context){
 		loadPreference(context);
-		return sharedPreferences.getBoolean(PreferencesActivity.KEY_COMPOSE_SIGNATURE_ENABLE, true);
+		return sharedPreferences.getBoolean(MyPreferencesActivity.KEY_COMPOSE_SIGNATURE_ENABLE, true);
 	}
 	/** notification type
 	 * @param context
@@ -90,7 +90,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public String getNotificationType(Context context){
 		loadPreference(context);
-		return sharedPreferences.getString(PreferencesActivity.KEY_NOTIFICATION_TYPE, "pull");
+		return sharedPreferences.getString(MyPreferencesActivity.KEY_NOTIFICATION_TYPE, "pull");
 	}
 	
 	/** pull frequency
@@ -99,7 +99,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public Long getNotificationPullFrequency(Context context){
 		loadPreference(context);
-		long time=Long.valueOf(sharedPreferences.getString(PreferencesActivity.KEY_PULL_FREQUENCY, "900000"));
+		long time=Long.valueOf(sharedPreferences.getString(MyPreferencesActivity.KEY_PULL_FREQUENCY, "900000"));
 		
 		return time;
 	}
@@ -110,6 +110,6 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public boolean isAutoUdpateNotifyEnabled(Context context){
 		loadPreference(context);
-		return sharedPreferences.getBoolean(PreferencesActivity.KEY_AUTO_UPDATE_NOTIFY, true);
+		return sharedPreferences.getBoolean(MyPreferencesActivity.KEY_AUTO_UPDATE_NOTIFY, true);
 	}
 }

@@ -2,11 +2,11 @@ package com.wipromail.sathesh.update;
 
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
@@ -21,12 +21,12 @@ import com.wipromail.sathesh.customui.Notifications;
  */
 public class CheckLatestVersion implements Constants, GenericAsyncTask {
 
-	private SherlockActivity activity;
+	private ActionBarActivity activity;
 	private WebView wv;
 	ProgressDialog dialog;
 	String releaseType="";
 
-	public CheckLatestVersion(SherlockActivity activity, WebView wv) {
+	public CheckLatestVersion(ActionBarActivity activity, WebView wv) {
 		this.activity = activity;
 		this.wv=wv;
 	}
@@ -83,13 +83,13 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 		}
 	}
 
-	public void noUpdateAvailable(SherlockActivity activity) {
+	public void noUpdateAvailable(ActionBarActivity activity) {
 		activity.setSupportProgressBarIndeterminateVisibility(false);
 		dialog.dismiss();
 		Notifications.showToast(activity,  activity.getText(R.string.app_updater_noupdates), Toast.LENGTH_SHORT);
 	}
 
-	public void updateAvailable(SherlockActivity activity) {
+	public void updateAvailable(ActionBarActivity activity) {
 
 		dialog.dismiss();
 		wv.loadUrl(LOADING_HTML_URL);

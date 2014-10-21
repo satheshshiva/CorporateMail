@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.LoginPageActivity;
-import com.wipromail.sathesh.activity.PreferencesActivity;
+import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
@@ -44,9 +44,9 @@ public class LoginPageListener implements AdapterView.OnItemSelectedListener, Co
              */
             case R.id.serverSpinner:
                 //if the option  selected is other than the Custom URL option then just save the value in preferences
-                if(position!= PreferencesActivity.CUSTOM_URL_POSITION) {
+                if(position!= MyPreferencesActivity.CUSTOM_URL_POSITION) {
                     // check if its the office 365
-                    if(position!= PreferencesActivity.OFFICE365_URL_POSITION) {
+                    if(position!= MyPreferencesActivity.OFFICE365_URL_POSITION) {
                         //update the user name display. Replace "wipro/" with "@wipro.com"
                         textViewUserName1.setVisibility(View.VISIBLE);
                         textViewUserName2.setVisibility(View.GONE);
