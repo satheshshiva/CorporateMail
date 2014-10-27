@@ -3,7 +3,6 @@ package com.wipromail.sathesh.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -28,7 +27,6 @@ import com.wipromail.sathesh.ui.SignOutAlertDialog;
 public class HomePageActivity extends ActionBarActivity implements Constants{
 
 	private WebView webview;
-	private Handler mHandler = new Handler();
 	private ActionBarActivity activity;
 	private Context context;
 	private Intent intent;
@@ -72,8 +70,9 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
 		try {
 			//setting the display name
 			//textViewLoginId.setText(MailApplication.getTitleBarDisplayName(activity));
-			String strDispName="";
+			String strDispName;
 			CharSequence cDispName = getTitleBarDisplayName(activity);
+
 			strDispName=(cDispName!=null) ? cDispName.toString(): "";
 
 			if(strDispName!= null && !(strDispName.equals(""))){
@@ -152,8 +151,14 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
                 MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		//Submenu
-		SubMenu subMenu = menu.addSubMenu("");
+        SubMenu subMenu;
 
+		subMenu = menu.addSubMenu(ACTIONBAR_OVERFLOW).setIcon(OptionsUIContent.getMoreoverFlowIcon());
+        //Overflow Submenu
+        MenuItem subMenuItem = subMenu.getItem();
+        MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        //Compose Icon
         menuItem=subMenu
 		.add(ACTIONBAR_COMPOSE)
 		.setIcon(OptionsUIContent.getComposeIcon());
@@ -161,6 +166,7 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
         MenuItemCompat.setShowAsAction(menuItem,
                 MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
+        //Settings Icon
         menuItem=subMenu
 		.add(ACTIONBAR_SETTINGS)
 		.setIcon(OptionsUIContent.getSettingsIcon());
@@ -168,6 +174,7 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
         MenuItemCompat.setShowAsAction(menuItem,
                 MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
+        //Check for Updates Icon
         menuItem=subMenu
 		.add(ACTIONBAR_CHECK_FOR_UPDATES)
 		.setIcon(OptionsUIContent.getUpdatesIcon());
@@ -175,19 +182,13 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
         MenuItemCompat.setShowAsAction(menuItem,
                 MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
+        //About Icon
         menuItem=subMenu
 		.add(ACTIONBAR_ABOUT)
 		.setIcon(OptionsUIContent.getAboutIcon());
 
         MenuItemCompat.setShowAsAction(menuItem,
                 MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		//Overflow submenu icon
-		MenuItem subMenuItem = subMenu.getItem();
-		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-
-        MenuItemCompat.setShowAsAction(menuItem,
-                MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		return true;
 	}
@@ -219,7 +220,7 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
 
 
 	/** the customization of the displayname in title bar
-	 * @return
+	 * @return String
 	 * @throws Exception
 	 */
 	public static CharSequence getTitleBarDisplayName(Context context) throws Exception {
