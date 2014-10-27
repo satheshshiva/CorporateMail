@@ -42,8 +42,6 @@ public interface Constants {
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  CACHE ----------------------------------------------
 	--------------------------------------------------------------------------------------*/
-	public static final String CACHE_INBOX_FILENAME = "cacheInbox.txt";
-	public static final String CACHE_INBOX_LASTSYNCDATE_FILENAME = "InboxLastSyncDate.txt";
 	public static final String CACHE_DIRECTORY_INLINE_IMGS = "inlineImgs";
 
 	/* -------------------------------------------------------------------------------------
@@ -74,9 +72,6 @@ public interface Constants {
 	public static final int UPDATE_INBOX_PAGESIZE=512;
 	public static final long INBOX_UPDATER_MIN_INTERVAL = 20*1000;			//the minimum amt of interal in millis before any 2 sync
 
-	public static final long INBOX_UPDATER_SHORT_REFRESH_RATE = 20*1000;		//the inbox will auto update after this seconds if more changes are available
-	public static final long INBOX_UPDATER_LONG_REFRESH_RATE = 1*30*1000;		//the inbox will auto update after this seconds if there are no more changes
-
 	//sync using search filter
 	public static final int INBOX_LATESTMAIL_OFFSET = 2;			//while syncing for the latest mails, this the no of mails it will fetch at a time
 
@@ -105,7 +100,7 @@ public interface Constants {
 	--------------------------------------------------------------------------------------*/
 
 	public static int MAIL_NOTIFICATION_SERVICE_CONN_TIMEOUT = 30;
-	public static long SLEEPTIME_FOR_GENERAL_EXCEPTION = 2*60*1000;
+
 	//public static long PULL_DURATION = 30*1000;	//30 secs
 	public static long PULL_SUBSCRIPTION_RENEWAL = 23*60*60*1000;	//23 hours
 
@@ -118,6 +113,7 @@ public interface Constants {
 	public static String ACTIONBAR_COMPOSE = "Compose";
 	public static String ACTIONBAR_ABOUT = "About";
     public static String ACTIONBAR_LOGIN = "Login";
+    public static String ACTIONBAR_OVERFLOW = "More";
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  UI TEXTS -------------------------------------------
@@ -143,8 +139,6 @@ public interface Constants {
 
 	//Title bar display
 	public static final int TITLEBAR_NO_OF_CHARS_DISP_NAME = 40;	//no of chars to be displayed in the title bar for the display name
-
-	public static final String TITLEBAR_UPDATED_DATEFORMAT = "d-MMM h:mm a";	//this is the date format in which the updated date will be displayed in title bar
 
 	public static final String LOADING_HTML_URL="file:///android_asset/loading.html";
 

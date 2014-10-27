@@ -127,26 +127,27 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
         MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         //Submenu
-        SubMenu subMenu = menu.addSubMenu("");
+        SubMenu subMenu = menu.addSubMenu(ACTIONBAR_OVERFLOW).setIcon(OptionsUIContent.getMoreoverFlowIcon());
+        //Overflow submenu icon
+        menuItem = subMenu.getItem();
+        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
+        //Refresh Submenu
         menuItem=subMenu.add(ACTIONBAR_REFRESH)
 		.setIcon(OptionsUIContent.getRefreshIcon());
         MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
+        //Settings Submenu
         menuItem=subMenu
 		.add(ACTIONBAR_SETTINGS)
 		.setIcon(OptionsUIContent.getSettingsIcon());
         MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
+        //About Submenu
         menuItem=subMenu
 		.add(ACTIONBAR_ABOUT)
 		.setIcon(OptionsUIContent.getAboutIcon());
         MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		//Overflow submenu icon
-		MenuItem subMenuItem = subMenu.getItem();
-		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         return true;
 	}

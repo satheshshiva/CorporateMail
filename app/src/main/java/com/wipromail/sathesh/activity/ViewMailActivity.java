@@ -70,7 +70,7 @@ public class ViewMailActivity extends ActionBarActivity implements Constants{
             //Adding Delete Icon to Main Menu
             menuItem=menu.add(this.getString(R.string.actionBar_Delete))
                     .setIcon(OptionsUIContent.getDeleteIcon());
-            MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         }
         // Attachment main menu
@@ -136,10 +136,6 @@ public class ViewMailActivity extends ActionBarActivity implements Constants{
             }else{
                 viewMailFragment.showAlertdialogPermanentDelete();
             }
-        }
-
-        else if(item!=null && item.getTitle().equals(this.getString(R.string.actionBar_Attachment))){
-            //	Notifications.showToast(this.getApplicationContext(),getString(R.string.attachment_feature_not_avaialable) , Toast.LENGTH_SHORT);
         }
 
         else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
