@@ -46,9 +46,10 @@ public class ContactDetailsActivity extends ActionBarActivity implements Constan
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         setContentView(R.layout.activity_contact_details);
 
         displayName = (TextView) findViewById(R.id.displayName);

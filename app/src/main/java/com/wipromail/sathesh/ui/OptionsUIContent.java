@@ -43,7 +43,7 @@ public class OptionsUIContent {
 	}
 	
 	public static int getMoreoverFlowIcon(){
-		return R.drawable.ic_menu_moreoverflow;
+		return R.drawable.ic_menu_overflow;
 	}
 	
 }

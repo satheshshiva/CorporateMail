@@ -48,9 +48,10 @@ public class SearchContactsActivity extends ActionBarActivity implements Constan
 	private List<String> dispNameList = new ArrayList<String>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		this.activity = this;
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		setContentView(R.layout.activity_search_contacts);
 
 		getSupportActionBar().setHomeButtonEnabled(true);

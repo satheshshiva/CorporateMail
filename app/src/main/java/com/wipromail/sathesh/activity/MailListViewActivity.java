@@ -51,9 +51,8 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
 		mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);

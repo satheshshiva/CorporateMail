@@ -144,9 +144,10 @@ public class ComposeActivity extends ActionBarActivity implements Constants,IRes
     private static SpannableStringBuilder sBuilder=new SpannableStringBuilder();
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         activity=this;
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         setContentView(R.layout.activity_compose);
 
         standardWebView = new StandardWebView();
