@@ -57,9 +57,10 @@ public class AddRecipientActivity extends ActionBarActivity implements Constants
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		setContentView(R.layout.activity_add_recipient);
 		activity=this;
 		getSupportActionBar().setHomeButtonEnabled(true);

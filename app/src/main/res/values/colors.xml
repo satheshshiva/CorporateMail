@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="blue_material_sample_Primary_Dark">#306ACF</color>
+    <color name="blue_material_sample_Primary">#3D88EC</color>
+
     <color name="Holo_Light">#33B5E5</color>
     <color name="Holo_Dark">#0099CC</color>
      <color name="Holo_Bright">#00ddff</color>

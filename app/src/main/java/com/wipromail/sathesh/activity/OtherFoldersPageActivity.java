@@ -45,8 +45,9 @@ public class OtherFoldersPageActivity extends ActionBarActivity implements Const
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
 		setContentView(R.layout.activity_folders_page);
 		//getSupportActionBar().setIcon(R.drawable.);
 		activity=this;
