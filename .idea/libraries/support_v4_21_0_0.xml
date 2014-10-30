@@ -6,10 +6,6 @@
       <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$APPLICATION_HOME_DIR$/sdk/extras/android/support/v4/src/api21" />
-      <root url="file://$APPLICATION_HOME_DIR$/sdk/extras/android/support/v4/src/api21" />
-      <root url="file://$APPLICATION_HOME_DIR$/sdk/extras/android/support/v4/src/api21" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

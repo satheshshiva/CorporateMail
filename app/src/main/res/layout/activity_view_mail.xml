@@ -3,9 +3,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <!-- layout to show image downloading progress -->
-    <include layout="@layout/include_toolbar" />
-
     <fragment
         android:id="@+id/viewMailFragment"
         android:layout_width="fill_parent"

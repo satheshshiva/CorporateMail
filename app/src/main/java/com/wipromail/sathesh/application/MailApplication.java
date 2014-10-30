@@ -85,6 +85,14 @@ public class MailApplication implements Constants {
         activity.setSupportActionBar(toolbar);
     }
 
+    /** All fragments will call this method in the OnCreate or similarr to initialize the actionbar toolbar
+     *
+     */
+    public static void toolbarInitialize( ActionBarActivity activity ,View view) {
+        toolbar = (Toolbar) view.findViewById(R.id.actionbar_toolbar);
+        activity.setSupportActionBar(toolbar);
+    }
+
     public static String getWebmailURL(Context context){
         return generalSettings.getServerURL(context) + context.getString(R.string.webmail_url_EWS_extension);
     }
