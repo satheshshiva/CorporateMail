@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -33,10 +32,12 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
 	private ActionBar myActionBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_home_page);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
 
 		getSupportActionBar().setIcon(R.drawable.ic_menu_home);
 		activity=this;
@@ -87,7 +88,7 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
 		}
 	}
 
-	private class JavaScriptInterface{
+    private class JavaScriptInterface{
 		JavaScriptInterface() {
 		}
 

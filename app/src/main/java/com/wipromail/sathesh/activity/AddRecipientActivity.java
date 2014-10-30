@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
 import com.wipromail.sathesh.constants.Constants;
@@ -60,9 +61,16 @@ public class AddRecipientActivity extends ActionBarActivity implements Constants
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
-
 		setContentView(R.layout.activity_add_recipient);
-		activity=this;
+
+        activity=this;
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		contactSearch= (EditText)findViewById(R.id.contactSearch);
 

@@ -30,6 +30,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
 import com.wipromail.sathesh.constants.Constants;
@@ -149,6 +150,9 @@ public class ComposeActivity extends ActionBarActivity implements Constants,IRes
         activity=this;
 
         setContentView(R.layout.activity_compose);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
 
         standardWebView = new StandardWebView();
 

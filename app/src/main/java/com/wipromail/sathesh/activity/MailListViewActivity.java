@@ -54,12 +54,15 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_mail_list_view);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
 		mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
 		mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
 		mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
 
-		setContentView(R.layout.activity_mail_list_view);
-		
 		// declaring the fragment (list fragment). used for calling the refresh in the fragment
 		//actually MailListViewFragment
 		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()

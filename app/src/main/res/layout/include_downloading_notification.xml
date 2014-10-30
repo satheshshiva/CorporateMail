@@ -19,7 +19,8 @@
                 android:id="@+id/titlebar_viewmail_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
                 android:layout_marginLeft="2dp"
                 android:text=""
-                android:textSize="11sp" />
+                android:textSize="12sp" />
         </LinearLayout>

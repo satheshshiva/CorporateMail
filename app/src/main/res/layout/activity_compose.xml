@@ -1,16 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <!-- layout to show image downloading progress -->
-
-    <include layout="@layout/include_downloading_notification" />
-
-    <!-- layout to show error or warning -->
-
-    <include layout="@layout/include_warning_notification" />
+    <include layout="@layout/include_toolbar" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -20,7 +14,6 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         android:scrollbarStyle="insideOverlay" >
 
         <LinearLayout
@@ -28,8 +21,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <!-- To -->
+            <!-- layout to show image downloading progress -->
+            <include layout="@layout/include_downloading_notification" />
 
+            <!-- layout to show error or warning -->
+            <include layout="@layout/include_warning_notification" />
+
+            <!-- To -->
             <LinearLayout
                 android:id="@+id/layout_to"
                 android:layout_width="match_parent"
@@ -156,10 +154,12 @@
             android:onClick="toAddOnClick"
             android:background="@drawable/add_icon" />
 
-    </LinearLayout>
+    </LinearLayout>
+
+
             -->
 
-			<!--  Subject -->
+            <!--  Subject -->
             <EditText
                 android:id="@+id/compose_subject"
                 android:layout_width="match_parent"
@@ -184,7 +184,7 @@
                 android:minLines="3" >
             </EditText>
 
-            
+
             <!--  Signature -->
             <EditText
                 android:id="@+id/compose_signature"
@@ -198,7 +198,7 @@
                 android:minLines="3" >
             </EditText>
 
-            
+
             <!-- Quote webview -->
 
 
@@ -209,33 +209,34 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:onClick="sendBtnOnClick"
-                android:text="@string/compose_send_btn_lbl" />
+                android:text="@string/compose_send_btn_lbl" />
+
             -->
-			
-			<LinearLayout 
-			    android:id="@+id/quoteLinearLayout"
-			    android:orientation="vertical"
-			    android:visibility="gone"
+
+            <LinearLayout
+                android:id="@+id/quoteLinearLayout"
+                android:orientation="vertical"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-			
 
-				<TextView
-				    android:id="@+id/quotedTextLbl"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/compose_quoted_text_lbl"
-				    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <WebView
-                android:id="@+id/quoteWebview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/quotedTextLbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/compose_quoted_text_lbl"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <WebView
+                    android:id="@+id/quoteWebview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
         </LinearLayout>
-        
-			</LinearLayout>
     </ScrollView>
 
 </LinearLayout>
