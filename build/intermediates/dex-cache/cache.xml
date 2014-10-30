@@ -20,12 +20,6 @@
         revision="20.0.0"
         sha1="4f5040d53f4082980f3ebc0935ac6d7b3e273a05"/>
     <item
-        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsV2-fac30ac25db25ee5ce5d67d34c7550a4f337c776.jar"
-        jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/libGoogleAnalyticsV2.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="4d946a10c0d73adf8596ab3547fb78f00346673a"/>
-    <item
         dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-c7bfa4b21118702f8237d7cc010417e2cd75f3c5.jar"
         jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
         jumboMode="false"
@@ -74,17 +68,17 @@
         revision="21.0.2"
         sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e"/>
     <item
-        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsV2-fac30ac25db25ee5ce5d67d34c7550a4f337c776.jar"
-        jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/libGoogleAnalyticsV2.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="4d946a10c0d73adf8596ab3547fb78f00346673a"/>
-    <item
         dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-c7bfa4b21118702f8237d7cc010417e2cd75f3c5.jar"
         jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="686344a780033e4ba22b926cd225f8d4941247e6"/>
+    <item
+        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-8a0b49006d49ce72442e728dd0cea6aa880cace9.jar"
+        jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/libGoogleAnalyticsServices.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="db1e65d9e3ee616f871cb23120fbea8f18ad3e4c"/>
     <item
         dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.2.1-10cfd7267ac09d02f49b7ed3365da3231228cf08.jar"
         jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/GoogleAdMobAdsSdk-6.2.1.jar"

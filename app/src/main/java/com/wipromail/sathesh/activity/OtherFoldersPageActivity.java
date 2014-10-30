@@ -341,12 +341,12 @@ public class OtherFoldersPageActivity extends ActionBarActivity implements Const
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance().activityStart(this);
+		EasyTracker.getInstance(this).activityStart(this);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance().activityStop(this); 
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 }

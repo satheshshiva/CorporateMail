@@ -1008,19 +1008,6 @@ public class ComposeActivity extends ActionBarActivity implements Constants,IRes
         checkResolvedNames();
     }
 
-    //Google Analytics
-    @Override
-    public void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this); // Add this method.
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EasyTracker.getInstance().activityStop(this); // Add this method.
-    }
-
     public  void buildAlertDialog(Context context, String title, String message, String positiveMsg, String negativeMsg){
         AlertDialog myConfirmBox =new AlertDialog.Builder(context)
                 //set message, title, and icon
@@ -1041,6 +1028,19 @@ public class ComposeActivity extends ActionBarActivity implements Constants,IRes
                 .create();
 
         myConfirmBox.show();
+    }
+
+    //Google Analytics
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this); // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this); // Add this method.
     }
 }
 
