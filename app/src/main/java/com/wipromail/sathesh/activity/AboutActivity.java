@@ -59,6 +59,9 @@ public class AboutActivity extends ActionBarActivity implements Constants{
 
 		setContentView(R.layout.activity_about);
 
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
 		try {
 			service = EWSConnection.getServiceFromStoredCredentials(this);}
 		catch (Exception e) {

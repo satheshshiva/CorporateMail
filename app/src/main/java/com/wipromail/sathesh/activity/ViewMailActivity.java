@@ -11,6 +11,7 @@ import android.view.SubMenu;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.asynccaller.DeleteMailAsyncCaller;
 import com.wipromail.sathesh.constants.Constants;
@@ -26,6 +27,9 @@ public class ViewMailActivity extends ActionBarActivity implements Constants{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
 
         setContentView(R.layout.activity_view_mail);
 

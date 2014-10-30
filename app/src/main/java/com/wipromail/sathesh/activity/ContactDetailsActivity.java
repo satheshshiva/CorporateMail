@@ -52,6 +52,9 @@ public class ContactDetailsActivity extends ActionBarActivity implements Constan
 
         setContentView(R.layout.activity_contact_details);
 
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
         displayName = (TextView) findViewById(R.id.displayName);
         department = (TextView) findViewById(R.id.dept);
         companyName = (TextView) findViewById(R.id.companyName);

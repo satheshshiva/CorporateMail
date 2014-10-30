@@ -20,6 +20,7 @@ import android.webkit.WebView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
@@ -49,6 +50,10 @@ public class OtherFoldersPageActivity extends ActionBarActivity implements Const
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_folders_page);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
 		//getSupportActionBar().setIcon(R.drawable.);
 		activity=this;
 		webview = (WebView)findViewById(R.id.folders_page_webview);

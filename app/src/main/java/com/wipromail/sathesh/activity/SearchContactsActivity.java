@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
 import com.wipromail.sathesh.constants.Constants;
@@ -53,6 +54,9 @@ public class SearchContactsActivity extends ActionBarActivity implements Constan
 		this.activity = this;
 
 		setContentView(R.layout.activity_search_contacts);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		contactSearch= (EditText)findViewById(R.id.contactSearch);

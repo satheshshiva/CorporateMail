@@ -57,6 +57,10 @@ public class LoginPageActivity extends ActionBarActivity implements Constants {
         context=this;
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.activity_login_page);
+
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(this);
+
         login_username = (EditText)findViewById(R.id.login_username);
         login_passwd = (EditText)findViewById(R.id.login_passwd);
         serverSpinner = (Spinner)findViewById(R.id.serverSpinner);

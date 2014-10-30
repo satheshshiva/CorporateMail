@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -132,9 +133,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				mailFolderName = activityDataPasser.getMailFolderName();
 				mailFolderId = activityDataPasser.getStrFolderId();
 
-				//action bar initialize 
-				myActionBar = activity.getSupportActionBar();
-				//progress bar initialize 
+				//progress bar initialize
 				circle_progressbar = (ProgressBar)view.findViewById(R.id.circle_progressbar);
 
 				//icons initialize
@@ -143,6 +142,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				readIcon = (ImageView)view.findViewById(R.id.read_icon);
 				unreadIcon = (ImageView)view.findViewById(R.id.unread_icon);
 				bar_progressbar = (ProgressBar)view.findViewById(R.id.bar_progressbar);
+
+                //action bar initialize
+                myActionBar = activity.getSupportActionBar();
 
 				//update mail type in the action bar title
 				myActionBar.setTitle(getMailFolderDisplayName(mailType));
