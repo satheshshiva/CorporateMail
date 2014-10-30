@@ -80,7 +80,7 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
 		if(BuildConfig.DEBUG)
 			Log.i(TAG, "MailListViewActivity -> Starting MNS Service");
 		MailApplication.startMNSService(this);
-		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	/** ON STOP  **
@@ -90,7 +90,7 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance().activityStop(this); // Add this method.
+		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	/** ON DESTROY **

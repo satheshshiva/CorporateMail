@@ -17,6 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
@@ -178,5 +179,18 @@ public class SearchContactsActivity extends ActionBarActivity implements Constan
 		Notifications.showToast(this, getText(R.string.addrecipient_error), Toast.LENGTH_SHORT);
 		setSupportProgressBarIndeterminateVisibility(false);
 	}
+
+    //Google Analytics
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
+    }
 
 }

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
@@ -219,5 +220,18 @@ public class ContactDetailsActivity extends ActionBarActivity implements Constan
     public void handleResolveNamesOutputError(NameResolutionCollection outputCollection, String extra1, Exception pE) {
         setProgressBarIndeterminateVisibility(false);
 
+    }
+
+    //Google Analytics
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this); // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this); // Add this method.
     }
 }

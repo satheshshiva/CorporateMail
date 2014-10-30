@@ -44,12 +44,12 @@ public class MainActivity extends Activity implements Constants{
 	public void onStart() {
 		super.onStart();
 		(new CheckLogin()).execute();
-		EasyTracker.getInstance().activityStart(this); // Add this method.
+		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 	 @Override
 	  public void onStop() {
 	    super.onStop();
-	    EasyTracker.getInstance().activityStop(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	  }
 	
 	private class CheckLogin extends AsyncTask<Void, Void, Void>{
