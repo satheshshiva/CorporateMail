@@ -108,6 +108,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		
 		if(activity != null){
 			try {
+                //Initialize toolbar
+                MailApplication.toolbarInitialize(activity, view);
+
 				//List View Initialization
 				listView = (ListView)view.findViewById(R.id.listView);
 

@@ -124,6 +124,9 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
         setRetainInstance(true);
 
+        //Initialize toolbar
+        MailApplication.toolbarInitialize(activity, view);
+
         progressStatusDispBar = new ProgressDisplayNotificationBar(activity,view);
         //listener for this frament and activity
         viewMailListener = new ViewMailListener(this);
