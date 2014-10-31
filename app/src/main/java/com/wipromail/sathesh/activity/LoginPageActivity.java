@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -85,12 +86,8 @@ public class LoginPageActivity extends ActionBarActivity implements Constants {
 
         MenuItem menuItem;
 
-		//Always Visible menu
-        menuItem=menu.add(ACTIONBAR_LOGIN);
-        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
         menuItem=menu.add(ACTIONBAR_ABOUT)
-                .setIcon(OptionsUIContent.getAboutIcon());
+                .setIcon(OptionsUIContent.getAboutDarkIcon());
         MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		return true;
@@ -109,6 +106,14 @@ public class LoginPageActivity extends ActionBarActivity implements Constants {
 		return super.onOptionsItemSelected(item);
 	}
 
+
+    /** Public method for the Button Onclick from layout
+     *
+     * @param view
+     */
+    public void loginButtonClicked(View view){
+        loginButtonClicked();
+    }
     /**Called when the login button is clicked
      *
      */

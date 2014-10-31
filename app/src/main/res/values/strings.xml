@@ -19,7 +19,7 @@
     <string name="title_activity_login_page">Login</string>
     <string name="login_user_text">Wipro AD ID</string>
     <string name="login_pwd_text">Password</string>
-    <string name="loginact_loginbtn_text">Login</string>
+    <string name="login_btn_text">Login</string>
     <string name="login_username_hint">wipro\\</string>
     <string name="login_username_office365_hint">\u0040wipro.com</string>
     <string name="alertdialog_save_lbl">Save</string>

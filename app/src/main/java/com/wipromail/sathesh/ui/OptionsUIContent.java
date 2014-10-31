@@ -38,6 +38,10 @@ public class OptionsUIContent {
 		return R.drawable.ic_menu_about;
 	}
 
+    public static int getAboutDarkIcon(){
+        return R.drawable.ic_menu_about_dark;
+    }
+
 	public static int getUpdatesIcon(){
 		return R.drawable.ic_action_updates;
 	}
