@@ -149,7 +149,9 @@ public class SearchContactsActivity extends ActionBarActivity implements Constan
 					@Override
 					public void onItemClick(AdapterView<?> adapter, View view, int position,
 							long arg) {
-						Log.d(TAG, String.valueOf(position));
+                        if(BuildConfig.DEBUG) {
+                            Log.d(TAG, String.valueOf(position));
+                        }
 						Intent contactDetailsIntent = new Intent(getBaseContext(), ContactDetailsActivity.class);
 						contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, dispContactsMap.get(position));
 						contactDetailsIntent.putExtra(ContactDetailsActivity.SHOW_SENDMAIL_BTN_EXTRA, true);
