@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-  >
+    >
 
     <!-- layout to show image downloading progress -->
     <include layout="@layout/include_toolbar" />
@@ -21,120 +21,131 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
-    <!-- Logo Section -->
+            <!-- Logo Section -->
 
-     <RelativeLayout
-         android:layout_width="match_parent"
-         android:layout_height="88dp"
-         >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                >
 
-         <ImageView
-             android:id="@+id/imageView1"
-             android:layout_width="90dip"
-             android:layout_height="match_parent"
-             android:layout_alignParentLeft="true"
-             android:layout_alignParentTop="true"
-             android:layout_marginLeft="5dp"
-             android:contentDescription="@string/contetn_desc_logo"
-             android:src="@drawable/wipro_logo_trans" />
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="90dip"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:contentDescription="@string/contetn_desc_logo"
+                    android:src="@drawable/wipro_logo_trans" />
 
-         <TextView
-             android:id="@+id/textView3"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerInParent="true"
-             android:layout_marginLeft="10dip"
-             android:layout_toRightOf="@+id/imageView1"
-             android:text="@string/login_logo_bigText"
-             android:textAppearance="?android:attr/textAppearanceLarge" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dip"
+                    android:layout_toRightOf="@+id/imageView1"
+                    android:text="@string/login_logo_bigText"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-         <TextView
-             android:id="@+id/textView4"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignTop="@+id/textView3"
-             android:layout_marginLeft="2dp"
-             android:layout_toRightOf="@+id/textView3"
-             android:text="@string/login_logo_bigText_beta"
-             android:textSize="10dp" />
-     </RelativeLayout>
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/textView3"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@+id/textView3"
+                    android:text="@string/login_logo_bigText_beta"
+                    android:textSize="10dp" />
+            </RelativeLayout>
 
-    <!-- Main Content -->
-     <LinearLayout
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:orientation="vertical"
-         android:paddingLeft="20dp"
-         android:paddingRight="20dp"
-         android:paddingTop="60dp" >
+            <!-- Main Content -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="60dp">
 
-         <!-- UserName section -->
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal">
+                <!-- UserName section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-         <!-- Display: "wipro\" -->
-         <TextView
-             android:id="@+id/textView5"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="@string/login_username_hint"
-             android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <!-- Display: "wipro\" -->
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_username_hint"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-         <!-- UserName edittext -->
-         <EditText
-             android:id="@+id/login_username"
-             android:layout_width="0dip"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:ems="10"
-             android:hint="@string/login_user_text"
-             android:inputType="textNoSuggestions" />
+                    <!-- UserName edittext -->
+                    <EditText
+                        android:id="@+id/login_username"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/login_user_text"
+                        android:inputType="textNoSuggestions" />
 
-         <!-- Display: "@wipro.com"for office 365 -->
-         <TextView
-             android:id="@+id/textView6"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="@string/login_username_office365_hint"
-             android:visibility="gone"
-             android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <!-- Display: "@wipro.com"for office 365 -->
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_username_office365_hint"
+                        android:visibility="gone"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-         </LinearLayout>
+                </LinearLayout>
 
-         <!-- Password -->
-         <EditText
-             android:id="@+id/login_passwd"
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="17dp"
-             android:ems="10"
-             android:hint="@string/login_pwd_text"
-             android:inputType="textPassword" />
+                <!-- Password -->
+                <EditText
+                    android:id="@+id/login_passwd"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17sp"
+                    android:ems="10"
+                    android:hint="@string/login_pwd_text"
+                    android:inputType="textPassword" />
 
-         <!-- URL Selection Spinner -->
-         <Spinner
-             android:id="@+id/serverSpinner"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="50dp"
-             android:defaultValue="@string/webmail1_url"
-             android:dialogTitle="@string/preference_serverurl_title"
-             android:entries="@array/preferences_serverlist_text"
-             android:entryValues="@array/preferences_serverlist_values"
-             android:key="webmail_server"
-              />
+                <!-- URL Selection Spinner -->
+                <Spinner
+                    android:id="@+id/serverSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17sp"
+                    android:defaultValue="@string/webmail1_url"
+                    android:dialogTitle="@string/preference_serverurl_title"
+                    android:entries="@array/preferences_serverlist_text"
+                    android:entryValues="@array/preferences_serverlist_values"
+                    android:key="webmail_server" />
 
-         <!-- URL Display TextView -->
-         <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:id="@+id/serverURLDisp"
-             android:textStyle="italic"
-         />
+                <!-- URL Display TextView -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/serverURLDisp"
+                    android:textStyle="italic"
+                    android:layout_marginLeft="15sp" />
 
-     </LinearLayout>
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_btn_text"
+                    android:background="?attr/colorPrimary"
+                    android:textAllCaps="true"
+                    android:onClick="loginButtonClicked"
+                    android:textColor="@color/white"
+                    android:id="@+id/loginBtn"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="40sp" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
- </LinearLayout>
+</LinearLayout>
