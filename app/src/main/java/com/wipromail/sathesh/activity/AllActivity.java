@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.service.data.EmailMessage;
@@ -232,19 +231,14 @@ public class AllActivity extends Activity implements Constants{
 
 	}
 
-
-
-	//Google Analytics
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 }

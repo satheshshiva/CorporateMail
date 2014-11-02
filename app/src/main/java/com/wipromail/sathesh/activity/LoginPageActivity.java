@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,11 +15,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
@@ -38,7 +37,7 @@ import com.wipromail.sathesh.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;
 
-public class LoginPageActivity extends ActionBarActivity implements Constants {
+public class LoginPageActivity extends MyActivity implements Constants {
 
 	private String username=USERNAME_NULL, password=PASSWORD_NULL;
 	private Intent intent;
@@ -310,17 +309,14 @@ public class LoginPageActivity extends ActionBarActivity implements Constants {
         }
     }
 
-	//Google Analytics
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	/** GETTER AND SETTER **/

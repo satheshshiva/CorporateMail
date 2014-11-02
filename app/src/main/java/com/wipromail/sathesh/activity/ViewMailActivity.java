@@ -3,21 +3,20 @@ package com.wipromail.sathesh.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.asynccaller.DeleteMailAsyncCaller;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 
-public class ViewMailActivity extends ActionBarActivity implements Constants{
+public class ViewMailActivity extends MyActivity implements Constants{
 
     private ViewMailFragmentDataPasser viewMailFragment;
     /** ON CREATE **
@@ -151,17 +150,14 @@ public class ViewMailActivity extends ActionBarActivity implements Constants{
         return super.onOptionsItemSelected(item);
     }
 
-    // Google Analytics
     @Override
     public void onStart() {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);
     }
 
 }

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -19,18 +18,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
 import com.wipromail.sathesh.constants.Constants;
@@ -56,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ComposeActivity extends ActionBarActivity implements Constants,IResolveNames{
+public class ComposeActivity extends MyActivity implements Constants,IResolveNames{
 
     private  static Activity activity;
     //making this change
@@ -145,7 +143,6 @@ public class ComposeActivity extends ActionBarActivity implements Constants,IRes
     private static SpannableStringBuilder sBuilder=new SpannableStringBuilder();
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         activity=this;
 
@@ -1030,17 +1027,14 @@ public class ComposeActivity extends ActionBarActivity implements Constants,IRes
         myConfirmBox.show();
     }
 
-    //Google Analytics
     @Override
     public void onStart() {
         super.onStart();
-        EasyTracker.getInstance(this).activityStart(this); // Add this method.
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        EasyTracker.getInstance(this).activityStop(this); // Add this method.
     }
 }
 

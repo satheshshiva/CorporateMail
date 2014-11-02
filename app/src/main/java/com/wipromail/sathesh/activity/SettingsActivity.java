@@ -3,20 +3,19 @@ package com.wipromail.sathesh.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingsActivity extends ActionBarActivity implements Constants {
+public class SettingsActivity extends MyActivity implements Constants {
 
 	private SharedPreferences credStorage;
 	private TextView SignedInAccUsername;
@@ -87,16 +86,13 @@ public class SettingsActivity extends ActionBarActivity implements Constants {
 	      
     }
     
-  //Google Analytics
   	 @Override
   	  public void onStart() {
   	    super.onStart();
-  	    EasyTracker.getInstance(this).activityStart(this);
   	  }
 
   	  @Override
   	  public void onStop() {
   	    super.onStop();
-  	    EasyTracker.getInstance(this).activityStop(this);
   	  }
 }

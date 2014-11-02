@@ -46,8 +46,7 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 	public void activity_OnPreExecute() {
 
 		try {
-			activity.setSupportProgressBarIndeterminateVisibility(true);
-			dialog = ProgressDialog.show(activity, "", 
+			dialog = ProgressDialog.show(activity, "",
 					activity.getString(R.string.app_updater_checking), true);
 
 		} catch (Exception e) {
@@ -74,7 +73,6 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 
 			}
 			else if(progress[0].equals(UpdateCheckerAsyncTask.STATUS_ERROR)){
-				activity.setSupportProgressBarIndeterminateVisibility(false);
 				dialog.dismiss();
 				Notifications.showAlert(activity, activity.getText(R.string.app_updater_error) + "\nDetails: " + progress[1]);
 			}
@@ -84,7 +82,6 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 	}
 
 	public void noUpdateAvailable(ActionBarActivity activity) {
-		activity.setSupportProgressBarIndeterminateVisibility(false);
 		dialog.dismiss();
 		Notifications.showToast(activity,  activity.getText(R.string.app_updater_noupdates), Toast.LENGTH_SHORT);
 	}

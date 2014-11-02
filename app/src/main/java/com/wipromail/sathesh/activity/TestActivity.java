@@ -1,21 +1,21 @@
 package com.wipromail.sathesh.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MyActivity;
 
-public class TestActivity extends ActionBarActivity {
+public class TestActivity extends MyActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        WebView w = (WebView)findViewById(R.id.webi);
+        WebView w = (WebView)findViewById(R.id.testWebView);
         w.loadUrl("file:///android_asset/loading_test.html");
         WebSettings webSettings = w.getSettings();
         webSettings.setSavePassword(false);

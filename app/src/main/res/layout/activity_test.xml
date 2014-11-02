@@ -35,7 +35,7 @@
         android:layout_gravity="center_horizontal" />
 
 <WebView
-    android:id="@+id/webi"
+    android:id="@+id/testWebView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     />
