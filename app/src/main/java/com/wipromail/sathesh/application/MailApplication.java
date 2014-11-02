@@ -80,17 +80,19 @@ public class MailApplication implements Constants {
     /** All activities will call this method in the OnCreate to initialize the actionbar toolbar
      *
      */
-    public static void toolbarInitialize(ActionBarActivity activity) {
+    public static Toolbar toolbarInitialize(ActionBarActivity activity) {
         toolbar = (Toolbar) activity.findViewById(R.id.actionbar_toolbar);
         activity.setSupportActionBar(toolbar);
+        return toolbar;
     }
 
     /** All fragments will call this method in the OnCreate or similarr to initialize the actionbar toolbar
      *
      */
-    public static void toolbarInitialize( ActionBarActivity activity ,View view) {
+    public static Toolbar toolbarInitialize( ActionBarActivity activity ,View view) {
         toolbar = (Toolbar) view.findViewById(R.id.actionbar_toolbar);
         activity.setSupportActionBar(toolbar);
+        return toolbar;
     }
 
     public static String getWebmailURL(Context context){
