@@ -32,6 +32,12 @@
         revision="20.0.0"
         sha1="1a2f0e28cc9497fb4927ea2422605fb8023969b6"/>
     <item
+        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-ffcc2a27ffc4aa007bffdca084175297d431f731.jar"
+        jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="efeda77c808750cb670ee9c48d8a1835d89dbcb2"/>
+    <item
         dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/acra-4.4.0-ddfd0371f78ae86d080016c9ac37de238f1332bb.jar"
         jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/acra-4.4.0.jar"
         jumboMode="false"

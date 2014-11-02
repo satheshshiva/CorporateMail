@@ -95,56 +95,6 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <!--
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="35dp"
-        android:background="@drawable/titlebar_background"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/maillist_refresh_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_action_refresh"
-            android:onClick="refreshOnClick" />
-
-        <ProgressBar
-            android:id="@+id/maillist_refresh_progressbar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:padding="1dp"
-            android:visibility="gone" />
-
-        <TextSwitcher
-            android:id="@+id/titlebar_inbox_status_textswitcher"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_weight="4"
-            android:textSize="13dp" >
-        </TextSwitcher>
-
-        <ImageButton
-            android:id="@+id/maillist_compose_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_action_compose"
-            android:onClick="composeOnClick" />
-
-        <ImageButton
-            android:id="@+id/maillist_more_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_action_collapse"
-            android:onClick="moreButtonOnClick" />
-    </LinearLayout>
-    -->
-    <!--
      <include
         android:id="@+id/ads"
         android:layout_width="fill_parent"
