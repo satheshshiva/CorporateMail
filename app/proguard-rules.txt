@@ -1,0 +1,7 @@
+-ignorewarnings
+-keepclassmembers public class HomePageActivity
+-keep public class com.wipromail.sathesh.activity.HomePageActivity$JavaScriptInterface
+-keep public class * implements com.wipromail.sathesh.activity.HomePageActivity$JavaScriptInterface
+-keepclassmembers class com.wipromail.sathesh.activity.HomePageActivity$JavaScriptInterface {
+    <methods>;
+}
