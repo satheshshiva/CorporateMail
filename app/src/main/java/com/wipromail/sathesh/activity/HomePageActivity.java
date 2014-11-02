@@ -45,7 +45,6 @@ public class HomePageActivity extends MyActivity implements Constants{
 		context=this;
 		
 		webview = (WebView)findViewById(R.id.home_page_webview);
-
 		WebSettings webSettings = webview.getSettings();
 		webSettings.setAllowFileAccess(true);
 
