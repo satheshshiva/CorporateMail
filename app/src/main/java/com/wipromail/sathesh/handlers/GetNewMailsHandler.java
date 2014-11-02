@@ -48,7 +48,6 @@ public class GetNewMailsHandler extends Handler implements Constants {
 				parent.setNewMailsThreadState(Status.UPDATED);
 				parent.softRefreshList();
 				parent.getSwipeRefreshLayout().setRefreshing(false);
-				parent.getBar_progressbar().setProgress(0);
 
 				if(BuildConfig.DEBUG){
 					Log.d(TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
@@ -103,7 +102,6 @@ public class GetNewMailsHandler extends Handler implements Constants {
 			}
 			parent.updateTextSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
 			parent.getSwipeRefreshLayout().setRefreshing(false);
-			parent.getBar_progressbar().setProgress(0);
 			parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_updater_error));
 			break;
 		}
