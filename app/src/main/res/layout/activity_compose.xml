@@ -4,7 +4,7 @@
     android:orientation="vertical" >
 
     <!-- layout to show image downloading progress -->
-    <include layout="@layout/include_toolbar" />
+    <include layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -108,9 +108,8 @@
 
             <Button
                 android:id="@+id/compose_to_addRecipientBtn"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                style="@style/Style.Button"
+                android:layout_width="120sp"
                 android:layout_marginTop="5dp"
                 android:onClick="toAddOnClick"
                 android:text="@string/compose_to_addRecipientBtn" />

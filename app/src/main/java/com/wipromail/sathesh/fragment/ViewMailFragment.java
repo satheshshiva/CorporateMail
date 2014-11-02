@@ -150,6 +150,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         // The Android system will hanldle image caches for the webview
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
+        //webSettings.setLoadWithOverviewMode(true);
+        //webSettings.setUseWideViewPort(true);
 
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

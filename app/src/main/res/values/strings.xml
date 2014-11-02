@@ -13,7 +13,6 @@
     <string name="webmail_365_url">https://outlook.office365.com</string>
     <string name="webmail_365_username_append">\u0040wipro.com</string>
     <string name="webmail_url_EWS_extension">/EWS/Exchange.asmx</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Wipro Mail</string>
     <string name="title_activity_login_page">Login</string>
@@ -157,10 +156,10 @@
     <string name="addrecipient_addCC_btn_lbl">CC</string>
     <string name="addrecipient_addBCC_btn_lbl">BCC</string>
     <string name="addrecipient_contactSearch_hint">Enter Email Id or Search</string>
-    <string name="addrecipient_contactSearch_helptext">Please enter email id or search person and click To, CC or BCC button</string>
+    <string name="addrecipient_contactSearch_helptext">Enter email id or search person and tap To, CC or BCC button</string>
     <string name="addrecipient_error">Unknown Error Occurred</string>
     <string name="addrecipient_nomatch">No match found</string>
-    <string name="addrecipient_select_person">Please enter valid email id or select person</string>
+    <string name="addrecipient_select_person">Please enter valid email id or search person</string>
 
     <!-- Contacts -->
     <string name="searchContact_textbox_hint">Contacts Search</string>
@@ -265,4 +264,6 @@
     <string name="actionBar_Send_Mail">Send Mail</string>
     <string name="actionBar_Submenu_Reply_Options">Reply Options</string>
     <string name="actionBar_Submenu_Others">Others</string>
+    <string name="title_activity_test">TestActivity</string>
+
 </resources>

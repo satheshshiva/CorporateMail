@@ -10,7 +10,8 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">40sp</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <!-- for v21 apply the ripple effect -->
+        <item name="android:background">@drawable/button_drawable_v21</item>
     </style>
 
 
