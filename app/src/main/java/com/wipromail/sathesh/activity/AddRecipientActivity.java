@@ -247,9 +247,6 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 				Log.d(TAG, "dispMap" +dispMap);
 				ListAdapter adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,dispNameList);
 				listView.setAdapter(adapter);
-
-
-
 			}
 			else{
 				Notifications.showToast(this, getText(R.string.addrecipient_nomatch), Toast.LENGTH_SHORT);

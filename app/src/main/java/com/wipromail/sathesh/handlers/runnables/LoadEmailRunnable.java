@@ -118,13 +118,13 @@ public class LoadEmailRunnable implements Runnable, Constants{
 
                 sendHandlerMsg(Status.SHOW_BODY);    //shows the headers and body
                 attachmentCollection = message.getAttachments();
-                parent.setTotalInlineImages(MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this.getClass()));
+                parent.setTotalInlineImages(MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this));
                 parent.setRemainingInlineImages(parent.getTotalInlineImages());
 
                 //if inline images present
                 if (parent.getRemainingInlineImages() > 0) {
                     //replace all the inline image "cid" tags with "file://" tags
-                    String bodyWithImg = MailApplication.getBodyWithImgHtml(parent.getContext(), parent.getProcessedHtml(), attachmentCollection, parent.getItemId(), this.getClass());
+                    String bodyWithImg = MailApplication.getBodyWithImgHtml(parent.getContext(), parent.getProcessedHtml(), attachmentCollection, parent.getItemId(), this);
 
                     //writing VO to cache with the custom body
                     cacheMailBodyAdapter.cacheNewData(message, bodyWithImg, parent.getMailType(), parent.getMailFolderName(), parent.getMailFolderId());
@@ -133,7 +133,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
                     parent.setProcessedHtml(bodyWithImg);
 
                     // download and cache images. html body will be refreshed after each img download to show the imgs
-                    MailApplication.cacheInlineImages(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this.getClass());
+                    MailApplication.cacheInlineImages(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this);
                 }
                 //no inline images
                 else {

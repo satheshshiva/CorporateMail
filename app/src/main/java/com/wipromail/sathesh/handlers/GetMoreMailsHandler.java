@@ -41,7 +41,7 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 				parent.setMoreMailsThreadState(Status.UPDATED);
 				parent.softRefreshList();
 			} catch (Exception e) {
-				Utilities.generalCatchBlock(e, this.getClass());
+				Utilities.generalCatchBlock(e, this);
 			}
 			break;
 

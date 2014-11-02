@@ -536,7 +536,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 dateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
             }
         }catch(Exception e){
-            Utilities.generalCatchBlock(e, this.getClass());
+            Utilities.generalCatchBlock(e, this);
         }
 
     }
