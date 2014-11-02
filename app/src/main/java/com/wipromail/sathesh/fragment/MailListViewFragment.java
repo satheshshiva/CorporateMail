@@ -65,7 +65,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	private ActionBar myActionBar;
 
-	private ProgressBar bar_progressbar;
 	private ListView listView;
 	private CachedMailHeaderAdapter cacheMailHeaderAdapter;
 	private int totalCachedRecords=0;
@@ -96,10 +95,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		View view = inflater.inflate(R.layout.fragment_mail_list_view,
 				container, false);
 
+
 		activity = (ActionBarActivity) getActivity();
 		context = (ActionBarActivity) getActivity();
 		activityDataPasser = (MailListActivityDataPasser)getActivity();
-		
 		if (cacheMailHeaderAdapter ==null){
 			cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
 		}
@@ -143,7 +142,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				failureIcon = (ImageView)view.findViewById(R.id.failure_icon);
 				readIcon = (ImageView)view.findViewById(R.id.read_icon);
 				unreadIcon = (ImageView)view.findViewById(R.id.unread_icon);
-				bar_progressbar = (ProgressBar)view.findViewById(R.id.bar_progressbar);
 
                 //action bar initialize
                 myActionBar = activity.getSupportActionBar();
@@ -199,8 +197,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 					softRefreshList();
 				}
 				fragmentAlreadyLoaded=true; //tracks config change(screen rotation)
-                throw new Exception("SAMPLE EXCEPTION");
-
 			} catch (Exception e) {
 				Utilities.generalCatchBlock(e, this);
 			}
@@ -313,8 +309,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	 */
 	public void updatingStatusUIChanges() {
 		try {
-			//progress bar - visible
-			bar_progressbar.setVisibility(View.VISIBLE);
 			//swipe refresh layout - visible
 			swipeRefreshLayout.setRefreshing(true);
 			//if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
@@ -326,9 +320,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)).toString());
 			}
 			//text switcher - refreshing icon
-			updateTextSwitcherIcons(View.VISIBLE,View.GONE,View.GONE, View.GONE, View.GONE);
-			//progress bar at 40
-			bar_progressbar.setProgress(40);
+			updateTextSwitcherIcons(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE);
 		} catch (Exception e) {
 			Utilities.generalCatchBlock(e, this);
 		}
@@ -427,15 +419,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		this.circle_progressbar = maillist_refresh_progressbar;
 	}
 
-	public ProgressBar getBar_progressbar() {
-		return bar_progressbar;
-	}
-
-	public void setBar_progressbar(
-			ProgressBar maillist_update_progressbar) {
-		this.bar_progressbar = maillist_update_progressbar;
-	}
-
 	public SwipeRefreshLayout getSwipeRefreshLayout() {
 		return swipeRefreshLayout;
     }
@@ -490,4 +473,5 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	public void setTotalMailsInFolder(long totalMailsInFolder) {
 		this.totalMailsInFolder = totalMailsInFolder;
 	}
+
 }
