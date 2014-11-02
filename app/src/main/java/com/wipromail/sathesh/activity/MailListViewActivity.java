@@ -3,17 +3,15 @@ package com.wipromail.sathesh.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.Window;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
@@ -28,7 +26,7 @@ import com.wipromail.sathesh.ui.OptionsUIContent;
  * @author sathesh
  *
  */
-public class MailListViewActivity extends ActionBarActivity implements Constants,MailListActivityDataPasser{
+public class MailListViewActivity extends MyActivity implements Constants,MailListActivityDataPasser{
 
 	private MailListFragmentDataPasser mailListViewFragment;
 
@@ -51,7 +49,6 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
         mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
@@ -80,7 +77,6 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
 		if(BuildConfig.DEBUG)
 			Log.i(TAG, "MailListViewActivity -> Starting MNS Service");
 		MailApplication.startMNSService(this);
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	/** ON STOP  **
@@ -90,7 +86,6 @@ public class MailListViewActivity extends ActionBarActivity implements Constants
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	/** ON DESTROY **

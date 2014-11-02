@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
@@ -44,12 +43,10 @@ public class MainActivity extends Activity implements Constants{
 	public void onStart() {
 		super.onStart();
 		(new CheckLogin()).execute();
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 	 @Override
 	  public void onStop() {
 	    super.onStop();
-	    EasyTracker.getInstance(this).activityStop(this);
 	  }
 	
 	private class CheckLogin extends AsyncTask<Void, Void, Void>{

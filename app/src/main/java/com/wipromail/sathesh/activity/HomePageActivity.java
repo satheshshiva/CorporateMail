@@ -15,15 +15,15 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 import com.wipromail.sathesh.ui.SignOutAlertDialog;
 
-public class HomePageActivity extends ActionBarActivity implements Constants{
+public class HomePageActivity extends MyActivity implements Constants{
 
 	private WebView webview;
 	private ActionBarActivity activity;
@@ -236,12 +236,10 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
 		return username;
 	}
 
-	//Google Analytics
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
-		
+
 		MailApplication mailappln = MailApplication.getInstance();
 		mailappln.onEveryAppOpen(activity, context);
 	}
@@ -249,6 +247,5 @@ public class HomePageActivity extends ActionBarActivity implements Constants{
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 }

@@ -7,20 +7,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
@@ -32,7 +30,7 @@ import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.OptionsUIContent;
 
-public class OtherFoldersPageActivity extends ActionBarActivity implements Constants{
+public class OtherFoldersPageActivity extends MyActivity implements Constants{
 
 	private WebView webview;
 	private Handler mHandler = new Handler();
@@ -46,7 +44,6 @@ public class OtherFoldersPageActivity extends ActionBarActivity implements Const
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_folders_page);
@@ -341,12 +338,10 @@ public class OtherFoldersPageActivity extends ActionBarActivity implements Const
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this);
 	}
 }

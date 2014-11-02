@@ -11,19 +11,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.asynctask.DownloadAndUpdateAppAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
@@ -40,7 +38,7 @@ import com.wipromail.sathesh.update.CheckLatestVersion;
  * @author sathesh
  *
  */
-public class AboutActivity extends ActionBarActivity implements Constants{
+public class AboutActivity extends MyActivity implements Constants{
 
 	private static ActionBarActivity activity;
 	private WebView wv;
@@ -54,7 +52,6 @@ public class AboutActivity extends ActionBarActivity implements Constants{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_about);
@@ -81,16 +78,6 @@ public class AboutActivity extends ActionBarActivity implements Constants{
 				return true;
 			}});
 
-		wv.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress)   
-			{
-
-				// Return the app name after finish loading
-				if(progress == 100)
-					setSupportProgressBarIndeterminateVisibility(false);
-			}
-		});
-
 		WebSettings webSettings = wv.getSettings();
 		webSettings.setSavePassword(false);
 		webSettings.setSaveFormData(false);
@@ -101,7 +88,6 @@ public class AboutActivity extends ActionBarActivity implements Constants{
 		//	wv.setWebChromeClient(new CommonWebChromeClient());
 
 		wv.addJavascriptInterface(new AboutActivityJSInterface(), AboutActivityJSInterface.ABOUT_ACTIVITY_JS_INTERFACE_NAME);
-		setSupportProgressBarIndeterminateVisibility(false);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		bugOrSuggestionBtn = (Button)findViewById(R.id.about_activity_bugOrSuggestion_btn);
@@ -224,17 +210,14 @@ public class AboutActivity extends ActionBarActivity implements Constants{
 				true);
 	}
 
-	//Google Analytics
 	@Override
 	public void onStart() {
 		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 }
