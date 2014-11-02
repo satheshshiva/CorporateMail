@@ -98,7 +98,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
                     }
                 }
                 catch (Exception e) {
-                    Utilities.generalCatchBlock(e,this.getClass());
+                    Utilities.generalCatchBlock(e,this);
                 }
             }
             //refresh the UI with the ContactSerializable
@@ -208,7 +208,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
                 Log.e(TAG , "outputCollection Count " + ((outputCollection!=null)?outputCollection.getCount() : outputCollection).toString());
             }
         } catch (Exception e) {
-            Utilities.generalCatchBlock(e, this.getClass());
+            Utilities.generalCatchBlock(e, this);
         }
         loadUI(sContact);
     }

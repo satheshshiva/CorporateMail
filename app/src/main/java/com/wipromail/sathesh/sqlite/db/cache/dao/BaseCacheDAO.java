@@ -120,7 +120,7 @@ public class BaseCacheDAO implements Constants{
 				}
 			}
 		}catch(Exception e){
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 		return contentValues;
 	}
@@ -148,7 +148,7 @@ public class BaseCacheDAO implements Constants{
 
 		}
 		catch(Exception e){
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 		finally{
 			cursor.close();

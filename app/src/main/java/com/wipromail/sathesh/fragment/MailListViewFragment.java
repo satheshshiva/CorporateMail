@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -200,9 +199,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 					softRefreshList();
 				}
 				fragmentAlreadyLoaded=true; //tracks config change(screen rotation)
+                throw new Exception("SAMPLE EXCEPTION");
 
 			} catch (Exception e) {
-				Utilities.generalCatchBlock(e, this.getClass());
+				Utilities.generalCatchBlock(e, this);
 			}
 		}
 		return view;
@@ -258,7 +258,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	@Override
 	public void softRefreshList(){
 		if(BuildConfig.DEBUG){
-			Log.d(TAG,  this.getClass() + " ->  Called Soft refresh list");
+			Log.d(TAG,  ((Object)this).getClass() + " ->  Called Soft refresh list");
 		}
 		try {
             //update the list view
@@ -269,7 +269,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             updateTextSwitcherWithMailCount(totalCachedRecords);
 
 		} catch (Exception e) {
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 	}
 	
@@ -330,7 +330,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 			//progress bar at 40
 			bar_progressbar.setProgress(40);
 		} catch (Exception e) {
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 	}
 

@@ -245,7 +245,7 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
             //caching mail header
             cachedMailHeaderAdapter.cacheNewData(message, MailType.INBOX, "Inbox", "");
         } catch (Exception e) {
-            Utilities.generalCatchBlock(e,"Exception while caching mail header during notifications processing", this.getClass());
+            Utilities.generalCatchBlock(e,"Exception while caching mail header during notifications processing", this);
         }
 
         //CACHING MAIL BODY
@@ -253,18 +253,18 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
             attachmentCollection = message.getAttachments();
 
             //get the total number of inline images
-            totalInlineImgs = MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this.getClass());
+            totalInlineImgs = MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this);
 
             //INLINE IMGS PRESENT
             if (totalInlineImgs > 0) {
                //replace all the inline image "cid" tags with "file://" tags
-                String bodyWithImg = MailApplication.getBodyWithImgHtml(context, mailFunctions.getBody(message) , attachmentCollection, mailFunctions.getItemId(message), this.getClass());
+                String bodyWithImg = MailApplication.getBodyWithImgHtml(context, mailFunctions.getBody(message) , attachmentCollection, mailFunctions.getItemId(message), this);
 
                 //writing VO to cache with the custom body
                 cachedMailBodyAdapter.cacheNewData(message,bodyWithImg, MailType.INBOX, "Inbox", "" );
 
                 // download and cache images. html body will be refreshed after each img download to show the imgs
-                MailApplication.cacheInlineImages(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this.getClass());
+                MailApplication.cacheInlineImages(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this);
             }
             //NO INLINE IMGS
             else {
@@ -273,7 +273,7 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 
             }
         } catch (Exception e) {
-            Utilities.generalCatchBlock(e, "Exception while caching mail body during notifications processing", this.getClass());
+            Utilities.generalCatchBlock(e, "Exception while caching mail body during notifications processing", this);
         }
 
     }

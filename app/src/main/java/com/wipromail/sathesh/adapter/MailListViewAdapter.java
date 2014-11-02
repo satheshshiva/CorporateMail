@@ -46,7 +46,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			this.listLocalContent = makeLocalContent(listVOs);
 
 		} catch (Exception e) {
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 	}
 
@@ -332,7 +332,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 			//refresh the local content list from VOs
 			this.listLocalContent = makeLocalContent(listVOs);
 		} catch (Exception e) {
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 		super.notifyDataSetChanged();
 	}

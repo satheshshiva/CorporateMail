@@ -604,7 +604,7 @@ public class MailApplication implements Constants {
      * @return
      * @throws Exception
      */
-    public static String getBodyWithImgHtml(Context context, String body, AttachmentCollection attachmentCollection, String itemId, Class thisClass) throws Exception {
+    public static String getBodyWithImgHtml(Context context, String body, AttachmentCollection attachmentCollection, String itemId, Object thisClass) throws Exception {
 
         String bodyWithImage=body;
         String cid="", imagePath="", imageHtmlUrl="";
@@ -641,7 +641,7 @@ public class MailApplication implements Constants {
      * @param attachmentCollection
      * @return
      */
-    public static int getTotalNoOfInlineImgs(AttachmentCollection attachmentCollection, Class thisClass){
+    public static int getTotalNoOfInlineImgs(AttachmentCollection attachmentCollection, Object thisClass){
         int no=0;
         try {
             for(Attachment attachment:  attachmentCollection){
@@ -657,7 +657,7 @@ public class MailApplication implements Constants {
     }
 
 
-    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailRunnable loadEmailRunnable, Class thisClass){
+    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailRunnable loadEmailRunnable, Object thisClass){
         String path="";
         File file;
         FileAttachment fileAttachment;

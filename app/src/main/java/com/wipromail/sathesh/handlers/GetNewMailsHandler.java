@@ -73,7 +73,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				Utilities.generalCatchBlock(e, this.getClass());
+				Utilities.generalCatchBlock(e, this);
 			}
 			break;
 

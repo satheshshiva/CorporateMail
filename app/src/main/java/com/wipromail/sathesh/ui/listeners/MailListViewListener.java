@@ -100,7 +100,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 										//enter the More Loading thread in to Waiting state. Whent eh New mails thread is done it will invoke this thread again
 										parent.setMoreMailsThreadState(Status.WAITING);
 										parent.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
-										if(BuildConfig.DEBUG) Log.d(TAG, this.getClass().getName() +" -> went in wait state as GetNewMails is currently updating");
+										if(BuildConfig.DEBUG) Log.d(TAG, "MailListViewListener -> went in wait state as GetNewMails is currently updating");
 									}
 								}
 							}
@@ -114,7 +114,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 				}
 			}
 		} catch (Exception e) {
-			Utilities.generalCatchBlock(e, this.getClass());
+			Utilities.generalCatchBlock(e, this);
 		}
 	}
 
