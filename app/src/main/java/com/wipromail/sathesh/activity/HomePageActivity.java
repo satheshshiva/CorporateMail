@@ -32,7 +32,8 @@ public class HomePageActivity extends MyActivity implements Constants{
 	private ActionBar myActionBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+
+        super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_home_page);
 

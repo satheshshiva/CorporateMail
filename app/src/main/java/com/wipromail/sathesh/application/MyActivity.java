@@ -14,6 +14,11 @@ import com.wipromail.sathesh.R;
  */
 public class MyActivity extends ActionBarActivity {
 
+    /** The setSupportProgressBarIndeterminateVisibility() method is NA in toolbar
+     * Since it was used across the appln in Actionbar have to override and call a custom progressbar created
+     * in the toolbar
+     * @param visibility
+     */
     public void setSupportProgressBarIndeterminateVisibility(boolean visibility){
         ProgressBar progressBar=(ProgressBar)findViewById(R.id.indeterminate_progress);
         if(visibility)
