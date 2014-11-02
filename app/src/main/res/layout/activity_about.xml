@@ -4,7 +4,7 @@
     android:orientation="vertical">
 
     <!-- layout to show image downloading progress -->
-    <include layout="@layout/include_toolbar" />
+    <include layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="fill_parent"

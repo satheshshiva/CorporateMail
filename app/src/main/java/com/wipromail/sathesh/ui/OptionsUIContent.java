@@ -39,7 +39,7 @@ public class OptionsUIContent {
 	}
 
     public static int getAboutDarkIcon(){
-        return R.drawable.ic_menu_about_dark;
+        return R.drawable.ic_menu_about_inverse;
     }
 
 	public static int getUpdatesIcon(){

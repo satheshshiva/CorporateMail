@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <!-- layout to show image downloading progress -->
-    <include layout="@layout/include_toolbar" />
+    <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,14 +30,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/addrecipient_contactSearch_helptext"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="italic" />
 
         <Button
             android:id="@+id/searchDirectoryBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Style.Button"
+            android:layout_width="140sp"
             android:layout_marginTop="10dp"
             android:onClick="onClickDirectorySearch"
             android:text="@string/addrecipient_searchdirectory_btn_lbl" />
@@ -46,7 +45,7 @@
             android:id="@+id/suggestionsListView"
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:layout_weight="1"
+            android:layout_weight="60"
             android:fadeScrollbars="false"
             >
         </ListView>
@@ -55,34 +54,31 @@
             android:layout_width="fill_parent"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/addTo"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/Style.Button"
                 android:onClick="addToOnClick"
-                android:text="@string/addrecipient_addTo_btn_lbl" />
+                android:text="@string/addrecipient_addTo_btn_lbl"
+                android:layout_weight="1"
+                android:layout_marginLeft="10sp" />
 
             <Button
                 android:id="@+id/addCC"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/Style.Button"
                 android:onClick="addCCOnClick"
-                android:text="@string/addrecipient_addCC_btn_lbl" />
+                android:text="@string/addrecipient_addCC_btn_lbl"
+                android:layout_weight="1"
+                android:layout_marginLeft="10sp" />
 
             <Button
                 android:id="@+id/addBCC"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/Style.Button"
                 android:onClick="addBCCOnClick"
-                android:text="@string/addrecipient_addBCC_btn_lbl" />
+                android:text="@string/addrecipient_addBCC_btn_lbl"
+                android:layout_weight="1"
+                android:layout_marginLeft="10sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -6,7 +6,7 @@
     >
 
     <!-- layout to show image downloading progress -->
-    <include layout="@layout/include_toolbar" />
+    <include layout="@layout/toolbar" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -36,7 +36,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:contentDescription="@string/contetn_desc_logo"
-                    android:src="@drawable/wipro_logo_trans" />
+                    android:src="@drawable/wipro_logo_trans"
+                     />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -131,17 +132,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/serverURLDisp"
                     android:textStyle="italic"
-                    android:layout_marginLeft="15sp" />
+                    android:layout_marginLeft="12sp" />
 
                 <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login_btn_text"
-                    android:background="?attr/colorPrimary"
-                    android:textAllCaps="true"
-                    android:onClick="loginButtonClicked"
-                    android:textColor="@color/white"
+                    style="@style/Style.Button"
                     android:id="@+id/loginBtn"
+                    android:layout_width="fill_parent"
+                    android:text="@string/login_btn_text"
+                    android:onClick="loginButtonClicked"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="40sp" />
 

@@ -6,7 +6,7 @@
     tools:context=".HomePageActivity" >
 
     <!-- layout to show image downloading progress -->
-    <include layout="@layout/include_toolbar" />
+    <include layout="@layout/toolbar" />
 
     <WebView
         android:id="@+id/home_page_webview"
