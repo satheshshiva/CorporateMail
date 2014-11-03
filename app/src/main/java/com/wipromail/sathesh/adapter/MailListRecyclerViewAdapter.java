@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
@@ -173,14 +174,6 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
         }
     }
 
-    /* (non-Javadoc)
-     * @see android.widget.Adapter#getItemId(int)
-     */
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
     public void notifyDataSetChangedCall() {
 
         try {
@@ -228,22 +221,8 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int rowType) {
-        View v=null;
-
-            switch(rowType){
-                case LocalContent.types.DATE_HEADER:
-                    v = LayoutInflater.from(viewGroup.getContext())
-                            .inflate(R.layout.listview_maillist_header, viewGroup, false);
-                    break;
-                case LocalContent.types.MAIL:
-                    v = LayoutInflater.from(viewGroup.getContext())
-                            .inflate(R.layout.listview_maillist, viewGroup, false);
-                    break;
-                case LocalContent.types.LOADING_MORE_MAILS:
-                    v = LayoutInflater.from(viewGroup.getContext())
-                            .inflate(R.layout.listview_maillist_more_loading, viewGroup, false);
-                    break;
-            }
+        View v= LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.recyclerview_maillist, viewGroup, false);
 
         return new ViewHolder(v);
     }
@@ -257,13 +236,21 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
 
                 //ROW TYPE: DATE HEADER
                 case LocalContent.types.DATE_HEADER:
-                    System.out.println("UNREAD " +ViewHolder.mailReadUnreadIcon);
+
+                    ViewHolder.layoutDateHeader.setVisibility(View.VISIBLE);
+                    ViewHolder.layoutMail.setVisibility(View.GONE);
+                    ViewHolder.layoutMoreMailsProgress.setVisibility(View.GONE);
+
                     ViewHolder.dateHeaderLeftView.setText(localContent.date_left);
                     ViewHolder.dateHeaderRightView.setText(localContent.date_right);
                     break;
 
                 //ROW TYPE: MAIL
                 case LocalContent.types.MAIL:
+
+                    ViewHolder.layoutDateHeader.setVisibility(View.GONE);
+                    ViewHolder.layoutMail.setVisibility(View.VISIBLE);
+                    ViewHolder.layoutMoreMailsProgress.setVisibility(View.GONE);
 
                     mailListHeader = localContent.vo;
 
@@ -310,8 +297,12 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
 
                 //ROW TYPE: LOADING MORE MAILS
                 case LocalContent.types.LOADING_MORE_MAILS:
+
+                    ViewHolder.layoutDateHeader.setVisibility(View.GONE);
+                    ViewHolder.layoutMail.setVisibility(View.GONE);
+                    ViewHolder.layoutMoreMailsProgress.setVisibility(View.VISIBLE);
+
                     ViewHolder.moreLoadingText1View.setText(context.getString(R.string.mailListView_moreloading));
-                    //}
 
                     //set the remaining no of mails in the second text view
                     if(localContent.loading_totalMailCount>localContent.loading_totalCached){
@@ -352,12 +343,17 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private static TextView fromView, dateView, dateHeaderLeftView,subjectView,dateHeaderRightView,moreLoadingText1View,moreLoadingText2View;
-        static ImageView mailReadUnreadIcon,hasAttachment;
+        private static LinearLayout layoutDateHeader, layoutMail, layoutMoreMailsProgress;
+        private static ImageView mailReadUnreadIcon,hasAttachment;
 
         public ViewHolder(View itemView) {
             super(itemView);
             try{
                 //initializing controls
+                layoutDateHeader = (LinearLayout)itemView.findViewById(R.id.layout_type_header);
+                layoutMail= (LinearLayout)itemView.findViewById(R.id.layout_type_mail);
+                layoutMoreMailsProgress= (LinearLayout)itemView.findViewById(R.id.layout_type_moremails);
+
                 dateHeaderLeftView = (TextView) itemView.findViewById(R.id.listview_maillist_header_dateHeader);
                 dateHeaderRightView = (TextView) itemView.findViewById(R.id.listview_maillist_header_dateHeader_right);
 
