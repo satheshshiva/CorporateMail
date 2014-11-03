@@ -8,12 +8,6 @@
         revision="21.0.2"
         sha1="9fe67c06f8411b5f906c0e1f84a1289d612a4b79"/>
     <item
-        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-ee576f91b45a6538d4156fc6e674b6f65034f74e.jar"
-        jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e"/>
-    <item
         dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes_repacked_v2-5abfa7292cbb4be63592eb5bc2f323691e697769.jar"
         jar="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/classes_repacked_v2.jar"
         jumboMode="false"
@@ -68,8 +62,8 @@
         revision="21.0.2"
         sha1="4f5040d53f4082980f3ebc0935ac6d7b3e273a05"/>
     <item
-        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-ee576f91b45a6538d4156fc6e674b6f65034f74e.jar"
-        jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
+        dex="/Users/sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-42f6eb614004398b2729580cc5a2e545770e9225.jar"
+        jar="/Users/sathesh/MyContent/Java/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
         jumboMode="false"
         revision="21.0.2"
         sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e"/>

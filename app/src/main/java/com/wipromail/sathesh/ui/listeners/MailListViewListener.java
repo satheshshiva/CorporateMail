@@ -45,7 +45,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 		try {
 			//Determine whether its our listview listener
 			switch(lw.getId()) {
-			case R.id.listView:  
+			case R.id.recyclerView:
 				//Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 
 				//SWIPE REFRESH
