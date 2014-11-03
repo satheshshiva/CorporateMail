@@ -7,13 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -21,7 +23,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.adapter.MailListViewAdapter;
+import com.wipromail.sathesh.adapter.MailListRecyclerViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
@@ -40,7 +42,7 @@ import java.util.List;
 
 /**
  * @author sathesh
- * This fragment is used to load only the MailFunctions.
+ * This Fragment contains the RecyclerView which shows the mail list
  */
 
 public class MailListViewFragment extends Fragment implements Constants, MailListFragmentDataPasser {
@@ -52,7 +54,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	public ActionBarActivity activity ;
 	private Context context ;
 
-	private MailListViewAdapter adapter;
+	private MailListRecyclerViewAdapter adapter;
 	private TextSwitcher textswitcher;
 
 	private int mailType;
@@ -65,7 +67,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 	private ActionBar myActionBar;
 
-	private ListView listView;
+	private RecyclerView recyclerView;
 	private CachedMailHeaderAdapter cacheMailHeaderAdapter;
 	private int totalCachedRecords=0;
 
@@ -109,8 +111,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //Initialize toolbar
                 MailApplication.toolbarInitialize(activity, view);
 
-				//List View Initialization
-				listView = (ListView)view.findViewById(R.id.listView);
+				//Recycler View Initialization
+                recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 				//Text Switcher Initiliazation
 				textswitcher = (TextSwitcher)view.findViewById(R.id.textswitcher);
@@ -150,18 +154,19 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 				myActionBar.setTitle(getMailFolderDisplayName(mailType));
 				myActionBar.setDisplayHomeAsUpEnabled(true);
 
-				//initializes the adapter and associates the listview. 
-				//this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
+				//initializes the adapter and associates the recyclerView.
+				//this set  of code when placed when placed few lines before wont initialize and is giving empty recyclerView. dont know why.
 				//get the cursor
 
 				if(adapter==null){	//on config change it wont be null
+                    //get the mail headers from cache. (even after netork call it will update cache and UI will read form cache)
                     List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
-					//initialize the adapter
-					adapter = new MailListViewAdapter(context, listVOs);
-				}
+					//initialize the adapter with the list
+                    adapter = new MailListRecyclerViewAdapter(context, listVOs);
+                }
 
-				// initializes the list view with the adapter. also will place all the cached mails in list view initially
-				listView.setAdapter(adapter);
+				// initializes the recycler view with the adapter. also will place all the cached mails in list view initially
+				recyclerView.setAdapter(adapter);
 
 				//Initialize SwipeRefreshLayout
 				swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -230,9 +235,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		MailListViewListener listener = new MailListViewListener(this);
 		
 		super.onActivityCreated(savedInstanceState);
-		listView.setOnScrollListener(listener);
+        // TODO Comeback here for onscroll listener and onclick listener
+
+		//recyclerView.setOnScrollListener(listener);
 		//ListView -Itemclick Listener
-		listView.setOnItemClickListener(listener);
+        //recyclerView.setOnItemClickListener(listener);
 	}
 	
 	/** Refreshes the list from network
@@ -248,7 +255,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		}
 	}
 
-	/** Refreshes the listview from local cache
+	/** Refreshes the recyclerView from local cache
 	 * 
 	 */
 	@Override
@@ -258,8 +265,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 		}
 		try {
             //update the list view
-			adapter.setListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
-			adapter.notifyDataSetChanged();
+			//TODO notifydata setchanged
+			//adapter.setListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
+			//adapter.notifyDataSetChangedCall();
 
             //update the text switcher
             updateTextSwitcherWithMailCount(totalCachedRecords);
@@ -434,11 +442,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 	public void setTextswitcher(TextSwitcher textswitcher) {
 		this.textswitcher = textswitcher;
 	}
-	public MailListViewAdapter getAdapter() {
+	public MailListRecyclerViewAdapter getAdapter() {
 		return adapter;
 	}
 
-	public void setAdapter(MailListViewAdapter adapter) {
+	public void setAdapter(MailListRecyclerViewAdapter adapter) {
 		this.adapter = adapter;
 	}
 
