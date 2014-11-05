@@ -186,7 +186,9 @@ public class BaseCacheDAO implements Constants{
 				//match column name from the cursor with the method name
 				if(columnName!=null && ("set" + columnName).equalsIgnoreCase(method.getName())){
 					columnIndex=cursor.getColumnIndex(columnName);
-					//data type matching is only for API >= 11
+					//data type matching cannot be done is only for API >= 11 because cursor.getType() is avialbe 11+
+                    //Coded to get as getString() b default. it will get exception since if all the columns can not be of the type string.
+                    // so dropping support for Android <11 since cursor.getType is not avaialble
 					if (android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) {
 						if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_STRING){
 							//The datatype from the database is of type String
@@ -271,7 +273,8 @@ public class BaseCacheDAO implements Constants{
 					else{
 						//pre honey comb devices. no type checking for column. Automatically considers as string
 						//call the VO objects set method with the value from the db table as argument
-						method.invoke(vo,cursor.getString(columnIndex));
+
+                        method.invoke(vo, cursor.getString(columnIndex));
 					}
 				}
 			}
