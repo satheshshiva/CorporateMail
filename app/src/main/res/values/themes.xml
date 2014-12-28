@@ -11,10 +11,9 @@
         <item name="android:textColor">@color/black</item>
         <item name="windowActionBar">false</item>
         <item name="android:navigationBarColor">@color/blue_material_sample_Primary_Dark</item>
-
+        <item name="windowActionModeOverlay">true</item>
         <item name="colorAccent">@color/accent_material_dark</item>
 
-        <!-- The rest of your attributes -->
     </style>
 
 </resources>
