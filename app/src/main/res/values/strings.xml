@@ -266,4 +266,7 @@
     <string name="actionBar_Submenu_Others">Others</string>
     <string name="title_activity_test">TestActivity</string>
 
+    <!-- Action Mode -->
+    <string name="actionMode_deleteMail">Delete</string>
+
 </resources>
