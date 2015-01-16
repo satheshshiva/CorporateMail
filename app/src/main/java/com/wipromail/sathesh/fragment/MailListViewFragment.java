@@ -162,7 +162,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
                 // initializes the list view with the adapter. also will place all the cached mails in list view initially
                 listView.setAdapter(adapter);
-                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
                 //Initialize SwipeRefreshLayout
                 swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -261,7 +260,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         try {
             //update the list view
             adapter.setListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
-            adapter.notifyDataSetChanged();
+            adapter.updateAndNotify();
 
             //update the text switcher
             updateTextSwitcherWithMailCount(totalCachedRecords);

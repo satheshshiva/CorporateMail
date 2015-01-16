@@ -2,7 +2,6 @@ package com.wipromail.sathesh.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,7 +105,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 					else
 					{
 						//unread
-						rowView.setBackgroundColor(Color.TRANSPARENT);
+						//rowView.setBackgroundColor(Color.TRANSPARENT);
 						mailReadUnreadIcon.setBackgroundDrawable(MailApplication.getMailViewUnreadIcon(context));
 						fromView.setTypeface(Typeface.DEFAULT_BOLD);
 						dateView.setTypeface(Typeface.DEFAULT_BOLD);
@@ -325,8 +324,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		return position;
 	}
 
-	@Override
-	public void notifyDataSetChanged() {
+	public void updateAndNotify() {
 
 		try {
 			//refresh the local content list from VOs
@@ -336,7 +334,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
 		}
 		super.notifyDataSetChanged();
 	}
-
 
 	public List<CachedMailHeaderVO> getListVOs() {
 		return listVOs;
