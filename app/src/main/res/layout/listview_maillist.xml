@@ -7,7 +7,8 @@
     android:paddingBottom="10dip"
     android:paddingLeft="3dip"
     android:paddingRight="1dip"
-    android:paddingTop="10dip" >
+    android:paddingTop="10dip"
+    android:background="?android:attr/activatedBackgroundIndicator"> <!-- necessary for multiple selection -->
 
     <ImageView
         android:id="@+id/mailReadUnreadIcon"

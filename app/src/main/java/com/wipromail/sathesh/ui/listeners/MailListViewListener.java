@@ -168,8 +168,11 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
             final int checkedCount = parent.getListView().getCheckedItemCount();
             // Set the CAB title according to total checked items
             mode.setTitle(checkedCount + " Selected");
-
+           // parent.getAdapter().notifyDataSetChanged1();
+          //  parent.getListView().setSelection(position);
+            //parent.getAdapter().notifyDataSetChanged1();
             Log.d(TAG, "position Checked " + position + " id " + id );
+
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);
         }
