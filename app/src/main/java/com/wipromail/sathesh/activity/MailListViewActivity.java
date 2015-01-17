@@ -188,17 +188,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 			e.printStackTrace();
 		}
 	}
-	
-	/* When back Presed finish this activity
-	 * (non-Javadoc)
-	 * @see android.support.v4.app.FragmentActivity#onBackPressed()
-	 */
-	@Override
-	public void onBackPressed(){
-		finish();
-	}
 
-	
 	/** GETTER SETTER PART **/
 	@Override
 	public int getMailType() {

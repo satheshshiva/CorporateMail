@@ -268,5 +268,9 @@
 
     <!-- Action Mode -->
     <string name="actionMode_deleteMail">Delete</string>
+    <string name="actionMode_mark_unreadMail">Mark Unread</string>
+    <string name="actionMode_mark_readMail">Mark Read</string>
+    <string name="actionMode_mark_flagMail">Flag</string>
+    <string name="actionMode_mark_unflagMail">Unflag</string>
 
 </resources>
