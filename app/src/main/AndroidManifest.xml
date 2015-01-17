@@ -78,6 +78,8 @@
             android:name=".activity.MailListViewActivity"
             android:label="@string/title_activity_mail_list_view"
             android:uiOptions="splitActionBarWhenNarrow" >
+            <meta-data android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
             android:name=".activity.MyPreferencesActivity"

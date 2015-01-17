@@ -3,7 +3,7 @@
     <!-- The main theme for the app.
     Parent: Theme.AppCompat.Light -->
 
-    <style name="Theme.MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.MainTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/blue_material_sample_Primary</item>

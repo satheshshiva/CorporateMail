@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionMode_deleteMail"
-        android:title="@string/actionMode_deleteMail"/>
+        android:title="@string/actionMode_deleteMail"
+        android:icon="@drawable/ic_action_delete_inverse"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/actionMode_readMail"
+        android:title="@string/actionMode_mark_readMail"
+        android:icon="@drawable/ic_menu_read_inverse"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/actionMode_unreadMail"
+        android:title="@string/actionMode_mark_unreadMail"
+        android:icon="@drawable/ic_menu_unread_inverse"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/actionMode_flagMail"
+        android:title="@string/actionMode_mark_flagMail"
+        android:icon="@drawable/ic_menu_read_inverse"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/actionMode_unflagMail"
+        android:title="@string/actionMode_mark_unflagMail"
+        android:icon="@drawable/ic_menu_unread_inverse"
+        app:showAsAction="ifRoom"/>
 
 </menu>
