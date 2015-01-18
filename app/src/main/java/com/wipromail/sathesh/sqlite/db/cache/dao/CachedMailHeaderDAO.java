@@ -11,6 +11,7 @@ import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailHeader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** DAO for the Table CACHED_MAIL_HEADERS
@@ -295,6 +296,24 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
 			close(cacheDbHelper);
 		}
 	}
+
+    /** Delete Item
+     * Where Clause - Folder Id
+     * @param itemIds - Item ids to delete
+     * @throws Exception
+     */
+    public void deleteItems(ArrayList<String> itemIds) throws Exception {
+
+        try{
+            open(cacheDbHelper);
+            for(String itemId: itemIds) {
+                database.execSQL(TableCachedMailHeader.getDeleteItemQuery(),
+                        new String[]{itemId});
+            }
+        }finally{
+            close(cacheDbHelper);
+        }
+    }
 
     /*** PRIVATE METHODS ***/
 

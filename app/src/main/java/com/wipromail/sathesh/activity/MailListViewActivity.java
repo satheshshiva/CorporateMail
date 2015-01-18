@@ -189,6 +189,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 		}
 	}
 
+
 	/** GETTER SETTER PART **/
 	@Override
 	public int getMailType() {

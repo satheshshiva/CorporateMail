@@ -38,6 +38,7 @@ import com.wipromail.sathesh.service.data.SyncFolderItemsScope;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -209,7 +210,7 @@ public class NetworkCall implements Constants{
 		else{	throw new NoInternetConnectionException(); }
 	}
 
-	/** Send an Email
+	/** Forward Email
 	 * @param context
 	 * @param service
 	 * @param to
@@ -394,6 +395,21 @@ public class NetworkCall implements Constants{
         Item item=Item.bind(service, _itemId);
         item.delete(DeleteMode.MoveToDeletedItems);
 
+    }
+
+    /** This method deletes list of itemIds
+     * @param itemIds - Array list of item ids to delete
+     * @throws Exception
+     */
+    public static void deleteItemIds(ExchangeService service, ArrayList<String> itemIds) throws Exception{
+        ItemId _itemId;
+        ArrayList<ItemId> _itemIds = new ArrayList<>();
+
+        for(String itemId:itemIds){
+            _itemId = ItemId.getItemIdFromString(itemId);
+            _itemIds.add(_itemId);
+        }
+        service.deleteItems((Iterable)_itemIds,DeleteMode.MoveToDeletedItems,null,null);
     }
 
 	/** This method deletes the particular item whether its mail or anything and deletes it permanently, 

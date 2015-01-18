@@ -1,25 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="fill_parent"
-        android:layout_height="27dp"
-        android:background="@color/LightGrey" 
-    android:orientation="horizontal" >
+    android:layout_width="fill_parent"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:background="@color/LightGrey"> <!-- necessary for multiple selection -->
 
 
-        <TextView
-            android:id="@+id/listview_maillist_header_dateHeader"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:paddingLeft="2dp"
-            android:textColor="@color/Black" />
+    <TextView
+        android:id="@+id/dateHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:paddingLeft="4dp"
+        android:textColor="@color/Black" />
 
-        <TextView
-            android:id="@+id/listview_maillist_header_dateHeader_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="2dp"
-            android:textColor="@color/Black" />
+    <CheckedTextView
+        android:id="@+id/dateHeader_checked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:checked="true"
+        android:visibility="gone"
+        android:paddingRight="2dp"
+        />
 
 </LinearLayout>
