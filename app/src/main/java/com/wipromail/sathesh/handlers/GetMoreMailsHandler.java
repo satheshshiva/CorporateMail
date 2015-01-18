@@ -19,7 +19,6 @@ import com.wipromail.sathesh.util.Utilities;
  */
 public class GetMoreMailsHandler extends Handler implements Constants {
 
-	/*** HANDLER ****/
 	private MailListViewFragment parent;
 
 	public GetMoreMailsHandler(MailListViewFragment parent){

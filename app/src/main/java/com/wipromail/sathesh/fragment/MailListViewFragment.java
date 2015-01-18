@@ -72,11 +72,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private SwipeRefreshLayout swipeRefreshLayout ;
     private Status newMailsThreadState;
     private Status moreMailsThreadState;
+    private UndoBarStatus undoBarState;
 
     private long totalMailsInFolder=-1;
 
     private boolean fragmentAlreadyLoaded=false;
-
+    //contains all the UI listeners for this fragment
+    private MailListViewListener listener ;
     /**
      * @author sathesh
      *
@@ -87,6 +89,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         WAITING,	//not the actual Thread.wait(). One thread2 will just exit and the other thread (thread1) will invoke it again once its done.
         ERROR,
         ERROR_AUTH_FAILED
+    }
+
+    public enum UndoBarStatus{
+        IDLE,
+        DISPLAYED,
+        DELETING
     }
 
     @Override
@@ -105,6 +113,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         setRetainInstance(true);
 
         if(activity != null){
+            listener = new MailListViewListener(this);
             try {
                 //Initialize toolbar
                 MailApplication.toolbarInitialize(activity, view);
@@ -157,7 +166,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 if(adapter==null){	//on config change it wont be null
                     List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
                     //initialize the adapter
-                    adapter = new MailListViewAdapter(context, listVOs);
+                    adapter = new MailListViewAdapter(context, this, listVOs);
                 }
 
                 // initializes the list view with the adapter. also will place all the cached mails in list view initially
@@ -226,8 +235,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        //contains all the UI listeners for this fragment
-        MailListViewListener listener = new MailListViewListener(this);
+
 
         super.onActivityCreated(savedInstanceState);
         listView.setOnScrollListener(listener);
@@ -241,12 +249,17 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     @Override
     public void refreshList(){
 
-        if(newMailsThreadState!=Status.UPDATING){
-            //network call for getting the new mails
+        if(undoBarState==UndoBarStatus.DISPLAYED || undoBarState==UndoBarStatus.DELETING) {
+            //if the undo bar is displayed then dont refresh, hide the swipeRefreshLayout
+            swipeRefreshLayout.setRefreshing(false);
+        }
+        else if (newMailsThreadState != Status.UPDATING ) {
+            //network call for getting the new mails and corresponding UI changes
             Handler getNewMailsHandler = new GetNewMailsHandler(this);
             Thread t = new Thread(new GetNewMailsRunnable(this, getNewMailsHandler));
             t.start();
         }
+
     }
 
     /** Refreshes the listview from local cache
@@ -259,7 +272,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
         try {
             //update the list view
-            adapter.setListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
+            adapter.setMailListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
             adapter.updateAndNotify();
 
             //update the text switcher
@@ -481,5 +494,20 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     public void setListView(ListView listView) {
         this.listView = listView;
+    }
+    public UndoBarStatus getUndoBarState() {
+        return undoBarState;
+    }
+
+    public void setUndoBarState(UndoBarStatus undoBarState) {
+        this.undoBarState = undoBarState;
+    }
+
+    public MailListViewListener getListener() {
+        return listener;
+    }
+
+    public void setListener(MailListViewListener listener) {
+        this.listener = listener;
     }
 }

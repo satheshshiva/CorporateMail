@@ -175,6 +175,18 @@ public class CachedMailHeaderAdapter {
 		}
 	}
 
+    /** Delete items with item itemid
+     *
+     * @throws Exception
+     */
+    public void deleteItems(ArrayList<CachedMailHeaderVO> vos) throws Exception {
+        ArrayList<String> itemIds = new ArrayList<>();
+        for(CachedMailHeaderVO vo: vos) {
+            itemIds.add(vo.getItem_id());
+        }
+       dao.deleteItems(itemIds);
+    }
+
     /** UPDATE QUERIES **/
 
 	/** mark mail as read

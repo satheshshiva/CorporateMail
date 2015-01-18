@@ -145,6 +145,14 @@ public class TableCachedMailHeader implements CacheDbConstants, DbTable{
 				+ " SELECT " + COLUMN_ID + " FROM " + tableName + " WHERE " + COLUMN_FOLDER_ID + "=? LIMIT " + n + ")";
 	}
 
+    /** DELETE item
+     * WHERE CLAUSE - FOLDER ID
+     * @return
+     */
+    public static String getDeleteItemQuery(){
+        return "DELETE from " + tableName + " WHERE " + COLUMN_ITEM_ID + "=?";
+    }
+
 
     /*** APPLICATION LEVEL QUERIES ***/
 

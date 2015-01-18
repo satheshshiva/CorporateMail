@@ -50,7 +50,7 @@
     <string name="folder_updater_updating">Updating %s</string>
     <string name="pullToRefresh_checking_big">Loading..</string>
     <string name="pullToRefresh_checking_small">Checking for mails</string>
-    <string name="mailListView_moreloading">Getting few more...</string>
+    <string name="mailListView_moreloading">Getting mails...</string>
     <string name="mailListView_moreloading_next_x">Loading %s more...</string>
     <string name="mailListView_moreloading_remaining">%s remaining</string>
 
@@ -265,6 +265,7 @@
     <string name="actionBar_Submenu_Reply_Options">Reply Options</string>
     <string name="actionBar_Submenu_Others">Others</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="cabSelected">%s selected</string>
 
     <!-- Action Mode -->
     <string name="actionMode_deleteMail">Delete</string>
@@ -272,5 +273,9 @@
     <string name="actionMode_mark_readMail">Mark Read</string>
     <string name="actionMode_mark_flagMail">Flag</string>
     <string name="actionMode_mark_unflagMail">Unflag</string>
+
+    <!-- Undo Bar -->
+    <string name="undoBar_deletedMails">%s items deleted</string>
+
 
 </resources>

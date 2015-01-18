@@ -22,13 +22,11 @@
     <item
         android:id="@+id/actionMode_flagMail"
         android:title="@string/actionMode_mark_flagMail"
-        android:icon="@drawable/ic_menu_read_inverse"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/actionMode_unflagMail"
         android:title="@string/actionMode_mark_unflagMail"
-        android:icon="@drawable/ic_menu_unread_inverse"
         app:showAsAction="ifRoom"/>
 
 </menu>
