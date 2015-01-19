@@ -23,6 +23,7 @@ public class UndoBarBuilder extends UndoBarController.UndoBar implements Constan
         Bundle b = new Bundle();
         b.putSerializable("serializable", undoBarAction);
         super.token(b);
+        super.duration(3000); //default duration
         super.listener(this);
     }
 
