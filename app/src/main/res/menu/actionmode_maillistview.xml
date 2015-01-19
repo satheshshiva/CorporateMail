@@ -19,14 +19,4 @@
         android:icon="@drawable/ic_menu_unread_inverse"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/actionMode_flagMail"
-        android:title="@string/actionMode_mark_flagMail"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/actionMode_unflagMail"
-        android:title="@string/actionMode_mark_unflagMail"
-        app:showAsAction="ifRoom"/>
-
 </menu>
