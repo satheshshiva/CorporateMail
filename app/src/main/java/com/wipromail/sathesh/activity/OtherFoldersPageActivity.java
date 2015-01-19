@@ -28,7 +28,7 @@ import com.wipromail.sathesh.service.data.FindFoldersResults;
 import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
-import com.wipromail.sathesh.ui.OptionsUIContent;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 public class OtherFoldersPageActivity extends MyActivity implements Constants{
 

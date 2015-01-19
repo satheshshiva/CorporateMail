@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wipromail.sathesh.handlers.runnables;
+package com.wipromail.sathesh.threads.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +25,9 @@ import com.wipromail.sathesh.service.data.WellKnownFolderName;
 
 import java.net.UnknownHostException;
 
-/** This Runnable will load more emails from the network asynchronously which will be triggered when the user is scolling
+/** This Runnable will load the new set of mails from the network asynchronously for the particular mail type
+ * Handler: GetMoreMailsHandler
+ * Fragment: MailListViewFragment
  * 
  * NOTE: One general rule for handler - Don't pass the variables to the constructor and use inside the handler class. Because on Configuration change
  * all the View elements will get new elements and Handler thread will refer to the old elements. Always use parent.getElement() to get the latest element from 
@@ -33,13 +35,13 @@ import java.net.UnknownHostException;
  * @author sathesh
  *
  */
-public class GetMoreMailsRunnable implements Runnable, Constants{
+public class GetNewMailsThread extends Thread implements Runnable, Constants{
 
 	private MailListViewFragment parent;
 	private FindItemsResults<Item> findResults = null;
 	private Handler handler;
 	
-	public GetMoreMailsRunnable(MailListViewFragment parent, Handler handler){
+	public GetNewMailsThread(MailListViewFragment parent, Handler handler){
 		this.parent=parent;
 		this.handler=handler;
 	}
@@ -52,68 +54,73 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		int cacheRecordsCount ;
+		int totalCachedRecords ;
 
 		if (parent.getActivity() != null) {
 			try {
-				sendHandlerMsg(Status.UPDATING);
+				threadMsg(Status.UPDATING);
 				CachedMailHeaderAdapter headersCacheAdapter = parent.getMailHeadersCacheAdapter();
 				
 				//get the total no of records in cache and get all the same number of records.
-				cacheRecordsCount = headersCacheAdapter.getRecordsCount(parent.getMailType(), parent.getMailFolderId());
+				totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType(), parent.getMailFolderId());
 				
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
-					Log.d(TAG, "GetMoreMailsRunnable -> Total records in cache"+cacheRecordsCount);
+					Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
 				}
+
+				//if the cache is present, then get the same number of rows from EWS as of the local no of rows
+				int noOfMailsToFetch=(totalCachedRecords>MIN_NO_OF_MAILS?totalCachedRecords:MIN_NO_OF_MAILS);
 
 				if(parent.getMailFolderId()!=null && !(parent.getMailFolderId().equals("")))
 					//Ews call
-					findResults = NetworkCall.getNItemsFromFolder(parent.getMailFolderId(), service, cacheRecordsCount, MORE_NO_OF_MAILS);
+					findResults = NetworkCall.getNItemsFromFolder(parent.getMailFolderId(), service, 0, noOfMailsToFetch);
 				else
 					//Ews call
-					findResults = NetworkCall.getNItemsFromFolder(WellKnownFolderName.valueOf(parent.getMailFolderName()), service, cacheRecordsCount, MORE_NO_OF_MAILS);
+					findResults = NetworkCall.getNItemsFromFolder(WellKnownFolderName.valueOf(parent.getMailFolderName()), service, 0, noOfMailsToFetch);
 
 				if(findResults!=null){
 					//delete the old cache and updates the new cache
 					headersCacheAdapter.cacheNewData(findResults.getItems(),parent.getMailType(),
-							parent.getMailFolderName(), parent.getMailFolderId(), false);	//update the new records. dont delele the old records
+							parent.getMailFolderName(), parent.getMailFolderId(), true);
 					
 					parent.setTotalMailsInFolder(findResults.getTotalCount());	//set the total no of mails in this folder
 				}
-				sendHandlerMsg(Status.UPDATED);
+				threadMsg(Status.UPDATED);
+
 			}
 			catch (final NoUserSignedInException e) {
-				sendHandlerMsg(Status.ERROR);
+				threadMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 			catch (UnknownHostException e) {
-				sendHandlerMsg(Status.ERROR);
+				threadMsg(Status.ERROR);
 				e.printStackTrace();
+
 			}
 			catch(NoInternetConnectionException nic){
-				sendHandlerMsg(Status.ERROR);
+				threadMsg(Status.ERROR);
 				nic.printStackTrace();
 			}
 			catch(HttpErrorException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
-					sendHandlerMsg(Status.ERROR_AUTH_FAILED);
+					threadMsg(Status.ERROR_AUTH_FAILED);
 				}
 				else
 				{
-					sendHandlerMsg(Status.ERROR);
+					threadMsg(Status.ERROR);
 				}
 				e.printStackTrace();
 			}
 			catch (Exception e) {
-				sendHandlerMsg(Status.ERROR);
+				threadMsg(Status.ERROR);
 				e.printStackTrace();
 			}
 		}
 		else{
-			Log.e(TAG, "GetMoreMailsRunnable -> activity is null");
+			Log.e(TAG, "GetNewMails -> activity is null");
 		}
 	}	//end run()
 
@@ -121,7 +128,7 @@ public class GetMoreMailsRunnable implements Runnable, Constants{
 	/** Private method for bundling the message and sending it to the handler
 	 * @param status
 	 */
-	private void sendHandlerMsg(Status status) {
+	private void threadMsg(Status status) {
 
 		if (status!=null) {
 			Message msgObj = handler.obtainMessage();

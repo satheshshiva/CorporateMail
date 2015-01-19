@@ -39,11 +39,11 @@ import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
 import com.wipromail.sathesh.handlers.LoadEmailHandler;
-import com.wipromail.sathesh.handlers.runnables.LoadEmailRunnable;
+import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
 import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
-import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
+import com.wipromail.sathesh.ui.components.ProgressDisplayNotificationBar;
 import com.wipromail.sathesh.ui.listeners.ViewMailListener;
 import com.wipromail.sathesh.util.Utilities;
 import com.wipromail.sathesh.web.StandardWebView;
@@ -217,7 +217,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private void loadEmail() {
         LoadEmailHandler loadEmailHandler = new LoadEmailHandler(this);
         if(currentStatus==null){
-            Thread t = new Thread(new LoadEmailRunnable(this, loadEmailHandler));
+            Thread t = new LoadEmailThread(this, loadEmailHandler);
             t.start();
         }
         //when config change (Screen rotation , the activity will be recreated and the UI have to be updated based on previous activity status

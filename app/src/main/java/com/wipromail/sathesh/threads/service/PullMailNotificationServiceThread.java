@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.threads;
+package com.wipromail.sathesh.threads.service;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -6,25 +6,26 @@ import java.util.List;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.NotificationProcessing;
+import com.wipromail.sathesh.broadcastreceiver.MNSAlarmSetter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
-import com.wipromail.sathesh.intentservice.PollServerMNS;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.GetEventsResults;
@@ -32,7 +33,7 @@ import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.PullSubscription;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 
-public class PullMailNotificationServiceThread_bck
+public class PullMailNotificationServiceThread
 extends Thread implements Constants
 {
 
@@ -40,10 +41,8 @@ extends Thread implements Constants
 	private ExchangeService service = new ExchangeService();
 
 	private GetEventsResults events;
-	private Context context;
+	private static Context context;
 
-	private NotificationManager mNM;
-	public int newMailNotificationCounter=0;
 	private Notification notification;
 	private PendingIntent contentIntent;
 
@@ -66,7 +65,7 @@ extends Thread implements Constants
 	}
 
 	public static PullSubscription getPullSubscription() {
-		Log.d(TAG, "retrieving Pull Subscription" + subscription);
+		Log.d(TAG_MNS, "retrieving Pull Subscription" + subscription);
 		return subscription;
 	}
 
@@ -74,10 +73,10 @@ extends Thread implements Constants
 		return pendingIntent;
 	}
 
-	public PullMailNotificationServiceThread_bck(Context context , NotificationManager mNM)
+		
+	public PullMailNotificationServiceThread(Context context )
 	{
 		this.context=context;
-		this.mNM = mNM;
 		alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 	}
@@ -104,45 +103,54 @@ extends Thread implements Constants
 			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Sequence initiated. Making a new subscription");
 
 
+			if(!repeatingPollAlarmSet){
+				setNewRepeatingPoll();
+				msg = Message.obtain();		//prevents message already in use exception
+				handler.sendMessage(msg);
+				repeatingPollAlarmSet=true;
+			}
+			
+			//EWS Call..
+			//if the call is successful thread will go to TIMED_WAIT state. 
+			// If exception occurs(no internet etc) it will enter wait. the alarm which is set above will notify this WAIT thread if exception occured
 			subscription = NetworkCall.subscribePull(context,service, folder);
 
-			Log.d(TAG, "Setting Pull Subscription" + subscription);
+			Log.d(TAG_MNS, "Setting Pull Subscription" + subscription);
 
 			msg.obj=context.getString(R.string.mns_service_started);
 			
-			
+			/*
 			if(!repeatingPollAlarmSet){
 				setNewRepeatingPoll();
+				msg = Message.obtain();		//prevents message already in use exception
 				handler.sendMessage(msg);
-				Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Poll Service Alarm Set");
 				repeatingPollAlarmSet=true;
 			}
-
+*/
 			//The current thread will go on a wait state until the pull subscription renewal time expires or a notify is called for the current thread.
 			waitUntilNextSubscriptionOrNotify(PULL_SUBSCRIPTION_RENEWAL);
 			
 			cancelRepeatingPollAlarm();
+			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Renewing the subscription");
 			run();
 
 		}
 		catch(NoUserSignedInException ne){
 
 			Log.e(TAG_MNS, "PullMailNotificationServiceThread -> No User has signed in");
-			waitThisThread();
-			
+			waitUntilNotify();		
 
 		}
 
 		catch (UnknownHostException e) {
 			Log.e(TAG_MNS, "PollServerMNS -> " + e.getMessage());
-			waitThisThread();
+			waitUntilNotify();
 
 		}
 
 		catch(NoInternetConnectionException nic){
 			Log.e(TAG_MNS, "PullMailNotificationServiceThread -> " + nic);
-			waitThisThread();
-
+			waitUntilNotify();
 
 		}
 		catch(HttpErrorException e){
@@ -152,11 +160,11 @@ extends Thread implements Constants
 			if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 				//unauthorised
 				try{
-					cancelRepeatingPollAlarm();
-					showLoginErrorNotification();
+					MailApplication.stopMNSService(context);
+					NotificationProcessing.showLoginErrorNotification(context);
 				}
 				catch(Exception le){};
-				waitThisThread();
+				waitUntilNotify();
 			}
 			else
 			{
@@ -170,7 +178,8 @@ extends Thread implements Constants
 			try{
 				cancelRepeatingPollAlarm();
 			}catch(Exception ae){}
-			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread Interupted..PollServer Alarm cancelled. Exiting");
+			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread Interupted(in run())..PollServer Alarm cancelled. Exiting");
+		//	waitUntilNotify();
 		}
 		catch(Exception e){
 			Log.e(TAG_MNS, "PullMailNotificationServiceThread -> " + e.getMessage());
@@ -182,39 +191,59 @@ extends Thread implements Constants
 
 	}
 
-	private void waitUntilNextSubscriptionOrNotify(long pullDuration) {
+	
+	//will wait in this method when any exception occurs other than interrupted exception
+	private void waitUntilNotify() {
 		// TODO Auto-generated method stub
-		try {
+		//waitThisThread();
+		
+		synchronized(this)  {
+			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread entering wait sincean exception might have occured");
+			try {
+				wait();
+				Log.i(TAG_MNS, "PullMailNotificationServiceThread -> Thread resumed from wait mode ");
+				run();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				try{
+					cancelRepeatingPollAlarm();
+				}catch(Exception ae){e.printStackTrace();}
+				Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread Interupted(when waiting in waitUntilNotify() method)..PollServer Alarm cancelled. Exiting");
+			}}
+		
+	}
+
+	private void waitUntilNextSubscriptionOrNotify(long pullDuration) throws InterruptedException {
+		// TODO Auto-generated method stub
 			synchronized(this)  {
 		wait(pullDuration);
 			}
-			run();
 			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			try{
-				cancelRepeatingPollAlarm();
-			}catch(Exception ae){}
-			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread Interupted..PollServer Alarm cancelled. Exiting");
-		}
+		
 	}
-
-	private  void waitThisThread() {
-		// TODO Auto-generated method stub
-		try {
-			synchronized(this)  {
-				wait();
-			}
-			run();
-			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			try{
-				cancelRepeatingPollAlarm();
-			}catch(Exception ae){}
-			Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread Interupted..PollServer Alarm cancelled. Exiting");
-		}
-	}
+//
+//	private  void waitThisThread() {
+//		// TODO Auto-generated method stub
+//			
+//			synchronized(this)  {
+//				Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread entering wait");
+//				try {
+//					wait();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					try{
+//						cancelRepeatingPollAlarm();
+//					}catch(Exception ae){}
+//					Log.d(TAG_MNS, "PullMailNotificationServiceThread -> Thread Interupted(in waitThisThread())..PollServer Alarm cancelled. Exiting");
+//					throw new Interru
+//					//handleGeneralException(e);
+//				}
+//			}
+//			
+//			
+//			
+//	
+//	}
 
 	public static void cancelRepeatingPollAlarm() {
 		// TODO Auto-generated method stub
@@ -222,29 +251,41 @@ extends Thread implements Constants
 		if(null != pendingIntent && null != alarmManager){
 			try{
 				alarmManager.cancel(pendingIntent);
+				repeatingPollAlarmSet=false;
+				Log.d(TAG_MNS, "PullMailNotificationServiceThread -> cancelRepeatingPollAlarm() -> Alarm cancelled");
 			}
 			catch(Exception e){
-				Log.e(TAG, "PullMailNotificationServiceThread -> Error while cancelling alarm");
+				Log.e(TAG_MNS, "PullMailNotificationServiceThread -> Error while cancelling alarm");
 				e.printStackTrace();
 			}
 		}
-		repeatingPollAlarmSet=false;
+		
 	}
 
 	/** This will set a new repeating alarm for polling the server
 	 * @throws Exception 
 	 * 
 	 */
-	private void setNewRepeatingPoll() throws Exception {
+	private static void setNewRepeatingPoll() throws Exception {
 		// TODO Auto-generated method stub
-		intent = new Intent(context, PollServerMNS.class);
+		
+		Log.i(TAG_MNS, "PullMailNotificationServiceThread -> Setting up alarm ");
+		AlarmManager mgr=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
+		Intent i  = new Intent(context, MNSAlarmSetter.class);
+		
 		//intent.putExtra("asd", context);
 		pendingIntent = PendingIntent.getBroadcast(context, 0,
-				intent, PendingIntent.FLAG_CANCEL_CURRENT);
+				  i, PendingIntent.FLAG_CANCEL_CURRENT);
 		
-		alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-				MailApplication.getPullFrequency(context), pendingIntent);
+		mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+	            SystemClock.elapsedRealtime()+60000,
+	            Long.valueOf(MailApplication.getPullFrequency(context)),
+	            pendingIntent);
+		
+		Log.d(TAG_MNS, "Alarm set " );
+		
+		
 	}
 
 	private void handleGeneralException(Exception ne) {
@@ -252,42 +293,17 @@ extends Thread implements Constants
 		ne.printStackTrace();
 		cancelRepeatingPollAlarm();
 		Log.e(TAG_MNS, "PullMailNotificationServiceThread -> Exception " + ne.getMessage());
-		waitThisThread();
+		waitUntilNotify();
 	}
 
 
-
-	private void showLoginErrorNotification() {
-		// TODO Auto-generated method stub
-
-		// Set the icon, scrolling text and timestamp
-		notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.mns_service_invalidUser_title),
-				System.currentTimeMillis());
-
-		MailApplication.setLightNotificationWithPermission(notification);
-		MailApplication.setSoundWithPermission(notification);
-		MailApplication.setVibrateNotificationWithPermission(notification);
-
-		notification.flags=Notification.FLAG_AUTO_CANCEL;
-
-		// The PendingIntent to launch our activity if the user selects this notification
-		contentIntent = PendingIntent.getActivity(context, 0,
-				new Intent(context, MailApplication.mainApplicationActivity()), 0);
-
-		mNM.cancelAll();
-		// Set the info for the views that show in the notification panel.
-		notification.setLatestEventInfo(context,  context.getString(R.string.mns_service_invalidUser_title),
-				context.getString(R.string.mns_service_invalidUser_message), contentIntent);
-		mNM.notify(0, notification);
-
-	}
 
 	public static boolean isRepeatingPollAlarmSet() {
 		return repeatingPollAlarmSet;
 	}
 
 	public static void setRepeatingPollAlarmSet(boolean repeatingPollAlarmSet) {
-		PullMailNotificationServiceThread_bck.repeatingPollAlarmSet = repeatingPollAlarmSet;
+		PullMailNotificationServiceThread.repeatingPollAlarmSet = repeatingPollAlarmSet;
 	}
 
 
@@ -299,6 +315,17 @@ extends Thread implements Constants
 			}
 		}
 		};
+
+	/**
+	 * @throws Exception 
+	 * 
+	 */
+	public static void resetAlarm() throws Exception {
+		// TODO Auto-generated method stub
+		cancelRepeatingPollAlarm();
+		setNewRepeatingPoll();
+		
+	}
 
 }
 

@@ -31,7 +31,7 @@ import com.wipromail.sathesh.service.data.GetEventsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.ItemEvent;
 import com.wipromail.sathesh.service.data.PullSubscription;
-import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
+import com.wipromail.sathesh.threads.service.PullMailNotificationServiceThread;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.net.UnknownHostException;

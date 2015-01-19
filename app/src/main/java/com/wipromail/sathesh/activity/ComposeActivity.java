@@ -41,8 +41,8 @@ import com.wipromail.sathesh.service.data.Contact;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
-import com.wipromail.sathesh.ui.ProgressDisplayNotificationBar;
-import com.wipromail.sathesh.ui.WarningDisplayNotificationBar;
+import com.wipromail.sathesh.ui.components.ProgressDisplayNotificationBar;
+import com.wipromail.sathesh.ui.components.WarningDisplayNotificationBar;
 import com.wipromail.sathesh.util.Utilities;
 import com.wipromail.sathesh.web.StandardWebView;
 

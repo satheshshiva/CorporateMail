@@ -32,7 +32,7 @@ import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
-import com.wipromail.sathesh.ui.OptionsUIContent;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
 import com.wipromail.sathesh.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;

@@ -30,8 +30,8 @@ import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
-import com.wipromail.sathesh.handlers.runnables.GetMoreMailsRunnable;
-import com.wipromail.sathesh.handlers.runnables.GetNewMailsRunnable;
+import com.wipromail.sathesh.threads.ui.GetMoreMailsThread;
+import com.wipromail.sathesh.threads.ui.GetNewMailsThread;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
@@ -256,7 +256,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         else if (newMailsThreadState != Status.UPDATING ) {
             //network call for getting the new mails and corresponding UI changes
             Handler getNewMailsHandler = new GetNewMailsHandler(this);
-            Thread t = new Thread(new GetNewMailsRunnable(this, getNewMailsHandler));
+            Thread t = new GetNewMailsThread(this, getNewMailsHandler);
             t.start();
         }
 
@@ -292,7 +292,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
             //network call for getting the new mails
             Handler getMoreMailsHandler = new GetMoreMailsHandler(this);
-            Thread t = new Thread(new GetMoreMailsRunnable(this, getMoreMailsHandler));
+            Thread t = new GetMoreMailsThread(this, getMoreMailsHandler);
             t.start();
         }
     }

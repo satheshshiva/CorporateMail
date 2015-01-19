@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.vo;
+package com.wipromail.sathesh.ui.vo;
 
 /**
  * Created by sathesh on 1/17/15.

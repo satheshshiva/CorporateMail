@@ -20,8 +20,8 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
-import com.wipromail.sathesh.ui.OptionsUIContent;
-import com.wipromail.sathesh.ui.SignOutAlertDialog;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
+import com.wipromail.sathesh.ui.components.SignOutAlertDialog;
 
 public class HomePageActivity extends MyActivity implements Constants{
 

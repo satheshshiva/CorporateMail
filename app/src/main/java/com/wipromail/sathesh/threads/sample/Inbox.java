@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.threads;
+package com.wipromail.sathesh.threads.sample;
 
 import android.os.Handler;
 import android.os.Message;

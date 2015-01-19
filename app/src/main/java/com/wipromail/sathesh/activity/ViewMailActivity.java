@@ -14,7 +14,7 @@ import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.asynccaller.DeleteMailAsyncCaller;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
-import com.wipromail.sathesh.ui.OptionsUIContent;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 public class ViewMailActivity extends MyActivity implements Constants{
 

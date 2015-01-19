@@ -34,7 +34,7 @@ public class CachedMailHeaderAdapter {
 
     /** CREATE QUERIES **/
 
-    /** Writes the array List of items to cache
+    /** Inserts 1 item to cache
      * @param item  - The item to write to cache
      * @param mailType - the folder. Depending upon the mail type it will use folder name or folder id
      * @param mailFolderName
@@ -56,7 +56,7 @@ public class CachedMailHeaderAdapter {
         }
     }
 
-	/** Writes the array List of items to cache
+	/** Writes the array List of items to cache with or without emptying the previous ones
 	 * @param items
 	 * @param mailType - the folder. Depending upon the mail type it will use folder name or folder id
 	 * @param mailFolderName
@@ -83,6 +83,20 @@ public class CachedMailHeaderAdapter {
 		}	
 	}
 
+    /** Writes the  array list of vos to cache
+     *
+     * @param vos
+     */
+    public void creteNewData(ArrayList<CachedMailHeaderVO> vos)  {
+        try {
+            //call the DAO for with the list of VOs to save
+            dao.createOrUpdate(vos);
+
+        } catch (Exception e) {
+            if(BuildConfig.DEBUG)
+                e.printStackTrace();
+        }
+    }
 
     /** SELECT QUERIES **/
 

@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.threads;
+package com.wipromail.sathesh.threads.sample;
 
 
 import com.wipromail.sathesh.ews.EWSConnection;

@@ -20,7 +20,7 @@ import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.Item;
 import com.wipromail.sathesh.service.data.MessageBody;
-import com.wipromail.sathesh.threads.Inbox;
+import com.wipromail.sathesh.threads.sample.Inbox;
 
 import java.net.URISyntaxException;
 

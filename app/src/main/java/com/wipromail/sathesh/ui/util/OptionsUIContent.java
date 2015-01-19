@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.ui;
+package com.wipromail.sathesh.ui.util;
 
 import com.wipromail.sathesh.R;
 
