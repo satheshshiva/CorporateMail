@@ -10,7 +10,6 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
-import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -23,36 +22,42 @@ public class DeleteMultipleMailsThread extends Thread implements Runnable, Const
     private Context context;
     private ArrayList<String> itemIds;
     private Handler handler;
-    public DeleteMultipleMailsThread(Context context, ArrayList<String> itemIds, Handler handler)
+    private boolean permanent;
+    public enum Status{
+        DELETING,
+        COMPLETED
+    }
+    public DeleteMultipleMailsThread(Context context, ArrayList<String> itemIds, boolean permanent, Handler handler)
     {
         this.context=context;
         this.itemIds=itemIds;
         this.handler= handler;
+        this.permanent = permanent;
     }
     @Override
     public void run() {
         try {
-            threadMsg(MailListViewFragment.UndoBarStatus.DELETING);
+            threadMsg(Status.DELETING);
             if(BuildConfig.DEBUG) {
                 Log.d(TAG, "DeleteMultipleMailsThread -> Item count for deletion " + itemIds.size());
             }
             ExchangeService service = EWSConnection.getServiceFromStoredCredentials(context);
-            NetworkCall.deleteItemIds(service, itemIds);
+            NetworkCall.deleteItemIds(service, itemIds, permanent);
 
         } catch (Exception e) {
             Utilities.generalCatchBlock(e,this);
         }
 
-        threadMsg(MailListViewFragment.UndoBarStatus.IDLE);
+        threadMsg(Status.COMPLETED);
 
     }
 
     /** Private method for bundling the message and sending it to the handler
      * @param status
      */
-    private void threadMsg(MailListViewFragment.UndoBarStatus status) {
+    private void threadMsg(Status status) {
 
-        if (status!=null) {
+        if (handler!=null && status!=null) {
             Message msgObj = handler.obtainMessage();
             Bundle b = new Bundle();
             b.putSerializable("state", status);

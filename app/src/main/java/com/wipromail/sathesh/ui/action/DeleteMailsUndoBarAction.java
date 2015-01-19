@@ -36,7 +36,7 @@ public class DeleteMailsUndoBarAction implements UndoBarAction {
                 itemIds.add(vo.getItem_id());
             }
             new DeleteMultipleMailsThread(
-                    context,itemIds, new DeleteMultipleMailsHandler(parent)
+                    context,itemIds, false, new DeleteMultipleMailsHandler(parent)
             ).start();
         }
 
