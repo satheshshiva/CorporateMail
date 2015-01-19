@@ -7,6 +7,7 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.handlers.DeleteMailHandler;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.DeleteMailThread;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -16,7 +17,7 @@ import com.wipromail.sathesh.util.Utilities;
 public class PermanentMailDeleteDialog {
 
 
-    public void mailPermanentDelete(final ViewMailActivity _acivity, final CachedMailHeaderAdapter mailHeaderAdapter, final String itemId) {
+    public void mailPermanentDelete(final ViewMailActivity _acivity, final CachedMailHeaderAdapter mailHeaderAdapter, final CachedMailHeaderVO vo) {
         //build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(_acivity);
         builder.setTitle(R.string.dialog_deletemail_title)
@@ -25,10 +26,10 @@ public class PermanentMailDeleteDialog {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         try {
                             _acivity.finish();
-                            mailHeaderAdapter.deleteItemId(itemId);
+                            mailHeaderAdapter.deleteItemVo(vo);
                             //spawn a thread for deleting the mail permanently
                             new DeleteMailThread(
-                                    _acivity, itemId, true, new DeleteMailHandler(_acivity)
+                                    _acivity, vo.getItem_id(), true, new DeleteMailHandler(_acivity)
                             ).start();
                         } catch (Exception e) {
                             Utilities.generalCatchBlock(e, this);

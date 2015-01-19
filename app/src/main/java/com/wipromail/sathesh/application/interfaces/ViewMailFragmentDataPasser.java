@@ -5,6 +5,7 @@ package com.wipromail.sathesh.application.interfaces;
 
 import com.wipromail.sathesh.fragment.ViewMailFragment;
 import com.wipromail.sathesh.service.data.EmailMessage;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 
 /**
  * @author sathesh
@@ -37,6 +38,7 @@ public interface ViewMailFragmentDataPasser {
     public String getItemId();
 
     public ViewMailFragment.Status getCurrentStatus();
+    public CachedMailHeaderVO getCachedMailHeaderVO();
 
 
 }

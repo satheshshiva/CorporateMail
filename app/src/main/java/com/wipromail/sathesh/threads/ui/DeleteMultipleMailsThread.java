@@ -11,6 +11,7 @@ import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.service.data.ExchangeService;
+import com.wipromail.sathesh.util.Utilities;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class DeleteMultipleMailsThread extends Thread implements Runnable, Const
             NetworkCall.deleteItemIds(service, itemIds);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Utilities.generalCatchBlock(e,this);
         }
 
         threadMsg(MailListViewFragment.UndoBarStatus.IDLE);

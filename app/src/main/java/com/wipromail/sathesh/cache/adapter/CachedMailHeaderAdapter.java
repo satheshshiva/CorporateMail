@@ -4,9 +4,10 @@
 package com.wipromail.sathesh.cache.adapter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
-import com.wipromail.sathesh.constants.Constants.MailType;
+import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
 import com.wipromail.sathesh.service.data.Item;
@@ -21,7 +22,7 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class CachedMailHeaderAdapter {
+public class CachedMailHeaderAdapter implements Constants{
 
 	private static MailFunctions mailFunctions;
 	private static CachedMailHeaderDAO dao;
@@ -201,12 +202,18 @@ public class CachedMailHeaderAdapter {
        dao.deleteItems(itemIds);
     }
 
-    /** Delete item with item
+    /** Delete vo from cachce
      *
      * @throws Exception
+     * @param vo mail header vo to delete
      */
-    public void deleteItemId(String itemId) throws Exception {
-        dao.deleteItemId(itemId);
+    public void deleteItemVo(CachedMailHeaderVO vo) throws Exception {
+        if(vo!=null) {
+            dao.deleteItemId(vo.getItem_id());
+        }
+        else{
+            Log.e(TAG, "CachedMailHeaderAdapter-> deleteItemVo() -> vo is null" );
+        }
     }
 
     /** UPDATE QUERIES **/

@@ -36,7 +36,8 @@ public class DeleteMailsUndoBarAction implements UndoBarAction {
             ).start();
         }
 
-        /**method called when undo button is clicked. Restores the deleted cached items in UI
+        /** This method called when undo button is clicked.
+         * Should restore the deleted cached items in UI
          *
          */
         @Override
@@ -47,6 +48,7 @@ public class DeleteMailsUndoBarAction implements UndoBarAction {
 
                 //update the UI list (for updating the cached deletions in UI)
                 parent.softRefreshList();
+                parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
             } catch (Exception e) {
                 Utilities.generalCatchBlock(e, this);
             }
