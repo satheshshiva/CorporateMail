@@ -307,7 +307,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                             //show the undo bar
                             new UndoBarBuilder(parent.getActivity(), undoBarAction)
                                     ._setMessage(parent.getActivity().getString(R.string.undoBar_deletedMails, selectedVOs.size()))
-                                    ._setDuration(3000)
                                     ._show();
                         }else{
                             //Deleted Items folder
