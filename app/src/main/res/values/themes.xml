@@ -15,6 +15,12 @@
         <item name="colorAccent">@color/accent_material_dark</item>
         <item name="undoBarStyle">@style/UndoBarMaterialStyle</item>
 
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+
+
     </style>
 
+    <style name="Widget.Styled.ActionBar" parent="Widget.AppCompat.ActionMode" >
+        <item name="android:background">@color/ForestGreen</item>
+    </style>
 </resources>
