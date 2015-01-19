@@ -241,6 +241,7 @@
     <string name="dialog_deletemail_title">Delete Mail</string>
     <string name="dialog_deletemail_msg">Move this to Deleteted Items?</string>
     <string name="dialog_deletemail_perm_msg">This will permanently delete this mail</string>
+    <string name="dialog_delete_multiple_mail_perm_msg">This will permanently selected mail(s)</string>
 
     <!-- Title bar -->
     <string name="title_activity_home_page">Wipro Mail</string>

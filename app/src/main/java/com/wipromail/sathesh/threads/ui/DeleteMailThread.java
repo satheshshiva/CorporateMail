@@ -38,10 +38,10 @@ public class DeleteMailThread extends Thread implements Runnable, Constants {
             threadMsg(Status.DELETING);
             ExchangeService service = EWSConnection.getServiceFromStoredCredentials(parent.getApplicationContext());
             if(!permanent) {
-                NetworkCall.deleteItemId(service, itemId);
+                NetworkCall.deleteItemId(service, itemId, false);
             }
                 else{
-                NetworkCall.deleteItemIdPermanent(service, itemId);
+                NetworkCall.deleteItemId(service, itemId, true);
             }
             threadMsg(Status.DELETED);
         } catch (Exception e) {

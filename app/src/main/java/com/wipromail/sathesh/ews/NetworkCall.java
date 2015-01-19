@@ -375,33 +375,26 @@ public class NetworkCall implements Constants{
 		return service.findFolders(folderId,new  FolderView(Integer.MAX_VALUE));
 	}
 
-
-	/** This method deletes the particular item whether its mail or anything and sends to deleted items, 
-	 * @param item
-	 * @throws Exception
-	 */
-	public static void deleteItem(Item item) throws Exception{
-
-		item.delete(DeleteMode.MoveToDeletedItems);
-
-	}
-
     /** This method deletes the particular item whether its mail or anything and sends to deleted items,
      * @param itemId - String
      * @throws Exception
      */
-    public static void deleteItemId(ExchangeService service, String itemId) throws Exception{
+    public static void deleteItemId(ExchangeService service, String itemId, boolean permanent) throws Exception{
         ItemId _itemId = ItemId.getItemIdFromString(itemId);
         Item item=Item.bind(service, _itemId);
         item.delete(DeleteMode.MoveToDeletedItems);
-
+        if(!permanent) {
+            item.delete(DeleteMode.MoveToDeletedItems);
+        }else{
+            item.delete(DeleteMode.HardDelete);
+        }
     }
 
     /** This method deletes list of itemIds
      * @param itemIds - Array list of item ids to delete
      * @throws Exception
      */
-    public static void deleteItemIds(ExchangeService service, ArrayList<String> itemIds) throws Exception{
+    public static void deleteItemIds(ExchangeService service, ArrayList<String> itemIds, boolean permanent) throws Exception{
         ItemId _itemId;
         ArrayList<ItemId> _itemIds = new ArrayList<>();
 
@@ -409,17 +402,11 @@ public class NetworkCall implements Constants{
             _itemId = ItemId.getItemIdFromString(itemId);
             _itemIds.add(_itemId);
         }
-        service.deleteItems((Iterable)_itemIds,DeleteMode.MoveToDeletedItems,null,null);
+        if(!permanent) {
+            service.deleteItems((Iterable) _itemIds, DeleteMode.MoveToDeletedItems, null, null);
+        }else{
+            service.deleteItems((Iterable) _itemIds, DeleteMode.HardDelete, null, null);
+        }
     }
 
-    /** This method deletes the particular item whether its mail or anything and sends to deleted items,
-     * @param itemId - String
-     * @throws Exception
-     */
-    public static void deleteItemIdPermanent(ExchangeService service, String itemId) throws Exception{
-        ItemId _itemId = ItemId.getItemIdFromString(itemId);
-        Item item=Item.bind(service, _itemId);
-        item.delete(DeleteMode.HardDelete);
-
-    }
 }

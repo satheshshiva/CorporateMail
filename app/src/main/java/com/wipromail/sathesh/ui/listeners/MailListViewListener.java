@@ -23,6 +23,7 @@ import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.action.DeleteMailsUndoBarAction;
+import com.wipromail.sathesh.ui.components.MailDeleteDialog;
 import com.wipromail.sathesh.ui.components.UndoBarBuilder;
 import com.wipromail.sathesh.ui.interfaces.UndoBarAction;
 import com.wipromail.sathesh.ui.vo.MailListViewContent;
@@ -286,6 +287,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
             // we will clone the selected VOs since it will be cleared in CAB destroy
             final ArrayList<CachedMailHeaderVO> selectedVOs = (ArrayList<CachedMailHeaderVO>)curentlySelectedVOs.clone();
             switch (item.getItemId()) {
+                //Delete Action Mode button is clicked
                 case R.id.actionMode_deleteMail:
                     try {
                         if(parent.getMailType() != MailType.DELETED_ITEMS) {
@@ -310,8 +312,9 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                                     ._show();
                         }else{
                             //Deleted Items folder
-                            // Close CAB
-                            mode.finish();
+
+                            MailDeleteDialog dialog=new MailDeleteDialog();
+                            dialog.multipleMailsDeleteDialog(parent, mode, selectedVOs);
                         }
 
                     } catch (Exception e) {
