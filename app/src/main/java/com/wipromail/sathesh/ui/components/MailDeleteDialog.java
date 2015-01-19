@@ -14,14 +14,14 @@ import com.wipromail.sathesh.util.Utilities;
 /**
  * Created by sathesh on 1/18/15.
  */
-public class PermanentMailDeleteDialog {
+public class MailDeleteDialog {
 
 
     public void mailPermanentDelete(final ViewMailActivity _acivity, final CachedMailHeaderAdapter mailHeaderAdapter, final CachedMailHeaderVO vo) {
         //build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(_acivity);
         builder.setTitle(R.string.dialog_deletemail_title)
-                .setMessage(R.string.dialog_deletemail_msg)
+                .setMessage(R.string.dialog_deletemail_perm_msg)
                 .setPositiveButton(R.string.alertdialog_positive_lbl, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         try {
@@ -31,6 +31,37 @@ public class PermanentMailDeleteDialog {
                             new DeleteMailThread(
                                     _acivity, vo.getItem_id(), true, new DeleteMailHandler(_acivity)
                             ).start();
+                        } catch (Exception e) {
+                            Utilities.generalCatchBlock(e, this);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.alertdialog_negative_lbl, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    public void mailDeleteDialog(final ViewMailActivity _acivity, final CachedMailHeaderAdapter mailHeaderAdapter, final CachedMailHeaderVO vo) {
+        //build the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(_acivity);
+        builder.setTitle(R.string.dialog_deletemail_title)
+                .setMessage(R.string.dialog_deletemail_msg)
+                .setPositiveButton(R.string.alertdialog_positive_lbl, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            mailHeaderAdapter.deleteItemVo(vo);
+
+                            //spawn a thread for deleting the mail
+                            new DeleteMailThread(
+                                    _acivity, vo.getItem_id(), false, new DeleteMailHandler(_acivity)
+                            ).start();
+                            _acivity.finish();
                         } catch (Exception e) {
                             Utilities.generalCatchBlock(e, this);
                         }

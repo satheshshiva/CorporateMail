@@ -14,9 +14,7 @@ import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
-import com.wipromail.sathesh.handlers.DeleteMailHandler;
-import com.wipromail.sathesh.threads.ui.DeleteMailThread;
-import com.wipromail.sathesh.ui.components.PermanentMailDeleteDialog;
+import com.wipromail.sathesh.ui.components.MailDeleteDialog;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -139,16 +137,13 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
                 // Delete button is clicked
                 if (viewMailFragment.getMailType() != MailType.DELETED_ITEMS) {
-                    finish();
-                    mailHeaderAdapter.deleteItemVo(viewMailFragment.getCachedMailHeaderVO());
-                    //spawn a thread for deleting the mail
-                    new DeleteMailThread(
-                            this, viewMailFragment.getItemId(), false, new DeleteMailHandler(this)
-                    ).start();
+
+                    MailDeleteDialog dialog = new MailDeleteDialog();
+                    dialog.mailDeleteDialog(this, mailHeaderAdapter, viewMailFragment.getCachedMailHeaderVO());
 
                 } else {
                     //if in Deleted Items folder show a dialog saying it will permanently delete
-                    PermanentMailDeleteDialog dialog = new PermanentMailDeleteDialog();
+                    MailDeleteDialog dialog = new MailDeleteDialog();
                     dialog.mailPermanentDelete(this, mailHeaderAdapter, viewMailFragment.getCachedMailHeaderVO());
                 }
             } catch (Exception e) {
