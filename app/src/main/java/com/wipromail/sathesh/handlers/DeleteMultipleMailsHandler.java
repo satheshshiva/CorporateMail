@@ -21,14 +21,17 @@ public class DeleteMultipleMailsHandler extends Handler {
         switch(status){
 
             case  DELETING:
-                parent.setUndoBarState(MailListViewFragment.UndoBarStatus.DELETING);
+                if(parent!=null){
+                    parent.setUndoBarState(MailListViewFragment.UndoBarStatus.DELETING);
+                }
                 break;
 
             case IDLE:
-                parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
-                parent.refreshList();
+                if(parent!=null) {
+                    parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
+                    parent.refreshList();
+                }
                 break;
-
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.wipromail.sathesh.threads.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,12 +20,12 @@ import java.util.ArrayList;
  * Created by sathesh on 1/17/15.
  */
 public class DeleteMultipleMailsThread extends Thread implements Runnable, Constants {
-    private MailListViewFragment parent;
+    private Context context;
     private ArrayList<String> itemIds;
     private Handler handler;
-    public DeleteMultipleMailsThread(MailListViewFragment parent, ArrayList<String> itemIds, Handler handler)
+    public DeleteMultipleMailsThread(Context context, ArrayList<String> itemIds, Handler handler)
     {
-        this.parent=parent;
+        this.context=context;
         this.itemIds=itemIds;
         this.handler= handler;
     }
@@ -35,7 +36,7 @@ public class DeleteMultipleMailsThread extends Thread implements Runnable, Const
             if(BuildConfig.DEBUG) {
                 Log.d(TAG, "DeleteMultipleMailsThread -> Item count for deletion " + itemIds.size());
             }
-            ExchangeService service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
+            ExchangeService service = EWSConnection.getServiceFromStoredCredentials(context);
             NetworkCall.deleteItemIds(service, itemIds);
 
         } catch (Exception e) {

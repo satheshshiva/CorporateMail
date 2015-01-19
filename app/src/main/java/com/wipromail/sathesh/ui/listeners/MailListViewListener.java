@@ -302,7 +302,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 
                             // DeleteMailsUndoBarAction class will have the actions what to do on execute now
                             // after showing message and the action when undo button clicked
-                            UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(parent, selectedVOs);
+                            UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(parent.getActivity(), parent, selectedVOs);
 
                             //show the undo bar
                             new UndoBarBuilder(parent.getActivity(), undoBarAction)
