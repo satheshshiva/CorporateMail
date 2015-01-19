@@ -2,7 +2,6 @@
 package com.wipromail.sathesh.service;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -14,7 +13,7 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
-import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
+import com.wipromail.sathesh.threads.service.PullMailNotificationServiceThread;
 
 /**
  * @author Sathesh

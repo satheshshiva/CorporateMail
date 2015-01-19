@@ -1,18 +1,13 @@
-package com.wipromail.sathesh.ui;
+package com.wipromail.sathesh.ui.components;
 
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.CheckBox;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.tools.SignOut;
 
 public class AuthFailedAlertDialog  implements Constants{
 

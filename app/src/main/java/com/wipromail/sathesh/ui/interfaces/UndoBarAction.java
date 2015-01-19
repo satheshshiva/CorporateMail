@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.generalinterface;
+package com.wipromail.sathesh.ui.interfaces;
 
 import java.io.Serializable;
 
@@ -7,5 +7,6 @@ import java.io.Serializable;
  */
 public interface UndoBarAction extends Serializable {
 
-    public void execute();
+    public void executeAction();
+    public void undoAction();
 }

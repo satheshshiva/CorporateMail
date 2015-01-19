@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.wipromail.sathesh.handlers.runnables;
+package com.wipromail.sathesh.threads.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +33,7 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class LoadEmailRunnable implements Runnable, Constants{
+public class LoadEmailThread extends Thread implements Runnable, Constants{
 
     private ViewMailFragment parent;
     private Handler handler;
@@ -41,7 +41,7 @@ public class LoadEmailRunnable implements Runnable, Constants{
     private AttachmentCollection attachmentCollection;
     private MailFunctions mailFunctions;
 
-    public LoadEmailRunnable(ViewMailFragment viewMailFragment, Handler handler){
+    public LoadEmailThread(ViewMailFragment viewMailFragment, Handler handler){
         this.parent = viewMailFragment;
         this.handler= handler;
     }

@@ -19,7 +19,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.util.Utilities;
-import com.wipromail.sathesh.vo.MailListViewContent;
+import com.wipromail.sathesh.ui.vo.MailListViewContent;
 
 import java.util.ArrayList;
 import java.util.Date;

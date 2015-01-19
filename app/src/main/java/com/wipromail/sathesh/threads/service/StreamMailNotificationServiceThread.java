@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.threads;
+package com.wipromail.sathesh.threads.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;

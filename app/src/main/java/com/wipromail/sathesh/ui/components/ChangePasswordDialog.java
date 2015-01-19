@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.ui;
+package com.wipromail.sathesh.ui.components;
 
 
 import android.app.Activity;

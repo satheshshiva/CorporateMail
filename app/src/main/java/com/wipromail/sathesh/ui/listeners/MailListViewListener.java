@@ -26,12 +26,11 @@ import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
-import com.wipromail.sathesh.generalinterface.UndoBarAction;
-import com.wipromail.sathesh.handlers.DeleteMultipleMailsHandler;
+import com.wipromail.sathesh.ui.action.DeleteMailsUndoBarAction;
+import com.wipromail.sathesh.ui.interfaces.UndoBarAction;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
-import com.wipromail.sathesh.threads.DeleteMultipleMailsThread;
 import com.wipromail.sathesh.util.Utilities;
-import com.wipromail.sathesh.vo.MailListViewContent;
+import com.wipromail.sathesh.ui.vo.MailListViewContent;
 
 import java.util.ArrayList;
 
@@ -64,7 +63,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
             //Determine whether its our listview listener
             switch(lw.getId()) {
                 case R.id.listView:
-                    Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+                   // Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 
                     //SWIPE REFRESH
                     //enable Swipe Refresh
@@ -302,22 +301,11 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                         parent.setUndoBarState(MailListViewFragment.UndoBarStatus.DISPLAYED);
                         //create an undo action bar with the anonymous class to make a network call to delete
                         final Bundle b = new Bundle();
-                        // anonymous class to make a network call to delete
-                        UndoBarAction action = new UndoBarAction() {
-                            @Override
-                            public void execute() {
-                                ArrayList<String> itemIds = new ArrayList<>();
+                        // DeleteMailsUndoBarAction class will have the actions what to do on execute and undo button clicked
+                        UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(parent, selectedVOs);
 
-                                for(CachedMailHeaderVO vo : selectedVOs){
-                                    itemIds.add(vo.getItem_id());
-                                }
-                                new DeleteMultipleMailsThread(
-                                        parent,itemIds, new DeleteMultipleMailsHandler(parent)
-                                ).start();
-                            }
-                        };
                         //this serializable anonymus class will be executed during the undo bar hides (OnHide())
-                        b.putSerializable("serializable", action);
+                        b.putSerializable("serializable", undoBarAction);
                         // Close CAB
                         mode.finish();
 
@@ -363,7 +351,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
         if (parcelable != null) {
             UndoBarAction action = (UndoBarAction)((Bundle) parcelable).getSerializable("serializable");
             if(action!=null){
-                action.execute();
+                action.executeAction();
             }
         }
     }
@@ -385,6 +373,12 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     @Override
     public void onUndo(@Nullable Parcelable parcelable) {
         if(BuildConfig.DEBUG) Log.d(TAG, "UndoBar - OnUndo() called");
+        if (parcelable != null) {
+            UndoBarAction action = (UndoBarAction)((Bundle) parcelable).getSerializable("serializable");
+            if(action!=null){
+                action.undoAction();
+            }
+        }
         parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
 
     }

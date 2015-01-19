@@ -36,7 +36,7 @@ import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
-import com.wipromail.sathesh.handlers.runnables.LoadEmailRunnable;
+import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.service.MailNotificationService;
 import com.wipromail.sathesh.service.data.Attachment;
 import com.wipromail.sathesh.service.data.AttachmentCollection;
@@ -46,8 +46,8 @@ import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FileAttachment;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
-import com.wipromail.sathesh.threads.PullMailNotificationServiceThread;
-import com.wipromail.sathesh.ui.ChangePasswordDialog;
+import com.wipromail.sathesh.threads.service.PullMailNotificationServiceThread;
+import com.wipromail.sathesh.ui.components.ChangePasswordDialog;
 import com.wipromail.sathesh.update.AutoUpdater;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -659,7 +659,7 @@ public class MailApplication implements Constants {
     }
 
 
-    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailRunnable loadEmailRunnable, Object thisClass){
+    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass){
         String path="";
         File file;
         FileAttachment fileAttachment;
@@ -707,9 +707,9 @@ public class MailApplication implements Constants {
                                     e.printStackTrace();
                                 }
                             }
-                            if(loadEmailRunnable!=null ) {
-                                loadEmailRunnable.getParent().setRemainingInlineImages(loadEmailRunnable.getParent().getRemainingInlineImages() - 1);
-                                loadEmailRunnable.sendHandlerMsg(ViewMailFragment.Status.DOWNLOADED_AN_IMAGE, body);
+                            if(loadEmailThread !=null ) {
+                                loadEmailThread.getParent().setRemainingInlineImages(loadEmailThread.getParent().getRemainingInlineImages() - 1);
+                                loadEmailThread.sendHandlerMsg(ViewMailFragment.Status.DOWNLOADED_AN_IMAGE, body);
                             }
                         }
                         else{

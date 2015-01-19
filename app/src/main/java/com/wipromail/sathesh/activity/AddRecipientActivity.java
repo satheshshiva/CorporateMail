@@ -27,7 +27,7 @@ import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
-import com.wipromail.sathesh.ui.UIutilities;
+import com.wipromail.sathesh.ui.util.UIutilities;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.util.ArrayList;

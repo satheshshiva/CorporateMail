@@ -15,7 +15,7 @@ import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
-import com.wipromail.sathesh.ui.AuthFailedAlertDialog;
+import com.wipromail.sathesh.ui.components.AuthFailedAlertDialog;
 import com.wipromail.sathesh.util.Utilities;
 
 /** Handler method for GetNewMailsRunnable

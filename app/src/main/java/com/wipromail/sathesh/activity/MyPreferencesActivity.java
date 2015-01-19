@@ -20,10 +20,10 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.tools.CacheClear;
-import com.wipromail.sathesh.ui.ChangePasswordDialog;
+import com.wipromail.sathesh.ui.components.ChangePasswordDialog;
 
 import java.util.Calendar;
-//import com.wipromail.sathesh.ui.SignOutAlertDialog;
+//import com.wipromail.sathesh.ui.components.SignOutAlertDialog;
 
 /** For the general preferncescreen, Use the adapter {@link GeneralPreferenceAdapter}
  * @author Sathesh

@@ -17,7 +17,7 @@ import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.tools.CacheClear;
-import com.wipromail.sathesh.ui.OptionsUIContent;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 /** This Activity is the one which shows the mail list.
  * 
