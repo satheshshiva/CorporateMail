@@ -733,6 +733,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setCcShowMoreFlag(boolean ccShowMoreFlag) {
         this.ccShowMoreFlag = ccShowMoreFlag;
     }
+    @Override
     public CachedMailHeaderVO getCachedMailHeaderVO() {
         return mailHeader;
     }

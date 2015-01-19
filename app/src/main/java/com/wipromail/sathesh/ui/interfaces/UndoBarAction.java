@@ -7,6 +7,13 @@ import java.io.Serializable;
  */
 public interface UndoBarAction extends Serializable {
 
+    /** The action to perform when after the message is shown and going to hide
+     *
+     */
     public void executeAction();
+
+    /** Undo button is clicked
+     *
+     */
     public void undoAction();
 }

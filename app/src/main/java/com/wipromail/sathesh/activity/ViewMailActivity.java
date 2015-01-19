@@ -136,19 +136,20 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
         else if(item!=null && item.getTitle().equals(this.getString(R.string.actionBar_Delete))){
             try {
+
                 // Delete button is clicked
-                if(viewMailFragment.getMailType() != MailType.DELETED_ITEMS){
+                if (viewMailFragment.getMailType() != MailType.DELETED_ITEMS) {
                     finish();
-                    mailHeaderAdapter.deleteItemId(viewMailFragment.getItemId().toString());
+                    mailHeaderAdapter.deleteItemVo(viewMailFragment.getCachedMailHeaderVO());
                     //spawn a thread for deleting the mail
                     new DeleteMailThread(
                             this, viewMailFragment.getItemId(), false, new DeleteMailHandler(this)
                     ).start();
 
-                }else{
+                } else {
                     //if in Deleted Items folder show a dialog saying it will permanently delete
                     PermanentMailDeleteDialog dialog = new PermanentMailDeleteDialog();
-                    dialog.mailPermanentDelete(this, mailHeaderAdapter,viewMailFragment.getItemId());
+                    dialog.mailPermanentDelete(this, mailHeaderAdapter, viewMailFragment.getCachedMailHeaderVO());
                 }
             } catch (Exception e) {
                 Utilities.generalCatchBlock(e,this);
