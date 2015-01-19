@@ -201,6 +201,14 @@ public class CachedMailHeaderAdapter {
        dao.deleteItems(itemIds);
     }
 
+    /** Delete item with item
+     *
+     * @throws Exception
+     */
+    public void deleteItemId(String itemId) throws Exception {
+        dao.deleteItemId(itemId);
+    }
+
     /** UPDATE QUERIES **/
 
 	/** mark mail as read

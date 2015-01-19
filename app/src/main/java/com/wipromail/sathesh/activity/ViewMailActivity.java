@@ -11,14 +11,19 @@ import android.view.SubMenu;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
-import com.wipromail.sathesh.asynccaller.DeleteMailAsyncCaller;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
+import com.wipromail.sathesh.handlers.DeleteMailHandler;
+import com.wipromail.sathesh.threads.ui.DeleteMailThread;
+import com.wipromail.sathesh.ui.components.PermanentMailDeleteDialog;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
+import com.wipromail.sathesh.util.Utilities;
 
 public class ViewMailActivity extends MyActivity implements Constants{
 
     private ViewMailFragmentDataPasser viewMailFragment;
+    private CachedMailHeaderAdapter mailHeaderAdapter;
     /** ON CREATE **
      *  Fragment : ViewMailFragment
      */
@@ -32,6 +37,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
         // declaring the fragment
         viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
                 .findFragmentById(R.id.viewMailFragment);
+        mailHeaderAdapter = new CachedMailHeaderAdapter(this);
     }
 
     @Override
@@ -129,12 +135,23 @@ public class ViewMailActivity extends MyActivity implements Constants{
         }
 
         else if(item!=null && item.getTitle().equals(this.getString(R.string.actionBar_Delete))){
-            if(viewMailFragment.getMailType() != MailType.DELETED_ITEMS){
-                DeleteMailAsyncCaller deleteCaller;
-                deleteCaller = new DeleteMailAsyncCaller(this, viewMailFragment.getMessage(),viewMailFragment.getItemId(), false);
-                deleteCaller.startDeleteMailAsyncTask();
-            }else{
-                viewMailFragment.showAlertdialogPermanentDelete();
+            try {
+                // Delete button is clicked
+                if(viewMailFragment.getMailType() != MailType.DELETED_ITEMS){
+                    finish();
+                    mailHeaderAdapter.deleteItemId(viewMailFragment.getItemId().toString());
+                    //spawn a thread for deleting the mail
+                    new DeleteMailThread(
+                            this, viewMailFragment.getItemId(), false, new DeleteMailHandler(this)
+                    ).start();
+
+                }else{
+                    //if in Deleted Items folder show a dialog saying it will permanently delete
+                    PermanentMailDeleteDialog dialog = new PermanentMailDeleteDialog();
+                    dialog.mailPermanentDelete(this, mailHeaderAdapter,viewMailFragment.getItemId());
+                }
+            } catch (Exception e) {
+                Utilities.generalCatchBlock(e,this);
             }
         }
 
