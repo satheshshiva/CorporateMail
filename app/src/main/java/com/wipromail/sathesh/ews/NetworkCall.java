@@ -412,15 +412,6 @@ public class NetworkCall implements Constants{
         service.deleteItems((Iterable)_itemIds,DeleteMode.MoveToDeletedItems,null,null);
     }
 
-	/** This method deletes the particular item whether its mail or anything and deletes it permanently, 
-	 * @param item
-	 * @throws Exception
-	 */
-	public static void deleteItemPermanent(Item item) throws Exception{
-		item.delete(DeleteMode.HardDelete);
-
-	}
-
     /** This method deletes the particular item whether its mail or anything and sends to deleted items,
      * @param itemId - String
      * @throws Exception

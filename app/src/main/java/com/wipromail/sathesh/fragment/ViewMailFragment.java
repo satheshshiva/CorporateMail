@@ -3,9 +3,7 @@
  */
 package com.wipromail.sathesh.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,16 +31,15 @@ import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
-import com.wipromail.sathesh.asynccaller.DeleteMailAsyncCaller;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
 import com.wipromail.sathesh.handlers.LoadEmailHandler;
-import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
 import com.wipromail.sathesh.service.data.EmailMessage;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.ui.components.ProgressDisplayNotificationBar;
 import com.wipromail.sathesh.ui.listeners.ViewMailListener;
 import com.wipromail.sathesh.util.Utilities;
@@ -561,34 +558,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             //webvew.loadData(VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT, StandardWebView.MIME_TYPE_HTML,StandardWebView.ENCODING);
             standardWebView.loadData(webview, VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT);
         }
-    }
-
-    /** Confirmation dialog shown for deleting items from Deleted Items folder
-     */
-    @Override
-    public void showAlertdialogPermanentDelete(){
-
-        final ActionBarActivity _acivity=activity;
-
-        //build the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dialog_deletemail_title)
-                .setMessage(R.string.dialog_deletemail_msg)
-                .setPositiveButton(R.string.alertdialog_positive_lbl, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        DeleteMailAsyncCaller deleteCaller;
-                        deleteCaller = new DeleteMailAsyncCaller(_acivity, message, itemId, true);
-                        deleteCaller.startDeleteMailAsyncTask();
-                    }
-                })
-                .setNegativeButton(R.string.alertdialog_negative_lbl, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                })
-                .create();
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 
     /** Build the headers display with links

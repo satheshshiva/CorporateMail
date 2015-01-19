@@ -13,11 +13,6 @@ import com.wipromail.sathesh.service.data.EmailMessage;
 public interface ViewMailFragmentDataPasser {
 
 	/**
-	 * 
-	 */
-	public void showAlertdialogPermanentDelete();
-
-	/**
 	 * @throws Exception 
 	 * 
 	 */

@@ -292,29 +292,35 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
             switch (item.getItemId()) {
                 case R.id.actionMode_deleteMail:
                     try {
-                        //delete the items in cache first and will update UI
-                        parent.getMailHeadersCacheAdapter().deleteItems(selectedVOs);
+                        if(parent.getMailType() != MailType.DELETED_ITEMS) {
+                            //delete the items in cache first and will update UI
+                            parent.getMailHeadersCacheAdapter().deleteItems(selectedVOs);
 
-                        //update the UI list (for updating the cached deletions in UI)
-                        parent.softRefreshList();
+                            //update the UI list (for updating the cached deletions in UI)
+                            parent.softRefreshList();
 
-                        parent.setUndoBarState(MailListViewFragment.UndoBarStatus.DISPLAYED);
-                        //create an undo action bar with the anonymous class to make a network call to delete
-                        final Bundle b = new Bundle();
-                        // DeleteMailsUndoBarAction class will have the actions what to do on execute and undo button clicked
-                        UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(parent, selectedVOs);
+                            parent.setUndoBarState(MailListViewFragment.UndoBarStatus.DISPLAYED);
+                            //create an undo action bar with the anonymous class to make a network call to delete
+                            final Bundle b = new Bundle();
+                            // DeleteMailsUndoBarAction class will have the actions what to do on execute and undo button clicked
+                            UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(parent, selectedVOs);
 
-                        //this serializable anonymus class will be executed during the undo bar hides (OnHide())
-                        b.putSerializable("serializable", undoBarAction);
-                        // Close CAB
-                        mode.finish();
+                            //this serializable anonymus class will be executed during the undo bar hides (OnHide())
+                            b.putSerializable("serializable", undoBarAction);
+                            // Close CAB
+                            mode.finish();
 
-                        //show the undo bar
-                        new UndoBarController.UndoBar(parent.getActivity())
-                                .message(parent.getActivity().getString(R.string.undoBar_deletedMails, selectedVOs.size()))
-                                .duration(3000)
-                                .listener(this).token(b).show();
+                            //show the undo bar
+                            new UndoBarController.UndoBar(parent.getActivity())
+                                    .message(parent.getActivity().getString(R.string.undoBar_deletedMails, selectedVOs.size()))
+                                    .duration(3000)
+                                    .listener(this).token(b).show();
+                        }else{
+                            //Deleted Items folder
+                            // Close CAB
+                            mode.finish();
 
+                        }
 
                     } catch (Exception e) {
                         parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
