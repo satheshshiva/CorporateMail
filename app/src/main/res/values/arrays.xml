@@ -2,16 +2,16 @@
     
     <!-- Webmail URL -->
     <string-array name="preferences_serverlist_text">
+        <item>Office 365</item>
         <item>Primary Webmail Server</item>
         <item>Secondary Webmail Server</item>
-        <item>Office 365</item>
         <item>Custom URL</item>
     </string-array>
     
     <string-array name="preferences_serverlist_values">
+        <item>@string/webmail_365_url</item>
         <item>@string/webmail1_url</item>
         <item>@string/webmail2_url</item>
-        <item>@string/webmail_365_url</item>
         <item>Custom URL</item>
     </string-array>
 
