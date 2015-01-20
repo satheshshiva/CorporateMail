@@ -31,6 +31,7 @@ import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.ews.MailFunctions;
@@ -107,6 +108,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private int remainingInlineImages=0;
     private Status currentStatus;
     private ViewMailListener viewMailListener;
+    private CachedMailHeaderAdapter cachedMailHeaderAdapter;
 
 
     @Override
@@ -117,10 +119,13 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 container, false);
 
         activity = (ActionBarActivity) getActivity();
-        context = (ActionBarActivity) getActivity();
+        context = getActivity();
 
         setRetainInstance(true);
 
+        if(cachedMailHeaderAdapter==null){
+            cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
+        }
         //Initialize toolbar
         MailApplication.toolbarInitialize(activity, view);
 
@@ -208,6 +213,17 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         super.onDetach();
     }
 
+    /** This will mark this mail as read in cache
+     *
+     */
+    public void mailAsReadInCache(){
+        //Mark the item as read
+        try {
+            cachedMailHeaderAdapter.markMailAsReadUnread(mailHeader.getItem_id(), true);
+        } catch (Exception e) {
+            Utilities.generalCatchBlock(e, this);
+        }
+    }
     /**
      *
      */
@@ -433,6 +449,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 			Log.d(TAG, "Exception while deleting cache" + e.getMessage());
 			e.printStackTrace();
 		}*/
+
+
     }
 
     public void displayHeadersAndBody(){

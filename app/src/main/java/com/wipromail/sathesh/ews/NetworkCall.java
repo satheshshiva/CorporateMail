@@ -97,16 +97,26 @@ public class NetworkCall implements Constants{
 		else{	throw new NoInternetConnectionException(); }
 	}
 
-    public static void markEmailAsRead(ExchangeService service, Context context, String itemId) throws NoInternetConnectionException, Exception{
+    /** Mark an itemId as Read/Unread
+     *
+     * @param context
+     * @param itemId
+     * @param isRead
+     * @throws NoInternetConnectionException
+     * @throws Exception
+     */
+    public static void markEmailAsReadUnread(Context context, String itemId, boolean isRead) throws NoInternetConnectionException, Exception{
+        ExchangeService  service = EWSConnection.getServiceFromStoredCredentials(context);
         if(Utils.checkInternetConnection(context)){
             ItemId _itemId = ItemId.getItemIdFromString(itemId);
             EmailMessage item=(EmailMessage)Item.bind(service, _itemId);
-
-            item.setIsRead(true);
+            item.setIsRead(isRead);
             item.update(ConflictResolutionMode.AutoResolve);
         }
         else{	throw new NoInternetConnectionException(); }
     }
+
+
 
 	/** Send an Email
 	 * @param context

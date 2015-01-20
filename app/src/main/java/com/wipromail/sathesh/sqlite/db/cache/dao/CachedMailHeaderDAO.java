@@ -214,17 +214,42 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
      * Where Clause - Item Id
      * @throws Exception
      */
-    public void markMailAsRead(String itemId) throws Exception {
+    public void markMailAsReadUnread(String itemId, boolean isRead) throws Exception {
 
         try{
             open(cacheDbHelper);
-            database.execSQL(TableCachedMailHeader.getMarkMailAsReadQuery(),
-                    new String[]{itemId});
+            if(isRead) {
+                database.execSQL(TableCachedMailHeader.getMarkMailAsReadQuery(),
+                        new String[]{itemId});
+            }
+            else {
+                database.execSQL(TableCachedMailHeader.getMarkMailAsUnReadQuery(),
+                        new String[]{itemId});
+            }
         }finally{
             close(cacheDbHelper);
         }
     }
 
+    /** Marks mail as read/ unread
+     * Where Clause - Item Id
+     * param isRead true if the mail is read
+     * @throws Exception
+     */
+    public void markMailsAsReadUnread(ArrayList<String> itemIds, boolean isRead) throws Exception {
+
+        String query ;
+        query = isRead ? TableCachedMailHeader.getMarkMailAsReadQuery() : TableCachedMailHeader.getMarkMailAsUnReadQuery();
+        try{
+            open(cacheDbHelper);
+            for(String itemId:itemIds) {
+                database.execSQL(query,
+                        new String[]{itemId});
+            }
+        }finally{
+            close(cacheDbHelper);
+        }
+    }
 
     /*** DELETE QUERIES ***/
 

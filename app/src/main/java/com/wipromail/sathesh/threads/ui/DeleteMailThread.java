@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.ews.EWSConnection;
@@ -35,16 +36,24 @@ public class DeleteMailThread extends Thread implements Runnable, Constants {
     @Override
     public void run() {
         try {
-            threadMsg(Status.DELETING);
-            ExchangeService service = EWSConnection.getServiceFromStoredCredentials(parent.getApplicationContext());
-            if(!permanent) {
-                NetworkCall.deleteItemId(service, itemId, false);
+            if (itemId != null && !itemId.equals("")) {
+                threadMsg(Status.DELETING);
+
+                ExchangeService service = EWSConnection.getServiceFromStoredCredentials(parent.getApplicationContext());
+                if (!permanent) {
+                    NetworkCall.deleteItemId(service, itemId, false);
+                } else {
+                    NetworkCall.deleteItemId(service, itemId, true);
+                }
+
+                threadMsg(Status.DELETED);
+            }else{
+                Log.e(TAG, "MarkMailsReadUnreadThread -> Item count 0 or null");
+                threadMsg(Status.ERROR);
             }
-                else{
-                NetworkCall.deleteItemId(service, itemId, true);
-            }
-            threadMsg(Status.DELETED);
-        } catch (Exception e) {
+        }
+
+        catch (Exception e) {
             Utilities.generalCatchBlock(e,this);
             threadMsg(Status.ERROR);
         }

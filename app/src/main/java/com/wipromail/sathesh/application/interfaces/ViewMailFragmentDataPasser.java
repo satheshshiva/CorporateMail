@@ -39,6 +39,6 @@ public interface ViewMailFragmentDataPasser {
 
     public ViewMailFragment.Status getCurrentStatus();
     public CachedMailHeaderVO getCachedMailHeaderVO();
-
+    public void mailAsReadInCache();
 
 }

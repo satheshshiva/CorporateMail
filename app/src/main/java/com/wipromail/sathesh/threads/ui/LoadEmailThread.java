@@ -11,7 +11,6 @@ import android.util.Log;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.cache.adapter.CachedMailBodyAdapter;
-import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
@@ -55,7 +54,6 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
         List<FileAttachment> successfulCachedImages;
         EmailMessage message;
         CachedMailHeaderVO cachedMailHeaderVO;
-        CachedMailHeaderAdapter cacheMailHeaderAdapter;
         CachedMailBodyAdapter cacheMailBodyAdapter;
         String from_delimited="",to_delimited="", cc_delimited="", bcc_delimited="";
 
@@ -66,12 +64,10 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             service = EWSConnection.getServiceFromStoredCredentials(parent.getContext());
 
             cachedMailHeaderVO= parent.getMailHeader();
-            cacheMailHeaderAdapter = new CachedMailHeaderAdapter(parent.getContext());
             cacheMailBodyAdapter = new CachedMailBodyAdapter(parent.getContext());
 
-            //Mark the item as read
-            //First mark it in the cache
-            cacheMailHeaderAdapter.markMailAsRead(cachedMailHeaderVO.getItem_id());
+            //Mark the item as read in cache
+            parent.mailAsReadInCache();
 
             // get the cached body items by passing item id
             List<CachedMailBodyVO> bodyVOList = cacheMailBodyAdapter.getMailBody(parent.getItemId());
@@ -97,7 +93,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                     Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
                 }
 
-                NetworkCall.markEmailAsRead(service, parent.getContext(), parent.getItemId());
+                NetworkCall.markEmailAsReadUnread( parent.getContext(), parent.getItemId(), true);
             }
             else {
             //cache does NOT exist
@@ -152,7 +148,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                 if(BuildConfig.DEBUG){
                     Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
                 }
-                NetworkCall.markEmailAsRead(parent.getContext(), message);
+                NetworkCall.markEmailAsReadUnread(parent.getContext(), message.getId().toString(),true);
             } // end else cache NOT exist
 
         } catch(NoUserSignedInException e) {

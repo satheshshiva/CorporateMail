@@ -22,6 +22,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
+import com.wipromail.sathesh.threads.ui.MarkMailsReadUnreadThread;
 import com.wipromail.sathesh.ui.action.DeleteMailsUndoBarAction;
 import com.wipromail.sathesh.ui.components.MailDeleteDialog;
 import com.wipromail.sathesh.ui.components.UndoBarBuilder;
@@ -322,6 +323,59 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                     }
 
                     return true;
+
+                //Mark Mail as Unread
+                case R.id.actionMode_readMail:
+                    try {
+                        //update the cache marking all items as unread
+                        parent.getMailHeadersCacheAdapter().markMailsAsReadUnread(selectedVOs, true);
+
+                        //update the UI list (for updating the cached deletions in UI)
+                        parent.softRefreshList();
+
+                        // Close CAB
+                        mode.finish();
+
+                        // strip out the item ids from vo list
+                        ArrayList<String> itemIds = new ArrayList<>();
+                        for(CachedMailHeaderVO vo: selectedVOs){
+                            itemIds.add(vo.getItem_id());
+                        }
+                        //spawn a thread to update in the server
+                        new MarkMailsReadUnreadThread(parent.getActivity(), itemIds,true,null).start();
+
+                    } catch (Exception e) {
+                        Utilities.generalCatchBlock(e,this);
+                    }
+
+                    return true;
+
+                //Mark Mail as Unread
+                case R.id.actionMode_unreadMail:
+                    try {
+                        //update the cache marking all items as unread
+                        parent.getMailHeadersCacheAdapter().markMailsAsReadUnread(selectedVOs, false);
+
+                        //update the UI list (for updating the cached deletions in UI)
+                        parent.softRefreshList();
+
+                        // Close CAB
+                        mode.finish();
+
+                        // strip out the item ids from vo list
+                        ArrayList<String> itemIds = new ArrayList<>();
+                        for(CachedMailHeaderVO vo: selectedVOs){
+                            itemIds.add(vo.getItem_id());
+                        }
+                        //spawn a thread to update in the server
+                        new MarkMailsReadUnreadThread(parent.getActivity(), itemIds,false,null).start();
+
+                    } catch (Exception e) {
+                        Utilities.generalCatchBlock(e,this);
+                    }
+
+                    return true;
+
                 default:
                     return false;
             }
