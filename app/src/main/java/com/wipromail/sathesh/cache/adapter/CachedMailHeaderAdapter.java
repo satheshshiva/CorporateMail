@@ -222,10 +222,26 @@ public class CachedMailHeaderAdapter implements Constants{
 	 * @throws ServiceLocalException
 	 * @throws Exception
 	 */
-	public synchronized void markMailAsRead(String itemId ) throws Exception {
+	public synchronized void markMailAsReadUnread(String itemId , boolean isRead) throws Exception {
 		//call the DAO for with the list of VOs to save
-		dao.markMailAsRead(itemId);
+		dao.markMailAsReadUnread(itemId, isRead);
 	}
+
+
+
+    /** mark mails as read
+     * @throws ServiceLocalException
+     * @throws Exception
+     */
+    public synchronized void markMailsAsReadUnread(ArrayList<CachedMailHeaderVO> vos , boolean isRead) throws Exception {
+       ArrayList<String> itemIds = new ArrayList<String>();
+        for(CachedMailHeaderVO vo: vos){
+            itemIds.add(vo.getItem_id());
+       }
+        //call the DAO
+        dao.markMailsAsReadUnread(itemIds, isRead);
+    }
+
 
     /** PRIVATE METHODS **/
 

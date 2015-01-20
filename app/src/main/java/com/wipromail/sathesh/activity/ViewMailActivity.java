@@ -104,6 +104,10 @@ public class ViewMailActivity extends MyActivity implements Constants{
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item!=null && item.getItemId()==android.R.id.home){
+            //Mark the item as read
+            //this is done here because when the mail listview network
+            // refresh happens after it getting overriden
+            viewMailFragment.mailAsReadInCache();
             finish();
         }
 
@@ -173,6 +177,13 @@ public class ViewMailActivity extends MyActivity implements Constants{
         super.onStop();
     }
 
+    @Override
+    public void onBackPressed(){
+        //Mark the item as read
+        //this is done here because when the mail listview network
+        // refresh happens after it getting overriden
+        viewMailFragment.mailAsReadInCache();
+        super.onBackPressed();
+    }
+
 }
-
-

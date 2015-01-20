@@ -107,6 +107,14 @@ public class TableCachedMailHeader implements CacheDbConstants, DbTable{
 		return "UPDATE " + tableName + " SET " + COLUMN_ISREAD + "='1' WHERE " + COLUMN_ITEM_ID + "=? "   ;
 	}
 
+    /** UPDATE
+     * Mark MAIL AS UN-READ
+     * @return
+     */
+    public static String getMarkMailAsUnReadQuery(){
+        return "UPDATE " + tableName + " SET " + COLUMN_ISREAD + "='0' WHERE " + COLUMN_ITEM_ID + "=? "   ;
+    }
+
     /*** DELETE QUERIES ***/
 
 	/** DELETE by MailType

@@ -105,7 +105,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
 
         activity = (ActionBarActivity) getActivity();
-        context = (ActionBarActivity) getActivity();
+        context =  getActivity();
         activityDataPasser = (MailListActivityDataPasser)getActivity();
         if (cacheMailHeaderAdapter ==null){
             cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
@@ -113,7 +113,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         setRetainInstance(true);
 
         if(activity != null){
-            listener = new MailListViewListener(this);
+            if(listener==null) {
+                listener = new MailListViewListener(this);
+            }
             try {
                 //Initialize toolbar
                 MailApplication.toolbarInitialize(activity, view);
@@ -234,8 +236,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
-
 
         super.onActivityCreated(savedInstanceState);
         listView.setOnScrollListener(listener);
