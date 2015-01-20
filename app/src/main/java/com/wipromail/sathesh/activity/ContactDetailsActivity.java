@@ -72,6 +72,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
         if(sContact!= null ){
             getSupportActionBar().setSubtitle(getCustomDisplayName(sContact));
         }
+
     }
     @Override
     protected void onResume() {
@@ -186,12 +187,12 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
 
     @Override
     public void handleResolvingNames() {
-        setProgressBarIndeterminateVisibility(true);
+        setSupportProgressBarIndeterminateVisibility(true);
     }
 
     @Override
     public void handleResolveNamesOutput(NameResolutionCollection outputCollection, String extra1) {
-        setProgressBarIndeterminateVisibility(false);
+        setSupportProgressBarIndeterminateVisibility(false);
         Contact contact;
 
         try {
@@ -215,7 +216,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
 
     @Override
     public void handleResolveNamesOutputError(NameResolutionCollection outputCollection, String extra1, Exception pE) {
-        setProgressBarIndeterminateVisibility(false);
+        setSupportProgressBarIndeterminateVisibility(false);
 
     }
 
