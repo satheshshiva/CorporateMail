@@ -124,8 +124,8 @@
 
             <Button
                 android:id="@+id/about_activity_bugOrSuggestion_btn"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
+                style="@style/Style.Button"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/aboutActivityWebView"
                 android:layout_marginLeft="21dp"
@@ -136,8 +136,8 @@
 
             <Button
                 android:id="@+id/about_activity_check_update_btn"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
+                style="@style/Style.Button"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/aboutActivityWebView"
                 android:layout_below="@+id/imageButton1"
