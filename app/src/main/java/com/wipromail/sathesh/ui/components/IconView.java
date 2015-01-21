@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import com.wipromail.sathesh.constants.Constants;
+
 /** Source: https://bitbucket.org/informatic0re/awesome-font-iconview/overview
  *
  *
@@ -12,9 +14,9 @@ import android.widget.TextView;
 */
 
 
-public class IconView extends TextView {
+public class IconView extends TextView implements Constants{
 
-    public static final String FONT = "fontawesome-webfont.ttf";
+    public static final String FONT = "fontawesome-webfont_4.2.ttf";
 
     private static Typeface mFont;
     private String mIcon;
@@ -41,35 +43,6 @@ public class IconView extends TextView {
 
     private void init(Context context) {
         setTypeface(IconView.getTypeface(context, FONT));
-        setText(mIcon);
     }
 
-    public void setIcon(int iconResId) {
-        setText(iconResId);
-    }
-
-    public void setIcon(String iconString) {
-        setText(iconString);
-    }
-
-  /*  private void applyAttributes(Context context, AttributeSet attrs){
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.IconView, 0, 0);
-        try{
-            mIcon = a.getString(R.styleable.IconView_iconn);
-            mMeasureRatio = a.getBoolean(R.styleable.IconView_measureRatio, false);
-        } finally {
-            a.recycle();
-        }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if(mMeasureRatio){
-            int widthSize = getMeasuredWidth();
-            int heightSize = getMeasuredHeight();
-            int size = Math.max(widthSize, heightSize);
-            setMeasuredDimension(size, size);
-        }
-    }*/
 }
