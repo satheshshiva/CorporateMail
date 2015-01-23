@@ -49,13 +49,6 @@
                     android:background="@drawable/ic_menu_attachment"
                     android:cropToPadding="true" />
 
-              <ImageView
-                  android:id="@+id/header_flagIcon"
-                  android:layout_width="18dp"
-                  android:layout_height="18dp"
-                  android:background="@drawable/ic_action_flag"
-                  android:cropToPadding="true" />
-
             </LinearLayout>
 
         <LinearLayout
