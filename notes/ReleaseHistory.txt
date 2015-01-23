@@ -18,7 +18,5 @@ VERSION NAME	CODE	DATE                                DB VERSION
 0.2.7 alpha 	14		25June14 (EWS1.2 upgrade, min sdk 9) (last working version for API<11)
 0.3 alpha       15      20Oct14 (Sqlite,DB VERSION=1
                         orientation fixes.
-                        Will be the last version update for
-                        Gingerbread ).
-
-
+0.4 alpha       16      22Jan15(API 21 support library(Material design). Multiple select mails and do delete, read, unread.
+                        Changed actionbar to toolbar widget)
