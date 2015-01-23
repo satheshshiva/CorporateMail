@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FontIcon">
+        <attr name="fontVariant" format="enum">
+            <!-- if you change something here,
+             then change the "FontVariant" interface in "FontIcon" class -->
+            <enum name="fontsawesome" value="0"/>
+            <enum name="iconapp" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>
