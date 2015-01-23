@@ -1,13 +1,5 @@
 package com.wipromail.sathesh.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +13,14 @@ import android.util.Log;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.security.EncryptionDecryption;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @author Sathesh
@@ -112,7 +112,6 @@ public class Utilities implements Constants {
 
 			if(contentType.toLowerCase().contains("jpeg") || contentType.toLowerCase().contains("jpg") ){
 				boolean b=bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-				System.out.println("MyUtilities after cpmpreess " + b);
 			}
 			else if(contentType.toLowerCase().contains("png") ){
 				bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -149,7 +148,6 @@ public class Utilities implements Constants {
 	} 
 
 	/** input a string of array. outut a string array with trim() applied
-	 * @param string array
 	 * @return	string array
 	 */
 	public static String[] trimArrayString(String[] strarray){
@@ -253,5 +251,19 @@ public class Utilities implements Constants {
             e.printStackTrace();
     }
 
+    /** generic catch block which will log the exception
+     * @param e
+     */
+    public static void generalCatchBlock( Exception e, String additionalMsg){
+        Log.e(TAG, "Exception Occured ");
+        if(additionalMsg!=null && !additionalMsg.equals("")){
+            Log.e(TAG, additionalMsg);
+        }
+        Log.e(TAG, new StringBuffer()
+                .append(e.getClass().getName()).append(":").append(e.getMessage())
+                .toString());
+        if(BuildConfig.DEBUG)
+            e.printStackTrace();
+    }
 
 }

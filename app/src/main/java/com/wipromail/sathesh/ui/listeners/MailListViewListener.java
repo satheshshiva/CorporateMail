@@ -151,16 +151,15 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position,
                             long id) {
-
         //the pull to refresh list view starts from instead of 0.. fix for that
         CachedMailHeaderVO vo;
         MailListViewContent listViewContent;
 
-        try{
-            if(adapterView.getItemAtPosition(position)!=null){
-                listViewContent = (MailListViewContent)adapterView.getItemAtPosition(position);
+        try {
+            if (adapterView.getItemAtPosition(position) != null) {
+                listViewContent = (MailListViewContent) adapterView.getItemAtPosition(position);
 
-                switch(listViewContent.getType()) {
+                switch (listViewContent.getType()) {
                     case MailListViewContent.types.MAIL:
                         //open the mail
                         vo = listViewContent.getMailVO();
@@ -180,11 +179,11 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 
                 }
             }
-        }
-        catch(Exception e){
-            if(BuildConfig.DEBUG)
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG)
                 e.printStackTrace();
         }
+
     }
 
     /*** CAB LISTENERS ***/

@@ -42,11 +42,11 @@
                     android:textColor="@color/Black"
                     android:textSize="15dip" />
 
-                <ImageView
+              <ImageView
                     android:id="@+id/header_attachmentIcon"
-                    android:layout_width="25dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/attachment"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/ic_menu_attachment"
                     android:cropToPadding="true" />
 
             </LinearLayout>
