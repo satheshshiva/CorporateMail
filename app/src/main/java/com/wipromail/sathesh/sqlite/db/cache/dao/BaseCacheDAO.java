@@ -47,7 +47,7 @@ public class BaseCacheDAO implements Constants{
 	 * 
 	 */
 	protected void close(CacheDbHelper cacheDbHelper) {
-		cacheDbHelper.close();
+		//cacheDbHelper.close();
 	}
 
 	/** VO to DB TABLE(ContentValue)
