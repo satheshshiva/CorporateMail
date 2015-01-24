@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.TextView;
@@ -102,7 +100,7 @@ public class FontIcon implements Constants{
         public IconView(Context context, AttributeSet attrs) {
             super(context, attrs);
            initializeAttributes(context, attrs);
-            //setTypeface(getMyTypeFace(context));
+            setTypeface(getMyTypeFace(context));
 
         }
     }
@@ -115,20 +113,13 @@ public class FontIcon implements Constants{
         public ButtonView(Context context, AttributeSet attrs) {
             super(context, attrs);
             initializeAttributes(context, attrs);
-            str=getText();
-            span = new SpannableString(getText());
-            typeface=Typeface.createFromAsset(context.getAssets(), "fontawesome-webfont_4.2.ttf");
-            span.setSpan(typeface, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            super.setText(span);
+            setTypeface(getMyTypeFace(context));
 
         }
 
         @Override
         public void setText(CharSequence text, BufferType type) {
-            span = new SpannableString(text);
-            typeface=Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont_4.2.ttf");
-            span.setSpan(typeface, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            super.setText(span, type);
+            super.setText(text, type);
 
         }
 
