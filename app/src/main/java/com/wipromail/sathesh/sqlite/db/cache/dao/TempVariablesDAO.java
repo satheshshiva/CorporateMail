@@ -18,52 +18,54 @@ import java.util.List;
 
 public class TempVariablesDAO extends BaseCacheDAO {
 
-	//All the DAOs should have fully qualified class names of table class and vo class for auto wiring
-	private Class tableClass= com.wipromail.sathesh.sqlite.db.cache.tables.TableTempVariables.class;
-	private Class voClass= com.wipromail.sathesh.sqlite.db.cache.vo.TempVariablesVO.class;
+    //All the DAOs should have fully qualified class names of table class and vo class for auto wiring
+    private Class tableClass= com.wipromail.sathesh.sqlite.db.cache.tables.TableTempVariables.class;
+    private Class voClass= com.wipromail.sathesh.sqlite.db.cache.vo.TempVariablesVO.class;
 
 
-	/** Constructor for the DAO. initializes the Database helper
-	 * @param context
-	 */
-	public TempVariablesDAO(Context context) {
-		this.context = context;
-		cacheDbHelper = CacheDbHelper.getInstance(context);
-	}
+    /** Constructor for the DAO. initializes the Database helper
+     * @param context
+     */
+    public TempVariablesDAO(Context context) {
+        this.context = context;
+        cacheDbHelper = CacheDbHelper.getInstance(context);
+    }
 
 
-	/** New record 
-	 * @return
-	 */
-	public long createOrUpdate(TempVariablesVO vo) throws Exception {
-		long insertId=0;
-		ContentValues values = autoMapVoToContentValues(vo,tableClass);
-		try{
-			open(cacheDbHelper);
-			insertId = database.insertWithOnConflict(CacheDbConstants.table.TEMP_VARIABLES, null,
-					values,SQLiteDatabase.CONFLICT_REPLACE);
-		}
-		finally{
-			try{close(cacheDbHelper);}catch(Exception e){}
-		}
-		return insertId;
-	}
-	
-	/** Get all records
-	 * @return
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<TempVariablesVO> getAllRecords() throws Exception {
-		
-		List<TempVariablesVO> returnList =null;
-		try{
-		open(cacheDbHelper);
-		Cursor cursor = database.query(CacheDbConstants.table.TEMP_VARIABLES,
-				null, null, null, null, null, null);
-		returnList =(List)autoMapCursorToVo(cursor,voClass);
-		}finally{
-		close(cacheDbHelper);
-		}
-		return returnList;
-	}
+    /** New record
+     * @return
+     */
+    public long createOrUpdate(TempVariablesVO vo) throws Exception {
+        long insertId=0;
+        ContentValues values = autoMapVoToContentValues(vo,tableClass);
+        try{
+            open(cacheDbHelper);
+            insertId = database.insertWithOnConflict(CacheDbConstants.table.TEMP_VARIABLES, null,
+                    values,SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        finally{
+            try{close(cacheDbHelper);}catch(Exception e){}
+        }
+        return insertId;
+    }
+
+    /** Get all records
+     * @return
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public List<TempVariablesVO> getAllRecords() throws Exception {
+
+        List<TempVariablesVO> returnList =null;
+        Cursor cursor=null;
+        try{
+            open(cacheDbHelper);
+            cursor = database.query(CacheDbConstants.table.TEMP_VARIABLES,
+                    null, null, null, null, null, null);
+            returnList =(List)autoMapCursorToVo(cursor,voClass);
+        }finally{
+            try{cursor.close();}catch (Exception e){}
+            close(cacheDbHelper);
+        }
+        return returnList;
+    }
 }
