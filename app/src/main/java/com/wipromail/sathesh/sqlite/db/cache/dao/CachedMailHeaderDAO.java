@@ -47,7 +47,7 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
             }
         }
         finally{
-            try{close(cacheDbHelper);}catch(Exception e){}
+            close(cacheDbHelper);
         }
         return insertId;
     }
@@ -62,7 +62,7 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
             insertId= saveVOInDB(vo);
         }
         finally{
-            try{close(cacheDbHelper);}catch(Exception e){}
+            close(cacheDbHelper);
         }
         return insertId;
     }
@@ -80,13 +80,15 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
         List<CachedMailHeaderVO> returnList =null;
         if(mailType>0){
             String mailTypeStr = String.valueOf(mailType);
+            Cursor cursor=null;
             try{
                 open(cacheDbHelper);
                 //call the select query with the where clause mail type
-                Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
+                cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByMailTypeQuery(),
                         new String[]{mailTypeStr});
                 returnList =(List)autoMapCursorToVo(cursor,voClass);
             }finally{
+                try{cursor.close();}catch(Exception e ){}
                 close(cacheDbHelper);
             }
         }
@@ -102,13 +104,15 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
     public List<CachedMailHeaderVO> getAllRecordsByFolderId(String folderId) throws Exception {
 
         List<CachedMailHeaderVO> returnList =null;
+        Cursor cursor=null;
         try{
             open(cacheDbHelper);
             //call the select query with where clause as folder id
-            Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
+            cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsByFolderIdQuery(),
                     new String[]{folderId});
             returnList =(List)autoMapCursorToVo(cursor,voClass);
         }finally{
+            try{cursor.close();}catch(Exception e ){}
             close(cacheDbHelper);
         }
         return returnList;
@@ -122,17 +126,19 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
     public int getRecordsCountByMailType(int mailType) throws Exception {
 
         int count=-1;
+        Cursor cursor=null;
         if(mailType>0){
             String mailTypeStr = String.valueOf(mailType);
             try{
                 open(cacheDbHelper);
-                Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsCountByMailTypeQuery(),
+                cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsCountByMailTypeQuery(),
                         new String[]{mailTypeStr});
                 if(cursor!=null){
                     cursor.moveToFirst();
                     count=cursor.getInt(0);
                 }
             }finally{
+                try{cursor.close();}catch(Exception e ){}
                 close(cacheDbHelper);
             }
         }
@@ -147,15 +153,17 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
     public int getRecordsCountByFolderId(String folderId) throws Exception {
 
         int count=-1;
+        Cursor cursor=null;
         try{
             open(cacheDbHelper);
-            Cursor cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsCountByFolderIdQuery(),
+            cursor = database.rawQuery(TableCachedMailHeader.getAllRecordsCountByFolderIdQuery(),
                     new String[]{folderId});
             if(cursor!=null){
                 cursor.moveToFirst();
                 count=cursor.getInt(0);
             }
         }finally{
+            try{cursor.close();}catch(Exception e ){}
             close(cacheDbHelper);
         }
         return count;
@@ -169,17 +177,19 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
     public int getUnreadByMailType(int mailType) throws Exception {
 
         int count=-1;
+        Cursor cursor=null;
         if(mailType>0){
             String mailTypeStr = String.valueOf(mailType);
             try{
                 open(cacheDbHelper);
-                Cursor cursor = database.rawQuery(TableCachedMailHeader.getUnreadByMailTypeQuery(),
+                cursor = database.rawQuery(TableCachedMailHeader.getUnreadByMailTypeQuery(),
                         new String[]{mailTypeStr});
                 if(cursor!=null){
                     cursor.moveToFirst();
                     count=cursor.getInt(0);
                 }
             }finally{
+                try{cursor.close();}catch(Exception e ){}
                 close(cacheDbHelper);
             }
         }
@@ -194,15 +204,17 @@ public class CachedMailHeaderDAO extends BaseCacheDAO {
     public int getUnreadCountByFolderId(String folderId) throws Exception {
 
         int count=-1;
+        Cursor cursor=null;
         try{
             open(cacheDbHelper);
-            Cursor cursor = database.rawQuery(TableCachedMailHeader.getUnreadCountByFolderIdQuery(),
+            cursor = database.rawQuery(TableCachedMailHeader.getUnreadCountByFolderIdQuery(),
                     new String[]{folderId});
             if(cursor!=null){
                 cursor.moveToFirst();
                 count=cursor.getInt(0);
             }
         }finally{
+            try{cursor.close();}catch(Exception e ){}
             close(cacheDbHelper);
         }
         return count;

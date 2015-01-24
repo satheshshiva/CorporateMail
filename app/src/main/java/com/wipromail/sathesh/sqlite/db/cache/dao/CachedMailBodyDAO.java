@@ -47,7 +47,7 @@ public class CachedMailBodyDAO extends BaseCacheDAO {
             insertId= saveVOInDB(vo);
         }
         finally{
-            try{close(cacheDbHelper);}catch(Exception e){}
+            close(cacheDbHelper);
         }
         return insertId;
     }
@@ -62,13 +62,15 @@ public class CachedMailBodyDAO extends BaseCacheDAO {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<CachedMailBodyVO> getAllRecordsByItemId(String itemId) throws Exception {
         List<CachedMailBodyVO> returnList =null;
+        Cursor cursor=null;
         try{
             open(cacheDbHelper);
             //call the select query with the where clause mail type
-            Cursor cursor = database.rawQuery(TableCachedMailBody.getAllRecordsByItemIdQuery(),
+            cursor = database.rawQuery(TableCachedMailBody.getAllRecordsByItemIdQuery(),
                     new String[]{itemId});
             returnList =(List)autoMapCursorToVo(cursor,voClass);
         }finally{
+            try{cursor.close();}catch(Exception e ){}
             close(cacheDbHelper);
         }
         return returnList;
