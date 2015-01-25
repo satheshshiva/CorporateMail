@@ -1,19 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<!--?xml version="1.0" encoding="utf-8"?-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    >-->
-    <TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@android:id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textColor="@color/black"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
 
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
-<!--</LinearLayout>-->
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_margin="10dp"
+        android:layout_weight=".5"
+        android:src="@drawable/ic_action_compose" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="1.5"
+        android:gravity="left|center_vertical"
+        android:text="TextView" />
+
+</LinearLayout>  
