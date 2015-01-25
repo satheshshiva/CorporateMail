@@ -44,9 +44,9 @@ public class PlanetAdapter extends RecyclerView.Adapter<PlanetAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mTextView;
 
-        public ViewHolder(TextView v) {
+        public ViewHolder(View v) {
             super(v);
-            mTextView = v;
+            mTextView = (TextView) v.findViewById(R.id.text1);
         }
     }
 
@@ -59,8 +59,7 @@ public class PlanetAdapter extends RecyclerView.Adapter<PlanetAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater vi = LayoutInflater.from(parent.getContext());
         View v = vi.inflate(R.layout.drawer_list_item, parent, false);
-        TextView tv = (TextView) v.findViewById(android.R.id.text1);
-        return new ViewHolder(tv);
+        return new ViewHolder(v);
     }
 
     @Override
