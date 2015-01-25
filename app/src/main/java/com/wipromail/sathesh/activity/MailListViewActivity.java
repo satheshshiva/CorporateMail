@@ -1,9 +1,11 @@
 package com.wipromail.sathesh.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -151,27 +153,24 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		if(item!=null && item.getItemId()==android.R.id.home){
-			Intent intent = new Intent(this, HomePageActivity.class);
-			startActivity(intent);
-			finish();
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_REFRESH))
-		{
-			mailListViewFragment.refreshList();
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_COMPOSE)){
-			Intent intent = new Intent(this, ComposeActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			Intent intent = new Intent(this, MyPreferencesActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-			Intent intent = new Intent(this, AboutActivity.class);
-			startActivity(intent);
-		}
+        if (mailListViewFragment.getmDrawerToggle().onOptionsItemSelected(item)) {
+            return true;
+        }
+
+		if(item!=null && item.getTitle()!=null) {
+            if (item != null && item.getTitle().equals(ACTIONBAR_REFRESH)) {
+                mailListViewFragment.refreshList();
+            } else if ( item.getTitle().equals(ACTIONBAR_COMPOSE)) {
+                Intent intent = new Intent(this, ComposeActivity.class);
+                startActivity(intent);
+            } else if (item.getTitle().equals(ACTIONBAR_SETTINGS)) {
+                Intent intent = new Intent(this, MyPreferencesActivity.class);
+                startActivity(intent);
+            } else if (item.getTitle().equals(ACTIONBAR_ABOUT)) {
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+            }
+        }
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -189,6 +188,29 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 		}
 	}
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mailListViewFragment.getmDrawerToggle().syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mailListViewFragment.getmDrawerToggle().onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //this will close the navigation drawer first when its open
+        if(mailListViewFragment.getmDrawerLayout().isDrawerOpen(Gravity.LEFT)){
+            mailListViewFragment.getmDrawerLayout().closeDrawer(Gravity.LEFT);
+        }else{
+            super.onBackPressed();
+        }
+    }
 
 	/** GETTER SETTER PART **/
 	@Override

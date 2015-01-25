@@ -3,10 +3,14 @@ package com.wipromail.sathesh.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +26,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
+import com.wipromail.sathesh.adapter.PlanetAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
@@ -30,9 +35,9 @@ import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
+import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.GetMoreMailsThread;
 import com.wipromail.sathesh.threads.ui.GetNewMailsThread;
-import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -75,10 +80,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private UndoBarStatus undoBarState;
 
     private long totalMailsInFolder=-1;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     private boolean fragmentAlreadyLoaded=false;
     //contains all the UI listeners for this fragment
     private MailListViewListener listener ;
+    private DrawerLayout mDrawerLayout;
     /**
      * @author sathesh
      *
@@ -102,7 +109,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_list_view,
                 container, false);
-
 
         activity = (ActionBarActivity) getActivity();
         context =  getActivity();
@@ -160,6 +166,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //update mail type in the action bar title
                 myActionBar.setTitle(getMailFolderDisplayName(mailType));
                 myActionBar.setDisplayHomeAsUpEnabled(true);
+                myActionBar.setHomeButtonEnabled(true);
 
                 //initializes the adapter and associates the listview.
                 //this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
@@ -189,6 +196,40 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 if(resources.length==4){
                     swipeRefreshLayout.setColorSchemeResources(resources[0],resources[1],resources[2],resources[3]);
                 }
+
+                //Navigation Drawer
+                String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                        "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+                        "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+                        "Android", "iPhone", "WindowsMobile" };
+                RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.left_drawer);
+                mDrawerList.setAdapter(new PlanetAdapter(values, listener));
+                    // improve performance by indicating the list if fixed size.
+            //    mDrawerList.setHasFixedSize(true);
+                mDrawerList.setLayoutManager(new LinearLayoutManager(context));
+                mDrawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
+
+                // ActionBarDrawerToggle ties together the the proper interactions
+                // between the sliding drawer and the action bar app icon
+                mDrawerToggle = new ActionBarDrawerToggle(
+                        activity,                  /* host Activity */
+                        mDrawerLayout,         /* DrawerLayout object */
+                        R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+                        R.string.drawer_open,  /* "open drawer" description for accessibility */
+                        R.string.drawer_close  /* "close drawer" description for accessibility */
+                ) {
+                    public void onDrawerClosed(View view) {
+                    //    getActionBar().setTitle(mTitle);
+                        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    }
+
+                    public void onDrawerOpened(View drawerView) {
+                       // getActionBar().setTitle(mDrawerTitle);
+                        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    }
+                };
+                mDrawerLayout.setDrawerListener(mDrawerToggle);
 
                 //Action
                 //if the activity is recreated, and if the thread is already updating then update the UI status
@@ -509,5 +550,21 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     public void setListener(MailListViewListener listener) {
         this.listener = listener;
+    }
+
+    public ActionBarDrawerToggle getmDrawerToggle() {
+        return mDrawerToggle;
+    }
+
+    public void setmDrawerToggle(ActionBarDrawerToggle mDrawerToggle) {
+        this.mDrawerToggle = mDrawerToggle;
+    }
+
+    public DrawerLayout getmDrawerLayout() {
+        return mDrawerLayout;
+    }
+
+    public void setmDrawerLayout(DrawerLayout mDrawerLayout) {
+        this.mDrawerLayout = mDrawerLayout;
     }
 }
