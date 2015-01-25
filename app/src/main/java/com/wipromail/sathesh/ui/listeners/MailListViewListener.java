@@ -18,6 +18,7 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
+import com.wipromail.sathesh.adapter.PlanetAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
  * @author sathesh
  *
  */
-public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants {
+public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, PlanetAdapter.OnItemClickListener {
     private MailListViewFragment parent;
     private int preLast=-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
@@ -425,4 +426,8 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
         }
     }
 
+    @Override
+    public void onClick(View view, int position) {
+
+    }
 }
