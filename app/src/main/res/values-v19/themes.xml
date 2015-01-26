@@ -14,6 +14,10 @@
         <item name="colorAccent">@color/accent_material_dark</item>
         <item name="undoBarStyle">@style/UndoBarMaterialStyle</item>
         <item name="android:actionModeBackground">@color/blue_material_sample_Primary</item>
+
+        <!-- v19 -->
+        <item name="android:windowTranslucentStatus">true</item>
+
     </style>
 
 
