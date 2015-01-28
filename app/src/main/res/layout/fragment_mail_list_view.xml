@@ -4,8 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
@@ -110,7 +108,15 @@
 
     </LinearLayout>
 
-    <!-- layout to show image downloading progress -->
-    <include layout="@layout/drawer_layout" />
+    <!-- Drawer - Recycler View - list of items -->
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recyclerView"
+        android:layout_gravity="left|start"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:background="@color/white"
+        />
 
 </android.support.v4.widget.DrawerLayout>

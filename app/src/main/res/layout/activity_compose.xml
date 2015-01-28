@@ -141,7 +141,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
         
-        android:onClick="toSearchOnClick"
+        android:onDrawerLayoutRecyclerViewClick="toSearchOnClick"
             android:background="@drawable/search_icon"
             />
 
@@ -150,7 +150,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:onClick="toAddOnClick"
+            android:onDrawerLayoutRecyclerViewClick="toAddOnClick"
             android:background="@drawable/add_icon" />
 
     </LinearLayout>
@@ -207,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:onClick="sendBtnOnClick"
+                android:onDrawerLayoutRecyclerViewClick="sendBtnOnClick"
                 android:text="@string/compose_send_btn_lbl" />
 
             -->

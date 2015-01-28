@@ -22,7 +22,7 @@ public class ViewMailListener implements OnClickListener, Constants {
 		this.parent = viewMailFragment;
 	}
 	/* (non-Javadoc)
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 * @see android.view.View.OnClickListener#onDrawerLayoutRecyclerViewClick(android.view.View)
 	 */
 	@Override
 	public void onClick(View view) {

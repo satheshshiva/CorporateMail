@@ -25,8 +25,8 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
-import com.wipromail.sathesh.adapter.PlanetAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
@@ -203,8 +203,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                         "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
                         "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
                         "Android", "iPhone", "WindowsMobile" };
-                RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.left_drawer);
-                mDrawerList.setAdapter(new PlanetAdapter(values, listener));
+                RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.recyclerView);
+                mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(values, listener));
+                mDrawerList.setScrollContainer(true);
                     // improve performance by indicating the list if fixed size.
             //    mDrawerList.setHasFixedSize(true);
                 mDrawerList.setLayoutManager(new LinearLayoutManager(context));
