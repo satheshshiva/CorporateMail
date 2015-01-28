@@ -198,18 +198,14 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 }
 
                 //Navigation Drawer
-                String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                        "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-                        "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-                        "Android", "iPhone", "WindowsMobile" };
+                String[] values = context.getResources().getStringArray(R.array.drawerFolderNames);
+
                 RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.recyclerView);
                 mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(values, listener));
-                mDrawerList.setScrollContainer(true);
-                    // improve performance by indicating the list if fixed size.
-            //    mDrawerList.setHasFixedSize(true);
                 mDrawerList.setLayoutManager(new LinearLayoutManager(context));
                 mDrawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
+
+                //Navigation Drawer Slider Listener
 
                 // ActionBarDrawerToggle ties together the the proper interactions
                 // between the sliding drawer and the action bar app icon
