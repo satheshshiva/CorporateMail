@@ -32,6 +32,22 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     private String[] mDataset;
     private OnRecyclerViewClickListener mListener;
 
+    /**
+     * Interface for receiving click events from cells.
+     */
+    public interface OnRecyclerViewClickListener {
+        public void onDrawerLayoutRecyclerViewClick(View view, int position);
+    }
+
+    /**
+     * Interface for type of row specification
+     */
+    public interface Type {
+        public final int HEADER_IMAGE=0;
+        public final int HEADER_ROW=1;
+        public final int ROW_ITEM=2;
+    }
+
     // Constructor
     public DrawerRecyclerViewAdapter(String[] myDataset, OnRecyclerViewClickListener listener) {
         mDataset = myDataset;
@@ -45,6 +61,8 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         switch(viewType) {
             case Type.HEADER_IMAGE:
                 v = vi.inflate(R.layout.drawer_item_header_image, parent, false);
+                break;
+            case Type.HEADER_ROW:
                 break;
             case Type.ROW_ITEM:
                 v = vi.inflate(R.layout.drawer_item_row, parent, false);
@@ -69,22 +87,6 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     }
 
     /**
-     * Interface for receiving click events from cells.
-     */
-    public interface OnRecyclerViewClickListener {
-        public void onDrawerLayoutRecyclerViewClick(View view, int position);
-    }
-
-    /**
-     * Interface for type of row specification
-     */
-    public interface Type {
-        public final int HEADER_IMAGE=0;
-        public final int HEADER_ROW=1;
-        public final int ROW_ITEM=2;
-    }
-
-    /**
      * Custom ViewHolder
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements Constants{
@@ -103,7 +105,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         return mDataset.length;
     }
 
-    // With the following method we can check what type of view is being passed
+    // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
         if (position==0) {
