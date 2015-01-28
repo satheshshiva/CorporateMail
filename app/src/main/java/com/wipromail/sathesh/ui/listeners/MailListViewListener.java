@@ -18,7 +18,7 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
-import com.wipromail.sathesh.adapter.PlanetAdapter;
+import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * @author sathesh
  *
  */
-public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, PlanetAdapter.OnItemClickListener {
+public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener {
     private MailListViewFragment parent;
     private int preLast=-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
@@ -394,6 +394,15 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
         }
     }
 
+    /*** RECYCLER VIEW Listeners **/
+
+   /** Drawer Layout - On Item Click **/
+    @Override
+    public void onDrawerLayoutRecyclerViewClick(View view, int position) {
+        Log.d(TAG, "RecyclerView clicked item " + position);
+    }
+
+    /** PRIVATE METHODS ***/
     /** Select or unselects the mails below a particular date header
      *
      * @param dateHeaderPos position of date header in listview
@@ -424,10 +433,5 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 continue;   //nextContent is null. may not be possible
             }
         }
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-
     }
 }

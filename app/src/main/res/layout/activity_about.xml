@@ -68,7 +68,7 @@
                 android:layout_alignLeft="@+id/linearLayout1"
                 android:layout_below="@+id/linearLayout1"
                 android:layout_marginTop="45dp"
-                android:onClick="onClickRateApp"
+                android:onDrawerLayoutRecyclerViewClick="onClickRateApp"
                 android:text="@string/about_activity_rate_app_btn" />
 
             <Button
@@ -80,7 +80,7 @@
                 android:layout_alignBottom="@+id/about_activity_rate_app_btn"
                 android:layout_marginLeft="15dp"
                 android:layout_toRightOf="@+id/about_activity_rate_app_btn"
-                android:onClick="onClose"
+                android:onDrawerLayoutRecyclerViewClick="onClose"
                 android:text="@string/about_activity_close_btn" />
             <FrameLayout android:layout_width="fill_parent"
             android:layout_height="40dp"
