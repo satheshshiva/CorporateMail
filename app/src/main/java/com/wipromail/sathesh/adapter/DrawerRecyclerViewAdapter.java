@@ -71,7 +71,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
         // calculate the total item count.
         itemCount += 1 + mailFolders.length;
-            //header image (1) + mail folders length
+        //header image (1) + mail folders length
     }
 
     @Override
@@ -106,10 +106,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 // setting row on click listener
                 if (holder.view != null) {
                     // bind the onclick listener for the this view(row)
-                    holder.view.setOnClickListener(new View.OnClickListener() {
+                    holder.view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
-                        public void onClick(View view) {
-                            listener.onDrawerLayoutRecyclerViewClick(view, position);
+                        public void onFocusChange(View view, boolean hasFocus) {
+                            if(hasFocus) {
+                                listener.onDrawerLayoutRecyclerViewClick(view, position);
+                            }
                         }
                     });
                 }
