@@ -88,39 +88,59 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 v = vi.inflate(R.layout.drawer_item_row, parent, false);
                 break;
         }
-        return new ViewHolder(v);
+        return new ViewHolder(v, viewType);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if (holder.mTextView != null) {
-            holder.mTextView.setText((String) mailFoldersNamesStack.pop());
-            holder.fontIconView.setText((String) mailFoldersIconsStack.pop());
-        }
-        if (holder.view != null) {
-            // bind the onclick listener for the this view(row)
-            holder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onDrawerLayoutRecyclerViewClick(view, position);
+
+        switch(holder.viewType) {
+            case Type.HEADER_IMAGE:
+                break;
+            case Type.HEADER_ROW:
+                break;
+            case Type.ROW_ITEM:
+                holder.mTextView.setText((String) mailFoldersNamesStack.pop());
+                holder.fontIconView.setText((String) mailFoldersIconsStack.pop());
+
+                // setting row on click listener
+                if (holder.view != null) {
+                    // bind the onclick listener for the this view(row)
+                    holder.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            listener.onDrawerLayoutRecyclerViewClick(view, position);
+                        }
+                    });
                 }
-            });
+                break;
         }
     }
 
     /**
-     * Custom ViewHolder
+     * Custom ViewHolder. One object will be created for each row in the OnCreateViewHolder
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements Constants{
-        public final View view; // a row
-        public final TextView mTextView;
-        public final TextView fontIconView;
+        public int viewType;
+        public  View view; // a row
+        public  TextView mTextView;
+        public  TextView fontIconView;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, int vt) {
             super(v);
+            viewType = vt;
             view=v; // for assigning the onclick listener
-            mTextView = (TextView) view.findViewById(R.id.text1);
-            fontIconView = (TextView) view.findViewById(R.id.fontIconView);
+
+            switch(viewType) {
+                case Type.HEADER_IMAGE:
+                    break;
+                case Type.HEADER_ROW:
+                    break;
+                case Type.ROW_ITEM:
+                    mTextView = (TextView) view.findViewById(R.id.text1);
+                    fontIconView = (TextView) view.findViewById(R.id.fontIconView);
+                    break;
+            }
         }
     }
 

@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:orientation="horizontal"
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="?attr/selectableItemBackground"
     >
 
     <view
@@ -35,5 +38,5 @@
         android:text="folder name"
         android:textColor="#D9000000"
         android:textSize="14sp"
-         />
+        />
 </RelativeLayout>
