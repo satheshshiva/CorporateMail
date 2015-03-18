@@ -25,12 +25,16 @@ import android.widget.TextView;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
 
+import java.util.Stack;
+
 /**
  * Adapter for the planet data used in our drawer menu,
  */
-public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> {
-    private String[] mDataset;
-    private OnRecyclerViewClickListener mListener;
+public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> implements Constants{
+    private int itemCount=0;
+    private OnRecyclerViewClickListener listener;
+    private Stack mailFoldersNamesStack;
+    private Stack mailFoldersIconsStack;
 
     /**
      * Interface for receiving click events from cells.
@@ -49,9 +53,25 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     }
 
     // Constructor
-    public DrawerRecyclerViewAdapter(String[] myDataset, OnRecyclerViewClickListener listener) {
-        mDataset = myDataset;
-        mListener = listener;
+    public DrawerRecyclerViewAdapter(String[] mailFolders, String[] mailFolderIcons, OnRecyclerViewClickListener listener) {
+        this.listener = listener;
+
+        this.mailFoldersNamesStack = new Stack();
+        this.mailFoldersIconsStack = new Stack();
+
+        //copying the mail folder names in stack.. popping is easy using stack during row creation
+        for(int i= (mailFolders.length-1); i>=0; i--) {
+            this.mailFoldersNamesStack.add(mailFolders[i]);
+        }
+
+        //copying the mail folder names in stack.. popping is easy using stack during row creation
+        for(int i= (mailFolderIcons.length-1); i>=0; i--) {
+            this.mailFoldersIconsStack.add(mailFolderIcons[i]);
+        }
+
+        // calculate the total item count.
+        itemCount += 1 + mailFolders.length;
+            //header image (1) + mail folders length
     }
 
     @Override
@@ -73,17 +93,19 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if(position!=0) {
-            //bind the data
-            holder.mTextView.setText(mDataset[position]);
+        if (holder.mTextView != null) {
+            holder.mTextView.setText((String) mailFoldersNamesStack.pop());
+            holder.fontIconView.setText((String) mailFoldersIconsStack.pop());
         }
-        // bind the onclick listener for the this view(row)
-        holder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDrawerLayoutRecyclerViewClick(view, position);
-            }
-        });
+        if (holder.view != null) {
+            // bind the onclick listener for the this view(row)
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onDrawerLayoutRecyclerViewClick(view, position);
+                }
+            });
+        }
     }
 
     /**
@@ -92,17 +114,19 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     public static class ViewHolder extends RecyclerView.ViewHolder implements Constants{
         public final View view; // a row
         public final TextView mTextView;
+        public final TextView fontIconView;
 
         public ViewHolder(View v) {
             super(v);
             view=v; // for assigning the onclick listener
             mTextView = (TextView) view.findViewById(R.id.text1);
+            fontIconView = (TextView) view.findViewById(R.id.fontIconView);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return itemCount;
     }
 
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)

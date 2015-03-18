@@ -29,13 +29,11 @@ public class FontIcon implements Constants{
     private static Typeface mFont;
     private static int fontVariant;
 
-    public static final String FONT_AWESOME = "fontawesome-webfont_4.2.ttf";
-    public static final String FONT_ICO_MOON = "IcoMoon-Free.ttf";
+    public static final String FONT_ICO_MOON = "icomoon.ttf";
 
     //mapping for custom attributes present in attrs.xml
     private interface FontVariant{
-        public int FONT_AWESOME=0;
-        public int FONT_ICO_MOON =1;
+        public int FONT_ICO_MOON =0;
     }
 
     private static Hashtable<String,Typeface> typeFacesCache  = new Hashtable<>();
@@ -71,10 +69,7 @@ public class FontIcon implements Constants{
             String path=null;
 
             //select the path to ttf based on layout attribute
-            if (fontVariant == FontVariant.FONT_AWESOME) {
-                //call the super method to set the type face
-                path = FONT_AWESOME;
-            } else if (fontVariant == FontVariant.FONT_ICO_MOON) {
+            if (fontVariant == FontVariant.FONT_ICO_MOON) {
                 //call the super method to set the type face
                 path= FONT_ICO_MOON;
             }

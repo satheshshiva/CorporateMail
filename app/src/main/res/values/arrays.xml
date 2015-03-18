@@ -47,11 +47,4 @@
         <item name="remove">Remove</item>
     </string-array>
 
-    <!-- Drawer Folder Names -->
-    <string-array name="drawerFolderNames">
-        <item>@string/drawer_inbox</item>
-        <item>@string/drawer_drafts</item>
-        <item>@string/drawer_sent</item>
-        <item>@string/drawer_deleted_items</item>
-    </string-array>
 </resources>
