@@ -189,7 +189,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 
     /*** CAB LISTENERS ***/
 
-    /** CAB - List Item select
+    /** CAB - ListView Item select
      * a data structure curentlySelectedVOs will hold the selected items mail vos.
      * listview.getCheckedIds or similar will do the job but it will also give the date headers and loading more mails
      * row along with the result

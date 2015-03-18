@@ -203,7 +203,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
                 RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.recyclerView);
                 mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(mailfolderNames, mailfolderIcons, listener));
-                mDrawerList.setLayoutManager(new LinearLayoutManager(context));
+                mDrawerList.setLayoutManager(new LinearLayoutManager(context){
+                    @Override
+                    public View onFocusSearchFailed(View focused, int direction, RecyclerView.Recycler recycler, RecyclerView.State state){
+                        return focused;
+                    }
+                });
                 mDrawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
 
                 //Navigation Drawer Slider Listener
@@ -218,11 +223,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                         R.string.drawer_close  /* "close drawer" description for accessibility */
                 ) {
                     public void onDrawerClosed(View view) {
+                        super.onDrawerClosed(view);
                     //    getActionBar().setTitle(mTitle);
                         activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                     }
 
                     public void onDrawerOpened(View drawerView) {
+                        super.onDrawerOpened(drawerView);
                        // getActionBar().setTitle(mDrawerTitle);
                         activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                     }
