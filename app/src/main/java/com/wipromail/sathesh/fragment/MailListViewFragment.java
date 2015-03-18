@@ -3,12 +3,12 @@ package com.wipromail.sathesh.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -218,21 +218,23 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 mDrawerToggle = new ActionBarDrawerToggle(
                         activity,                  /* host Activity */
                         mDrawerLayout,         /* DrawerLayout object */
-                        R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
                         R.string.drawer_open,  /* "open drawer" description for accessibility */
                         R.string.drawer_close  /* "close drawer" description for accessibility */
                 ) {
-                    public void onDrawerClosed(View view) {
-                        super.onDrawerClosed(view);
-                    //    getActionBar().setTitle(mTitle);
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        super.onDrawerOpened(drawerView);
+                        // getActionBar().setTitle(mDrawerTitle);
                         activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                     }
 
-                    public void onDrawerOpened(View drawerView) {
-                        super.onDrawerOpened(drawerView);
-                       // getActionBar().setTitle(mDrawerTitle);
-                        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    @Override
+                    public void onDrawerClosed(View view) {
+                        super.onDrawerClosed(view);
+                    //    getActionBar().setTitle(mTitle);
+                        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()\
                     }
+
                 };
                 mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -267,7 +269,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     public void showMoreLoadingAnimation() {
         int totalRecordsInCache=-1;
 
-        //show the loading animation with the no of mails reamaining in the end of listview
+        //show the loading animation with the no of mails remaining in the end of listview
         try {
             totalRecordsInCache = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
 
