@@ -16,6 +16,7 @@
 
 package com.wipromail.sathesh.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,7 @@ import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
-
-import java.util.Stack;
+import com.wipromail.sathesh.fragment.MailListViewFragment;
 
 /**
  * Adapter for the planet data used in our drawer menu,
@@ -33,8 +33,9 @@ import java.util.Stack;
 public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> implements Constants{
     private int itemCount=0;
     private OnRecyclerViewClickListener listener;
-    private Stack mailFoldersNamesStack;
-    private Stack mailFoldersIconsStack;
+    private String[] mailFolders;
+    private String[] mailFolderIcons;
+    private MailListViewFragment parent;
 
     /**
      * Interface for receiving click events from cells.
@@ -53,21 +54,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     }
 
     // Constructor
-    public DrawerRecyclerViewAdapter(String[] mailFolders, String[] mailFolderIcons, OnRecyclerViewClickListener listener) {
+    public DrawerRecyclerViewAdapter(final MailListViewFragment parent, String[] mailFolders, String[] mailFolderIcons, OnRecyclerViewClickListener listener) {
         this.listener = listener;
 
-        this.mailFoldersNamesStack = new Stack();
-        this.mailFoldersIconsStack = new Stack();
-
-        //copying the mail folder names in stack.. popping is easy using stack during row creation
-        for(int i= (mailFolders.length-1); i>=0; i--) {
-            this.mailFoldersNamesStack.add(mailFolders[i]);
-        }
-
-        //copying the mail folder names in stack.. popping is easy using stack during row creation
-        for(int i= (mailFolderIcons.length-1); i>=0; i--) {
-            this.mailFoldersIconsStack.add(mailFolderIcons[i]);
-        }
+        this.mailFolders = mailFolders;
+        this.mailFolderIcons = mailFolderIcons;
+        this.parent = parent;
 
         // calculate the total item count.
         itemCount += 1 + mailFolders.length;
@@ -75,20 +67,34 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater vi = LayoutInflater.from(parent.getContext());
-        View v=null;
+    public ViewHolder onCreateViewHolder(final ViewGroup viewGroup, int viewType) {
+        LayoutInflater vi = LayoutInflater.from(viewGroup.getContext());
+        View view=null;
         switch(viewType) {
             case Type.HEADER_IMAGE:
-                v = vi.inflate(R.layout.drawer_item_header_image, parent, false);
+                view = vi.inflate(R.layout.drawer_item_header_image, viewGroup, false);
                 break;
             case Type.HEADER_ROW:
                 break;
             case Type.ROW_ITEM:
-                v = vi.inflate(R.layout.drawer_item_row, parent, false);
+                view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
+
+                //setting on click listener for the row item
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //get the selected position from the tag stored in OnBind
+                        parent.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
+
+                        //here you inform view that something was change - view will be invalidated
+                        notifyDataSetChanged();
+                        view.requestFocus();
+                        listener.onDrawerLayoutRecyclerViewClick(view, parent.getDrawerLayoutSelectedPosition());
+                    }
+                });
                 break;
         }
-        return new ViewHolder(v, viewType);
+        return new ViewHolder(view, viewType);
     }
 
     @Override
@@ -100,20 +106,17 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
             case Type.HEADER_ROW:
                 break;
             case Type.ROW_ITEM:
-                holder.mTextView.setText((String) mailFoldersNamesStack.pop());
-                holder.fontIconView.setText((String) mailFoldersIconsStack.pop());
+                holder.mTextView.setText(mailFolders[position-1]);
+                holder.fontIconView.setText(mailFolderIcons[position-1]);
 
                 // setting row on click listener
                 if (holder.view != null) {
-                    // bind the onclick listener for the this view(row)
-                    holder.view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View view, boolean hasFocus) {
-                            if(hasFocus) {
-                                listener.onDrawerLayoutRecyclerViewClick(view, position);
-                            }
-                        }
-                    });
+                    // Highlight the row if its a selected position
+                    if ( parent.getDrawerLayoutSelectedPosition() == position)
+                        holder.itemView.setBackgroundColor(Color.GRAY);
+                    else
+                        holder.itemView.setBackgroundColor(Color.WHITE);
+                    holder.view.setTag(holder); // used to get the selected position in OnCreateViewHolder
                 }
                 break;
         }

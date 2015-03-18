@@ -399,6 +399,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
    /** Drawer Layout - On Item Click **/
     @Override
     public void onDrawerLayoutRecyclerViewClick(View view, int position) {
+        parent.getmDrawerLayout().closeDrawers();
         Log.d(TAG, "RecyclerView clicked item " + position);
     }
 

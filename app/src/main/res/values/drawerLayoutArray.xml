@@ -6,6 +6,17 @@
         <item>@string/drawer_drafts</item>
         <item>@string/drawer_sent</item>
         <item>@string/drawer_deleted_items</item>
+        <item>SSS</item>
+        <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>   <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>   <item>AAa</item>
+
+
     </string-array>
 
     <!-- Drawer Folder Names Icons-->
@@ -14,6 +25,12 @@
         <item>@string/fontIcon_drawer_drafts</item>
         <item>@string/fontIcon_drawer_sentItems</item>
         <item>@string/fontIcon_drawer_deletedItems</item>
+
+        <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>
+        <item>AAa</item>   <item>AAa</item>   <item>AAa</item>   <item>AAa</item>   <item>AAa</item>   <item>AAa</item>
+        <item>AAa</item>   <item>AAa</item>
     </string-array>
 
 </resources>
