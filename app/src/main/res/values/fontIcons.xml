@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <!-- Drawer Layout -->
+    <string name="fontIcon_drawer_inbox">&#xf01c;</string>
+    <string name="fontIcon_drawer_drafts">&#xf044;</string>
+    <string name="fontIcon_drawer_sentItems">&#xf1d8;</string>
+    <string name="fontIcon_drawer_deletedItems">&#xe620;</string>
+</resources>

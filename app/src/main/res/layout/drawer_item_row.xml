@@ -1,26 +1,39 @@
 <!--?xml version="1.0" encoding="utf-8"?-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="48dp"
     android:orientation="horizontal"
+    android:background="?android:attr/activatedBackgroundIndicator"
     >
 
-    <ImageView
+    <view
+        class="com.wipromail.sathesh.ui.components.FontIcon$IconView"
+        android:id="@+id/fontIconView"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:textSize="23sp"
+        android:gravity="center_vertical"
+        android:textColor="#D9000000"
+        android:text="icon"
+        android:layout_marginLeft="16dp"
+        />
+
+    <!--<ImageView
         android:id="@+id/imageView1"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_margin="10dp"
         android:layout_weight=".5"
-        android:src="@drawable/ic_action_compose" />
+        android:src="@drawable/ic_action_compose" />-->
 
     <TextView
         android:id="@+id/text1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_weight="1.5"
-        android:gravity="left|center_vertical"
-        android:text="TextView" />
-
-</LinearLayout>  
+        android:gravity="center_vertical"
+        android:layout_marginLeft="72dp"
+        android:text="folder name"
+        android:textColor="#D9000000"
+        android:textSize="14sp"
+         />
+</RelativeLayout>

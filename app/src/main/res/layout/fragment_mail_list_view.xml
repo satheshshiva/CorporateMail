@@ -108,7 +108,7 @@
 
     </LinearLayout>
 
-    <!-- Drawer - Recycler View - list of items -->
+    <!-- Drawer - Recycler View -->
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/recyclerView"
