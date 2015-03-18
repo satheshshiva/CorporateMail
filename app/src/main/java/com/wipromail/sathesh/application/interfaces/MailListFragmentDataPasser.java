@@ -1,7 +1,6 @@
 package com.wipromail.sathesh.application.interfaces;
 
 
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 
 public interface MailListFragmentDataPasser {
@@ -17,6 +16,6 @@ public interface MailListFragmentDataPasser {
 	 */
 	public void softRefreshList();
 
-    public ActionBarDrawerToggle getmDrawerToggle();
+    public android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
     public DrawerLayout getmDrawerLayout();
 }
