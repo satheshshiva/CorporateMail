@@ -78,6 +78,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private Status newMailsThreadState;
     private Status moreMailsThreadState;
     private UndoBarStatus undoBarState;
+    private int drawerLayoutSelectedPosition=0;
 
     private long totalMailsInFolder=-1;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -86,6 +87,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     //contains all the UI listeners for this fragment
     private MailListViewListener listener ;
     private DrawerLayout mDrawerLayout;
+
     /**
      * @author sathesh
      *
@@ -202,7 +204,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 String[] mailfolderIcons = context.getResources().getStringArray(R.array.drawerMailFolderIcons);
 
                 RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.recyclerView);
-                mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(mailfolderNames, mailfolderIcons, listener));
+                mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, listener));
                 mDrawerList.setLayoutManager(new LinearLayoutManager(context){
                     @Override
                     public View onFocusSearchFailed(View focused, int direction, RecyclerView.Recycler recycler, RecyclerView.State state){
@@ -573,5 +575,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     public void setmDrawerLayout(DrawerLayout mDrawerLayout) {
         this.mDrawerLayout = mDrawerLayout;
+    }
+    public int getDrawerLayoutSelectedPosition() {
+        return drawerLayoutSelectedPosition;
+    }
+
+    public void setDrawerLayoutSelectedPosition(int drawerLayoutSelectedPosition) {
+        this.drawerLayoutSelectedPosition = drawerLayoutSelectedPosition;
     }
 }

@@ -4,8 +4,6 @@
     android:layout_height="48dp"
     android:orientation="horizontal"
     android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:background="?attr/selectableItemBackground"
     >
 
