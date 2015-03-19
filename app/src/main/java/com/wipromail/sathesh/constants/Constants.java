@@ -35,6 +35,7 @@ public interface Constants {
 
 	/** User Account Details Shared Preference **/
 	public static final String SIGNED_IN_USER_DISP_NAME = "SignedInUserDispName";
+    public static final String SIGNED_IN_USER_COMP_NAME = "SignedInUserCompanyName";
 	public static final String SIGNED_IN_USER_EMAIL = "SignedInUserEmail";
 	public static final String COUNTER_OPENED_MAILS = "CounterOpenedMails";
 	public static final String DO_NOT_RATE_APP = "DoNotRateApp";

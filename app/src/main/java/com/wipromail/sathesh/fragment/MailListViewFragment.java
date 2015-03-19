@@ -29,6 +29,7 @@ import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
@@ -87,6 +88,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     //contains all the UI listeners for this fragment
     private MailListViewListener listener ;
     private DrawerLayout mDrawerLayout;
+    private TextView dispName;
+    private TextView companyName;
 
     /**
      * @author sathesh
@@ -170,6 +173,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 myActionBar.setDisplayHomeAsUpEnabled(true);
                 myActionBar.setHomeButtonEnabled(true);
 
+                dispName = (TextView) view.findViewById(R.id.dispName);
+                companyName = (TextView) view.findViewById(R.id.companyName);
+
+                dispName.setText(SharedPreferencesAdapter.getUserDetailsDisplayName(context));
+                companyName.setText(SharedPreferencesAdapter.getUserDetailsCompanyName(context));
                 //initializes the adapter and associates the listview.
                 //this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
                 //get the cursor

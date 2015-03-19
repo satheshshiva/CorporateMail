@@ -1,7 +1,5 @@
 package com.wipromail.sathesh.application;
 
-import java.util.Date;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -249,6 +247,27 @@ public class SharedPreferencesAdapter implements Constants{
 		editor.commit();
 
 	}
+
+    /** Stores the user account details Company Name
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public static String getUserDetailsCompanyName(Context context) throws Exception{
+        sharedPreferences = context.getSharedPreferences(USER_ACCT_DETAILS, 0);
+        return sharedPreferences.getString(SIGNED_IN_USER_COMP_NAME, "");
+
+    }
+
+    public synchronized static void storeUserDetailsCompanyName(Context context, String value) throws Exception{
+
+        sharedPreferences = context.getSharedPreferences(USER_ACCT_DETAILS, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SIGNED_IN_USER_COMP_NAME, value);
+
+        editor.commit();
+
+    }
 
 	/** Stores the user account details Email
 	 * @param context
