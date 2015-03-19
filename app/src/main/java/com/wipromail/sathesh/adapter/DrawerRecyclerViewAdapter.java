@@ -62,7 +62,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         this.parent = parent;
 
         // calculate the total item count.
-        itemCount += 1 + mailFolders.length;
+        itemCount +=  mailFolders.length;
         //header image (1) + mail folders length
     }
 
@@ -72,33 +72,18 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         View view=null;
         switch(viewType) {
             case Type.HEADER_IMAGE:
-                view = vi.inflate(R.layout.drawer_item_header_image, viewGroup, false);
                 break;
             case Type.HEADER_ROW:
                 break;
             case Type.ROW_ITEM:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
-
-                //setting on click listener for the row item
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //get the selected position from the tag stored in OnBind
-                        parent.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
-
-                        //here you inform view that something was change - view will be invalidated
-                        notifyDataSetChanged();
-                        view.requestFocus();
-                        listener.onDrawerLayoutRecyclerViewClick(view, parent.getDrawerLayoutSelectedPosition());
-                    }
-                });
                 break;
         }
         return new ViewHolder(view, viewType);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         switch(holder.viewType) {
             case Type.HEADER_IMAGE:
@@ -106,16 +91,45 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
             case Type.HEADER_ROW:
                 break;
             case Type.ROW_ITEM:
-                holder.mTextView.setText(mailFolders[position-1]);
-                holder.fontIconView.setText(mailFolderIcons[position-1]);
+                holder.mailFolderNameTextView.setText(mailFolders[position]);
+                holder.fontIconView.setText(mailFolderIcons[position]);
 
                 // setting row on click listener
                 if (holder.view != null) {
-                    // Highlight the row if its a selected position
-                    if ( parent.getDrawerLayoutSelectedPosition() == position)
+
+                    //setting on click listener for the row item
+                    holder.view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        public void onClick(View view) {
+                            //get the selected position from the tag stored in OnBind
+                            parent.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
+
+                            //here you inform view that something was change - view will be invalidated
+                            notifyDataSetChanged();
+                            view.requestFocus();
+                            listener.onDrawerLayoutRecyclerViewClick(view, parent.getDrawerLayoutSelectedPosition());
+                        }
+
+                        @Override
+                        public void onFocusChange(View view, boolean hasFocus) {
+                            if(hasFocus) {
+                                listener.onDrawerLayoutRecyclerViewClick(view, position);
+                                holder.mailFolderNameTextView.setTextColor(Color.RED);
+                                holder.fontIconView.setTextColor(Color.RED);
+                            }
+                            else{
+                                holder.mailFolderNameTextView.setTextColor(Color.BLACK);
+                                holder.fontIconView.setTextColor(Color.BLACK);
+                            }
+                        }
+                    });
+
+                   /* // Highlight the row if its a selected position
+                    if ( parent.getDrawerLayoutSelectedPosition() == position) {
                         holder.itemView.setBackgroundColor(Color.GRAY);
-                    else
+                    }
+                    else {
                         holder.itemView.setBackgroundColor(Color.WHITE);
+                    }*/
                     holder.view.setTag(holder); // used to get the selected position in OnCreateViewHolder
                 }
                 break;
@@ -128,7 +142,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     public static class ViewHolder extends RecyclerView.ViewHolder implements Constants{
         public int viewType;
         public  View view; // a row
-        public  TextView mTextView;
+        public  TextView mailFolderNameTextView;
         public  TextView fontIconView;
 
         public ViewHolder(View v, int vt) {
@@ -142,7 +156,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 case Type.HEADER_ROW:
                     break;
                 case Type.ROW_ITEM:
-                    mTextView = (TextView) view.findViewById(R.id.text1);
+                    mailFolderNameTextView = (TextView) view.findViewById(R.id.mailFolderName);
                     fontIconView = (TextView) view.findViewById(R.id.fontIconView);
                     break;
             }
@@ -157,9 +171,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-        if (position==0) {
-            return Type.HEADER_IMAGE;
-        }
+
         return Type.ROW_ITEM;
     }
 }

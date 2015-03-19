@@ -108,15 +108,7 @@
 
     </LinearLayout>
 
-    <!-- Drawer - Recycler View -->
-    <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recyclerView"
-        android:layout_gravity="left|start"
-        android:layout_width="320dp"
-        android:layout_height="match_parent"
-        android:choiceMode="singleChoice"
-        android:background="@color/white"
-        />
+    <!-- Drawer layout -->
+    <include layout="@layout/drawer_layout" />
 
 </android.support.v4.widget.DrawerLayout>
