@@ -4,7 +4,7 @@
 <!-- Header Image-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="178dp"
+    android:layout_height="98dp"
     android:background="@drawable/drawer_1"
     android:orientation="vertical"
    android:onClick="emptyClick"
@@ -47,12 +47,12 @@
     </LinearLayout>
 
     <!-- circular image -->
-    <de.hdodenhof.circleimageview.CircleImageView
+    <!--<de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:src="@drawable/wipro_logo_big"
+        android:src="@drawable/ic_launcher"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="38dp"
         android:id="@+id/circleView"
-        />
+        />-->
 </RelativeLayout>
