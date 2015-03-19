@@ -32,17 +32,17 @@ import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
-import com.wipromail.sathesh.ui.util.OptionsUIContent;
 import com.wipromail.sathesh.ui.listeners.LoginPageListener;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 import java.net.URISyntaxException;
 
 public class LoginPageActivity extends MyActivity implements Constants {
 
-	private String username=USERNAME_NULL, password=PASSWORD_NULL;
-	private Intent intent;
-	//	private  boolean customTitleSupported = false;
-	private Activity activity;
+    private String username=USERNAME_NULL, password=PASSWORD_NULL;
+    private Intent intent;
+    //	private  boolean customTitleSupported = false;
+    private Activity activity;
     private Context context;
     private EditText login_username;
     private EditText login_passwd;
@@ -50,13 +50,13 @@ public class LoginPageActivity extends MyActivity implements Constants {
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
     private TextView urlDisp;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		activity = this;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = this;
         context=this;
-		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.activity_login_page);
+        // requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.activity_login_page);
 
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
@@ -74,14 +74,14 @@ public class LoginPageActivity extends MyActivity implements Constants {
         urlDisp.setText(sharedPref.getServerURL(context));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		//testingdb(activity);
+        //testingdb(activity);
 		/* if(customTitleSupported)
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getInboxTitleBarLayout());*/
-	}
+    }
 
     @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
 
         MenuItem menuItem;
 
@@ -89,21 +89,21 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 .setIcon(OptionsUIContent.getAboutDarkIcon());
         MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		return true;
-	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         if(item!=null && item.getTitle().equals(ACTIONBAR_LOGIN)){
             loginButtonClicked();
         }
         else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-			Intent intent = new Intent(this, AboutActivity.class);
-			startActivity(intent);
-		}
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
 
     /** Public method for the Button Onclick from layout
@@ -145,96 +145,96 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
     private class Login extends AsyncTask<String, String, Long>{
 
-		private ExchangeService service;
-		ProgressDialog dialog;
+        private ExchangeService service;
+        ProgressDialog dialog;
 
-		@Override
-		protected void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
 
-			try {
-				dialog = ProgressDialog.show(LoginPageActivity.this, "Logging in", 
-						"", true);
+            try {
+                dialog = ProgressDialog.show(LoginPageActivity.this, "Logging in",
+                        "", true);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				Log.e(TAG, "Exception occured on preexecute");
-			}
-		}
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "Exception occured on preexecute");
+            }
+        }
 
-		@Override
-		protected Long doInBackground(String... paramArrayOfParams) {
+        @Override
+        protected Long doInBackground(String... paramArrayOfParams) {
 
-			try {
+            try {
 
-				publishProgress("2" ,"RUNNING", LOGGING_IN_PROG1_TEXT);
+                publishProgress("2" ,"RUNNING", LOGGING_IN_PROG1_TEXT);
 
-				service = EWSConnection.getService(activity, paramArrayOfParams[0], paramArrayOfParams[1]);
+                service = EWSConnection.getService(activity, paramArrayOfParams[0], paramArrayOfParams[1]);
 
-				//get and store userd detials
-				//EWS call
-				publishProgress("3" ,"RUNNING", LOGGING_IN_PROG2_TEXT);
-				try{
-					retrieveAndStoreUserDetails(service, paramArrayOfParams[0]);
-				}catch(Exception e){e.printStackTrace();}
+                //get and store userd detials
+                //EWS call
+                publishProgress("3" ,"RUNNING", LOGGING_IN_PROG2_TEXT);
+                try{
+                    retrieveAndStoreUserDetails(service, paramArrayOfParams[0]);
+                }catch(Exception e){e.printStackTrace();}
 
-				//EWScall
-				FindFoldersResults findResults = NetworkCall.getInboxFolders(service);
-				publishProgress("6" ,"RUNNING", LOGGING_IN_PROG3_TEXT);
+                //EWScall
+                FindFoldersResults findResults = NetworkCall.getInboxFolders(service);
+                publishProgress("6" ,"RUNNING", LOGGING_IN_PROG3_TEXT);
 
-				for(Folder folder : findResults.getFolders())
-				{     
-					Log.i(TAG, "Count======"+folder.getChildFolderCount());                                         		
-					Log.i(TAG, "Name======="+folder.getDisplayName());
-				}
+                for(Folder folder : findResults.getFolders())
+                {
+                    Log.i(TAG, "Count======"+folder.getChildFolderCount());
+                    Log.i(TAG, "Name======="+folder.getDisplayName());
+                }
 
-				publishProgress("10" ,"COMPLETED", "");
+                publishProgress("10" ,"COMPLETED", "");
 
-			}
-			catch(NullPointerException e){
-					publishProgress("0" ,"ERROR", "Check your Internet Connection\n\nDetails:NPE"  );
-			}
-			catch (URISyntaxException e) {
-				publishProgress("0" ,"ERROR", MALFORMED_WEBMAIL_URL_TEXT);
-			}
-			catch(HttpErrorException e){
-				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
-					publishProgress("0" ,"ERROR", AUTHENICATION_FAILED_TEXT);
-				}
-				else
-				{
-					publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
-				}
-			}
+            }
+            catch(NullPointerException e){
+                publishProgress("0" ,"ERROR", "Check your Internet Connection\n\nDetails:NPE"  );
+            }
+            catch (URISyntaxException e) {
+                publishProgress("0" ,"ERROR", MALFORMED_WEBMAIL_URL_TEXT);
+            }
+            catch(HttpErrorException e){
+                if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
+                    publishProgress("0" ,"ERROR", AUTHENICATION_FAILED_TEXT);
+                }
+                else
+                {
+                    publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
+                }
+            }
 
-			catch (Exception e) {
-				publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " +e.getMessage());
-			}
+            catch (Exception e) {
+                publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " +e.getMessage());
+            }
 
-			return 0l;
+            return 0l;
 
-		}
+        }
 
-		private void retrieveAndStoreUserDetails(ExchangeService service, String username) throws NoInternetConnectionException, Exception {
+        private void retrieveAndStoreUserDetails(ExchangeService service, String username) throws NoInternetConnectionException, Exception {
 
-			//EWS call
-			NameResolutionCollection nameResolutions = MailApplication.resolveName(service, trimUserName(username), false);
-			String email;
+            //EWS call
+            NameResolutionCollection nameResolutions = MailApplication.resolveName(service, trimUserName(username), false);
+            String email;
 
-			for(NameResolution nameResolution : nameResolutions)
-			{
-				if( nameResolution!= null && nameResolution.getMailbox() != null){
-					//it might return more values.. so check for the current user name which is signed in
-					if(nameResolution.getMailbox().getName().equalsIgnoreCase(trimUserName(username))){
+            for(NameResolution nameResolution : nameResolutions)
+            {
+                if( nameResolution!= null && nameResolution.getMailbox() != null){
+                    //it might return more values.. so check for the current user name which is signed in
+                    if(nameResolution.getMailbox().getName().equalsIgnoreCase(trimUserName(username))){
 
-						email = nameResolution.getMailbox().getAddress();
-						//have to get contact details
-						//EWS call
-						nameResolutions = MailApplication.resolveName(service, email, true);
+                        email = nameResolution.getMailbox().getAddress();
+                        //have to get contact details
+                        //EWS call
+                        nameResolutions = MailApplication.resolveName(service, email, true);
 
-						//the returned should be 1 since we gave the full email address
-						if(nameResolutions.getCount() == 1){
+                        //the returned should be 1 since we gave the full email address
+                        if(nameResolutions.getCount() == 1){
 
-							nameResolution = nameResolutions.nameResolutionCollection(0);
+                            nameResolution = nameResolutions.nameResolutionCollection(0);
                             if(nameResolution!= null ) {
                                 //storing the Display name locally
                                 if (nameResolution.getContact() != null){
@@ -242,66 +242,63 @@ public class LoginPageActivity extends MyActivity implements Constants {
                                 }
                                 //storing the Company Name locally
                                 if ( nameResolution.getMailbox() != null) {
-                                    SharedPreferencesAdapter.storeUserDetailsCompanyName(activity, nameResolution.getContact().getCompanyName());
-                                }
-                                //storing the Email Address locally
-                                if ( nameResolution.getMailbox() != null) {
                                     SharedPreferencesAdapter.storeUserDetailEmail(activity, nameResolution.getMailbox().getAddress());
+                                    SharedPreferencesAdapter.storeUserDetailsCompanyName(activity, nameResolution.getContact().getCompanyName());
                                 }
 
                             }
-						}
+                        }
 
-						//since we are done already and no need to process the rest of the username looking similarly
-						break;
-					}
-				}
+                        //since we are done already and no need to process the rest of the username looking similarly
+                        break;
+                    }
+                }
 
-			}
-		}
+            }
+        }
 
-		@Override
-		protected void onProgressUpdate(String... progress) {
+        @Override
+        protected void onProgressUpdate(String... progress) {
 
-			if (progress[1].equalsIgnoreCase("RUNNING")){
-				dialog.setMessage(progress[2]);
-			}
+            if (progress[1].equalsIgnoreCase("RUNNING")){
+                dialog.setMessage(progress[2]);
+            }
 
-			else if (progress[1].equalsIgnoreCase("COMPLETED")){
-				try {
-					dialog.dismiss();	//gives this exception "View not attached to window manager" on a mobile
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				try {
-					saveCredentials(username, password);
-				//	MailApplication.onFirstTimeSuccessfulLogin(activity);
-				} catch (Exception e) {
-					e.printStackTrace();
-					onProgressUpdate("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
-				}
+            else if (progress[1].equalsIgnoreCase("COMPLETED")){
+                try {
+                    dialog.dismiss();	//gives this exception "View not attached to window manager" on a mobile
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                try {
+                    saveCredentials(username, password);
+                    //	MailApplication.onFirstTimeSuccessfulLogin(activity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onProgressUpdate("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
+                }
 
-				intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
-				startActivity(intent);
+                intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
+                startActivity(intent);
 
-				LoginPageActivity.this.finish();
-			}
+                LoginPageActivity.this.finish();
+            }
 
-			else if(progress[1].equalsIgnoreCase("ERROR")){
-				dialog.dismiss();
-				Notifications.showAlert(LoginPageActivity.this, progress[2] );
-			}
-		}
+            else if(progress[1].equalsIgnoreCase("ERROR")){
+                dialog.dismiss();
+                Notifications.showAlert(LoginPageActivity.this, progress[2] );
+            }
+        }
 
-		private void saveCredentials(String username, String password) throws Exception {
-			SharedPreferencesAdapter.storeCredentials(LoginPageActivity.this.getApplicationContext(), username, password);
-		}
+        private void saveCredentials(String username, String password) throws Exception {
+            SharedPreferencesAdapter.storeCredentials(LoginPageActivity.this.getApplicationContext(), username, password);
+        }
 
-		@Override
-		protected void onPostExecute(Long nl) {
+        @Override
+        protected void onPostExecute(Long nl) {
 
-		}
-	}   //end async task
+        }
+    }   //end async task
 
 
 
@@ -326,17 +323,17 @@ public class LoginPageActivity extends MyActivity implements Constants {
         return username;
     }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
-	/** GETTER AND SETTER **/
+    /** GETTER AND SETTER **/
     public TextView getUrlDisp() {
         return urlDisp;
     }
