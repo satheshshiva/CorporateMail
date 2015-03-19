@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
@@ -210,6 +211,12 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         }else{
             super.onBackPressed();
         }
+    }
+
+    // Drawer layout header on click will call this. To prevent the underlying element click
+    public void emptyClick(View view){
+        //do nothing
+
     }
 
 	/** GETTER SETTER PART **/

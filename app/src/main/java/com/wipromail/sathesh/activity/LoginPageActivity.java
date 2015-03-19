@@ -217,14 +217,14 @@ public class LoginPageActivity extends MyActivity implements Constants {
 		private void retrieveAndStoreUserDetails(ExchangeService service, String username) throws NoInternetConnectionException, Exception {
 
 			//EWS call
-			NameResolutionCollection nameResolutions = MailApplication.resolveName(service, username, false);
+			NameResolutionCollection nameResolutions = MailApplication.resolveName(service, trimUserName(username), false);
 			String email;
 
 			for(NameResolution nameResolution : nameResolutions)
 			{
 				if( nameResolution!= null && nameResolution.getMailbox() != null){
 					//it might return more values.. so check for the current user name which is signed in
-					if(nameResolution.getMailbox().getName().equalsIgnoreCase(username)){
+					if(nameResolution.getMailbox().getName().equalsIgnoreCase(trimUserName(username))){
 
 						email = nameResolution.getMailbox().getAddress();
 						//have to get contact details
@@ -235,12 +235,21 @@ public class LoginPageActivity extends MyActivity implements Constants {
 						if(nameResolutions.getCount() == 1){
 
 							nameResolution = nameResolutions.nameResolutionCollection(0);
-							if( nameResolution!= null && nameResolution.getContact() != null ){
-								SharedPreferencesAdapter.storeUserDetailDisplayName(activity, nameResolution.getContact().getDisplayName());
-							}
-							if( nameResolution!= null && nameResolution.getMailbox() != null ){
-								SharedPreferencesAdapter.storeUserDetailEmail(activity, nameResolution.getMailbox().getAddress());
-							}
+                            if(nameResolution!= null ) {
+                                //storing the Display name locally
+                                if (nameResolution.getContact() != null){
+                                    SharedPreferencesAdapter.storeUserDetailDisplayName(activity, nameResolution.getContact().getDisplayName());
+                                }
+                                //storing the Company Name locally
+                                if ( nameResolution.getMailbox() != null) {
+                                    SharedPreferencesAdapter.storeUserDetailsCompanyName(activity, nameResolution.getContact().getCompanyName());
+                                }
+                                //storing the Email Address locally
+                                if ( nameResolution.getMailbox() != null) {
+                                    SharedPreferencesAdapter.storeUserDetailEmail(activity, nameResolution.getMailbox().getAddress());
+                                }
+
+                            }
 						}
 
 						//since we are done already and no need to process the rest of the username looking similarly
@@ -294,6 +303,8 @@ public class LoginPageActivity extends MyActivity implements Constants {
 		}
 	}   //end async task
 
+
+
     /** Private method which updates the Server Spinner selection based on the stored preference value
      * For Custom URL it wont switch to Custom URL because when Custom URL option is selcted it wont trigger the dialog
      *
@@ -307,6 +318,12 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 serverSpinner.setSelection(i);
             }
         }
+    }
+    private String trimUserName(String username) {
+        if(username.contains("@")){
+            return username.substring(0, username.indexOf("@"));
+        }
+        return username;
     }
 
 	@Override
