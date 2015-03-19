@@ -39,6 +39,7 @@ import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.GetMoreMailsThread;
 import com.wipromail.sathesh.threads.ui.GetNewMailsThread;
+import com.wipromail.sathesh.ui.action.NavigationBarToggle;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -91,6 +92,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private TextView dispName;
     private TextView companyName;
 
+    private int existingNavigationBarColor;
     /**
      * @author sathesh
      *
@@ -222,27 +224,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
                 // ActionBarDrawerToggle ties together the the proper interactions
                 // between the sliding drawer and the action bar app icon
-                mDrawerToggle = new ActionBarDrawerToggle(
+                mDrawerToggle = new NavigationBarToggle(
                         activity,                  /* host Activity */
                         mDrawerLayout,         /* DrawerLayout object */
                         R.string.drawer_open,  /* "open drawer" description for accessibility */
                         R.string.drawer_close  /* "close drawer" description for accessibility */
-                ) {
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-                        super.onDrawerOpened(drawerView);
-                        // getActionBar().setTitle(mDrawerTitle);
-                        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                    }
+                );
 
-                    @Override
-                    public void onDrawerClosed(View view) {
-                        super.onDrawerClosed(view);
-                    //    getActionBar().setTitle(mTitle);
-                        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()\
-                    }
-
-                };
                 mDrawerLayout.setDrawerListener(mDrawerToggle);
 
                 //Action
