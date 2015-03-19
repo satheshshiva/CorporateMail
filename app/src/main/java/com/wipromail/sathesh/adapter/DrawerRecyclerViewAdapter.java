@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.wipromail.sathesh.adapter;
 
 import android.graphics.Color;
@@ -77,6 +61,20 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 break;
             case Type.ROW_ITEM:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
+
+                //setting on click listener for the row item
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //get the selected position from the tag stored in OnBind
+                        parent.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
+
+                        //here you inform view that something was change - view will be invalidated
+                        notifyDataSetChanged();
+                        view.requestFocus();
+                        listener.onDrawerLayoutRecyclerViewClick(view, parent.getDrawerLayoutSelectedPosition());
+                    }
+                });
                 break;
         }
         return new ViewHolder(view, viewType);
@@ -97,39 +95,28 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 // setting row on click listener
                 if (holder.view != null) {
 
-                    //setting on click listener for the row item
-                    holder.view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        public void onClick(View view) {
-                            //get the selected position from the tag stored in OnBind
-                            parent.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
-
-                            //here you inform view that something was change - view will be invalidated
-                            notifyDataSetChanged();
-                            view.requestFocus();
-                            listener.onDrawerLayoutRecyclerViewClick(view, parent.getDrawerLayoutSelectedPosition());
-                        }
-
-                        @Override
-                        public void onFocusChange(View view, boolean hasFocus) {
-                            if(hasFocus) {
-                                listener.onDrawerLayoutRecyclerViewClick(view, position);
-                                holder.mailFolderNameTextView.setTextColor(Color.RED);
-                                holder.fontIconView.setTextColor(Color.RED);
-                            }
-                            else{
-                                holder.mailFolderNameTextView.setTextColor(Color.BLACK);
-                                holder.fontIconView.setTextColor(Color.BLACK);
-                            }
-                        }
-                    });
-
-                   /* // Highlight the row if its a selected position
+                    // Highlight the row if its a selected position
                     if ( parent.getDrawerLayoutSelectedPosition() == position) {
-                        holder.itemView.setBackgroundColor(Color.GRAY);
+                        //selected row
+                        holder.itemView.setBackgroundColor(parent.getResources().getColor(R.color.LightGrey));
+                        //font icon
+                        holder.fontIconView.setTextColor(Color.BLACK);
+                        holder.fontIconView.setAlpha(1f);
+                        // text view
+                        holder.mailFolderNameTextView.setTextColor(Color.BLACK);
+                        holder.mailFolderNameTextView.setAlpha(1f);
+
                     }
                     else {
-                        holder.itemView.setBackgroundColor(Color.WHITE);
-                    }*/
+                        //normal row
+                        holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                        //font icon
+                        holder.fontIconView.setTextColor(Color.BLACK);
+                        holder.fontIconView.setAlpha(.6f);
+                        // textview
+                        holder.mailFolderNameTextView.setTextColor(Color.BLACK);
+                        holder.mailFolderNameTextView.setAlpha(.8f);
+                    }
                     holder.view.setTag(holder); // used to get the selected position in OnCreateViewHolder
                 }
                 break;
