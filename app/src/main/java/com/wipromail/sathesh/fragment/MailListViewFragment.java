@@ -204,13 +204,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 String[] mailfolderIcons = context.getResources().getStringArray(R.array.drawerMailFolderIcons);
 
                 RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.recyclerView);
+                mDrawerList.setScrollContainer(true);
+
                 mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, listener));
-                mDrawerList.setLayoutManager(new LinearLayoutManager(context){
-                    @Override
-                    public View onFocusSearchFailed(View focused, int direction, RecyclerView.Recycler recycler, RecyclerView.State state){
-                        return focused;
-                    }
-                });
+                mDrawerList.setLayoutManager(new LinearLayoutManager(context));
                 mDrawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
 
                 //Navigation Drawer Slider Listener

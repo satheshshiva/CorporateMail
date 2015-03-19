@@ -4,6 +4,8 @@
     android:layout_height="48dp"
     android:orientation="horizontal"
     android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:background="?attr/selectableItemBackground"
     >
 
@@ -28,7 +30,7 @@
         android:src="@drawable/ic_action_compose" />-->
 
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/mailFolderName"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:gravity="center_vertical"
