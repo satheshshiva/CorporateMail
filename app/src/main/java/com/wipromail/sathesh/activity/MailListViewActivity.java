@@ -3,6 +3,8 @@ package com.wipromail.sathesh.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +21,7 @@ import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
@@ -31,7 +34,7 @@ import com.wipromail.sathesh.ui.util.OptionsUIContent;
  */
 public class MailListViewActivity extends MyActivity implements Constants,MailListActivityDataPasser{
 
-	private MailListFragmentDataPasser mailListViewFragment;
+	private static MailListFragmentDataPasser mailListViewFragment;
 
 	public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
 	public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -63,9 +66,17 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
 		// declaring the fragment (list fragment). used for calling the refresh in the fragment
 		//actually MailListViewFragment
-		mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
-				.findFragmentById(R.id.mailListViewFragment);
+		//mailListViewFragment = (MailListFragmentDataPasser) getSupportFragmentManager()
+			//	.findFragmentById(R.id.mailListViewFragment);
 
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        if(mailListViewFragment == null ) {
+            mailListViewFragment = new MailListViewFragment();
+        }
+        ft.replace(R.id.mailListFragmentLayout, (android.support.v4.app.Fragment) mailListViewFragment);
+        ft.commit();
 	}
 	
 	/** ON START **
