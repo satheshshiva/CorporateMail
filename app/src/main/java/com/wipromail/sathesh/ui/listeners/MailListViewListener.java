@@ -4,6 +4,8 @@
 package com.wipromail.sathesh.ui.listeners;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -401,6 +403,12 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     public void onDrawerLayoutRecyclerViewClick(View view, int position) {
      //   parent.getmDrawerLayout().closeDrawers();
         Log.d(TAG, "RecyclerView clicked item " + position);
+        FragmentManager fm = parent.getActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        MailListViewFragment mailListViewFragment = new MailListViewFragment();
+        ft.replace(R.id.mailListFragmentLayout,  mailListViewFragment);
+        ft.commit();
     }
 
     /** PRIVATE METHODS ***/
