@@ -13,13 +13,13 @@ import android.view.WindowManager;
  *
  * When the Navigation drawer is opened or closed this is called.
  */
-public class NavigationBarToggle extends ActionBarDrawerToggle {
+public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
 
     private Activity activity;
     private static boolean opening = true, closing=false;
     private static int existingNavigationBarColor;
 
-    public NavigationBarToggle(Activity activity, DrawerLayout drawerLayout, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+    public MyActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
         super(activity, drawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
         this.activity = activity;
     }

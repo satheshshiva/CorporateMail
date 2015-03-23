@@ -73,7 +73,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private Status newMailsThreadState;
     private Status moreMailsThreadState;
     private UndoBarStatus undoBarState;
-    private int drawerLayoutSelectedPosition=0;
 
     private long totalMailsInFolder=-1;
 
@@ -81,7 +80,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     //contains all the UI listeners for this fragment
     private MailListViewListener listener ;
 
-    private int existingNavigationBarColor;
     /**
      * @author sathesh
      *
@@ -156,11 +154,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
                 //get the cursor
 
-                if(adapter==null){	//on config change it wont be null
-                    List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
-                    //initialize the adapter
-                    adapter = new MailListViewAdapter(context, this, listVOs);
-                }
+                //if(adapter==null){	//on config change it wont be null
+                List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
+                //initialize the adapter
+                adapter = new MailListViewAdapter(context, this, listVOs);
+                //}
 
                 // initializes the list view with the adapter. also will place all the cached mails in list view initially
                 listView.setAdapter(adapter);
@@ -204,6 +202,18 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             }
         }
         return view;
+    }
+
+    /** ON RESUME **/
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            activityDataPasser.getmDrawerToggle().syncState();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /** Show the more loading text with animation
@@ -500,14 +510,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     public void setListener(MailListViewListener listener) {
         this.listener = listener;
-    }
-
-    public int getDrawerLayoutSelectedPosition() {
-        return drawerLayoutSelectedPosition;
-    }
-
-    public void setDrawerLayoutSelectedPosition(int drawerLayoutSelectedPosition) {
-        this.drawerLayoutSelectedPosition = drawerLayoutSelectedPosition;
     }
 
     public Context getContext() {

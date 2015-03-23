@@ -65,7 +65,4 @@ public interface MailListFragmentDataPasser {
 
     void setUndoBarState(UndoBarStatus displayed);
 
-    public int getDrawerLayoutSelectedPosition();
-
-    void setDrawerLayoutSelectedPosition(int layoutPosition);
 }
