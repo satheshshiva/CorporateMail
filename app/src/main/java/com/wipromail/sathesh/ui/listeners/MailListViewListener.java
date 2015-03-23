@@ -3,6 +3,9 @@
  */
 package com.wipromail.sathesh.ui.listeners;
 
+import android.support.v7.app.ActionBarActivity;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,9 +24,11 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
+import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.MarkMailsReadUnreadThread;
 import com.wipromail.sathesh.ui.action.DeleteMailsUndoBarAction;
@@ -40,12 +45,15 @@ import java.util.ArrayList;
  *
  */
 public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener {
-    private MailListViewFragment parent;
+    private MailListFragmentDataPasser fragment;
+    private ActionBarActivity activity;
+
     private int preLast=-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
 
-    public MailListViewListener(MailListViewFragment parent){
-        this.parent=parent;
+    public MailListViewListener(MailListActivityDataPasser activity, MailListFragmentDataPasser fragment){
+        this.activity = (ActionBarActivity)activity;
+        this.fragment = fragment;
     }
 
     /** LISTVIEW LISTENERS **/
@@ -82,7 +90,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                         // enabling or disabling the refresh layout
                         enable = firstItemVisible && topOfFirstItemVisible;
                     }
-                    if(parent.getSwipeRefreshLayout()!=null)  parent.getSwipeRefreshLayout().setEnabled(enable);
+                    if(fragment.getSwipeRefreshLayout()!=null)  fragment.getSwipeRefreshLayout().setEnabled(enable);
 
                     //Last Item Listener - loads more mails
 
@@ -94,31 +102,31 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                         //to avoid multiple calls for last item
                         if(preLast!=lastItem){
                             //if the more mails thread is not in updating or waiting state
-                            if(parent.getMoreMailsThreadState()!= Status.UPDATING && parent.getMoreMailsThreadState()!= Status.WAITING){
+                            if(fragment.getMoreMailsThreadState()!= MailListFragmentDataPasser.Status.UPDATING && fragment.getMoreMailsThreadState()!= MailListFragmentDataPasser.Status.WAITING){
                                 // if the get new mails thread is not updating
-                                int totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType()
-                                        , parent.getMailFolderId());
+                                int totalCachedRecords = fragment.getMailHeadersCacheAdapter().getRecordsCount(fragment.getMailType()
+                                        , fragment.getMailFolderId());
                                 //if total cached records is less than minimum no of mails.
                                 //this check is to stop initially showing the progress when there only few mails
                                 if(totalCachedRecords>=MIN_NO_OF_MAILS){
                                     //if the total number of cached records is less than the total mails in folder
                                     //getTotalMailsInFolder() will be -1 when the GetNewMailThreads is not yet completed even for 1 time.
-                                    if(parent.getTotalMailsInFolder()==-1 || totalCachedRecords < parent.getTotalMailsInFolder()){
+                                    if(fragment.getTotalMailsInFolder()==-1 || totalCachedRecords < fragment.getTotalMailsInFolder()){
 
                                         // if the new mails thread is not updating
-                                        if(parent.getNewMailsThreadState() != Status.UPDATING){
+                                        if(fragment.getNewMailsThreadState() != Status.UPDATING){
                                             if(BuildConfig.DEBUG){
                                                 Log.d(TAG, "MailListViewFragment -> Last Item listener");
                                             }
                                             //Call the More mails thread
-                                            parent.getMoreMails();	// spawns a thread for network call
+                                            fragment.getMoreMails();	// spawns a thread for network call
                                             lastItem++;	//since loading symbol shown one extra row was added dnamically. To compensate that add 1 to the last visibile item
                                         }
                                         else{
                                             //enter the More Loading thread in to Waiting state. Whent eh New mails thread is currently updating.
                                             // when New Mail Loading thread is done it will invoke More Mails Loading thread again
-                                            parent.setMoreMailsThreadState(Status.WAITING);
-                                            parent.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
+                                            fragment.setMoreMailsThreadState(Status.WAITING);
+                                            fragment.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
                                             if(BuildConfig.DEBUG) Log.d(TAG, "MailListViewListener -> went in wait state as GetNewMails is currently updating");
                                         }
                                     }
@@ -166,10 +174,10 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                     case MailListViewContent.types.MAIL:
                         //open the mail
                         vo = listViewContent.getMailVO();
-                        Intent viewMailIntent = new Intent(parent.getActivity().getBaseContext(), ViewMailActivity.class);
+                        Intent viewMailIntent = new Intent(((Activity)activity).getBaseContext(), ViewMailActivity.class);
                         viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
                         //start the view mail activity
-                        parent.getActivity().startActivity(viewMailIntent);
+                        activity.startActivity(viewMailIntent);
                         break;
                     case MailListViewContent.types.DATE_HEADER:
                         //setting all child mails for this date header to selected
@@ -205,9 +213,9 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
         MailListViewContent listViewContent;
         CachedMailHeaderVO vo;
         try {
-            if(parent.getAdapter().getItem(position) !=null) {
+            if(fragment.getAdapter().getItem(position) !=null) {
 
-                listViewContent = (MailListViewContent)parent.getAdapter().getItem(position);
+                listViewContent = (MailListViewContent) fragment.getAdapter().getItem(position);
 
                 switch (listViewContent.getType()) {
 
@@ -222,16 +230,16 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                         }
 
                         // Set the CAB title according to total checked items
-                        mode.setTitle(parent.getActivity().getString(R.string.cabSelected, curentlySelectedVOs.size()));
+                        mode.setTitle(activity.getString(R.string.cabSelected, curentlySelectedVOs.size()));
                         break;
                     case MailListViewContent.types.DATE_HEADER:
                         // check if the date header is selected.
-                        if(parent.getListView().getCheckedItemPositions().get(position)) {
+                        if(fragment.getListView().getCheckedItemPositions().get(position)) {
 
                             //setting all child mails for this date header to selected
                             toggleSelectionChildMails(position, true);
                             //remove selection for the date header
-                            parent.getListView().setItemChecked(position, false);
+                            fragment.getListView().setItemChecked(position, false);
                             //note: this will again call this same method again
                         }
 
@@ -243,7 +251,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 }
             }
             else{
-                Log.e(TAG, "parent.getAdapter().getItem(position) is null");
+                Log.e(TAG, "fragment.getAdapter().getItem(position) is null");
             }
 
 
@@ -293,35 +301,35 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 //Delete Action Mode button is clicked
                 case R.id.actionMode_deleteMail:
                     try {
-                        if(parent.getMailType() != MailType.DELETED_ITEMS) {
+                        if(fragment.getMailType() != MailType.DELETED_ITEMS) {
                             //delete the items in cache first and will update UI
-                            parent.getMailHeadersCacheAdapter().deleteItems(selectedVOs);
+                            fragment.getMailHeadersCacheAdapter().deleteItems(selectedVOs);
 
                             //update the UI list (for updating the cached deletions in UI)
-                            parent.softRefreshList();
+                            fragment.softRefreshList();
 
-                            parent.setUndoBarState(MailListViewFragment.UndoBarStatus.DISPLAYED);
+                            fragment.setUndoBarState(MailListViewFragment.UndoBarStatus.DISPLAYED);
 
                             // Close CAB
                             mode.finish();
 
                             // DeleteMailsUndoBarAction class will have the actions what to do on execute now
                             // after showing message and the action when undo button clicked
-                            UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(parent.getActivity(), parent, selectedVOs);
+                            UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(fragment.getContext(), fragment, selectedVOs);
 
                             //show the undo bar
-                            new UndoBarBuilder(parent.getActivity(), undoBarAction)
-                                    ._setMessage(parent.getActivity().getString(R.string.undoBar_deletedMails, selectedVOs.size()))
+                            new UndoBarBuilder(activity, undoBarAction)
+                                    ._setMessage(activity.getString(R.string.undoBar_deletedMails, selectedVOs.size()))
                                     ._show();
                         }else{
                             //Deleted Items folder
 
                             MailDeleteDialog dialog=new MailDeleteDialog();
-                            dialog.multipleMailsDeleteDialog(parent, mode, selectedVOs);
+                            dialog.multipleMailsDeleteDialog(fragment, mode, selectedVOs);
                         }
 
                     } catch (Exception e) {
-                        parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
+                        fragment.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
                     }
 
                     return true;
@@ -330,10 +338,10 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 case R.id.actionMode_readMail:
                     try {
                         //update the cache marking all items as unread
-                        parent.getMailHeadersCacheAdapter().markMailsAsReadUnread(selectedVOs, true);
+                        fragment.getMailHeadersCacheAdapter().markMailsAsReadUnread(selectedVOs, true);
 
                         //update the UI list (for updating the cached deletions in UI)
-                        parent.softRefreshList();
+                        fragment.softRefreshList();
 
                         // Close CAB
                         mode.finish();
@@ -344,7 +352,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                             itemIds.add(vo.getItem_id());
                         }
                         //spawn a thread to update in the server
-                        new MarkMailsReadUnreadThread(parent.getActivity(), itemIds,true,null).start();
+                        new MarkMailsReadUnreadThread(fragment.getContext(), itemIds,true,null).start();
 
                     } catch (Exception e) {
                         Utilities.generalCatchBlock(e,this);
@@ -356,10 +364,10 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 case R.id.actionMode_unreadMail:
                     try {
                         //update the cache marking all items as unread
-                        parent.getMailHeadersCacheAdapter().markMailsAsReadUnread(selectedVOs, false);
+                        fragment.getMailHeadersCacheAdapter().markMailsAsReadUnread(selectedVOs, false);
 
                         //update the UI list (for updating the cached deletions in UI)
-                        parent.softRefreshList();
+                        fragment.softRefreshList();
 
                         // Close CAB
                         mode.finish();
@@ -370,7 +378,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                             itemIds.add(vo.getItem_id());
                         }
                         //spawn a thread to update in the server
-                        new MarkMailsReadUnreadThread(parent.getActivity(), itemIds,false,null).start();
+                        new MarkMailsReadUnreadThread(fragment.getContext(), itemIds,false,null).start();
 
                     } catch (Exception e) {
                         Utilities.generalCatchBlock(e,this);
@@ -401,9 +409,9 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
    /** Drawer Layout - On Item Click **/
     @Override
     public void onDrawerLayoutRecyclerViewClick(View view, int position) {
-     //   parent.getmDrawerLayout().closeDrawers();
+     //   fragment.getmDrawerLayout().closeDrawers();
         Log.d(TAG, "RecyclerView clicked item " + position);
-        FragmentManager fm = parent.getActivity().getSupportFragmentManager();
+        FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         MailListViewFragment mailListViewFragment = new MailListViewFragment();
@@ -421,17 +429,17 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
         // we have to select or unselect all the mails under this date header
         int _position=dateHeaderPos;
         MailListViewContent nextContent;
-        while(++_position < parent.getAdapter().getCount()) {
+        while(++_position < fragment.getAdapter().getCount()) {
             //next mail
-            nextContent = (MailListViewContent) parent.getListView().getItemAtPosition(_position);
+            nextContent = (MailListViewContent) fragment.getListView().getItemAtPosition(_position);
             if(nextContent!=null) {
                 if (nextContent.getType() == MailListViewContent.types.MAIL) {
                     //if the mail is already selected then do nothing
-                    if (parent.getListView().getCheckedItemPositions().get(_position) == childsSelect) {
+                    if (fragment.getListView().getCheckedItemPositions().get(_position) == childsSelect) {
                         continue;
                     } else {
                         //if the mail is not selected then select it
-                        parent.getListView().setItemChecked(_position, childsSelect);
+                        fragment.getListView().setItemChecked(_position, childsSelect);
                         //note: this will again call this same method
                     }
                 } else {

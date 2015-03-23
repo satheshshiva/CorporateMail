@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
@@ -16,7 +17,6 @@ import com.wipromail.sathesh.customexceptions.NoUserSignedInException;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.FindItemsResults;
 import com.wipromail.sathesh.service.data.HttpErrorException;
