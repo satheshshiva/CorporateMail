@@ -12,9 +12,9 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
-import com.wipromail.sathesh.fragment.MailListViewFragment.Status;
 import com.wipromail.sathesh.ui.components.AuthFailedAlertDialog;
 import com.wipromail.sathesh.util.Utilities;
 

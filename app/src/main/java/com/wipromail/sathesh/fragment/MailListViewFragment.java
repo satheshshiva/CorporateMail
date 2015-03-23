@@ -4,13 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,11 +21,9 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
-import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
@@ -39,7 +33,6 @@ import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.GetMoreMailsThread;
 import com.wipromail.sathesh.threads.ui.GetNewMailsThread;
-import com.wipromail.sathesh.ui.action.NavigationBarToggle;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.util.Utilities;
 
@@ -83,33 +76,17 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private int drawerLayoutSelectedPosition=0;
 
     private long totalMailsInFolder=-1;
-    private ActionBarDrawerToggle mDrawerToggle;
 
     private boolean fragmentAlreadyLoaded=false;
     //contains all the UI listeners for this fragment
     private MailListViewListener listener ;
-    private DrawerLayout mDrawerLayout;
-    private TextView dispName;
-    private TextView companyName;
 
     private int existingNavigationBarColor;
     /**
      * @author sathesh
      *
      */
-    public enum Status{
-        UPDATING,
-        UPDATED,
-        WAITING,	//not the actual Thread.wait(). One thread2 will just exit and the other thread (thread1) will invoke it again once its done.
-        ERROR,
-        ERROR_AUTH_FAILED
-    }
 
-    public enum UndoBarStatus{
-        IDLE,
-        DISPLAYED,
-        DELETING
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +94,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         View view = inflater.inflate(R.layout.fragment_mail_list_view,
                 container, false);
 
-        activity = (ActionBarActivity) getActivity();
+        activity =   (ActionBarActivity)getActivity();
         context =  getActivity();
         activityDataPasser = (MailListActivityDataPasser)getActivity();
         if (cacheMailHeaderAdapter ==null){
@@ -126,10 +103,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         setRetainInstance(true);
 
         if(activity != null){
-            if(listener==null) {
-                listener = new MailListViewListener(this);
-            }
+
             try {
+                listener = activityDataPasser.getListener();
+
                 //Initialize toolbar
                 MailApplication.toolbarInitialize(activity, view);
 
@@ -175,11 +152,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 myActionBar.setDisplayHomeAsUpEnabled(true);
                 myActionBar.setHomeButtonEnabled(true);
 
-                dispName = (TextView) view.findViewById(R.id.dispName);
-                companyName = (TextView) view.findViewById(R.id.companyName);
-
-                dispName.setText(SharedPreferencesAdapter.getUserDetailsDisplayName(context));
-                companyName.setText(SharedPreferencesAdapter.getUserDetailsCompanyName(context));
                 //initializes the adapter and associates the listview.
                 //this set  of code when placed when placed few lines before wont initialize and is giving empty listview. dont know why.
                 //get the cursor
@@ -208,30 +180,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 if(resources.length==4){
                     swipeRefreshLayout.setColorSchemeResources(resources[0],resources[1],resources[2],resources[3]);
                 }
-
-                //Navigation Drawer
-                String[] mailfolderNames = context.getResources().getStringArray(R.array.drawerMailFolderNames);
-                String[] mailfolderIcons = context.getResources().getStringArray(R.array.drawerMailFolderIcons);
-
-                RecyclerView mDrawerList = (RecyclerView) view.findViewById(R.id.recyclerView);
-                mDrawerList.setScrollContainer(true);
-
-                mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, listener));
-                mDrawerList.setLayoutManager(new LinearLayoutManager(context));
-                mDrawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
-
-                //Navigation Drawer Slider Listener
-
-                // ActionBarDrawerToggle ties together the the proper interactions
-                // between the sliding drawer and the action bar app icon
-                mDrawerToggle = new NavigationBarToggle(
-                        activity,                  /* host Activity */
-                        mDrawerLayout,         /* DrawerLayout object */
-                        R.string.drawer_open,  /* "open drawer" description for accessibility */
-                        R.string.drawer_close  /* "close drawer" description for accessibility */
-                );
-
-                mDrawerLayout.setDrawerListener(mDrawerToggle);
 
                 //Action
                 //if the activity is recreated, and if the thread is already updating then update the UI status
@@ -554,26 +502,19 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         this.listener = listener;
     }
 
-    public ActionBarDrawerToggle getmDrawerToggle() {
-        return mDrawerToggle;
-    }
-
-    public void setmDrawerToggle(ActionBarDrawerToggle mDrawerToggle) {
-        this.mDrawerToggle = mDrawerToggle;
-    }
-
-    public DrawerLayout getmDrawerLayout() {
-        return mDrawerLayout;
-    }
-
-    public void setmDrawerLayout(DrawerLayout mDrawerLayout) {
-        this.mDrawerLayout = mDrawerLayout;
-    }
     public int getDrawerLayoutSelectedPosition() {
         return drawerLayoutSelectedPosition;
     }
 
     public void setDrawerLayoutSelectedPosition(int drawerLayoutSelectedPosition) {
         this.drawerLayoutSelectedPosition = drawerLayoutSelectedPosition;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

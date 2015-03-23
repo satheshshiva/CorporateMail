@@ -2,6 +2,7 @@ package com.wipromail.sathesh.ui.action;
 
 import android.content.Context;
 
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.handlers.DeleteMultipleMailsHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
@@ -16,12 +17,12 @@ import java.util.ArrayList;
  */
 public class DeleteMailsUndoBarAction implements UndoBarAction {
     private Context context;
-    private MailListViewFragment parent;
+    private MailListFragmentDataPasser fragment;
     private ArrayList<CachedMailHeaderVO> selectedVOs;
 
-    public DeleteMailsUndoBarAction(Context context, MailListViewFragment parent, ArrayList<CachedMailHeaderVO> selectedVOs){
+    public DeleteMailsUndoBarAction(Context context, MailListFragmentDataPasser fragment, ArrayList<CachedMailHeaderVO> selectedVOs){
         this.context=context;
-        this.parent=parent;
+        this.fragment = fragment;
         this.selectedVOs=selectedVOs;
     }
 
@@ -36,7 +37,7 @@ public class DeleteMailsUndoBarAction implements UndoBarAction {
                 itemIds.add(vo.getItem_id());
             }
             new DeleteMultipleMailsThread(
-                    context,itemIds, false, new DeleteMultipleMailsHandler(parent)
+                    context,itemIds, false, new DeleteMultipleMailsHandler(fragment)
             ).start();
         }
 
@@ -48,11 +49,11 @@ public class DeleteMailsUndoBarAction implements UndoBarAction {
         public void undoAction() {
             try {
                 //delete the items in cache first and will update UI
-                parent.getMailHeadersCacheAdapter().creteNewData(selectedVOs);
+                fragment.getMailHeadersCacheAdapter().creteNewData(selectedVOs);
 
                 //update the UI list (for updating the cached deletions in UI)
-                parent.softRefreshList();
-                parent.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
+                fragment.softRefreshList();
+                fragment.setUndoBarState(MailListViewFragment.UndoBarStatus.IDLE);
             } catch (Exception e) {
                 Utilities.generalCatchBlock(e, this);
             }

@@ -1,7 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wipromail.sathesh.ui.components.CustomDrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
     <!-- Holder for the MailListViewFragment -->
     <FrameLayout
@@ -10,4 +11,7 @@
         android:layout_height="wrap_content"
         ></FrameLayout>
 
-</LinearLayout>
+    <!-- Drawer layout -->
+    <include layout="@layout/drawer_layout" />
+
+</com.wipromail.sathesh.ui.components.CustomDrawerLayout>

@@ -1,9 +1,29 @@
 package com.wipromail.sathesh.application.interfaces;
 
 
-import android.support.v4.widget.DrawerLayout;
+import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.widget.ListView;
+
+import com.wipromail.sathesh.adapter.MailListViewAdapter;
+import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
+import com.wipromail.sathesh.fragment.MailListViewFragment;
 
 public interface MailListFragmentDataPasser {
+
+    public enum Status{
+        UPDATING,
+        UPDATED,
+        WAITING,	//not the actual Thread.wait(). One thread2 will just exit and the other thread (thread1) will invoke it again once its done.
+        ERROR,
+        ERROR_AUTH_FAILED
+    }
+
+    public enum UndoBarStatus{
+        IDLE,
+        DISPLAYED,
+        DELETING
+    }
 
 	/** Refresh the List View from network
 	 * 
@@ -16,6 +36,36 @@ public interface MailListFragmentDataPasser {
 	 */
 	public void softRefreshList();
 
-    public android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
-    public DrawerLayout getmDrawerLayout();
+
+    SwipeRefreshLayout getSwipeRefreshLayout();
+
+    MailListViewFragment.Status getMoreMailsThreadState();
+
+    CachedMailHeaderAdapter getMailHeadersCacheAdapter();
+
+    int getMailType();
+
+    String getMailFolderId();
+
+    long getTotalMailsInFolder();
+
+    MailListViewFragment.Status getNewMailsThreadState();
+
+    void getMoreMails();
+
+    void setMoreMailsThreadState(Status waiting);
+
+    public Context getContext();
+
+    void showMoreLoadingAnimation();
+
+    MailListViewAdapter getAdapter();
+
+    ListView getListView();
+
+    void setUndoBarState(UndoBarStatus displayed);
+
+    public int getDrawerLayoutSelectedPosition();
+
+    void setDrawerLayoutSelectedPosition(int layoutPosition);
 }

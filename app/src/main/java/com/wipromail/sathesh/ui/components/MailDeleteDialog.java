@@ -7,8 +7,8 @@ import android.view.ActionMode;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.ViewMailActivity;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
-import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.handlers.DeleteMailHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.DeleteMailThread;
@@ -83,8 +83,8 @@ public class MailDeleteDialog {
         alertDialog.show();
     }
 
-    public void multipleMailsDeleteDialog(final MailListViewFragment parent, final ActionMode mode, final ArrayList<CachedMailHeaderVO> vos) {
-        final Context context = parent.getActivity();
+    public void multipleMailsDeleteDialog(final MailListFragmentDataPasser fragment, final ActionMode mode, final ArrayList<CachedMailHeaderVO> vos) {
+        final Context context = fragment.getContext();
         //build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.dialog_deletemail_title)
@@ -92,10 +92,10 @@ public class MailDeleteDialog {
                 .setPositiveButton(R.string.alertdialog_positive_lbl, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         try {
-                            parent.getMailHeadersCacheAdapter().deleteItems(vos);
+                            fragment.getMailHeadersCacheAdapter().deleteItems(vos);
 
                             //update the UI list (for updating the cached deletions in UI)
-                            parent.softRefreshList();
+                            fragment.softRefreshList();
 
                             ArrayList<String> itemIds = new ArrayList<>();
 

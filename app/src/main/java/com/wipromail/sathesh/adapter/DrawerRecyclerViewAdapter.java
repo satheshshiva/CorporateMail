@@ -1,6 +1,7 @@
 package com.wipromail.sathesh.adapter;
 
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.fragment.MailListViewFragment;
 
 /**
  * Adapter for the planet data used in our drawer menu,
@@ -19,7 +20,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     private OnRecyclerViewClickListener listener;
     private String[] mailFolders;
     private String[] mailFolderIcons;
-    private MailListViewFragment parent;
+    private MailListFragmentDataPasser fragment;
 
     /**
      * Interface for receiving click events from cells.
@@ -38,12 +39,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     }
 
     // Constructor
-    public DrawerRecyclerViewAdapter(final MailListViewFragment parent, String[] mailFolders, String[] mailFolderIcons, OnRecyclerViewClickListener listener) {
+    public DrawerRecyclerViewAdapter(final MailListFragmentDataPasser fragment, String[] mailFolders, String[] mailFolderIcons, OnRecyclerViewClickListener listener) {
         this.listener = listener;
 
         this.mailFolders = mailFolders;
         this.mailFolderIcons = mailFolderIcons;
-        this.parent = parent;
+        this.fragment = fragment;
 
         // calculate the total item count.
         itemCount +=  mailFolders.length;
@@ -67,12 +68,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                     @Override
                     public void onClick(View view) {
                         //get the selected position from the tag stored in OnBind
-                        parent.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
+                        fragment.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
 
                         //here you inform view that something was change - view will be invalidated
                         notifyDataSetChanged();
                         view.requestFocus();
-                        listener.onDrawerLayoutRecyclerViewClick(view, parent.getDrawerLayoutSelectedPosition());
+                        listener.onDrawerLayoutRecyclerViewClick(view, fragment.getDrawerLayoutSelectedPosition());
                     }
                 });
                 break;
@@ -96,9 +97,9 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 if (holder.view != null) {
 
                     // Highlight the row if its a selected position
-                    if ( parent.getDrawerLayoutSelectedPosition() == position) {
+                    if ( fragment.getDrawerLayoutSelectedPosition() == position) {
                         //selected row
-                        holder.itemView.setBackgroundColor(parent.getResources().getColor(R.color.LightGrey));
+                        holder.itemView.setBackgroundColor(((Fragment)fragment).getResources().getColor(R.color.LightGrey));
                         //font icon
                         holder.fontIconView.setTextColor(Color.BLACK);
                         holder.fontIconView.setAlpha(1f);
