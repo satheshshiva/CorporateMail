@@ -33,6 +33,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
+import com.wipromail.sathesh.ui.listeners.MailListViewActivityListener;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
@@ -45,7 +46,7 @@ import com.wipromail.sathesh.ui.util.OptionsUIContent;
  */
 public class MailListViewActivity extends MyActivity implements Constants,MailListActivityDataPasser{
 
-    private MailListFragmentDataPasser mailListViewFragment;
+    private MailListFragmentDataPasser mailListViewFragmentDataPasser;
 
     public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -65,7 +66,8 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private MailListViewListener listener ;
+    private MailListViewListener fragmentListener;
+    private MailListViewActivityListener activityListener;
 
     /** ON CREATE **
      *  Fragment : MailListViewFragment
@@ -92,15 +94,19 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        if(mailListViewFragment == null ) {
-            mailListViewFragment = new MailListViewFragment();
+        if(mailListViewFragmentDataPasser == null ) {
+            mailListViewFragmentDataPasser = new MailListViewFragment();
         }
-        ft.replace(R.id.mailListFragmentLayout, (android.support.v4.app.Fragment) mailListViewFragment);
+        ft.replace(R.id.mailListFragmentLayout, (android.support.v4.app.Fragment) mailListViewFragmentDataPasser);
         ft.commit();
 
-        // Initializing the listener
-        if(listener==null) {
-            listener = new MailListViewListener(this, mailListViewFragment);
+        if(activityListener == null){
+            activityListener = new MailListViewActivityListener(this);
+        }
+
+        // Initializing the fragmentListener
+        if(fragmentListener ==null) {
+            fragmentListener = new MailListViewListener(this, mailListViewFragmentDataPasser);
         }
 
         // Initializing the Drawer Layout
@@ -111,7 +117,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         RecyclerView mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
         mDrawerList.setScrollContainer(true);
 
-        mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, listener));
+        mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, activityListener));
         mDrawerList.setLayoutManager(new LinearLayoutManager(context));
         mDrawerLayout = (DrawerLayout)activity.findViewById(R.id.drawer_layout);
 
@@ -185,27 +191,6 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         }
     }
 
-    /** Called when the MailListViewFragment is getting replaced. Called from the listener
-     *
-     */
-    @Override
-    public void onReplaceMailListViewFragment() {
-
-        //using fragment transaction, replace the fragment
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        MailListViewFragment _mailListViewFragment = new MailListViewFragment();
-        ft.replace(R.id.mailListFragmentLayout,  _mailListViewFragment);
-        ft.commit();
-
-        // replace the newly created fragment object
-        mailListViewFragment = _mailListViewFragment;
-
-        // create a new listener for the fragment
-        listener = new MailListViewListener(this, mailListViewFragment);
-    }
-
     /** OPTION ITEMS **/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -254,7 +239,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
         if(item!=null && item.getTitle()!=null) {
             if (item != null && item.getTitle().equals(ACTIONBAR_REFRESH)) {
-                mailListViewFragment.refreshList();
+                mailListViewFragmentDataPasser.refreshList();
             } else if ( item.getTitle().equals(ACTIONBAR_COMPOSE)) {
                 Intent intent = new Intent(this, ComposeActivity.class);
                 startActivity(intent);
@@ -277,7 +262,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         try {
             //cancel all the notifications
             NotificationProcessing.cancelAllNotifications(this);
-            mailListViewFragment.softRefreshList();
+            mailListViewFragmentDataPasser.softRefreshList();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -345,12 +330,13 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         this.mDrawerToggle = mDrawerToggle;
     }
 
-    public MailListViewListener getListener() {
-        return listener;
+    public MailListViewListener getFragmentListener() {
+        return fragmentListener;
     }
 
-    public void setListener(MailListViewListener listener) {
-        this.listener = listener;
+    @Override
+    public void setFragmentListener(MailListViewListener fragmentListener) {
+        this.fragmentListener = fragmentListener;
     }
 
     public int getDrawerLayoutSelectedPosition() {
@@ -361,12 +347,14 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         this.drawerLayoutSelectedPosition = drawerLayoutSelectedPosition;
     }
 
-    public MailListFragmentDataPasser getMailListViewFragment() {
-        return mailListViewFragment;
+    public MailListFragmentDataPasser getMailListViewFragmentDataPasser() {
+        return mailListViewFragmentDataPasser;
     }
 
     @Override
-    public void setMailListViewFragment(MailListFragmentDataPasser mailListViewFragment) {
-        this.mailListViewFragment = mailListViewFragment;
+    public void setMailListViewFragmentDataPasser(MailListFragmentDataPasser mailListViewFragmentDataPasser) {
+        this.mailListViewFragmentDataPasser = mailListViewFragmentDataPasser;
     }
+
+
 }

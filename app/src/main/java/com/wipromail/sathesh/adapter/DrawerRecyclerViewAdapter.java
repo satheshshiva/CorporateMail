@@ -72,7 +72,6 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
                         //here you inform view that something was change - view will be invalidated
                         notifyDataSetChanged();
-                        view.requestFocus();
                         listener.onDrawerLayoutRecyclerViewClick(view, activity.getDrawerLayoutSelectedPosition());
                     }
                 });

@@ -20,7 +20,6 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
-import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
@@ -41,7 +40,7 @@ import java.util.ArrayList;
  * @author sathesh
  *
  */
-public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener {
+public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants {
     private MailListFragmentDataPasser fragment;
     private ActionBarActivity activity;
     private MailListActivityDataPasser activityDataPasser;
@@ -401,17 +400,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
         if(curentlySelectedVOs !=null){
             curentlySelectedVOs.clear();
         }
-    }
-
-    /*** RECYCLER VIEW Listeners **/
-
-   /** Drawer Layout - On Item Click **/
-    @Override
-    public void onDrawerLayoutRecyclerViewClick(View view, int position) {
-     //   fragment.getmDrawerLayout().closeDrawers();
-
-        activityDataPasser.onReplaceMailListViewFragment();
-
     }
 
     /** PRIVATE METHODS ***/
