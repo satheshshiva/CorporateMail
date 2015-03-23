@@ -32,7 +32,7 @@ import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.tools.CacheClear;
-import com.wipromail.sathesh.ui.action.NavigationBarToggle;
+import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
@@ -45,7 +45,7 @@ import com.wipromail.sathesh.ui.util.OptionsUIContent;
  */
 public class MailListViewActivity extends MyActivity implements Constants,MailListActivityDataPasser{
 
-    private static MailListFragmentDataPasser mailListViewFragment;
+    private MailListFragmentDataPasser mailListViewFragment;
 
     public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -61,6 +61,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
     private Activity activity;
     private Context context;
 
+    private int drawerLayoutSelectedPosition=0;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -110,7 +111,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         RecyclerView mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
         mDrawerList.setScrollContainer(true);
 
-        mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(mailListViewFragment, mailfolderNames, mailfolderIcons, listener));
+        mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, listener));
         mDrawerList.setLayoutManager(new LinearLayoutManager(context));
         mDrawerLayout = (DrawerLayout)activity.findViewById(R.id.drawer_layout);
 
@@ -118,9 +119,9 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new NavigationBarToggle(
-                activity,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
+        mDrawerToggle = new MyActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         );
@@ -182,6 +183,27 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
                 e.printStackTrace();
             }
         }
+    }
+
+    /** Called when the MailListViewFragment is getting replaced. Called from the listener
+     *
+     */
+    @Override
+    public void onReplaceMailListViewFragment() {
+
+        //using fragment transaction, replace the fragment
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        MailListViewFragment _mailListViewFragment = new MailListViewFragment();
+        ft.replace(R.id.mailListFragmentLayout,  _mailListViewFragment);
+        ft.commit();
+
+        // replace the newly created fragment object
+        mailListViewFragment = _mailListViewFragment;
+
+        // create a new listener for the fragment
+        listener = new MailListViewListener(this, mailListViewFragment);
     }
 
     /** OPTION ITEMS **/
@@ -261,12 +283,12 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         }
     }
 
-    @Override
+ /*   @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
-    }
+    }*/
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -329,5 +351,22 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
     public void setListener(MailListViewListener listener) {
         this.listener = listener;
+    }
+
+    public int getDrawerLayoutSelectedPosition() {
+        return drawerLayoutSelectedPosition;
+    }
+
+    public void setDrawerLayoutSelectedPosition(int drawerLayoutSelectedPosition) {
+        this.drawerLayoutSelectedPosition = drawerLayoutSelectedPosition;
+    }
+
+    public MailListFragmentDataPasser getMailListViewFragment() {
+        return mailListViewFragment;
+    }
+
+    @Override
+    public void setMailListViewFragment(MailListFragmentDataPasser mailListViewFragment) {
+        this.mailListViewFragment = mailListViewFragment;
     }
 }

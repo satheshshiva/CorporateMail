@@ -3,12 +3,9 @@
  */
 package com.wipromail.sathesh.ui.listeners;
 
-import android.support.v7.app.ActionBarActivity;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -47,12 +44,14 @@ import java.util.ArrayList;
 public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener {
     private MailListFragmentDataPasser fragment;
     private ActionBarActivity activity;
+    private MailListActivityDataPasser activityDataPasser;
 
     private int preLast=-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
 
     public MailListViewListener(MailListActivityDataPasser activity, MailListFragmentDataPasser fragment){
         this.activity = (ActionBarActivity)activity;
+        this.activityDataPasser = activity;
         this.fragment = fragment;
     }
 
@@ -410,13 +409,9 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     @Override
     public void onDrawerLayoutRecyclerViewClick(View view, int position) {
      //   fragment.getmDrawerLayout().closeDrawers();
-        Log.d(TAG, "RecyclerView clicked item " + position);
-        FragmentManager fm = activity.getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
 
-        MailListViewFragment mailListViewFragment = new MailListViewFragment();
-        ft.replace(R.id.mailListFragmentLayout,  mailListViewFragment);
-        ft.commit();
+        activityDataPasser.onReplaceMailListViewFragment();
+
     }
 
     /** PRIVATE METHODS ***/

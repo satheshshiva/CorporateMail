@@ -18,4 +18,12 @@ public interface MailListActivityDataPasser {
     public android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
 
     public MailListViewListener getListener() ;
+
+    public int getDrawerLayoutSelectedPosition();
+
+    void setDrawerLayoutSelectedPosition(int layoutPosition);
+
+    public void setMailListViewFragment(MailListFragmentDataPasser mailListViewFragment);
+
+    public void onReplaceMailListViewFragment();
 }
