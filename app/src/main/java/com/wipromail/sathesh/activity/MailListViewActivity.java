@@ -305,6 +305,26 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
     }
 
     @Override
+    public void setMailType(int mailType) {
+        this.mailType = mailType;
+    }
+
+    @Override
+    public void setMailFolderName(String mailFolderName) {
+        this.mailFolderName = mailFolderName;
+    }
+
+    @Override
+    public String getMailFolderId() {
+        return mailFolderId;
+    }
+
+    @Override
+    public void setMailFolderId(String mailFolderId) {
+        this.mailFolderId = mailFolderId;
+    }
+
+    @Override
     public String getStrFolderId() {
         return mailFolderId;
     }

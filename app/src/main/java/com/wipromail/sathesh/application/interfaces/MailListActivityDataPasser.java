@@ -27,4 +27,12 @@ public interface MailListActivityDataPasser {
 
     public void setFragmentListener(MailListViewListener fragmentListener);
 
+    public void setMailType(int mailType) ;
+
+    public void setMailFolderName(String mailFolderName) ;
+
+    public String getMailFolderId() ;
+
+    public void setMailFolderId(String mailFolderId) ;
+
 }
