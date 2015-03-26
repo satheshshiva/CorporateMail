@@ -43,6 +43,10 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
         // replace the newly created fragment object
         activityDataPasser.setMailListViewFragmentDataPasser(_mailListViewFragment);
 
+        //Setting the Mail type, folder name, id
+       // activityDataPasser.setMailType(MailType.DRAFTS);
+       // activityDataPasser.setMailFolderName(WellKnownFolderName.Drafts.toString());
+
         // create a new listener for the fragment
         MailListViewListener fragmentListener = new MailListViewListener(activityDataPasser, _mailListViewFragment);
         activityDataPasser.setFragmentListener(fragmentListener);
