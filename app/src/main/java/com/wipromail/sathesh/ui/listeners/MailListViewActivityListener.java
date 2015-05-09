@@ -30,6 +30,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
     @Override
     public void onDrawerLayoutRecyclerViewClick(View view, int position) {
+        this.activityDataPasser.setDrawerLayoutSelectedPosition(position);
         activityDataPasser.getmDrawerLayout().closeDrawers();
 
         //using fragment transaction, replace the fragment
