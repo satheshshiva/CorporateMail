@@ -23,7 +23,7 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
     public static final String COLUMN_MENU_NAME = "MENU_NAME";
     public static final String COLUMN_FOLDER_ID = "FOLDER_ID";
     public static final String COLUMN_TYPE = "TYPE";
-
+    public static final String COLUMN_FONT_ICON = "FONT_ICON";
 
 	@Override
 	public String getCreateQuery(Context context){
@@ -32,7 +32,8 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 				+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_MENU_NAME + " TEXT,"
                 + COLUMN_FOLDER_ID + " TEXT,"
-				+ COLUMN_TYPE + " INTEGER"
+				+ COLUMN_TYPE + " INTEGER,"
+                + COLUMN_FONT_ICON + " TEXT"
 				+");";
 	}
 
@@ -45,22 +46,22 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 	 */
 	@Override
 	public List<String> getNewTableQueries(Context context) {
-        String sql1="INSERT INTO " + tableName + " (" + COLUMN_MENU_NAME + " ," + COLUMN_TYPE + ") VALUES ('";
+        String sql1="INSERT INTO " + tableName + " (" + COLUMN_MENU_NAME + " ," + COLUMN_TYPE + " ," + COLUMN_FONT_ICON + ") VALUES ('";
         List insertQueries =new ArrayList<String>();
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_inbox)+ "' ," + DrawerMenuRowType.INBOX+ ");");
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_drafts)+ "' ," + DrawerMenuRowType.DRAFTS+ ");");
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_sent_items)+ "' ," + DrawerMenuRowType.SENT_ITEMS+ ");");
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_deleted_items)+ "' ," + DrawerMenuRowType.DELETED_ITEMS+ ");");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_inbox)+ "' ," + DrawerMenuRowType.INBOX+ " , '" + context.getString(R.string.fontIcon_drawer_inbox)+ "');");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_drafts)+ "' ," + DrawerMenuRowType.DRAFTS+  " , '" + context.getString(R.string.fontIcon_drawer_drafts)+"');");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_sent_items)+ "' ," + DrawerMenuRowType.SENT_ITEMS+  " , '" + context.getString(R.string.fontIcon_drawer_sentItems)+"');");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_deleted_items)+ "' ," + DrawerMenuRowType.DELETED_ITEMS+  " , '" + context.getString(R.string.fontIcon_drawer_deletedItems)+"');");
 
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_more_folders)+ "' ," + DrawerMenuRowType.MORE_FOLDERS+ ");");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_more_folders)+ "' ," + DrawerMenuRowType.MORE_FOLDERS+  " , '" + context.getString(R.string.fontIcon_drawer_more_folders)+ "');");
 
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_favourites)+ "' ," + DrawerMenuRowType.FAVOURITES_HEADER+ ");");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_favourites)+ "' ," + DrawerMenuRowType.FAVOURITES_HEADER+  " , '" + context.getString(R.string.fontIcon_drawer_fave_header)+"');");
 
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_settings)+ "' ," + DrawerMenuRowType.SETTINGS+ ");");
-        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_about)+ "' ," + DrawerMenuRowType.ABOUT+ ");");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_settings)+ "' ," + DrawerMenuRowType.SETTINGS+  " , '" + context.getString(R.string.fontIcon_drawer_settings)+ "');");
+        insertQueries.add(sql1 + context.getString(R.string.drawer_menu_about)+ "' ," + DrawerMenuRowType.ABOUT+  " , '" + context.getString(R.string.fontIcon_drawer_about)+"');");
 
-        insertQueries.add(sql1 + "fave1" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS + ");");
-        insertQueries.add(sql1 + "fave2" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS + ");");
+        insertQueries.add(sql1 + "fave1" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS +  " , '" + context.getString(R.string.fontIcon_drawer_fave_item)+"');");
+        insertQueries.add(sql1 + "fave2" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS +  " , '" + context.getString(R.string.fontIcon_drawer_fave_item)+"');");
 
 		return insertQueries;
 	}
@@ -68,6 +69,12 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
     @Override
     public String getOnUpgradeDropQuery(Context context){
         return "DROP TABLE IF EXISTS " + tableName;
+    }
+
+    /*** SELECT QUERIES ***/
+
+    public static String getAllRecords(){
+        return "SELECT * FROM " + tableName + " ORDER BY " + COLUMN_TYPE + " ASC ";
     }
 	
 }
