@@ -1,5 +1,7 @@
 package com.wipromail.sathesh.sqlite.db.cache.tables;
 
+import android.content.Context;
+
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
 import com.wipromail.sathesh.sqlite.db.cache.DbTable;
 
@@ -28,7 +30,7 @@ public class TableCachedMailHeader implements CacheDbConstants, DbTable{
 	public static final String COLUMN_HAS_ATTACHMENTS = "MAIL_HAS_ATTACHMENTS";
 	
 	@Override
-	public String getCreateQuery(){
+	public String getCreateQuery(Context context){
 		return "CREATE TABLE "
 				+ tableName + "(" 
 				+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
@@ -169,12 +171,12 @@ public class TableCachedMailHeader implements CacheDbConstants, DbTable{
 	 * @see com.sathesh.carparking.db.DbTable#getNewTableQueries()
 	 */
 	@Override
-	public List<String> getNewTableQueries() {
+	public List<String> getNewTableQueries(Context context) {
 		return null;
 	}
 
     @Override
-    public String getOnUpgradeDropQuery(){
+    public String getOnUpgradeDropQuery(Context context){
         return "DROP TABLE IF EXISTS " + tableName;
     }
 

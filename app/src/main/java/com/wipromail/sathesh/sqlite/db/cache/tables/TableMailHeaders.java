@@ -1,9 +1,11 @@
 package com.wipromail.sathesh.sqlite.db.cache.tables;
 
-import java.util.List;
+import android.content.Context;
 
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
 import com.wipromail.sathesh.sqlite.db.cache.DbTable;
+
+import java.util.List;
 
 /**  Table to store the cached mail headers
  * @author sathesh
@@ -24,7 +26,7 @@ public class TableMailHeaders implements CacheDbConstants, DbTable{
 	public static final String COLUMN_ISREAD = "MAIL_ISREAD";
 	
 	@Override
-	public String getCreateQuery(){
+	public String getCreateQuery(Context context){
 		return "CREATE TABLE "
 				+ tableName + "(" 
 				+ COLUMN_ID + " INTEGER primary key autoincrement, " 
@@ -40,7 +42,7 @@ public class TableMailHeaders implements CacheDbConstants, DbTable{
 	}
 	
 	@Override
-	public String getOnUpgradeDropQuery(){
+	public String getOnUpgradeDropQuery(Context context){
 		return "DROP TABLE IF EXISTS " + tableName;
 	}
 	
@@ -70,8 +72,7 @@ public class TableMailHeaders implements CacheDbConstants, DbTable{
 	 * @see com.sathesh.carparking.db.DbTable#getNewTableQueries()
 	 */
 	@Override
-	public List<String> getNewTableQueries() {
-		// TODO Auto-generated method stub
+	public List<String> getNewTableQueries(Context context) {
 		return null;
 	}
 	

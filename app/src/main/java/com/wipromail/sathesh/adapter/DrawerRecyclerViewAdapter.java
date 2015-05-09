@@ -62,19 +62,6 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 break;
             case Type.ROW_ITEM:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
-
-                //setting on click listener for the row item
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //get the selected position from the tag stored in OnBind
-                        activity.setDrawerLayoutSelectedPosition(((ViewHolder) view.getTag()).getLayoutPosition());
-
-                        //here you inform view that something was change - view will be invalidated
-                        notifyDataSetChanged();
-                        listener.onDrawerLayoutRecyclerViewClick(view, activity.getDrawerLayoutSelectedPosition());
-                    }
-                });
                 break;
         }
         return new ViewHolder(view, viewType);
@@ -117,7 +104,16 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                         holder.mailFolderNameTextView.setTextColor(Color.BLACK);
                         holder.mailFolderNameTextView.setAlpha(.8f);
                     }
-                    holder.view.setTag(holder); // used to get the selected position in OnCreateViewHolder
+
+                    //setting onClick listener for the row
+                    holder.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //here you inform view that something was change - view will be invalidated
+                            notifyDataSetChanged();
+                            listener.onDrawerLayoutRecyclerViewClick(view, position);
+                        }
+                    });
                 }
                 break;
         }
@@ -132,12 +128,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         public  TextView mailFolderNameTextView;
         public  TextView fontIconView;
 
-        public ViewHolder(View v, int vt) {
+        public ViewHolder(View v, int viewType) {
             super(v);
-            viewType = vt;
+            this.viewType = viewType;
             view=v; // for assigning the onclick listener
 
-            switch(viewType) {
+            switch(this.viewType) {
                 case Type.HEADER_IMAGE:
                     break;
                 case Type.HEADER_ROW:
@@ -158,7 +154,6 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-
         return Type.ROW_ITEM;
     }
 }

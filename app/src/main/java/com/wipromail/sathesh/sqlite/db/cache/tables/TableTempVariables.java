@@ -1,10 +1,12 @@
 package com.wipromail.sathesh.sqlite.db.cache.tables;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
 
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
 import com.wipromail.sathesh.sqlite.db.cache.DbTable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** Table to store the temporary variables used in the app
  * @author sathesh
@@ -21,7 +23,7 @@ public class TableTempVariables implements CacheDbConstants, DbTable{
 	public static final String COLUMN_VALUE = "VALUE";
 
 	@Override
-	public String getCreateQuery(){
+	public String getCreateQuery(Context context){
 		return "CREATE TABLE "
 				+ tableName + "(" 
 				+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
@@ -31,7 +33,7 @@ public class TableTempVariables implements CacheDbConstants, DbTable{
 	}
 	
 	@Override
-	public String getOnUpgradeDropQuery(){
+	public String getOnUpgradeDropQuery(Context context){
 		return "DROP TABLE IF EXISTS " + tableName;
 	}
 	
@@ -55,8 +57,7 @@ public class TableTempVariables implements CacheDbConstants, DbTable{
 	 * @see com.sathesh.carparking.db.DbTable#getNewTableQueries()
 	 */
 	@Override
-	public List<String> getNewTableQueries() {
-		// TODO Auto-generated method stub
+	public List<String> getNewTableQueries(Context context) {
 		ArrayList<String> queries=new ArrayList<String>();
 		//queries.add("INSERT INTO " + tableName + " VALUES('','asd', ' asd')");
 		return queries;

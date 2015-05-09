@@ -13,6 +13,7 @@ import java.util.List;
 public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheDbConstants {
 
 	private static CacheDbHelper cacheDbHelper;
+    private static Context context;
 	public CacheDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -26,6 +27,8 @@ public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheD
 		if(cacheDbHelper ==null){
 			cacheDbHelper = new CacheDbHelper(context.getApplicationContext());
 		}
+        CacheDbHelper.context = context;
+
 		return cacheDbHelper;
 	}
 
@@ -33,9 +36,9 @@ public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheD
 	public void onCreate(SQLiteDatabase database) {
 		ArrayList<DbTable> listTables = TableMetaData.getListOfAllTables();
 		for(DbTable dbTable : listTables){
-			database.execSQL(dbTable.getCreateQuery());
+			database.execSQL(dbTable.getCreateQuery(context));
 			//execute the default queries for the table (if any)
-			List<String> defaultQueries = dbTable.getNewTableQueries();
+			List<String> defaultQueries = dbTable.getNewTableQueries(context);
 			if(defaultQueries!=null && defaultQueries.size()>0){
 				for(String query : defaultQueries){
 					database.execSQL(query);
@@ -52,7 +55,7 @@ public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheD
 						+ newVersion + ", which will destroy all old data");
 		ArrayList<DbTable> listTables = TableMetaData.getListOfAllTables();
 		for(DbTable dbTable : listTables){
-			db.execSQL(dbTable.getOnUpgradeDropQuery());
+			db.execSQL(dbTable.getOnUpgradeDropQuery(context));
 		}
 		onCreate(db);
 	}
