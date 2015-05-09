@@ -11,15 +11,16 @@ import android.widget.TextView;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
+
+import java.util.List;
 
 /**
  * Adapter for the planet data used in our drawer menu,
  */
 public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> implements Constants{
-    private int itemCount=0;
     private OnRecyclerViewClickListener listener;
-    private String[] mailFolders;
-    private String[] mailFolderIcons;
+    private List<DrawerMenuVO> drawerMenuVOList;
     private MailListActivityDataPasser activity;
 
     /**
@@ -29,26 +30,13 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         public void onDrawerLayoutRecyclerViewClick(View view, int position);
     }
 
-    /**
-     * Interface for type of row specification
-     */
-    public interface Type {
-        public final int HEADER_IMAGE=0;
-        public final int HEADER_ROW=1;
-        public final int ROW_ITEM=2;
-    }
-
     // Constructor
-    public DrawerRecyclerViewAdapter(final MailListActivityDataPasser activity, String[] mailFolders, String[] mailFolderIcons, OnRecyclerViewClickListener listener) {
+    public DrawerRecyclerViewAdapter(final MailListActivityDataPasser activity, List<DrawerMenuVO> drawerMenuVOList, OnRecyclerViewClickListener listener) {
         this.listener = listener;
 
-        this.mailFolders = mailFolders;
-        this.mailFolderIcons = mailFolderIcons;
+        this.drawerMenuVOList=drawerMenuVOList;
         this.activity = activity;
 
-        // calculate the total item count.
-        itemCount +=  mailFolders.length;
-        //header image (1) + mail folders length
     }
 
     @Override
@@ -56,11 +44,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         LayoutInflater vi = LayoutInflater.from(viewGroup.getContext());
         View view=null;
         switch(viewType) {
-            case Type.HEADER_IMAGE:
-                break;
-            case Type.HEADER_ROW:
-                break;
-            case Type.ROW_ITEM:
+            default:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
                 break;
         }
@@ -71,13 +55,9 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         switch(holder.viewType) {
-            case Type.HEADER_IMAGE:
-                break;
-            case Type.HEADER_ROW:
-                break;
-            case Type.ROW_ITEM:
-                holder.mailFolderNameTextView.setText(mailFolders[position]);
-                holder.fontIconView.setText(mailFolderIcons[position]);
+            default:
+                holder.mailFolderNameTextView.setText(drawerMenuVOList.get(position).getMenu_name());
+                holder.fontIconView.setText(drawerMenuVOList.get(position).getFont_icon());
 
                 // setting row on click listener
                 if (holder.view != null) {
@@ -134,11 +114,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
             view=v; // for assigning the onclick listener
 
             switch(this.viewType) {
-                case Type.HEADER_IMAGE:
-                    break;
-                case Type.HEADER_ROW:
-                    break;
-                case Type.ROW_ITEM:
+                default:
                     mailFolderNameTextView = (TextView) view.findViewById(R.id.mailFolderName);
                     fontIconView = (TextView) view.findViewById(R.id.fontIconView);
                     break;
@@ -148,12 +124,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
     @Override
     public int getItemCount() {
-        return itemCount;
+        return this.drawerMenuVOList.size();
     }
 
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-        return Type.ROW_ITEM;
+        return drawerMenuVOList.get(position).getType();
     }
 }

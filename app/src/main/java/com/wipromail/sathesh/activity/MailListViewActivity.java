@@ -31,11 +31,15 @@ import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.listeners.MailListViewActivityListener;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
+
+import java.util.List;
 
 /** This Activity is the one which shows the mail list.
  *
@@ -82,63 +86,63 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
         activity = this;
         context = this;
-
-        mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
-        mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
-        mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
-
-        //note: this will trigger the OnCreateView in the fragment.
-        setContentView(R.layout.activity_mail_list_view);
-
-        //Initializing the fragment MailListViewFragment
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        if(mailListViewFragmentDataPasser == null ) {
-            mailListViewFragmentDataPasser = new MailListViewFragment();
-        }
-        ft.replace(R.id.mailListFragmentLayout, (android.support.v4.app.Fragment) mailListViewFragmentDataPasser);
-        ft.commit();
-
-        if(activityListener == null){
-            activityListener = new MailListViewActivityListener(this);
-        }
-
-        // Initializing the fragmentListener
-        if(fragmentListener ==null) {
-            fragmentListener = new MailListViewListener(this, mailListViewFragmentDataPasser);
-        }
-
-        // Initializing the Drawer Layout
-        //Navigation Drawer
-        String[] mailfolderNames = context.getResources().getStringArray(R.array.drawerMailFolderNames);
-        String[] mailfolderIcons = context.getResources().getStringArray(R.array.drawerMailFolderIcons);
-
-        RecyclerView mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
-        mDrawerList.setScrollContainer(true);
-
-        mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, mailfolderNames, mailfolderIcons, activityListener));
-        mDrawerList.setLayoutManager(new LinearLayoutManager(context));
-        mDrawerLayout = (DrawerLayout)activity.findViewById(R.id.drawer_layout);
-
-        //Navigation Drawer Slider Listener
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new MyActionBarDrawerToggle(
-                this,
-                mDrawerLayout,
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        );
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        // Showing the display name and company name in Drawer Layout
-        dispName = (TextView) findViewById(R.id.dispName);
-        companyName = (TextView) findViewById(R.id.companyName);
-
         try {
+            mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
+            mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
+            mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
+
+            //note: this will trigger the OnCreateView in the fragment.
+            setContentView(R.layout.activity_mail_list_view);
+
+            //Initializing the fragment MailListViewFragment
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+
+            if(mailListViewFragmentDataPasser == null ) {
+                mailListViewFragmentDataPasser = new MailListViewFragment();
+            }
+            ft.replace(R.id.mailListFragmentLayout, (android.support.v4.app.Fragment) mailListViewFragmentDataPasser);
+            ft.commit();
+
+            if(activityListener == null){
+                activityListener = new MailListViewActivityListener(this);
+            }
+
+            // Initializing the fragmentListener
+            if(fragmentListener ==null) {
+                fragmentListener = new MailListViewListener(this, mailListViewFragmentDataPasser);
+            }
+
+            // Initializing the Drawer Layout
+            //Navigation Drawer
+            DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO( context);
+            List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
+
+            RecyclerView mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
+            mDrawerList.setScrollContainer(true);
+
+            mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
+            mDrawerList.setLayoutManager(new LinearLayoutManager(context));
+            mDrawerLayout = (DrawerLayout)activity.findViewById(R.id.drawer_layout);
+
+            //Navigation Drawer Slider Listener
+
+            // ActionBarDrawerToggle ties together the the proper interactions
+            // between the sliding drawer and the action bar app icon
+            mDrawerToggle = new MyActionBarDrawerToggle(
+                    this,
+                    mDrawerLayout,
+                    R.string.drawer_open,  /* "open drawer" description for accessibility */
+                    R.string.drawer_close  /* "close drawer" description for accessibility */
+            );
+
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+            // Showing the display name and company name in Drawer Layout
+            dispName = (TextView) findViewById(R.id.dispName);
+            companyName = (TextView) findViewById(R.id.companyName);
+
+
             dispName.setText(SharedPreferencesAdapter.getUserDetailsDisplayName(context));
             companyName.setText(SharedPreferencesAdapter.getUserDetailsCompanyName(context));
         } catch (Exception e) {
