@@ -279,6 +279,10 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 }
 
                 intent = new Intent(LoginPageActivity.this, MailListViewActivity.class);
+                intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX);
+                intent.putExtra(MailListViewActivity.FOLDER_ID_EXTRA, "");
+                intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, getString(R.string.drawer_menu_inbox));
+
                 startActivity(intent);
 
                 LoginPageActivity.this.finish();
