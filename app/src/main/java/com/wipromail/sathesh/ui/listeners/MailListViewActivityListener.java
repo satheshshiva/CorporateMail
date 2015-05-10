@@ -97,7 +97,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
         FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        AboutFragment fragment = AboutFragment.newInstance("");
+        AboutFragment fragment = AboutFragment.newInstance();
         ft.replace(R.id.mailListFragmentLayout, fragment);
         ft.commit();
 

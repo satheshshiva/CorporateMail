@@ -26,22 +26,17 @@ import com.wipromail.sathesh.jsinterfaces.AboutActivityJSInterface;
  * create an instance of this fragment.
  */
 public class AboutFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
 
     public ActionBarActivity activity ;
     private Context context ;
 
-    private String mParam1;
     private Button bugOrSuggestionBtn;
     private WebView wv;
 
     private InteractionListener mListener;
 
-    public static AboutFragment newInstance(String param1) {
+    public static AboutFragment newInstance() {
         AboutFragment fragment = new AboutFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -52,9 +47,23 @@ public class AboutFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (InteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement InteractionListener");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -62,7 +71,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //inflate layout for this fragment
-        View view = inflater.inflate(R.layout.activity_about, container, false);
+        View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         activity =   (ActionBarActivity)getActivity();
         context =  getActivity();
@@ -99,23 +108,6 @@ public class AboutFragment extends Fragment {
         }
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (InteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement InteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     public interface InteractionListener {
