@@ -68,13 +68,14 @@ public class MainActivity extends Activity implements Constants{
 				
 				if (null != SignedInAccUser && !(SignedInAccUser.equals(USERNAME_NULL)) && !(SignedInAccPassword.equals(PASSWORD_NULL))){
 					//user signed in
-					Intent intent = new Intent(MainActivity.this, HomePageActivity.class);
+					Intent intent = new Intent(MainActivity.this, MailListViewActivity.class);
+                    intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX);
+                    intent.putExtra(MailListViewActivity.FOLDER_ID_EXTRA, "");
+                    intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, getString(R.string.drawer_menu_inbox));
+
 					startActivity(intent);
 
 					ApplyAnimation.setMainActivitySignedInAnim(MainActivity.this);
-
-					
-
 				}
 				else{
 					//user not signed in

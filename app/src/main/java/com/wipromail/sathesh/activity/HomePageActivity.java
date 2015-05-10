@@ -23,6 +23,7 @@ import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.ui.util.OptionsUIContent;
 import com.wipromail.sathesh.ui.components.SignOutAlertDialog;
 
+@Deprecated
 public class HomePageActivity extends MyActivity implements Constants{
 
 	private WebView webview;

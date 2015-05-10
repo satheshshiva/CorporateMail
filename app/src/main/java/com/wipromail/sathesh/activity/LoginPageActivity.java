@@ -278,7 +278,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
                     onProgressUpdate("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
                 }
 
-                intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
+                intent = new Intent(LoginPageActivity.this, MailListViewActivity.class);
                 startActivity(intent);
 
                 LoginPageActivity.this.finish();
