@@ -11,7 +11,7 @@ import com.wipromail.sathesh.fragment.MailListViewFragment;
 
 public interface MailListFragmentDataPasser {
 
-    public enum Status{
+    enum Status{
         UPDATING,
         UPDATED,
         WAITING,	//not the actual Thread.wait(). One thread2 will just exit and the other thread (thread1) will invoke it again once its done.
@@ -19,7 +19,7 @@ public interface MailListFragmentDataPasser {
         ERROR_AUTH_FAILED
     }
 
-    public enum UndoBarStatus{
+    enum UndoBarStatus{
         IDLE,
         DISPLAYED,
         DELETING
@@ -28,13 +28,13 @@ public interface MailListFragmentDataPasser {
 	/** Refresh the List View from network
 	 * 
 	 */
-	public void refreshList();
+    void refreshList();
 	
 	
 	/** refreshes the List View from Local cache
 	 * 
 	 */
-	public void softRefreshList();
+    void softRefreshList();
 
 
     SwipeRefreshLayout getSwipeRefreshLayout();
@@ -55,7 +55,7 @@ public interface MailListFragmentDataPasser {
 
     void setMoreMailsThreadState(Status waiting);
 
-    public Context getContext();
+    Context getContext();
 
     void showMoreLoadingAnimation();
 

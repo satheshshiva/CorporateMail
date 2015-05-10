@@ -20,7 +20,7 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
-import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.constants.Constants;
@@ -43,14 +43,12 @@ import java.util.ArrayList;
 public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants {
     private MailListFragmentDataPasser fragment;
     private ActionBarActivity activity;
-    private MailListActivityDataPasser activityDataPasser;
 
     private int preLast=-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
 
-    public MailListViewListener(MailListActivityDataPasser activity, MailListFragmentDataPasser fragment){
-        this.activity = (ActionBarActivity)activity;
-        this.activityDataPasser = activity;
+    public MailListViewListener(MyActivity activity, MailListFragmentDataPasser fragment){
+        this.activity = activity;
         this.fragment = fragment;
     }
 
