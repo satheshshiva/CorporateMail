@@ -2,21 +2,17 @@ package com.wipromail.sathesh.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,7 +33,6 @@ import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.listeners.MailListViewActivityListener;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
-import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 import java.util.List;
 
@@ -203,44 +198,6 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         }
     }
 
-    /** OPTION ITEMS **/
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuItem menuItem;
-
-        //Always Visible menu
-        menuItem=menu.add(ACTIONBAR_COMPOSE)
-                .setIcon(OptionsUIContent.getComposeIcon());
-        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        //Submenu
-        SubMenu subMenu = menu.addSubMenu(ACTIONBAR_OVERFLOW).setIcon(OptionsUIContent.getMoreoverFlowIcon());
-        //Overflow submenu icon
-        menuItem = subMenu.getItem();
-        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        //Refresh Submenu
-        menuItem=subMenu.add(ACTIONBAR_REFRESH)
-                .setIcon(OptionsUIContent.getRefreshIcon());
-        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        //Settings Submenu
-        menuItem=subMenu
-                .add(ACTIONBAR_SETTINGS)
-                .setIcon(OptionsUIContent.getSettingsIcon());
-        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        //About Submenu
-        menuItem=subMenu
-                .add(ACTIONBAR_ABOUT)
-                .setIcon(OptionsUIContent.getAboutIcon());
-        MenuItemCompat.setShowAsAction(menuItem,MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        return true;
-    }
-
     /** OPTION ITEM SELECTED **/
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -249,20 +206,6 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
             return true;
         }
 
-        if(item!=null && item.getTitle()!=null) {
-            if (item != null && item.getTitle().equals(ACTIONBAR_REFRESH)) {
-                mailListViewFragmentDataPasser.refreshList();
-            } else if ( item.getTitle().equals(ACTIONBAR_COMPOSE)) {
-                Intent intent = new Intent(this, ComposeActivity.class);
-                startActivity(intent);
-            } else if (item.getTitle().equals(ACTIONBAR_SETTINGS)) {
-                Intent intent = new Intent(this, MyPreferencesActivity.class);
-                startActivity(intent);
-            } else if (item.getTitle().equals(ACTIONBAR_ABOUT)) {
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-            }
-        }
         return super.onOptionsItemSelected(item);
     }
 
