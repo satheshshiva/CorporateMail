@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
@@ -94,14 +95,21 @@ public class SignOut implements Constants{
 	
 	private void restartApp(Activity activity, Context context) {
 
-		activity.finish();
-		
-		Intent mStartActivity = new Intent(context, MailApplication.mainApplicationActivity());
+		//activity.finish();
+        // closes the app
+        Intent intent = new Intent(context, MailListViewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(MailListViewActivity.SIGN_OUT_EXTRA, true);
+        activity.startActivity(intent);
+
+		//Reopen the app
+       Intent mStartActivity = new Intent(context, MailApplication.mainApplicationActivity());
 		int mPendingIntentId = 123456;
 		PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
-		
+
+
 		//this wont work if the mainApplicationActivity is not on stack. i.e. when the user pressess the notification, inbox is directly opened
 		/*Intent intent = new Intent(context, MailApplication.mainApplicationActivity());
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
