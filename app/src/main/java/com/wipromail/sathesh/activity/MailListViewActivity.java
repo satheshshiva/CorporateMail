@@ -55,6 +55,7 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
     public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
     public final static String FOLDER_NAME_EXTRA = "FOLDER_NAME_EXTRA";
+    public final static String SIGN_OUT_EXTRA = "SIGN_OUT_EXTRA";
 
     public static final String EXTRA_MESSAGE_CACHED_HEADER = "cachedMailHeaderToOpen";
 
@@ -87,6 +88,13 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
         activity = this;
         context = this;
         try {
+
+            //while sign out is clicked, the enitire application will be closed by using clear top and by calling this activity since this is the first
+            //spawned activity.  we have to finish this first activity for sign out.
+            if (getIntent().getBooleanExtra(SIGN_OUT_EXTRA, false)) {
+                finish();
+            }
+
             mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
             mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
             mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
