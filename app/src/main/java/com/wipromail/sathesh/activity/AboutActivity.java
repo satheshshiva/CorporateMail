@@ -38,6 +38,7 @@ import com.wipromail.sathesh.update.CheckLatestVersion;
  * @author sathesh
  *
  */
+@Deprecated
 public class AboutActivity extends MyActivity implements Constants{
 
 	private static ActionBarActivity activity;
@@ -54,7 +55,7 @@ public class AboutActivity extends MyActivity implements Constants{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_about);
+		//setContentView(R.layout.activity_about);
 
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
