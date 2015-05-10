@@ -24,6 +24,7 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
@@ -211,6 +212,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
         try {
             activityDataPasser.getmDrawerToggle().syncState();
+
+            //below 2 lines moved from activity to here
+            if(mailType == MailType.INBOX) {
+                NotificationProcessing.cancelAllNotifications(activity);
+            }
+            //softRefreshList(); //this is done in OnCreate on setting the adapter
         } catch (Exception e) {
             e.printStackTrace();
         }
