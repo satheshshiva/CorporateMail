@@ -27,7 +27,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
      * Interface for receiving click events from cells.
      */
     public interface OnRecyclerViewClickListener {
-        public void onDrawerLayoutRecyclerViewClick(View view, int position);
+        public void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO);
     }
 
     // Constructor
@@ -54,10 +54,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
+        final DrawerMenuVO drawerMenuVO = drawerMenuVOList.get(position);
+
         switch(holder.viewType) {
             default:
-                holder.mailFolderNameTextView.setText(drawerMenuVOList.get(position).getMenu_name());
-                holder.fontIconView.setText(drawerMenuVOList.get(position).getFont_icon());
+                holder.mailFolderNameTextView.setText(drawerMenuVO.getMenu_name());
+                holder.fontIconView.setText(drawerMenuVO.getFont_icon());
 
                 // setting row on click listener
                 if (holder.view != null) {
@@ -91,7 +93,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                         public void onClick(View view) {
                             //here you inform view that something was change - view will be invalidated
                             notifyDataSetChanged();
-                            listener.onDrawerLayoutRecyclerViewClick(view, position);
+                            listener.onDrawerLayoutRecyclerViewClick(view, position, drawerMenuVO);
                         }
                     });
                 }

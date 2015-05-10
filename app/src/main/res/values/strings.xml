@@ -241,7 +241,7 @@
     <string name="dialog_deletemail_title">Delete Mail</string>
     <string name="dialog_deletemail_msg">Move this to Deleteted Items?</string>
     <string name="dialog_deletemail_perm_msg">This will permanently delete this mail</string>
-    <string name="dialog_delete_multiple_mail_perm_msg">This will permanently selected mail(s)</string>
+    <string name="dialog_delete_multiple_mail_perm_msg">This will permanently delete selected mail(s)</string>
 
     <!-- Title bar -->
     <string name="title_activity_home_page">Wipro Mail</string>
@@ -282,12 +282,6 @@
     <!-- Navigation Drawer -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="drawer_inbox">Inbox</string>
-    <string name="drawer_drafts">Drafts</string>
-    <string name="drawer_sent">Sent Items</string>
-    <string name="drawer_deleted_items">Deleted Items</string>
-    <string name="drawer_search_contact">Search Contact</string>
-    <string name="drawer_settings">Settings</string>
     <string name="drawer_sign_out">Sign Out</string>
     <string name="drawer_menu_inbox">Inbox</string>
     <string name="drawer_menu_drafts">Drafts</string>
@@ -295,6 +289,8 @@
     <string name="drawer_menu_deleted_items">Deleted Items</string>
     <string name="drawer_menu_more_folders">More Folders</string>
     <string name="drawer_menu_favourites">Favourites</string>
+    <string name="drawer_menu_contacts">Contacts</string>
+    <string name="drawer_menu_search_contact">Search Contact</string>
     <string name="drawer_menu_settings">Settings</string>
     <string name="drawer_menu_about">About</string>
 

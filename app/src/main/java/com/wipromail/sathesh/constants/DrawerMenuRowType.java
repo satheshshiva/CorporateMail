@@ -12,6 +12,11 @@ public interface DrawerMenuRowType {
     public final static int FAVOURITES_HEADER=20;
     public final static int FAVOURITE_FOLDERS =21;
 
+    public final static int CONTACTS_HEADER=120;
+    public final static int SEARCH_CONTACT =121;
+
     public final static int SETTINGS=1000;
     public final static int ABOUT=1001;
+
+    public final static int EMPTY_ROW=1010;
 }
