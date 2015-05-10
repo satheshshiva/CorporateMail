@@ -6,17 +6,17 @@ package com.wipromail.sathesh.ui.listeners;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.activity.AboutActivity;
 import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.activity.SearchContactsActivity;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
+import com.wipromail.sathesh.fragment.AboutFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
@@ -28,10 +28,10 @@ import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 public class MailListViewActivityListener implements  Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener {
 
     private MailListActivityDataPasser activityDataPasser;
-    private ActionBarActivity activity;
+    private MyActivity activity;
 
     public MailListViewActivityListener(MailListActivityDataPasser activityDataPasser){
-        this.activity = (ActionBarActivity)activityDataPasser;
+        this.activity = (MyActivity)activityDataPasser;
         this.activityDataPasser = activityDataPasser;
     }
 
@@ -43,26 +43,17 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
         switch(drawerMenuVO.getType()){
             case DrawerMenuRowType.INBOX:
             case DrawerMenuRowType.DRAFTS:
-                activityDataPasser.setMailFolderName(drawerMenuVO.getMenu_name());
-                activityDataPasser.setMailType(drawerMenuVO.getType());
-                loadMailListViewFragment();
+                loadMailListViewFragment( drawerMenuVO.getType(), drawerMenuVO.getMenu_name(), null);
                 break;
             case DrawerMenuRowType.SENT_ITEMS:
-                activityDataPasser.setMailFolderName( WellKnownFolderName.SentItems.toString());
-                activityDataPasser.setMailType(drawerMenuVO.getType());
-                loadMailListViewFragment();
+                loadMailListViewFragment(drawerMenuVO.getType(), WellKnownFolderName.SentItems.toString(), null);
                 break;
             case DrawerMenuRowType.DELETED_ITEMS:
-                activityDataPasser.setMailFolderName( WellKnownFolderName.DeletedItems.toString());
-                activityDataPasser.setMailType(drawerMenuVO.getType());
-                loadMailListViewFragment();
+                loadMailListViewFragment(drawerMenuVO.getType(), WellKnownFolderName.DeletedItems.toString(), null);
                 break;
 
             case DrawerMenuRowType.FAVOURITE_FOLDERS:
-                activityDataPasser.setMailFolderName(drawerMenuVO.getMenu_name());
-                activityDataPasser.setMailType(MailType.FOLDER_WITH_ID);
-                activityDataPasser.setMailFolderId(drawerMenuVO.getFolder_id());
-                loadMailListViewFragment();
+                loadMailListViewFragment(MailType.FOLDER_WITH_ID, drawerMenuVO.getMenu_name(), drawerMenuVO.getFolder_id());
                 break;
 
             case DrawerMenuRowType.SEARCH_CONTACT:
@@ -78,30 +69,37 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
                 break;
 
             case DrawerMenuRowType.ABOUT:
-                activityDataPasser.getmDrawerLayout().closeDrawers();
-                intent=new Intent(activity, AboutActivity.class);
-                activity.startActivity(intent);
+                loadAboutFragment();
                 break;
 
             default:
                 //usuaully header will come here. do nothing.
                 break;
-
         }
     }
 
     //(re)loads the MailListViewFragment inside the MailListViewActivity
-    private void loadMailListViewFragment() {
+    private void loadMailListViewFragment(int mailType, String mailFolderName, String mailFolderId) {
         activityDataPasser.getmDrawerLayout().closeDrawers();
         //using fragment transaction, replace the fragment
         FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        MailListViewFragment _mailListViewFragment = new MailListViewFragment();
-        ft.replace(R.id.mailListFragmentLayout,  _mailListViewFragment);
+        MailListViewFragment fragment = MailListViewFragment.newInstance(mailType, mailFolderName, mailFolderId);
+        ft.replace(R.id.mailListFragmentLayout, fragment);
+        ft.commit();
+    }
+
+    //loads the AboutFragment inside the MailListViewActivity
+    private void loadAboutFragment() {
+        activityDataPasser.getmDrawerLayout().closeDrawers();
+        //using fragment transaction, replace the fragment
+        FragmentManager fm = activity.getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        AboutFragment fragment = AboutFragment.newInstance("");
+        ft.replace(R.id.mailListFragmentLayout, fragment);
         ft.commit();
 
-        // replace the newly created fragment object
-        activityDataPasser.setMailListViewFragmentDataPasser(_mailListViewFragment);
     }
 }

@@ -1,12 +1,12 @@
 package com.wipromail.sathesh.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,8 +24,8 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.NotificationProcessing;
-import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
@@ -46,11 +46,12 @@ import java.util.List;
 
 public class MailListViewFragment extends Fragment implements Constants, MailListFragmentDataPasser {
 
-    // ListFragment is a very useful class that provides a simple ListView inside of a Fragment.
-    // This class is meant to be sub-classed and allows you to quickly build up list interfaces
-    // in your app.
-    private MailListActivityDataPasser activityDataPasser ;
-    public ActionBarActivity activity ;
+    private static final String ARG_MAILTYPE="mailType";
+    private static final String ARG_MAIL_FOLDER_NAME="mailFolderName";
+    private static final String ARG_MAIL_FOLDER_ID="mailFolderId";
+
+    private InteractionListener activityDataPasser ;
+    public MyActivity activity ;
     private Context context ;
 
     private MailListViewAdapter adapter;
@@ -86,6 +87,46 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
      *
      */
 
+    public static MailListViewFragment newInstance(int mailType, String mailFolderName, String mailFolderId) {
+        MailListViewFragment fragment = new MailListViewFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_MAILTYPE, mailType);
+        args.putString(ARG_MAIL_FOLDER_NAME, mailFolderName);
+        args.putString(ARG_MAIL_FOLDER_ID, mailFolderId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public MailListViewFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            this.mailType = getArguments().getInt(ARG_MAILTYPE);
+            this.mailFolderName = getArguments().getString(ARG_MAIL_FOLDER_NAME);
+            this.mailFolderId = getArguments().getString(ARG_MAIL_FOLDER_ID);
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            activityDataPasser = (InteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement InteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        activityDataPasser = null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,9 +134,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         View view = inflater.inflate(R.layout.fragment_mail_list_view,
                 container, false);
 
-        activity =   (ActionBarActivity)getActivity();
+        activity =   (MyActivity)getActivity();
         context =  getActivity();
-        activityDataPasser = (MailListActivityDataPasser)getActivity();
         if (cacheMailHeaderAdapter ==null){
             cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
@@ -106,7 +146,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             try {
                 // Initializing the fragmentListener
                 if(listener ==null) {
-                    listener = new MailListViewListener(activityDataPasser, this);
+                    listener = new MailListViewListener((MyActivity)activityDataPasser, this);
                 }
 
                 //Initialize toolbar
@@ -131,11 +171,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
                 //animation for text switcher
                 ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, textswitcher);
-
-                //mailtype, folname and folder id get from activity
-                mailType = activityDataPasser.getMailType();
-                mailFolderName = activityDataPasser.getMailFolderName();
-                mailFolderId = activityDataPasser.getStrFolderId();
 
                 //progress bar initialize
                 circle_progressbar = (ProgressBar)view.findViewById(R.id.circle_progressbar);
@@ -408,6 +443,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         failureIcon.setVisibility(failureIconVisibility);
         readIcon.setVisibility(readIconVisibility);
         unreadIcon.setVisibility(unreadIconVisibility);
+    }
+
+    /** Fragment Interation Listner
+     *
+     */
+    public interface InteractionListener{
+        android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
     }
 
     /*** GETTER SETTER PART ***/
