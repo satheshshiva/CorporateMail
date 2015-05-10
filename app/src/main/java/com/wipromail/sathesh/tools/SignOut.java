@@ -1,13 +1,12 @@
 package com.wipromail.sathesh.tools;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.wipromail.sathesh.activity.MailListViewActivity;
+import com.wipromail.sathesh.activity.MainActivity;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.constants.Constants;
@@ -95,20 +94,26 @@ public class SignOut implements Constants{
 	
 	private void restartApp(Activity activity, Context context) {
 
+        Intent intent;
+
 		//activity.finish();
         // closes the app
-        Intent intent = new Intent(context, MailListViewActivity.class);
+        intent = new Intent(context, MailListViewActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(MailListViewActivity.SIGN_OUT_EXTRA, true);
         activity.startActivity(intent);
 
-		//Reopen the app
-       Intent mStartActivity = new Intent(context, MailApplication.mainApplicationActivity());
+        intent = new Intent(context, MainActivity.class);
+        activity.startActivity(intent);
+
+		//Reopen the app after some time using alarm manager. this code was used before because the current actity is finish() before this line
+        // and the code for start activity was not getting executed.
+      /* Intent mStartActivity = new Intent(context, MailApplication.mainApplicationActivity());
 		int mPendingIntentId = 123456;
 		PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
-
+*/
 
 		//this wont work if the mainApplicationActivity is not on stack. i.e. when the user pressess the notification, inbox is directly opened
 		/*Intent intent = new Intent(context, MailApplication.mainApplicationActivity());

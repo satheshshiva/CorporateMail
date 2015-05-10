@@ -65,6 +65,8 @@ public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheD
      * @param context
      */
     public static void deleteDatabase(Context context){
+
         context.deleteDatabase(DATABASE_NAME);
+        cacheDbHelper=null;
     }
 }
