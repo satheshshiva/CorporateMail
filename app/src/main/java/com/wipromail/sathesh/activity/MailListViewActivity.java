@@ -21,7 +21,6 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
-import com.wipromail.sathesh.application.NotificationProcessing;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
@@ -216,8 +215,8 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
         try {
             //cancel all the notifications
-            NotificationProcessing.cancelAllNotifications(this);
-            mailListViewFragmentDataPasser.softRefreshList();
+           // NotificationProcessing.cancelAllNotifications(this);
+           // mailListViewFragmentDataPasser.softRefreshList();
         } catch (Exception e) {
             e.printStackTrace();
         }
