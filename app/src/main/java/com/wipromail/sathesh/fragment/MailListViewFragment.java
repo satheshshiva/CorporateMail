@@ -104,7 +104,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         if(activity != null){
 
             try {
-                listener = activityDataPasser.getFragmentListener();
+                // Initializing the fragmentListener
+                if(listener ==null) {
+                    listener = new MailListViewListener(activityDataPasser, this);
+                }
 
                 //Initialize toolbar
                 MailApplication.toolbarInitialize(activity, view);

@@ -31,7 +31,6 @@ import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.listeners.MailListViewActivityListener;
-import com.wipromail.sathesh.ui.listeners.MailListViewListener;
 
 import java.util.List;
 
@@ -65,7 +64,6 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private MailListViewListener fragmentListener;
     private MailListViewActivityListener activityListener;
 
     /** ON CREATE **
@@ -108,11 +106,6 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
 
             if(activityListener == null){
                 activityListener = new MailListViewActivityListener(this);
-            }
-
-            // Initializing the fragmentListener
-            if(fragmentListener ==null) {
-                fragmentListener = new MailListViewListener(this, mailListViewFragmentDataPasser);
             }
 
             // Initializing the Drawer Layout
@@ -303,16 +296,6 @@ public class MailListViewActivity extends MyActivity implements Constants,MailLi
     public void setmDrawerToggle(ActionBarDrawerToggle mDrawerToggle) {
         this.mDrawerToggle = mDrawerToggle;
     }
-
-    public MailListViewListener getFragmentListener() {
-        return fragmentListener;
-    }
-
-    @Override
-    public void setFragmentListener(MailListViewListener fragmentListener) {
-        this.fragmentListener = fragmentListener;
-    }
-
     public int getDrawerLayoutSelectedPosition() {
         return drawerLayoutSelectedPosition;
     }
