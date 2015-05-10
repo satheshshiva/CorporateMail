@@ -21,6 +21,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.components.ChangePasswordDialog;
+import com.wipromail.sathesh.ui.components.SignOutAlertDialog;
 
 import java.util.Calendar;
 //import com.wipromail.sathesh.ui.components.SignOutAlertDialog;
@@ -85,9 +86,9 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
                 KEY_CHANGE_PASSWORD);
         clearCache = (Preference)getPreferenceScreen().findPreference(
                 KEY_CLEAR_CACHE);
-		/*signOut = (Preference)getPreferenceScreen().findPreference(
+		signOut = (Preference)getPreferenceScreen().findPreference(
 				KEY_SIGN_OUT);
-*/
+
         //Will call the function to initialize the summary. The summary will change when the option changes
         oncreateWebmailServerFromSummary();
         updateComposeSignatureEnablePrefernceSummary();
@@ -126,12 +127,12 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
         });
 
         //initializing the click event for Sign Out  button
-		/*signOut.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		signOut.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				SignOutAlertDialog.showAlertdialog(activity, context);
 				return true;
 			}
-		});*/
+		});
 
     }
 

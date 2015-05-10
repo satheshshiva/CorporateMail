@@ -69,10 +69,10 @@
             android:key="clear_cache"
             android:summary="@string/preferences_clear_cache_summary"
             android:title="@string/preferences_clear_cache" />
-       <!--  <Preference
+         <Preference
             android:key="sign_out"
             android:summary="@string/preferences_signout_summary"
-            android:title="@string/preferences_signout_title" />-->
+            android:title="@string/preferences_signout_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>
