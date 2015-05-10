@@ -8,10 +8,12 @@
     <string name="fontIcon_drawer_deletedItems">&#xe620;</string>
     <string name="fontIcon_drawer_more_folders">&#xe930;</string>
 
-    <string name="fontIcon_drawer_fave_header"></string>
     <string name="fontIcon_drawer_fave_item">&#xf005;</string>
+
+    <string name="fontIcon_drawer_contacts_serach">&#xe64d;</string>
 
     <string name="fontIcon_drawer_settings">&#xe661;</string>
     <string name="fontIcon_drawer_about">&#xf05a;</string>
+
 
 </resources>
