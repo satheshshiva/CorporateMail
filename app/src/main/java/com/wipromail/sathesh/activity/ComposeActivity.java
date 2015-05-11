@@ -683,8 +683,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Notifications.showAlert(activity, progress[1]);
             }else if(progress[0].equalsIgnoreCase(STATUS_SENT)){
                 progressDialog.dismiss();
-                activity.finish();
-                ApplyAnimation.setComposeActivityCloseAnim(activity);
+                onBackPressed();
                 Notifications.showToast(activity, activity.getText(R.string.compose_msg_sent), Toast.LENGTH_SHORT);
             }
         }
@@ -764,7 +763,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item!=null && item.getItemId()==android.R.id.home){
-            finish();
             onBackPressed();
         }
         else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_send))){
@@ -790,8 +788,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 .setMessage(getString(R.string.compose_alert_confirm_cancel_msg) )
                 .setPositiveButton(getString(R.string.alertdialog_positive_lbl)	, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //your deleting code
-                        finish();
+                        onBackPressed();
                     }
                 })
                 .setNegativeButton(getString(R.string.alertdialog_negative_lbl), new DialogInterface.OnClickListener() {
