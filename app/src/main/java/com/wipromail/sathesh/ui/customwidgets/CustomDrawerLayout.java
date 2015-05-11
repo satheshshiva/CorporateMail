@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.ui.components;
+package com.wipromail.sathesh.ui.customwidgets;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
