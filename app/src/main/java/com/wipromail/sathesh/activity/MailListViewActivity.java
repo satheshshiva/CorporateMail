@@ -91,7 +91,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             }
 
             //Initializing Intent Extras
-            mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA, 0);
+            mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA, -1);
             mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
             mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
             appUpdateAvailble = getIntent().getBooleanExtra(APP_UPDATE_AVAILABLE, false);
@@ -109,6 +109,9 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
             if(appUpdateAvailble){
                 loadAboutFragment(true);
+            }
+            else if(mailType == -1){    //when this is not passed. when app opened from debugger or something
+                loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox), mailFolderId);
             }
             else{
                 loadMailListViewFragment(mailType, mailFolderName, mailFolderId);
