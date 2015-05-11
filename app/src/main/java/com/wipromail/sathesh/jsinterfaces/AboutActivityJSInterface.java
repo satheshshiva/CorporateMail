@@ -8,7 +8,8 @@ import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 
 public final class AboutActivityJSInterface implements Constants{
 
-	public static final String ABOUT_ACTIVITY_JS_INTERFACE_NAME="AboutFragementJSInterface";
+	//this
+	public static final String ABOUT_ACTIVITY_JS_INTERFACE_NAME="about";	//this is the javascript DOM object
 	AboutFragmentDataPasser fragmentDataPasser;
 
 	public AboutActivityJSInterface(AboutFragmentDataPasser fragmentDataPasser){
