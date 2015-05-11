@@ -99,7 +99,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp"
+                android:elevation="10dp"
                 android:src="@drawable/ic_fab_compose"
+                fab:fab_shadow="true"
                 fab:fab_colorNormal="@color/fab_accent"
                 fab:fab_colorPressed="@color/fab_accent_pressed"
                 fab:fab_colorRipple="@color/fab_ripple"/>

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
+import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
@@ -763,6 +764,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     {
         if(item!=null && item.getItemId()==android.R.id.home){
             finish();
+            onBackPressed();
         }
         else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_send))){
             sendMail();
@@ -772,6 +774,12 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ApplyAnimation.setComposeActivityCloseAnim(activity);
     }
 
     private void cancelPage() {

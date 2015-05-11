@@ -8,6 +8,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
+
 /**
  * Created by Sathesh on 3/19/15.
  *
@@ -32,6 +35,12 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
         // change the navigation bar color to translucent
         if(Build.VERSION.SDK_INT  >= Build.VERSION_CODES.LOLLIPOP) {
               changeNavigtionBarColor(true);
+        }
+
+        //MailListFragment instance
+        MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getCurrentInstance();
+        if(mailListViewFragment!=null){
+            mailListViewFragment.getFab().hide();
         }
     }
 
@@ -66,6 +75,12 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
         if(Build.VERSION.SDK_INT  >= Build.VERSION_CODES.LOLLIPOP) {
              changeNavigtionBarColor(false);
         }
+        //MailListFragment instance
+        MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getCurrentInstance();
+        if(mailListViewFragment!=null){
+            mailListViewFragment.getFab().show();
+        }
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
