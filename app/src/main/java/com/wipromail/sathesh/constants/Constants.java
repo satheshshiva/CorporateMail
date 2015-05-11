@@ -152,7 +152,7 @@ public interface Constants {
 	----------------------------------  Application Auto Updater ----------------------------
 	--------------------------------------------------------------------------------------*/
 
-	public static final long UPDATE_AUTO_CHECK_NO_OF_DAYS = 0;
+	public static final long UPDATE_AUTO_CHECK_NO_OF_DAYS = 14;
 	public static final String APPLICATION_APK_DOWNLOAD_URL1_DEV = "http://tiny.cc/wipromaildev";
 	public static final String APPLICATION_LATEST_VERSION_PROP_URL_DEV = "http://tiny.cc/wipromailpropdev";
 	public static final String APPLICATION_CHANGELOG_URL_DEV = "http://tiny.cc/wipromailchangelogdev";
