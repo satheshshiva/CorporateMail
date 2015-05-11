@@ -53,13 +53,13 @@ public class ApplyAnimation {
 
 	public static void setComposeActivityOpenAnim(Activity activity) {
 
-		activity.overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.hold);
+		activity.overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.zoom_exit);
 
 	}
 
 	public static void setComposeActivityCloseAnim(Activity activity) {
 
-		activity.overridePendingTransition(R.anim.hold, R.anim.slide_out_to_bottom);
+		activity.overridePendingTransition(R.anim.zoom_enter, R.anim.slide_out_to_bottom);
 
 	}
 

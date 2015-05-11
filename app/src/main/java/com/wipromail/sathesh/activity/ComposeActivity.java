@@ -684,6 +684,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             }else if(progress[0].equalsIgnoreCase(STATUS_SENT)){
                 progressDialog.dismiss();
                 activity.finish();
+                ApplyAnimation.setComposeActivityCloseAnim(activity);
                 Notifications.showToast(activity, activity.getText(R.string.compose_msg_sent), Toast.LENGTH_SHORT);
             }
         }
