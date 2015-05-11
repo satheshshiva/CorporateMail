@@ -42,28 +42,28 @@ import java.util.List;
 
 /**
  * @author sathesh
- * This fragment is used to load only the MailFunctions.
+ *         This fragment is used to load only the MailFunctions.
  */
 
 public class MailListViewFragment extends Fragment implements Constants, MailListFragmentDataPasser {
 
-    private static final String ARG_MAILTYPE="mailType";
-    private static final String ARG_MAIL_FOLDER_NAME="mailFolderName";
-    private static final String ARG_MAIL_FOLDER_ID="mailFolderId";
+    private static final String ARG_MAILTYPE = "mailType";
+    private static final String ARG_MAIL_FOLDER_NAME = "mailFolderName";
+    private static final String ARG_MAIL_FOLDER_ID = "mailFolderId";
 
-    private ActivityDataPasser activityDataPasser ;
-    public MyActivity activity ;
-    private Context context ;
+    private ActivityDataPasser activityDataPasser;
+    public MyActivity activity;
+    private Context context;
 
     private MailListViewAdapter adapter;
     private TextSwitcher textswitcher;
 
     private int mailType;
-    private String  mailFolderName;
+    private String mailFolderName;
     private String mailFolderId;
 
     private ProgressBar circle_progressbar;
-
+    private boolean fabShown=false;
     private ImageView successIcon, failureIcon, readIcon, unreadIcon;
     private FloatingActionButton fab;
 
@@ -71,26 +71,26 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     private ListView listView;
     private CachedMailHeaderAdapter cacheMailHeaderAdapter;
-    private int totalCachedRecords=0;
+    private int totalCachedRecords = 0;
 
-    private SwipeRefreshLayout swipeRefreshLayout ;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Status newMailsThreadState;
     private Status moreMailsThreadState;
     private UndoBarStatus undoBarState;
 
-    private long totalMailsInFolder=-1;
+    private static MailListViewFragment fragment;
+    private long totalMailsInFolder = -1;
 
-    private boolean fragmentAlreadyLoaded=false;
+    private boolean fragmentAlreadyLoaded = false;
     //contains all the UI listeners for this fragment
-    private MailListViewListener listener ;
+    private MailListViewListener listener;
 
     /**
      * @author sathesh
-     *
      */
 
     public static MailListViewFragment newInstance(int mailType, String mailFolderName, String mailFolderId) {
-        MailListViewFragment fragment = new MailListViewFragment();
+        fragment = new MailListViewFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_MAILTYPE, mailType);
         args.putString(ARG_MAIL_FOLDER_NAME, mailFolderName);
@@ -101,6 +101,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     public MailListViewFragment() {
         // Required empty public constructor
+    }
+
+    public static MailListViewFragment getCurrentInstance() {
+        return fragment;
     }
 
     @Override
@@ -136,29 +140,29 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         View view = inflater.inflate(R.layout.fragment_mail_list_view,
                 container, false);
 
-        activity =   (MyActivity)getActivity();
-        context =  getActivity();
-        if (cacheMailHeaderAdapter ==null){
+        activity = (MyActivity) getActivity();
+        context = getActivity();
+        if (cacheMailHeaderAdapter == null) {
             cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
         setRetainInstance(true);
 
-        if(activity != null){
+        if (activity != null) {
 
             try {
                 // Initializing the fragmentListener
-                if(listener ==null) {
-                    listener = new MailListViewListener((MyActivity)activityDataPasser, this);
+                if (listener == null) {
+                    listener = new MailListViewListener((MyActivity) activityDataPasser, this);
                 }
 
                 //Initialize toolbar
                 MailApplication.toolbarInitialize(activity, view);
 
                 //List View Initialization
-                listView = (ListView)view.findViewById(R.id.listView);
+                listView = (ListView) view.findViewById(R.id.listView);
 
                 //Text Switcher Initiliazation
-                textswitcher = (TextSwitcher)view.findViewById(R.id.textswitcher);
+                textswitcher = (TextSwitcher) view.findViewById(R.id.textswitcher);
 
                 //Text Switcher customze with text view
                 textswitcher.setFactory(new ViewFactory() {
@@ -175,13 +179,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 ApplyAnimation.setTitleInboxStatusTextSwitcher(activity, textswitcher);
 
                 //progress bar initialize
-                circle_progressbar = (ProgressBar)view.findViewById(R.id.circle_progressbar);
+                circle_progressbar = (ProgressBar) view.findViewById(R.id.circle_progressbar);
 
                 //icons initialize
-                successIcon = (ImageView)view.findViewById(R.id.success_icon);
-                failureIcon = (ImageView)view.findViewById(R.id.failure_icon);
-                readIcon = (ImageView)view.findViewById(R.id.read_icon);
-                unreadIcon = (ImageView)view.findViewById(R.id.unread_icon);
+                successIcon = (ImageView) view.findViewById(R.id.success_icon);
+                failureIcon = (ImageView) view.findViewById(R.id.failure_icon);
+                readIcon = (ImageView) view.findViewById(R.id.read_icon);
+                unreadIcon = (ImageView) view.findViewById(R.id.unread_icon);
 
                 //action bar initialize
                 myActionBar = activity.getSupportActionBar();
@@ -207,6 +211,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //FAB attachment
                 fab = (FloatingActionButton) view.findViewById(R.id.fab_compose);
                 fab.attachToListView(listView);
+                fab.setOnClickListener(listener);
 
                 //Initialize SwipeRefreshLayout
                 swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -219,29 +224,28 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                     }
                 });
                 // sets the colors used in the refresh animation
-                int[] resources= MailApplication.getSwipeRefreshLayoutColorResources();
-                if(resources.length==4){
-                    swipeRefreshLayout.setColorSchemeResources(resources[0],resources[1],resources[2],resources[3]);
+                int[] resources = MailApplication.getSwipeRefreshLayoutColorResources();
+                if (resources.length == 4) {
+                    swipeRefreshLayout.setColorSchemeResources(resources[0], resources[1], resources[2], resources[3]);
                 }
 
                 //Action
                 //if the activity is recreated, and if the thread is already updating then update the UI status
-                if(newMailsThreadState==Status.UPDATING) {
+                if (newMailsThreadState == Status.UPDATING) {
                     updatingStatusUIChanges();
                 }
 
-                if(moreMailsThreadState==Status.WAITING || moreMailsThreadState==Status.UPDATING){
+                if (moreMailsThreadState == Status.WAITING || moreMailsThreadState == Status.UPDATING) {
                     showMoreLoadingAnimation();
                 }
                 //make a refresh only once when the screen is loaded first time. make a soft refresh on config change
-                if(!fragmentAlreadyLoaded){
+                if (!fragmentAlreadyLoaded) {
                     refreshList();
-                }
-                else{
+                } else {
                     //config change (Screen rotation)
                     softRefreshList();
                 }
-                fragmentAlreadyLoaded=true; //tracks config change(screen rotation)
+                fragmentAlreadyLoaded = true; //tracks config change(screen rotation)
             } catch (Exception e) {
                 Utilities.generalCatchBlock(e, this);
             }
@@ -249,16 +253,24 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         return view;
     }
 
-    /** ON RESUME **/
+    /**
+     * ON RESUME *
+     */
     @Override
     public void onResume() {
         super.onResume();
 
         try {
+            // show FAB
+            if(!fabShown) {
+                fab.show();
+                fabShown=true;
+            }
+
             activityDataPasser.getmDrawerToggle().syncState();
 
             //below 2 lines moved from activity to here
-            if(mailType == MailType.INBOX) {
+            if (mailType == MailType.INBOX) {
                 NotificationProcessing.cancelAllNotifications(activity);
             }
             //softRefreshList(); //this is done in OnCreate on setting the adapter
@@ -267,11 +279,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
     }
 
-    /** Show the more loading text with animation
-     *
+    /**
+     * Show the more loading text with animation
      */
     public void showMoreLoadingAnimation() {
-        int totalRecordsInCache=-1;
+        int totalRecordsInCache = -1;
 
         //show the loading animation with the no of mails remaining in the end of listview
         try {
@@ -280,7 +292,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         } catch (Exception e) {
             // if exception in getting the no of mails in cache then just show loading mails symbol
         }
-        adapter.showMoreMailsLoadingAnimation(MORE_NO_OF_MAILS, totalRecordsInCache ,totalMailsInFolder);
+        adapter.showMoreMailsLoadingAnimation(MORE_NO_OF_MAILS, totalRecordsInCache, totalMailsInFolder);
     }
 
     /* (non-Javadoc)
@@ -296,16 +308,16 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         listView.setMultiChoiceModeListener(listener);
     }
 
-    /** Refreshes the list from network
+    /**
+     * Refreshes the list from network
      */
     @Override
-    public void refreshList(){
+    public void refreshList() {
 
-        if(undoBarState==UndoBarStatus.DISPLAYED || undoBarState==UndoBarStatus.DELETING) {
+        if (undoBarState == UndoBarStatus.DISPLAYED || undoBarState == UndoBarStatus.DELETING) {
             //if the undo bar is displayed then dont refresh, hide the swipeRefreshLayout
             swipeRefreshLayout.setRefreshing(false);
-        }
-        else if (newMailsThreadState != Status.UPDATING ) {
+        } else if (newMailsThreadState != Status.UPDATING) {
             //network call for getting the new mails and corresponding UI changes
             Handler getNewMailsHandler = new GetNewMailsHandler(this);
             Thread t = new GetNewMailsThread(this, getNewMailsHandler);
@@ -314,13 +326,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     }
 
-    /** Refreshes the listview from local cache
-     *
+    /**
+     * Refreshes the listview from local cache
      */
     @Override
-    public void softRefreshList(){
-        if(BuildConfig.DEBUG){
-            Log.d(TAG,  ((Object)this).getClass() + " ->  Called Soft refresh list");
+    public void softRefreshList() {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, ((Object) this).getClass() + " ->  Called Soft refresh list");
         }
         try {
             //update the list view
@@ -335,11 +347,11 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
     }
 
-    /** Gets More mails when the user scrolls down
-     *
+    /**
+     * Gets More mails when the user scrolls down
      */
-    public void getMoreMails(){
-        if(moreMailsThreadState!=Status.UPDATING){
+    public void getMoreMails() {
+        if (moreMailsThreadState != Status.UPDATING) {
             showMoreLoadingAnimation();
 
             //network call for getting the new mails
@@ -349,13 +361,15 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
     }
 
-    /** This method gets the customized Display name for a folder.
+    /**
+     * This method gets the customized Display name for a folder.
      * Well Known Folder Name can be used as is, but some have 2 words without space.
+     *
      * @param mailType
      * @return
      */
     private String getMailFolderDisplayName(int mailType) {
-        switch(mailType){
+        switch (mailType) {
             case (MailType.SENT_ITEMS):
                 return (activity.getString(R.string.ActionBarTitle_SentItems));
             case MailType.DELETED_ITEMS:
@@ -369,9 +383,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
     }
 
-    /** Make UI changes for the Updating status
+    /**
+     * Make UI changes for the Updating status
      * which includes progress bar, text switcher, swipe refresh
-     *
      */
     public void updatingStatusUIChanges() {
         try {
@@ -379,10 +393,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             swipeRefreshLayout.setRefreshing(true);
             //if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
             totalCachedRecords = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
-            if(totalCachedRecords>0){
+            if (totalCachedRecords > 0) {
                 textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
-            }
-            else{
+            } else {
                 textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)).toString());
             }
             //text switcher - refreshing icon
@@ -392,44 +405,44 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
     }
 
-    /** Updates the Text Switcher with the unread mail count.
+    /**
+     * Updates the Text Switcher with the unread mail count.
      * usually called after successful update
-     *
      */
     public void updateTextSwitcherWithMailCount(int totalCachedRecords) throws Exception {
         //get the unread emails count
         totalCachedRecords = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
         int totalUnread = cacheMailHeaderAdapter.getUnreadMailCount(mailType, mailFolderId);
-        String successMsg="";
+        String successMsg = "";
 
         //no email
-        if(totalCachedRecords<1){
-            successMsg=getString(R.string.no_mail);
+        if (totalCachedRecords < 1) {
+            successMsg = getString(R.string.no_mail);
             //update icon
             updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
         }
         //more than 1 unread email
-        else if(totalUnread>1){
+        else if (totalUnread > 1) {
             //update text in text switcher. for inbox alone show as "new mail" for other folders show "unread"
-            successMsg = (mailType==MailType.INBOX || mailType==MailType.INBOX_SUBFOLDER_WITH_ID) ?
-                    getString(R.string.new_mail_x,totalUnread):
-                    getString(R.string.unread_item_x,totalUnread);
+            successMsg = (mailType == MailType.INBOX || mailType == MailType.INBOX_SUBFOLDER_WITH_ID) ?
+                    getString(R.string.new_mail_x, totalUnread) :
+                    getString(R.string.unread_item_x, totalUnread);
             //update icon
             updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
         }
         //one unread email
-        else if(totalUnread==1){
+        else if (totalUnread == 1) {
             //update text in text switcher. for inbox alone show as "new mail" for other folders show "unread"
-            successMsg = (mailType==MailType.INBOX || mailType==MailType.INBOX_SUBFOLDER_WITH_ID) ?
-                    getString(R.string.new_mail_1,totalUnread):
-                    getString(R.string.unread_item_1,totalUnread);
+            successMsg = (mailType == MailType.INBOX || mailType == MailType.INBOX_SUBFOLDER_WITH_ID) ?
+                    getString(R.string.new_mail_1, totalUnread) :
+                    getString(R.string.unread_item_1, totalUnread);
             //update icon
             updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
         }
         //no new mail
-        else{
+        else {
             //update text in text switcher
-            successMsg=getString(R.string.no_new_mail);
+            successMsg = getString(R.string.no_new_mail);
             //update icon
             updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.VISIBLE, View.GONE);
         }
@@ -437,13 +450,14 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     }
 
 
-
-    /** This method sets the visibility of the icons inside the text switcher
+    /**
+     * This method sets the visibility of the icons inside the text switcher
+     *
      * @param progressCircleVisibility
      * @param successIconVisibility
      * @param failureIconVisibility
      */
-    public void updateTextSwitcherIcons(int progressCircleVisibility, int successIconVisibility, int failureIconVisibility, int readIconVisibility, int unreadIconVisibility){
+    public void updateTextSwitcherIcons(int progressCircleVisibility, int successIconVisibility, int failureIconVisibility, int readIconVisibility, int unreadIconVisibility) {
         circle_progressbar.setVisibility(progressCircleVisibility);
         successIcon.setVisibility(successIconVisibility);
         failureIcon.setVisibility(failureIconVisibility);
@@ -453,14 +467,16 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     /*** INTERFACES ***/
 
-    /** Fragment Interation Listner
-     *
+    /**
+     * Fragment Interation Listner
      */
     public interface ActivityDataPasser {
         android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
     }
 
-    /*** GETTER SETTER PART ***/
+    /**
+     * GETTER SETTER PART **
+     */
 
     public Status getNewMailsThreadState() {
         return newMailsThreadState;
@@ -469,6 +485,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     public void setNewMailsThreadState(Status currentStatus) {
         this.newMailsThreadState = currentStatus;
     }
+
     public String getMailFolderId() {
         return mailFolderId;
     }
@@ -509,6 +526,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     public void setTextswitcher(TextSwitcher textswitcher) {
         this.textswitcher = textswitcher;
     }
+
     public MailListViewAdapter getAdapter() {
         return adapter;
     }
@@ -556,6 +574,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     public void setListView(ListView listView) {
         this.listView = listView;
     }
+
     public UndoBarStatus getUndoBarState() {
         return undoBarState;
     }
@@ -585,7 +604,13 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         return fab;
     }
 
-    public void setFab(FloatingActionButton fab) {
-        this.fab = fab;
+    @Override
+    public boolean isFabShown() {
+        return fabShown;
+    }
+
+    @Override
+    public void setFabShown(boolean fabShown) {
+        this.fabShown = fabShown;
     }
 }

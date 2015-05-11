@@ -146,7 +146,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             dispName = (TextView) findViewById(R.id.dispName);
             companyName = (TextView) findViewById(R.id.companyName);
 
-
             dispName.setText(SharedPreferencesAdapter.getUserDetailsDisplayName(context));
             companyName.setText(SharedPreferencesAdapter.getUserDetailsCompanyName(context));
         } catch (Exception e) {

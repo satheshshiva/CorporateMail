@@ -18,8 +18,10 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.activity.ComposeActivity;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
+import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser.Status;
@@ -40,12 +42,11 @@ import java.util.ArrayList;
  * @author sathesh
  *
  */
-public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants {
+public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, View.OnClickListener {
     private MailListFragmentDataPasser fragment;
     private ActionBarActivity activity;
 
     private int preLast=-1;
-    private boolean fabShown=false; // to reduce multiple calls to show() hide() for FAB
     private int preFirstItemVisible =-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
 
@@ -92,24 +93,15 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
 
                     //ENABLING OR DISABLING FAB
                     if(preFirstItemVisible != firstVisibleItem) {
-                        if(preFirstItemVisible == -1){
-                            if(!fabShown) {
-                                Log.d(TAG, "SHOW");
+                        if (preFirstItemVisible > firstVisibleItem) {
+                            if(!fragment.isFabShown()) {
                                 fragment.getFab().show();
-                                fabShown=true;
-                            }
-                        }
-                        else if (preFirstItemVisible > firstVisibleItem) {
-                            if(!fabShown) {
-                                Log.d(TAG, "SHOW");
-                                fragment.getFab().show();
-                                fabShown = true;
+                                fragment.setFabShown(true);
                             }
                         } else {
-                            if(fabShown) {
-                                Log.d(TAG, "HIDE");
+                            if(fragment.isFabShown()) {
                                 fragment.getFab().hide();
-                                fabShown = false;
+                                fragment.setFabShown(false);
                             }
                         }
                     }
@@ -457,6 +449,18 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
             }else{
                 continue;   //nextContent is null. may not be possible
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.fab_compose:
+                //start compose activity
+                Intent intent = new Intent(activity, ComposeActivity.class);
+                activity.startActivity(intent);
+                ApplyAnimation.setComposeActivityOpenAnim(activity);
+                break;
         }
     }
 }

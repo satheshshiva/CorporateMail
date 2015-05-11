@@ -37,7 +37,6 @@ public interface MailListFragmentDataPasser {
 	 */
     void softRefreshList();
 
-
     SwipeRefreshLayout getSwipeRefreshLayout();
 
     MailListViewFragment.Status getMoreMailsThreadState();
@@ -67,5 +66,8 @@ public interface MailListFragmentDataPasser {
     void setUndoBarState(UndoBarStatus displayed);
 
     FloatingActionButton getFab();
+
+    boolean isFabShown();
+    void setFabShown(boolean shown);
 
 }
