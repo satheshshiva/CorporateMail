@@ -1,15 +1,15 @@
-<com.wipromail.sathesh.ui.customwidgets.CustomDrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wipromail.sathesh.ui.customwidgets.CustomDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Holder for the MailListViewFragment -->
+    <!-- Holder for the fragments -->
     <FrameLayout
-        android:id="@+id/mailListFragmentLayout"
+        android:id="@+id/fragmentContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        ></FrameLayout>
+        ></FrameLayout>https://github.com/makovkastar/FloatingActionButton
 
     <!-- Drawer layout -->
     <include layout="@layout/drawer_layout" />

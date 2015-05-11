@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.ListView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
@@ -64,5 +65,7 @@ public interface MailListFragmentDataPasser {
     ListView getListView();
 
     void setUndoBarState(UndoBarStatus displayed);
+
+    FloatingActionButton getFab();
 
 }
