@@ -281,7 +281,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         FragmentTransaction ft = fm.beginTransaction();
 
         MailListViewFragment fragment = MailListViewFragment.newInstance(mailType, mailFolderName, mailFolderId);
-        ft.replace(R.id.mailListFragmentLayout, fragment);
+        ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
     }
 
@@ -293,7 +293,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         FragmentTransaction ft = fm.beginTransaction();
 
         AboutFragment fragment = AboutFragment.newInstance(onLoadCheckForUpdates);
-        ft.replace(R.id.mailListFragmentLayout, fragment);
+        ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
 
     }

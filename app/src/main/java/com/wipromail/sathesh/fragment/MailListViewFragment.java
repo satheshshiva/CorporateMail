@@ -19,6 +19,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
@@ -26,9 +27,9 @@ import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.NotificationProcessing;
-import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
@@ -64,6 +65,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private ProgressBar circle_progressbar;
 
     private ImageView successIcon, failureIcon, readIcon, unreadIcon;
+    private FloatingActionButton fab;
 
     private ActionBar myActionBar;
 
@@ -201,6 +203,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
                 // initializes the list view with the adapter. also will place all the cached mails in list view initially
                 listView.setAdapter(adapter);
+
+                //FAB attachment
+                fab = (FloatingActionButton) view.findViewById(R.id.fab_compose);
+                fab.attachToListView(listView);
 
                 //Initialize SwipeRefreshLayout
                 swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -572,5 +578,14 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    @Override
+    public FloatingActionButton getFab() {
+        return fab;
+    }
+
+    public void setFab(FloatingActionButton fab) {
+        this.fab = fab;
     }
 }

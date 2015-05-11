@@ -45,6 +45,8 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     private ActionBarActivity activity;
 
     private int preLast=-1;
+    private boolean fabShown=false; // to reduce multiple calls to show() hide() for FAB
+    private int preFirstItemVisible =-1;
     private ArrayList<CachedMailHeaderVO> curentlySelectedVOs = new ArrayList<CachedMailHeaderVO>();
 
     public MailListViewListener(MyActivity activity, MailListFragmentDataPasser fragment){
@@ -68,7 +70,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
             //Determine whether its our listview listener
             switch(lw.getId()) {
                 case R.id.listView:
-                    // Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
+                 //    Log.d(TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount+ ". Total Items:" + totalItemCount);
 
                     //SWIPE REFRESH
                     //enable Swipe Refresh
@@ -88,7 +90,32 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                     }
                     if(fragment.getSwipeRefreshLayout()!=null)  fragment.getSwipeRefreshLayout().setEnabled(enable);
 
-                    //Last Item Listener - loads more mails
+                    //ENABLING OR DISABLING FAB
+                    if(preFirstItemVisible != firstVisibleItem) {
+                        if(preFirstItemVisible == -1){
+                            if(!fabShown) {
+                                Log.d(TAG, "SHOW");
+                                fragment.getFab().show();
+                                fabShown=true;
+                            }
+                        }
+                        else if (preFirstItemVisible > firstVisibleItem) {
+                            if(!fabShown) {
+                                Log.d(TAG, "SHOW");
+                                fragment.getFab().show();
+                                fabShown = true;
+                            }
+                        } else {
+                            if(fabShown) {
+                                Log.d(TAG, "HIDE");
+                                fragment.getFab().hide();
+                                fabShown = false;
+                            }
+                        }
+                    }
+                    preFirstItemVisible = firstVisibleItem;
+
+                    //LAST ITEM LISTENER - LOAD MORE MAILS
 
                     //gets the id for the last item
                     int lastItem = firstVisibleItem + visibleItemCount;
