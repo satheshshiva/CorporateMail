@@ -7,7 +7,7 @@ import android.view.ActionMode;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.ViewMailActivity;
-import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.handlers.DeleteMailHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;

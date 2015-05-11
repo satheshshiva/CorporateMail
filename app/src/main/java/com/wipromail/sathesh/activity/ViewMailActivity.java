@@ -10,7 +10,7 @@ import android.view.SubMenu;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MyActivity;
-import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
@@ -157,10 +157,6 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
         else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
             Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
-        }
-        else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-            Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
         }
 

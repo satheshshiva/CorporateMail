@@ -39,7 +39,7 @@ import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.adapter.MailListViewAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MailSort;
-import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
+import datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.cache.CacheInbox;
 import com.wipromail.sathesh.cache.CacheInboxAdapter;
 import com.wipromail.sathesh.constants.Constants;

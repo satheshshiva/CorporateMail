@@ -1,7 +1,7 @@
 package com.wipromail.sathesh.activity;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -18,15 +18,16 @@ import android.widget.TextView;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
-import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
-import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.AboutFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.tools.CacheClear;
@@ -42,7 +43,7 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.InteractionListener, AboutFragment.InteractionListener {
+public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser{
 
     private MailListFragmentDataPasser mailListViewFragmentDataPasser;
 
@@ -50,6 +51,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
     public final static String FOLDER_NAME_EXTRA = "FOLDER_NAME_EXTRA";
     public final static String SIGN_OUT_EXTRA = "SIGN_OUT_EXTRA";
+    public final static String APP_UPDATE_AVAILABLE = "APP_UPDATE_AVAILABLE";
 
     public static final String EXTRA_MESSAGE_CACHED_HEADER = "cachedMailHeaderToOpen";
 
@@ -58,8 +60,9 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private String mailFolderId="";
     private TextView dispName;
     private TextView companyName;
-    private Activity activity;
+    private MyActivity activity;
     private Context context;
+    private boolean appUpdateAvailble=false;
 
     private int drawerLayoutSelectedPosition=0;
     private DrawerLayout mDrawerLayout;
@@ -81,7 +84,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         activity = this;
         context = this;
         try {
-
             //while sign out is clicked, the enitire application will be closed by using clear top and by calling this activity since this is the first
             //spawned activity.  we have to finish this first activity for sign out.
             if (getIntent().getBooleanExtra(SIGN_OUT_EXTRA, false)) {
@@ -89,10 +91,14 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             }
 
             //Initializing Intent Extras
-            mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA,0);
+            mailType = getIntent().getIntExtra(MAIL_TYPE_EXTRA, 0);
             mailFolderId = getIntent().getStringExtra(FOLDER_ID_EXTRA);
             mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
+            appUpdateAvailble = getIntent().getBooleanExtra(APP_UPDATE_AVAILABLE, false);
 
+            if(mailType == MailType.INBOX) {
+                MailApplication.getInstance().onEveryAppOpen(activity, context);
+            }
             //note: this will trigger the OnCreateView in the fragment.
             setContentView(R.layout.activity_mail_list_view);
 
@@ -101,15 +107,12 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
                 activityListener = new MailListViewActivityListener(this);
             }
 
-            //Initializing the fragment MailListViewFragment
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-
-            if(mailListViewFragmentDataPasser == null ) {
-                mailListViewFragmentDataPasser = MailListViewFragment.newInstance(mailType,mailFolderName,mailFolderId);
+            if(appUpdateAvailble){
+                loadAboutFragment(true);
             }
-            ft.replace(R.id.mailListFragmentLayout, (android.support.v4.app.Fragment) mailListViewFragmentDataPasser);
-            ft.commit();
+            else{
+                loadMailListViewFragment(mailType, mailFolderName, mailFolderId);
+            }
 
             // Initializing the Drawer Layout
             //Navigation Drawer
@@ -242,9 +245,53 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         }
     }
 
+    //  ON CLICK METHODS
+
     // Drawer layout header on click will call this. To prevent the underlying element click
     public void emptyClick(View view){
         //do nothing
+    }
+
+    // AboutFragment Onclick methods
+    public void onClickChkUpdate(View view) {
+        AboutFragmentDataPasser aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment.onClickChkUpdate(view);
+    }
+
+    public void onBugOrSuggestion(View view) throws PackageManager.NameNotFoundException {
+        AboutFragmentDataPasser aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment.onBugOrSuggestion(view);
+    }
+
+    public void fbOnclick(View view){
+        AboutFragmentDataPasser aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment.fbOnclick(view);
+    }
+
+    /*** FRAGMENT LOADING ***/
+
+    @Override
+    //(re)loads the MailListViewFragment inside the MailListViewActivity
+    public void loadMailListViewFragment(int mailType, String mailFolderName, String mailFolderId) {
+        //using fragment transaction, replace the fragment
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        MailListViewFragment fragment = MailListViewFragment.newInstance(mailType, mailFolderName, mailFolderId);
+        ft.replace(R.id.mailListFragmentLayout, fragment);
+        ft.commit();
+    }
+
+    @Override
+    //loads the AboutFragment inside the MailListViewActivity
+    public void loadAboutFragment(boolean onLoadCheckForUpdates) {
+        //using fragment transaction, replace the fragment
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        AboutFragment fragment = AboutFragment.newInstance(onLoadCheckForUpdates);
+        ft.replace(R.id.mailListFragmentLayout, fragment);
+        ft.commit();
 
     }
 

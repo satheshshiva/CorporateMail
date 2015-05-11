@@ -770,14 +770,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_cancel))){
             cancelPage();
         }
-		/*else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-			Intent intent = new Intent(this, MyPreferencesActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-			Intent intent = new Intent(this, AboutActivity.class);
-			startActivity(intent);
-		}*/
 
         return super.onOptionsItemSelected(item);
     }

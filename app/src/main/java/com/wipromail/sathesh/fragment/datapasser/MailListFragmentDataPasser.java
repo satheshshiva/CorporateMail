@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.application.interfaces;
+package com.wipromail.sathesh.fragment.datapasser;
 
 
 import android.content.Context;

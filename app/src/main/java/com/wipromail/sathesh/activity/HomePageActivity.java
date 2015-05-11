@@ -205,8 +205,8 @@ public class HomePageActivity extends MyActivity implements Constants{
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_CHECK_FOR_UPDATES)){
-			intent = new Intent(this, AboutActivity.class);
-			intent.putExtra(AboutActivity.CHECK_UPDATES_ONLOAD_EXTRA, true);
+			//intent = new Intent(this, AboutActivity.class);
+			//intent.putExtra(AboutActivity.CHECK_UPDATES_ONLOAD_EXTRA, true);
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
@@ -214,14 +214,12 @@ public class HomePageActivity extends MyActivity implements Constants{
 			startActivity(intent);
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-			intent = new Intent(this, AboutActivity.class);
+		//	intent = new Intent(this, AboutActivity.class);
 			startActivity(intent);
 		}
 
 		return super.onOptionsItemSelected(item);
-
 	}
-
 
 	/** the customization of the displayname in title bar
 	 * @return String
@@ -240,9 +238,6 @@ public class HomePageActivity extends MyActivity implements Constants{
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		MailApplication mailappln = MailApplication.getInstance();
-		mailappln.onEveryAppOpen(activity, context);
 	}
 
 	@Override

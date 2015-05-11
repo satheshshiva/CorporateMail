@@ -36,7 +36,6 @@ import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.fragment.ViewMailFragment;
-import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.service.MailNotificationService;
 import com.wipromail.sathesh.service.data.Attachment;
 import com.wipromail.sathesh.service.data.AttachmentCollection;
@@ -47,6 +46,7 @@ import com.wipromail.sathesh.service.data.FileAttachment;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
 import com.wipromail.sathesh.threads.service.PullMailNotificationServiceThread;
+import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.ui.components.ChangePasswordDialog;
 import com.wipromail.sathesh.update.AutoUpdater;
 import com.wipromail.sathesh.util.Utilities;
@@ -503,7 +503,7 @@ public class MailApplication implements Constants {
         return mailApplication;
     }
 
-    public void onEveryAppOpen(ActionBarActivity activity, Context context) {
+    public void onEveryAppOpen(MyActivity activity, Context context) {
         //checking updates
         AutoUpdater.autoCheckForUpdates(activity);
         if(getInstance().isWrongPwd()){

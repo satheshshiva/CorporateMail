@@ -1,21 +1,5 @@
 package com.wipromail.sathesh.asynctask;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,15 +9,30 @@ import android.util.Log;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, String> implements Constants {
 	private InputStream input;
 	private OutputStream output ;
 	
 
-	private Activity activity;
+	private MyActivity activity;
 	private ProgressDialog mProgressDialog;
 	
 	private static String STATUS_DOWNLOADING="DOWNLOADING";
@@ -41,8 +40,7 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 	private static String STATUS_ERROR="ERROR";
 	private static String STATUS_DOWNLOAD_COMPLETE="COMPLETE";
 	
-	public DownloadAndUpdateAppAsyncTask(Activity activity) {
-		// TODO Auto-generated constructor stub
+	public DownloadAndUpdateAppAsyncTask(MyActivity activity) {
 		this.activity = activity;
 		this.mProgressDialog= mProgressDialog;
 	}

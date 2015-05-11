@@ -26,7 +26,7 @@ import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.NotificationProcessing;
-import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
@@ -50,7 +50,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     private static final String ARG_MAIL_FOLDER_NAME="mailFolderName";
     private static final String ARG_MAIL_FOLDER_ID="mailFolderId";
 
-    private InteractionListener activityDataPasser ;
+    private ActivityDataPasser activityDataPasser ;
     public MyActivity activity ;
     private Context context ;
 
@@ -115,10 +115,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            activityDataPasser = (InteractionListener) activity;
+            activityDataPasser = (ActivityDataPasser) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement InteractionListener");
+                    + " must implement ActivityDataPasser");
         }
     }
 
@@ -445,10 +445,12 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         unreadIcon.setVisibility(unreadIconVisibility);
     }
 
+    /*** INTERFACES ***/
+
     /** Fragment Interation Listner
      *
      */
-    public interface InteractionListener{
+    public interface ActivityDataPasser {
         android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
     }
 

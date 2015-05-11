@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +32,6 @@ import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.ui.listeners.LoginPageListener;
-import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 import java.net.URISyntaxException;
 
@@ -85,10 +83,10 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
         MenuItem menuItem;
 
-        menuItem=menu.add(ACTIONBAR_ABOUT)
+     /*   menuItem=menu.add(ACTIONBAR_ABOUT)
                 .setIcon(OptionsUIContent.getAboutDarkIcon());
         MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
+*/
         return true;
     }
     @Override
@@ -97,10 +95,10 @@ public class LoginPageActivity extends MyActivity implements Constants {
         if(item!=null && item.getTitle().equals(ACTIONBAR_LOGIN)){
             loginButtonClicked();
         }
-        else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
+       /* else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

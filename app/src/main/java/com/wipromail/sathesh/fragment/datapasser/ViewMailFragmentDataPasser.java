@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.wipromail.sathesh.application.interfaces;
+package com.wipromail.sathesh.fragment.datapasser;
 
 import com.wipromail.sathesh.fragment.ViewMailFragment;
 import com.wipromail.sathesh.service.data.EmailMessage;

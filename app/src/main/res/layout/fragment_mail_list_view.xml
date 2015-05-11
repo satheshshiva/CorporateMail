@@ -5,7 +5,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <!-- layout to show image downloading progress -->
         <include layout="@layout/toolbar" />
 
         <RelativeLayout
