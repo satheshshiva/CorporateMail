@@ -9,8 +9,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.activity.AboutActivity;
+import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.asynctask.UpdateCheckerAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
@@ -27,13 +28,13 @@ import java.util.Date;
  */
 public class AutoUpdater implements Constants, GenericAsyncTask{
 
-	private static ActionBarActivity activity;
+	private static MyActivity activity;
 
 	/** This is the entry point for auto check updater. this will check for time difference between 
 	 * the last successful update check and will procees when it exceed the specified no of day limit
 	 * @param activity
 	 */
-	public  static void autoCheckForUpdates(ActionBarActivity activity){
+	public  static void autoCheckForUpdates(MyActivity activity){
 
 		AutoUpdater.activity=activity;
 		Date date;
@@ -46,7 +47,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 			Log.e(TAG, "AutoUpdater -> Not checking for updates since the last stored date was not in a readable format");
 			return;
 		}
-		long dateDiff=0;
+		long dateDiff;
 		if(date!=null){
 			dateDiff = Utilities.getNumberOfDaysFromToday(date);
 			if(dateDiff >= UPDATE_AUTO_CHECK_NO_OF_DAYS){
@@ -82,7 +83,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 
 	/* The async task will call this for pre execute
 	 * (non-Javadoc)
-	 * @see com.wipromail.sathesh.interfaces.GenericAsyncTask#activity_OnPreExecute()
+	 * @see com.wipromail.sathesh.datapasser.GenericAsyncTask#activity_OnPreExecute()
 	 */
 	@Override
 	public void activity_OnPreExecute() {
@@ -90,7 +91,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 
 	/* The async task will call this on progress update
 	 * (non-Javadoc)
-	 * @see com.wipromail.sathesh.interfaces.GenericAsyncTask#activity_onProgressUpdate(java.lang.String[])
+	 * @see com.wipromail.sathesh.datapasser.GenericAsyncTask#activity_onProgressUpdate(java.lang.String[])
 	 */
 	@Override
 	public void activity_onProgressUpdate(String... progress) {
@@ -198,8 +199,9 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 		.setPositiveButton(positiveMsg	, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int whichButton) { 
-				Intent intent = new Intent(_activity,  AboutActivity.class);
-				intent.putExtra(AboutActivity.CHECK_UPDATES_ONLOAD_EXTRA, true);
+				Intent intent = new Intent(_activity,  MailListViewActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.putExtra(MailListViewActivity.APP_UPDATE_AVAILABLE, true);
 				_activity.startActivity(intent);
 			}   
 

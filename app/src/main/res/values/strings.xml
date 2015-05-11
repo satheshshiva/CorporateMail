@@ -80,7 +80,7 @@
     <string name="app_updater_noupdates">You have the latest version</string>
     <string name="app_updater_installing">Installing..</string>
     <string name="app_updater_checking">Checking for Updates..</string>
-    <string name="auto_update_check_dismiss_dialog">Later you can check for updates using the \"Check For Updates\" button in the Home Page</string>
+    <string name="auto_update_check_dismiss_dialog">You can check for updates later using the \"Check For Updates\" button in About section</string>
     <string name="auto_update_check_new_update_title">Update Available</string>
     <string name="auto_update_check_new_update_msg">New version update is available</string>
     <string name="auto_update_check_new_update_pos_button">Continue</string>

@@ -30,7 +30,7 @@ import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
-import com.wipromail.sathesh.application.interfaces.ViewMailFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;

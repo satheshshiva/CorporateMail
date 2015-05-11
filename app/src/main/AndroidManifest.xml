@@ -102,11 +102,6 @@
             android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
-        <activity
-            android:name=".activity.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:uiOptions="splitActionBarWhenNarrow" >
-        </activity>
         <!--
          <activity
         android:name="com.google.ads.AdActivity"

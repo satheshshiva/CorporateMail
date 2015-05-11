@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.application.interfaces.MailListActivityDataPasser;
+import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 

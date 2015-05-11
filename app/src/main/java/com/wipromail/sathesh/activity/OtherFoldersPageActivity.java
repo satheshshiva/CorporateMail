@@ -288,12 +288,6 @@ public class OtherFoldersPageActivity extends MyActivity implements Constants{
 
         MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-        menuItem = subMenu
-                        .add(ACTIONBAR_ABOUT)
-                        .setIcon(OptionsUIContent.getAboutIcon());
-
-        MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
 		//Overflow submenu icon
 		MenuItem subMenuItem = subMenu.getItem();
 		subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
@@ -306,16 +300,11 @@ public class OtherFoldersPageActivity extends MyActivity implements Constants{
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 
-
 		if(item!=null && item.getItemId()==android.R.id.home){
 			finish();
 		}
 		else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
 			intent = new Intent(this, MyPreferencesActivity.class);
-			startActivity(intent);
-		}
-		else if(item!=null && item.getTitle().equals(ACTIONBAR_ABOUT)){
-			intent = new Intent(this, AboutActivity.class);
 			startActivity(intent);
 		}
 

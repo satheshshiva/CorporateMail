@@ -3,7 +3,7 @@ package com.wipromail.sathesh.handlers;
 import android.os.Handler;
 import android.os.Message;
 
-import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.threads.ui.DeleteMultipleMailsThread;
 

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.asynctask.UpdateCheckerAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
@@ -21,12 +22,12 @@ import com.wipromail.sathesh.customui.Notifications;
  */
 public class CheckLatestVersion implements Constants, GenericAsyncTask {
 
-	private ActionBarActivity activity;
+	private MyActivity activity;
 	private WebView wv;
 	ProgressDialog dialog;
 	String releaseType="";
 
-	public CheckLatestVersion(ActionBarActivity activity, WebView wv) {
+	public CheckLatestVersion(MyActivity activity, WebView wv) {
 		this.activity = activity;
 		this.wv=wv;
 	}

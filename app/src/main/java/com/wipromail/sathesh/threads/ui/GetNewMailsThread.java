@@ -9,7 +9,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
-import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;

@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.wipromail.sathesh.application.MailApplication;
-import com.wipromail.sathesh.application.interfaces.MailListFragmentDataPasser.Status;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.util.Utilities;

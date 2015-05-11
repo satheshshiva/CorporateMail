@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.application.interfaces;
+package com.wipromail.sathesh.activity.datapasser;
 
 
 import android.support.v4.widget.DrawerLayout;
@@ -10,5 +10,9 @@ public interface MailListActivityDataPasser {
     int getDrawerLayoutSelectedPosition();
 
     void setDrawerLayoutSelectedPosition(int layoutPosition);
+
+    void loadMailListViewFragment(int mailType, String mailFolderName, String mailFolderId);
+
+    void loadAboutFragment(boolean checkForUpdates);
 
 }
