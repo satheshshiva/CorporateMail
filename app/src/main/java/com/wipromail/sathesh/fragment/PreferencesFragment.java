@@ -1,4 +1,4 @@
-package com.wipromail.sathesh.activity;
+package com.wipromail.sathesh.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,15 +8,15 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.adapter.GeneralPreferenceAdapter;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.tools.CacheClear;
@@ -30,7 +30,7 @@ import java.util.Calendar;
  * @author Sathesh
  *
  */
-public class MyPreferencesActivity extends PreferenceActivity implements Constants ,OnSharedPreferenceChangeListener{
+public class PreferencesFragment extends PreferenceFragment implements Constants ,OnSharedPreferenceChangeListener{
 
     public static int OFFICE365_URL_POSITION = 0;
     public static int CUSTOM_URL_POSITION = 3;
@@ -45,7 +45,6 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
     public final static String KEY_CLEAR_CACHE="clear_cache";
     public final static String KEY_SIGN_OUT="sign_out";
 
-
     //The following are not in the preferences page
     public final static String COMPOSE_SIGNATURE="compose_signature";
 
@@ -55,18 +54,30 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
     private static ListPreference subscrpyionType;
     private static ListPreference pullDuration;
     public static Calendar timeOfLastCustomURL;
-    private MyPreferencesActivity activity;
+    private MyActivity activity;
     private static Context context;
+    private ActionBar myActionBar;
 
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
+    private static PreferencesFragment preferencesFragment;
 
+    public static PreferencesFragment newInstance() {
+        preferencesFragment = new PreferencesFragment();
+        Bundle args = new Bundle();
+        preferencesFragment.setArguments(args);
+        return preferencesFragment;
+    }
+
+    public static PreferencesFragment getCurrentInstance(){
+        return preferencesFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity= this;
-        context = this;
+        activity= (MyActivity) this.getActivity();
+        context = activity.getApplicationContext();
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.mainpreferences);
         webMailServer=(ListPreference)getPreferenceScreen().findPreference(
@@ -97,13 +108,21 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
         updateSubscriptionTypePrefernceSummary();
         updatePullDurationPrefernceSummary();
         updateAutoUpdateNotifySummary();
-        // TODO Set the action bar as up enabled
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Initialize toolbar
+        /*MailApplication.toolbarInitialize(activity, this.getView());
+
+        //action bar initialize
+        myActionBar = activity.getSupportActionBar();
+        //update mail type in the action bar title
+        myActionBar.setTitle(activity.getString(R.string.drawer_menu_search_contact));
+        myActionBar.setDisplayHomeAsUpEnabled(true);
+        myActionBar.setHomeButtonEnabled(true);*/
 
         initializeEventsForAccount();
 
     }
-
 
     /** This functions initializes the click event for the Preferences other than checkboxpreference, list box preference etc.,
      *
@@ -129,29 +148,27 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
 
         //initializing the click event for Sign Out  button
 		signOut.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
-				SignOutAlertDialog.showAlertdialog(activity, context);
-				return true;
-			}
-		});
-
+            public boolean onPreferenceClick(Preference preference) {
+                SignOutAlertDialog.showAlertdialog(activity, context);
+                return true;
+            }
+        });
     }
 
-
     private void updatePullDurationPrefernceSummary() {
-        if(sharedPref.getNotificationPullFrequency(this)==30000){
+        if(sharedPref.getNotificationPullFrequency(context)==30000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_30s_summary));
         }
-        else if(sharedPref.getNotificationPullFrequency(this)==900000){
+        else if(sharedPref.getNotificationPullFrequency(context)==900000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_15m_summary));
         }
-        else if(sharedPref.getNotificationPullFrequency(this)==3600000){
+        else if(sharedPref.getNotificationPullFrequency(context)==3600000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_1h_summary));
         }
-        else if(sharedPref.getNotificationPullFrequency(this)==14400000){
+        else if(sharedPref.getNotificationPullFrequency(context)==14400000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_4h_summary));
         }
-        else if(sharedPref.getNotificationPullFrequency(this)==43200000){
+        else if(sharedPref.getNotificationPullFrequency(context)==43200000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_12h_summary));
         }
     }
@@ -161,7 +178,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
     }
 
     private void updateNotificationEnablePrefernceSummary() {
-        if(sharedPref.isNotificationEnabled(this)){
+        if(sharedPref.isNotificationEnabled(context)){
             notificationEnable.setSummary(getString(R.string.preference_notification_enable_ON_summary));
         }else{
             notificationEnable.setSummary(getString(R.string.preference_notification_enable_OFF_summary));
@@ -169,41 +186,23 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
     }
 
     private void updateAutoUpdateNotifySummary() {
-        if(sharedPref.isAutoUdpateNotifyEnabled(this)){
+        if(sharedPref.isAutoUdpateNotifyEnabled(context)){
             autoUpdateNotifyEnable.setSummary(getString(R.string.preferences_updater_ON_autoupdate_notify_summary));
         }else{
             autoUpdateNotifyEnable.setSummary(getString(R.string.preferences_updater_OFF_autoupdate_notify_summary));
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-
-
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if(item!=null && item.getItemId()==android.R.id.home){
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     private void updateComposeSignatureEnablePrefernceSummary() {
-        if(sharedPref.isComposeSignatureEnabled(this)){
+        if(sharedPref.isComposeSignatureEnabled(context)){
             composeSignatureEnable.setSummary(getString(R.string.preference_compose_signature_enable_ON_summary));
         }else{
             composeSignatureEnable.setSummary(getString(R.string.preference_compose_signature_enable_OFF_summary));
         }
-
-
     }
+
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         // Set up a listener whenever a key changes
@@ -211,7 +210,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
 
         // Unregister the listener whenever a key changes
@@ -224,7 +223,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
         if(key.equals(KEY_WEBMAIL_SERVER)){
             try {
                 Calendar now = Calendar.getInstance();
-                if( !(MyPreferencesActivity.timeOfLastCustomURL!=null && ((now.getTimeInMillis() - MyPreferencesActivity.timeOfLastCustomURL.getTimeInMillis() ) < 2000))){
+                if( !(PreferencesFragment.timeOfLastCustomURL!=null && ((now.getTimeInMillis() - PreferencesFragment.timeOfLastCustomURL.getTimeInMillis() ) < 2000))){
                     //when the custom url is saved, this event will be invoked again. so to preven that, the last custom url save shld be > than 2secs.
                     updateWebmailServerPrefernceSummary();
                 }
@@ -240,11 +239,11 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
         }
         else if(key.equals(KEY_NOTIFICATION_ENABLE)){
 
-            if(sharedPref.isNotificationEnabled(this)){
-                MailApplication.startMNSService(this);
+            if(sharedPref.isNotificationEnabled(context)){
+                MailApplication.startMNSService(context);
             }
             else{
-                MailApplication.stopMNSService(this);
+                MailApplication.stopMNSService(context);
             }
             updateNotificationEnablePrefernceSummary();
 
