@@ -145,6 +145,9 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         super.onResume();
 
         try {
+            // focus the edit text
+            UIutilities.showKeyBoard(context, contactSearch);
+
             activityDataPasser.getmDrawerToggle().syncState();
         } catch (Exception e) {
             e.printStackTrace();
