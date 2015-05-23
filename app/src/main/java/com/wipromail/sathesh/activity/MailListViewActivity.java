@@ -26,8 +26,9 @@ import com.wipromail.sathesh.application.SharedPreferencesAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.AboutFragment;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
-import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.tools.CacheClear;
@@ -43,9 +44,7 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser{
-
-    private MailListFragmentDataPasser mailListViewFragmentDataPasser;
+public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser, SearchContactFragment.ActivityDataPasser{
 
     public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -67,6 +66,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private int drawerLayoutSelectedPosition=0;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private  AboutFragmentDataPasser aboutFragment;
+    private SearchContactFragmentDataPasser searchContactFragment;
 
     private MailListViewActivityListener activityListener;
 
@@ -256,18 +257,23 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     // AboutFragment Onclick methods
     public void onClickChkUpdate(View view) {
-        AboutFragmentDataPasser aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment = AboutFragment.getCurrentInstance();
         aboutFragment.onClickChkUpdate(view);
     }
 
     public void onBugOrSuggestion(View view) throws PackageManager.NameNotFoundException {
-        AboutFragmentDataPasser aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment = AboutFragment.getCurrentInstance();
         aboutFragment.onBugOrSuggestion(view);
     }
 
     public void fbOnclick(View view){
-        AboutFragmentDataPasser aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment = AboutFragment.getCurrentInstance();
         aboutFragment.fbOnclick(view);
+    }
+
+    public void onClickDirectorySearch(View view) {
+        searchContactFragment = SearchContactFragment.getCurrentInstance();
+        searchContactFragment.onClickDirectorySearch(view);
     }
 
     /*** FRAGMENT LOADING ***/
@@ -294,7 +300,18 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         AboutFragment fragment = AboutFragment.newInstance(onLoadCheckForUpdates);
         ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
+    }
 
+    @Override
+    //loads the SearchContactFrgment inside the MailListViewActivity
+    public void loadSearchContactFragment() {
+        //using fragment transaction, replace the fragment
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        SearchContactFragment fragment = SearchContactFragment.newInstance();
+        ft.replace(R.id.fragmentContainer, fragment);
+        ft.commit();
     }
 
     /** GETTER SETTER PART **/

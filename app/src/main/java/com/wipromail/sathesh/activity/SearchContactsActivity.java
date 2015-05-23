@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class SearchContactsActivity extends MyActivity implements Constants,IResolveNames{
 
 	private EditText contactSearch;
@@ -51,7 +52,7 @@ public class SearchContactsActivity extends MyActivity implements Constants,IRes
 		super.onCreate(savedInstanceState);
 		this.activity = this;
 
-		setContentView(R.layout.activity_search_contacts);
+		setContentView(R.layout.fragment_search_contacts);
 
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
@@ -116,9 +117,6 @@ public class SearchContactsActivity extends MyActivity implements Constants,IRes
         }
 		try {
 			if(outputCollection!=null && outputCollection.getCount()>0){
-
-				
-
 				int resolveNameIndex=-1;
 				Log.i(TAG, "index 1 " +String.valueOf(resolveNameIndex));
 				for(NameResolution nameResolution : outputCollection)
@@ -153,12 +151,8 @@ public class SearchContactsActivity extends MyActivity implements Constants,IRes
 						contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, dispContactsMap.get(position));
 						contactDetailsIntent.putExtra(ContactDetailsActivity.SHOW_SENDMAIL_BTN_EXTRA, true);
 						startActivity(contactDetailsIntent);
-						
 					}
 				});
-
-
-
 			}
 			else{
 				ListAdapter adapter = new ArrayAdapter<String>(this,R.layout.simple_list_item_1,dispNameList);
