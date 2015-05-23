@@ -27,6 +27,15 @@ public class MyActivity extends ActionBarActivity {
         progressBar.setVisibility(View.GONE);
     }
 
+    //to be called from fragment
+    public void setSupportProgressBarIndeterminateVisibility(View view, boolean visibility){
+        ProgressBar progressBar=(ProgressBar)view.findViewById(R.id.indeterminate_progress);
+        if(visibility)
+            progressBar.setVisibility(View.VISIBLE);
+        else
+            progressBar.setVisibility(View.GONE);
+    }
+
     //Google Analytics
     @Override
     public void onStart() {

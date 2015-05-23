@@ -15,4 +15,6 @@ public interface MailListActivityDataPasser {
 
     void loadAboutFragment(boolean checkForUpdates);
 
+    void loadSearchContactFragment();
+
 }

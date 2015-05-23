@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.view.View;
 
 import com.wipromail.sathesh.activity.MyPreferencesActivity;
-import com.wipromail.sathesh.activity.SearchContactsActivity;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.application.MyActivity;
@@ -57,8 +56,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
             case DrawerMenuRowType.SEARCH_CONTACT:
                 activityDataPasser.getmDrawerLayout().closeDrawers();
-                intent = new Intent(activity, SearchContactsActivity.class);
-                activity.startActivity(intent);
+                activityDataPasser.loadSearchContactFragment();
                 break;
 
             case DrawerMenuRowType.SETTINGS:
