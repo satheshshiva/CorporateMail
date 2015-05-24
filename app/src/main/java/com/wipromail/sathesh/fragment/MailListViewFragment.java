@@ -103,7 +103,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         // Required empty public constructor
     }
 
-    public static MailListViewFragment getCurrentInstance() {
+    public static MailListViewFragment getInstance() {
         return fragment;
     }
 

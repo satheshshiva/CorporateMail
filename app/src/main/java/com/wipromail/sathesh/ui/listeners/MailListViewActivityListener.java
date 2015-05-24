@@ -23,6 +23,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
     private MailListActivityDataPasser activityDataPasser;
     private MyActivity activity;
+    private DrawerMenuVO drawerMenuVO;
 
     public MailListViewActivityListener(MailListActivityDataPasser activityDataPasser){
         this.activity = (MyActivity)activityDataPasser;
@@ -33,6 +34,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
     public void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO) {
         Intent intent;
         activityDataPasser.setDrawerLayoutSelectedPosition(position);
+        this.drawerMenuVO = drawerMenuVO;
 
         switch(drawerMenuVO.getType()){
             case DrawerMenuRowType.INBOX:
@@ -76,5 +78,11 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
         }
     }
 
+    public DrawerMenuVO getDrawerMenuVO() {
+        return drawerMenuVO;
+    }
 
+    public void setDrawerMenuVO(DrawerMenuVO drawerMenuVO) {
+        this.drawerMenuVO = drawerMenuVO;
+    }
 }

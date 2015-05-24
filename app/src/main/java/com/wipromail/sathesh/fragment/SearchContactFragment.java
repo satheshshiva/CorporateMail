@@ -69,7 +69,7 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         return fragment;
     }
 
-    public static SearchContactFragment getCurrentInstance(){
+    public static SearchContactFragment getInstance(){
         return fragment;
     }
 
@@ -250,4 +250,12 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
     }
 
+    @Override
+    public EditText getContactSearch() {
+        return contactSearch;
+    }
+
+    public void setContactSearch(EditText contactSearch) {
+        this.contactSearch = contactSearch;
+    }
 }

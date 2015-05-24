@@ -60,7 +60,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         return fragment;
     }
 
-    public static AboutFragment getCurrentInstance(){
+    public static AboutFragment getInstance(){
         return fragment;
     }
 

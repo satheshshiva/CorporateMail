@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -59,7 +60,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private String mailFolderId="";
     private TextView dispName;
     private TextView companyName;
-    private MyActivity activity;
+    private static MyActivity activity;
     private Context context;
     private boolean appUpdateAvailble=false;
 
@@ -68,8 +69,18 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private ActionBarDrawerToggle mDrawerToggle;
     private  AboutFragmentDataPasser aboutFragment;
     private SearchContactFragmentDataPasser searchContactFragment;
+    private Fragment currentlyLoadedFragment;
 
+    private static MailListViewActivity activityInstance;
     private MailListViewActivityListener activityListener;
+
+    public MailListViewActivity(){
+        activityInstance = this;
+    }
+
+    public static MailListViewActivity getInstance(){
+        return activityInstance;
+    }
 
     /** ON CREATE **
      *  Fragment : MailListViewFragment
@@ -217,8 +228,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
         try {
             //cancel all the notifications
-           // NotificationProcessing.cancelAllNotifications(this);
-           // mailListViewFragmentDataPasser.softRefreshList();
+            // NotificationProcessing.cancelAllNotifications(this);
+            // mailListViewFragmentDataPasser.softRefreshList();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -240,12 +251,20 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     @Override
     public void onBackPressed() {
-        //this will close the navigation drawer first when its open
+        //this will close the navigation drawer first if its open
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
             mDrawerLayout.closeDrawer(Gravity.LEFT);
-        }else{
-            super.onBackPressed();
+            return;
         }
+        else if(currentlyLoadedFragment instanceof MailListViewFragment){
+            if(MailListViewFragment.getInstance()!=null && MailListViewFragment.getInstance().getMailType() == MailType.INBOX) {
+                //only when back pressed from inbox, exit out of the app
+                super.onBackPressed();
+                return;
+            }
+        }
+        // else open the inbox
+        loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox),null);
     }
 
     //  ON CLICK METHODS
@@ -257,29 +276,29 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     // AboutFragment Onclick methods
     public void onClickChkUpdate(View view) {
-        aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment = AboutFragment.getInstance();
         aboutFragment.onClickChkUpdate(view);
     }
 
     public void onBugOrSuggestion(View view) throws PackageManager.NameNotFoundException {
-        aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment = AboutFragment.getInstance();
         aboutFragment.onBugOrSuggestion(view);
     }
 
     public void fbOnclick(View view){
-        aboutFragment = AboutFragment.getCurrentInstance();
+        aboutFragment = AboutFragment.getInstance();
         aboutFragment.fbOnclick(view);
     }
 
     public void onClickDirectorySearch(View view) {
-        searchContactFragment = SearchContactFragment.getCurrentInstance();
+        searchContactFragment = SearchContactFragment.getInstance();
         searchContactFragment.onClickDirectorySearch(view);
     }
 
     /*** FRAGMENT LOADING ***/
 
     @Override
-    //(re)loads the MailListViewFragment inside the MailListViewActivity
+    //loads the MailListViewFragment inside the MailListViewActivity
     public void loadMailListViewFragment(int mailType, String mailFolderName, String mailFolderId) {
         //using fragment transaction, replace the fragment
         FragmentManager fm = getSupportFragmentManager();
@@ -288,6 +307,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         MailListViewFragment fragment = MailListViewFragment.newInstance(mailType, mailFolderName, mailFolderId);
         ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
+        currentlyLoadedFragment = fragment;
     }
 
     @Override
@@ -300,6 +320,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         AboutFragment fragment = AboutFragment.newInstance(onLoadCheckForUpdates);
         ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
+        currentlyLoadedFragment = fragment;
     }
 
     @Override
@@ -312,6 +333,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         SearchContactFragment fragment = SearchContactFragment.newInstance();
         ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
+        currentlyLoadedFragment = fragment;
     }
 
     /** GETTER SETTER PART **/
@@ -339,4 +361,11 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         this.drawerLayoutSelectedPosition = drawerLayoutSelectedPosition;
     }
 
+    public Fragment getCurrentlyLoadedFragment() {
+        return currentlyLoadedFragment;
+    }
+
+    public void setCurrentlyLoadedFragment(Fragment currentlyLoadedFragment) {
+        this.currentlyLoadedFragment = currentlyLoadedFragment;
+    }
 }

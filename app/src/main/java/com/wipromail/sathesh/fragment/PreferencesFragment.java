@@ -68,7 +68,7 @@ public class PreferencesFragment extends PreferenceFragment implements Constants
         return preferencesFragment;
     }
 
-    public static PreferencesFragment getCurrentInstance(){
+    public static PreferencesFragment getInstance(){
         return preferencesFragment;
     }
 
