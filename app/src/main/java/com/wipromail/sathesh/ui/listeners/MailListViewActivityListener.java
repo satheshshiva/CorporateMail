@@ -33,7 +33,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
     @Override
     public void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO) {
         Intent intent;
-        activityDataPasser.setDrawerLayoutSelectedPosition(position);
+
         this.drawerMenuVO = drawerMenuVO;
 
         switch(drawerMenuVO.getType()){
@@ -75,6 +75,10 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
             default:
                 //usuaully header will come here. do nothing.
                 break;
+        }
+        // for setting we should nothightlight the row
+        if(drawerMenuVO.getType() != DrawerMenuRowType.SETTINGS){
+            activityDataPasser.setDrawerLayoutSelectedPosition(position);
         }
     }
 

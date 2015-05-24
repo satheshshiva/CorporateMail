@@ -27,7 +27,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
      * Interface for receiving click events from cells.
      */
     public interface OnRecyclerViewClickListener {
-        public void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO);
+        void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO);
     }
 
     // Constructor
