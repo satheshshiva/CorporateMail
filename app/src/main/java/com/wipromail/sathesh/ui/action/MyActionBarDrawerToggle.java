@@ -8,8 +8,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
+import com.wipromail.sathesh.ui.util.UIutilities;
 
 /**
  * Created by Sathesh on 3/19/15.
@@ -33,14 +36,28 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
         super.onDrawerOpened(drawerView);
         activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
         // change the navigation bar color to translucent
-        if(Build.VERSION.SDK_INT  >= Build.VERSION_CODES.LOLLIPOP) {
-              changeNavigtionBarColor(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            changeNavigtionBarColor(true);
         }
 
-        //MailListFragment instance
-        MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getCurrentInstance();
-        if(mailListViewFragment!=null){
-            mailListViewFragment.getFab().hide();
+        //check thecurrently loaded fragment in the MailListViewActivity
+        if (MailListViewActivity.getInstance() != null
+                && MailListViewActivity.getInstance().getCurrentlyLoadedFragment() != null) {
+            if ( MailListViewActivity.getInstance().getCurrentlyLoadedFragment() instanceof MailListViewFragment) {
+
+                //MailListFragment instance
+                MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getInstance();
+                if (mailListViewFragment != null) {
+                    //hide the Floating Action Button
+                    mailListViewFragment.getFab().hide();
+                }
+            }
+            // Seach Fragment
+            else if(MailListViewActivity.getInstance().getCurrentlyLoadedFragment() instanceof SearchContactFragment){
+                //hide keyboard
+                SearchContactFragment searchContactFragment = SearchContactFragment.getInstance();
+                UIutilities.hideKeyBoard(activity, searchContactFragment.getContactSearch());
+            }
         }
     }
 
@@ -76,7 +93,7 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
              changeNavigtionBarColor(false);
         }
         //MailListFragment instance
-        MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getCurrentInstance();
+        MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getInstance();
         if(mailListViewFragment!=null){
             mailListViewFragment.getFab().show();
         }
