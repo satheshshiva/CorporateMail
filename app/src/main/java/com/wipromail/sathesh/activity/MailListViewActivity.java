@@ -74,6 +74,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private static MailListViewActivity activityInstance;
     private MailListViewActivityListener activityListener;
 
+    private final String STATE_DRAWER_MENU_HIGHTLIGHTED="stateDrawerMenuHighlighted";
+
     public MailListViewActivity(){
         activityInstance = this;
     }
@@ -96,8 +98,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         activity = this;
         context = this;
         try {
-            //while sign out is clicked, the enitire application will be closed by using clear top and by calling this activity since this is the first
-            //spawned activity.  we have to finish this first activity for sign out.
+            //while sign out is clicked, the enitire application will be closed by calling this activity since with clear top since this is the first
+            //spawned activity.  if this is happening then we have to finish this first activity for sign out.
             if (getIntent().getBooleanExtra(SIGN_OUT_EXTRA, false)) {
                 finish();
             }
@@ -122,11 +124,13 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             if(appUpdateAvailble){
                 loadAboutFragment(true);
             }
-            else if(mailType == -1){    //when this is not passed. when app opened from debugger or something
-                loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox), mailFolderId);
-            }
-            else{
-                loadMailListViewFragment(mailType, mailFolderName, mailFolderId);
+            else if(savedInstanceState==null){
+                if(mailType == -1){    //this is not passed when app opened from debugger or something
+                    loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox), mailFolderId);
+                }
+                else {
+                    loadMailListViewFragment(mailType, mailFolderName, mailFolderId);
+                }
             }
 
             // Initializing the Drawer Layout
@@ -160,6 +164,10 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
             dispName.setText(SharedPreferencesAdapter.getUserDetailsDisplayName(context));
             companyName.setText(SharedPreferencesAdapter.getUserDetailsCompanyName(context));
+
+            if(savedInstanceState != null){
+                drawerLayoutSelectedPosition=savedInstanceState.getInt(STATE_DRAWER_MENU_HIGHTLIGHTED);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -187,6 +195,15 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putInt(STATE_DRAWER_MENU_HIGHTLIGHTED, drawerLayoutSelectedPosition);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     /** ON DESTROY **

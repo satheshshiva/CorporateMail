@@ -80,8 +80,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     private static MailListViewFragment fragment;
     private long totalMailsInFolder = -1;
+    private final String STATE_FAB_SHOW="fabShown";
 
-    private boolean fragmentAlreadyLoaded = false;
     //contains all the UI listeners for this fragment
     private MailListViewListener listener;
 
@@ -239,18 +239,27 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                     showMoreLoadingAnimation();
                 }
                 //make a refresh only once when the screen is loaded first time. make a soft refresh on config change
-                if (!fragmentAlreadyLoaded) {
-                    refreshList();
-                } else {
+                if (savedInstanceState!=null) {
                     //config change (Screen rotation)
                     softRefreshList();
+                    fabShown = savedInstanceState.getBoolean(STATE_FAB_SHOW);
+                } else {
+                    refreshList();
                 }
-                fragmentAlreadyLoaded = true; //tracks config change(screen rotation)
             } catch (Exception e) {
                 Utilities.generalCatchBlock(e, this);
             }
         }
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putBoolean(STATE_FAB_SHOW, fabShown);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     /**
@@ -262,7 +271,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
         try {
             // show FAB
-            if(!fabShown) {
+            if(fabShown) {
                 fab.show();
                 fabShown=true;
             }
