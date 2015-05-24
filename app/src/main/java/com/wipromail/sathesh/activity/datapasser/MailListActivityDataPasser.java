@@ -17,4 +17,6 @@ public interface MailListActivityDataPasser {
 
     void loadSearchContactFragment();
 
+    String getString(int Resid);
+
 }
