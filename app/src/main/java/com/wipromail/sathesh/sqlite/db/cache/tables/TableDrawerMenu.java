@@ -1,6 +1,7 @@
 package com.wipromail.sathesh.sqlite.db.cache.tables;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
@@ -72,8 +73,10 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
         //adding About Menu
         insertQueries.add(sql1 + context.getString(R.string.drawer_menu_about)+ "' ," + DrawerMenuRowType.ABOUT+  " , '" + context.getString(R.string.fontIcon_drawer_about)+"');");
 
-        //adding empty row
-        insertQueries.add(sql1 + "' ," + DrawerMenuRowType.EMPTY_ROW+  " , '');");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //adding empty row
+            insertQueries.add(sql1 + "' ," + DrawerMenuRowType.EMPTY_ROW + " , '');");
+        }
 
         //adding Sample Favourite folders
         insertQueries.add(sql1 + "fave1" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS +  " , '" + context.getString(R.string.fontIcon_drawer_fave_item)+"');");
