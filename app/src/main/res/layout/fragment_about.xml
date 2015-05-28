@@ -129,7 +129,6 @@
                 android:layout_above="@+id/aboutActivityWebView"
                 android:layout_marginLeft="21dp"
                 android:layout_toRightOf="@+id/about_activity_check_update_btn"
-                android:onClick="onBugOrSuggestion"
                 android:text="@string/about_activity_bugOrSuggestion_btn"
                 android:visibility="visible" />
 
@@ -139,9 +138,8 @@
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/aboutActivityWebView"
-                android:layout_below="@+id/imageButton1"
+                android:layout_below="@+id/fbButton"
                 android:layout_marginLeft="17dp"
-                android:onClick="onClickChkUpdate"
                 android:text="@string/about_activity_update_btn"
                 android:visibility="visible" />
 
@@ -152,13 +150,12 @@
                 android:layout_below="@+id/about_activity_check_update_btn" />
 
             <ImageButton
-                android:id="@+id/imageButton1"
+                android:id="@+id/fbButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/textView1"
                 android:layout_marginTop="2dp"
-                android:onClick="fbOnclick"
                 android:src="@drawable/fb_like" />
 
             <TextView
