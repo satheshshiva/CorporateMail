@@ -30,7 +30,6 @@
             style="@style/Style.Button"
             android:layout_width="140sp"
             android:layout_marginTop="10dp"
-            android:onClick="onClickDirectorySearch"
             android:text="@string/searchContact_searchdirectory_btn_lbl" />
 
         <ListView

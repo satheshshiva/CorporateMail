@@ -3,10 +3,6 @@ package com.wipromail.sathesh.fragment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -18,20 +14,19 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
-import com.wipromail.sathesh.activity.ComposeActivity;
-import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.asynctask.DownloadAndUpdateAppAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.customui.Notifications;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 import com.wipromail.sathesh.jsinterfaces.AboutActivityJSInterface;
+import com.wipromail.sathesh.ui.listeners.AboutFragmentListener;
 import com.wipromail.sathesh.update.CheckLatestVersion;
 
 
@@ -41,7 +36,8 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
     private ActivityDataPasser activityDataPasser;
     private static AboutFragment fragment;
     private Context context ;
-    private Button bugOrSuggestionBtn;
+    private Button bugOrSuggestionBtn, checkUpdatesBtn;
+    private ImageButton fbButton;
     private WebView wv;
     private ActionBar myActionBar;
     private final static String ARG_CHECK_FOR_UPDATES="ARG_CHECK_FOR_UPDATES";
@@ -126,7 +122,17 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
 
         wv.addJavascriptInterface(new AboutActivityJSInterface(this), AboutActivityJSInterface.ABOUT_ACTIVITY_JS_INTERFACE_NAME);
 
+        AboutFragmentListener listener = new AboutFragmentListener(activity, context, this);
+
         bugOrSuggestionBtn = (Button)view.findViewById(R.id.about_activity_bugOrSuggestion_btn);
+        checkUpdatesBtn = (Button)view.findViewById(R.id.about_activity_check_update_btn);
+        fbButton = (ImageButton)view.findViewById(R.id.fbButton);
+
+        //setting on click listeners for buttons
+        bugOrSuggestionBtn.setOnClickListener(listener);
+        checkUpdatesBtn.setOnClickListener(listener);
+        fbButton.setOnClickListener(listener);
+
         //hide the Bug/suggestion buttton if no user signed in.
         try {
             if(!(MailApplication.checkUserIfSignedIn(context))){
@@ -147,7 +153,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         myActionBar.setHomeButtonEnabled(true);
 
         if(onLoadCheckForUpdates){
-           checkForUpdates();
+            checkForUpdates();
         }
         return view;
     }
@@ -164,61 +170,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         }
     }
 
-    /*** ON CLICK METHODS ***/
-
-    @Override
-    public void onClickChkUpdate(View view) {
-        checkForUpdates();
-    }
-
-    private void checkForUpdates() {
-        new CheckLatestVersion(activity,wv).startAsyncCheck();
-    }
-
-    /** open the Compose activity to send email to developer with prefilled developer details
-     * @param view
-     * @throws PackageManager.NameNotFoundException
-     */
-    @Override
-    public void onBugOrSuggestion(View view) throws PackageManager.NameNotFoundException {
-
-        //create a ContactSerializable to hold the To value of the developer
-        Bundle toBundle = new Bundle();
-        PackageInfo pInfo ;
-        String developerEmail = getText(R.string.bugsOrSuggestion_developer_email).toString();
-        ContactSerializable developerContact = new ContactSerializable(developerEmail, developerEmail, true);	//true autoresolves the entry
-        //put the ContactSerializable to a bundle
-        toBundle.putSerializable(developerEmail, developerContact);	//the key value (developer email) for the bundle is not needed since ComposeActivity concerns only the values
-
-        //get the app version info
-        pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-
-        ComposeActivityAdapter.startPrefilledCompose(activity,
-                ComposeActivity.PREFILL_TYPE_BUGS_SUGGESTIONS,
-                toBundle, null, null,
-                getString(R.string.bugsOrSuggestion_email_subject, pInfo.versionName),
-                getString(R.string.bugsOrSuggestion_email_titlebar),
-                true);
-    }
-
-    /** This will be invoked when the facebook like image is clicked
-     * @param view
-     */
-    @Override
-    public void fbOnclick(View view){
-        Intent fbIntent;
-        try {
-            activity.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-            fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FB_LIKE_URL_APP));
-
-        } catch (Exception e) {
-            fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FB_LIKE_URL_BROWSER));
-        }
-        try{
-            startActivity(fbIntent);
-        }catch(Exception e){e.printStackTrace();}
-    }
-
     @Override
     public void downloadAndUpdate() {
         if (BuildConfig.DEBUG){
@@ -227,6 +178,11 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         else {
             new DownloadAndUpdateAppAsyncTask(activity).execute(APPLICATION_APK_DOWNLOAD_URL1_REL);
         }
+    }
+
+    @Override
+    public void checkForUpdates() {
+        new CheckLatestVersion(activity,wv).startAsyncCheck();
     }
 
     /** Unused right now

@@ -1,7 +1,6 @@
 package com.wipromail.sathesh.activity;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -289,27 +288,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     // Drawer layout header on click will call this. To prevent the underlying element click
     public void emptyClick(View view){
         //do nothing
-    }
-
-    // AboutFragment Onclick methods
-    public void onClickChkUpdate(View view) {
-        aboutFragment = AboutFragment.getInstance();
-        aboutFragment.onClickChkUpdate(view);
-    }
-
-    public void onBugOrSuggestion(View view) throws PackageManager.NameNotFoundException {
-        aboutFragment = AboutFragment.getInstance();
-        aboutFragment.onBugOrSuggestion(view);
-    }
-
-    public void fbOnclick(View view){
-        aboutFragment = AboutFragment.getInstance();
-        aboutFragment.fbOnclick(view);
-    }
-
-    public void onClickDirectorySearch(View view) {
-        searchContactFragment = SearchContactFragment.getInstance();
-        searchContactFragment.onClickDirectorySearch(view);
     }
 
     /*** FRAGMENT LOADING ***/

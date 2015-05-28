@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,17 +23,15 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.ContactDetailsActivity;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
-import com.wipromail.sathesh.asynctask.ResolveNamesAsyncTask;
 import com.wipromail.sathesh.asynctask.interfaces.IResolveNames;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.customui.Notifications;
-import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
-import com.wipromail.sathesh.service.data.ExchangeService;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceLocalException;
+import com.wipromail.sathesh.ui.listeners.SearchContactFragmentListener;
 import com.wipromail.sathesh.ui.util.UIutilities;
 
 import java.util.ArrayList;
@@ -48,10 +47,11 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
     private EditText contactSearch;
     private ActivityDataPasser activityDataPasser;
     private static SearchContactFragment fragment;
-    private ExchangeService service;
     private ListView listView;
     private ActionBar myActionBar;
     private ActivityDataPasser mListener;
+    private SearchContactFragmentListener listener;
+    private Button searchDirectoryBtn;
 
     private final Map<Integer, ContactSerializable> dispContactsMap = new HashMap<Integer, ContactSerializable>();
     private List<String> dispNameList = new ArrayList<String>();
@@ -127,14 +127,13 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         activity.getSupportActionBar().setHomeButtonEnabled(true);
         contactSearch= (EditText)view.findViewById(R.id.contactSearch);
 
-        try {
-            service = EWSConnection.getServiceFromStoredCredentials(context);}
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
         listView = (ListView)view.findViewById(R.id.suggestionsListView);
         activity.setSupportProgressBarIndeterminateVisibility(view, false);
+
+        listener = new SearchContactFragmentListener(activity, context, this);
+
+        searchDirectoryBtn = (Button) view.findViewById(R.id.searchDirectoryBtn);
+        searchDirectoryBtn.setOnClickListener(listener);
 
         return view;
     }
@@ -151,17 +150,6 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
             activityDataPasser.getmDrawerToggle().syncState();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /*** ON CLICK METHODS ***/
-    public void onClickDirectorySearch(View view){
-        UIutilities.hideKeyBoard(activity, contactSearch);
-
-        if( null!=contactSearch.getText() && null!=contactSearch.getText().toString() && !(contactSearch.getText().toString().equals(""))){
-
-            //EWS Call
-            new ResolveNamesAsyncTask(this,activity,service,contactSearch.getText().toString(),false,"","").execute();
         }
     }
 
