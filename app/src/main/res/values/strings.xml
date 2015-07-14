@@ -277,7 +277,8 @@
     <string name="actionMode_mark_unflagMail">Unflag</string>
 
     <!-- Undo Bar -->
-    <string name="undoBar_deletedMails">%s items deleted</string>
+    <string name="undoBar_deletedMails">%s item(s) deleted</string>
+    <string name="undoBar_undo_lbl">Undo</string>
 
     <!-- Navigation Drawer -->
     <string name="drawer_open">Open navigation drawer</string>
