@@ -30,6 +30,7 @@ import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.MarkMailsReadUnreadThread;
 import com.wipromail.sathesh.ui.action.DeleteMailsUndoBarAction;
 import com.wipromail.sathesh.ui.components.MailDeleteDialog;
+import com.wipromail.sathesh.ui.components.UndoBarBuilder;
 import com.wipromail.sathesh.ui.interfaces.UndoBarAction;
 import com.wipromail.sathesh.ui.vo.MailListViewContent;
 import com.wipromail.sathesh.util.Utilities;
@@ -330,10 +331,13 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                             // after showing message and the action when undo button clicked
                             UndoBarAction undoBarAction = new DeleteMailsUndoBarAction(fragment.getContext(), fragment, selectedVOs);
 
-                            //show the undo bar
-//                            new UndoBarBuilder(activity, undoBarAction)
-//                                    ._setMessage(activity.getString(R.string.undoBar_deletedMails, selectedVOs.size()))
-//                                    ._show();
+                            UndoBarBuilder undoBarBuilder = new UndoBarBuilder((MyActivity)activity,
+                                    undoBarAction,
+                                    activity.findViewById(R.id.fragmentContainer),
+                                    activity.getString(R.string.undoBar_deletedMails, selectedVOs.size()));
+
+                            undoBarBuilder.show();
+
                         }else{
                             //Deleted Items folder
 
