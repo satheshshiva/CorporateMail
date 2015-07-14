@@ -3,7 +3,6 @@
  */
 package com.wipromail.sathesh.ui.listeners;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -23,10 +22,10 @@ import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.activity.ViewMailActivity;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MyActivity;
-import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
-import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
+import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser.Status;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.wipromail.sathesh.threads.ui.MarkMailsReadUnreadThread;
 import com.wipromail.sathesh.ui.action.DeleteMailsUndoBarAction;
@@ -189,7 +188,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                     case MailListViewContent.types.MAIL:
                         //open the mail
                         vo = listViewContent.getMailVO();
-                        Intent viewMailIntent = new Intent(((Activity)activity).getBaseContext(), ViewMailActivity.class);
+                        Intent viewMailIntent = new Intent((activity).getBaseContext(), ViewMailActivity.class);
                         viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
                         //start the view mail activity
                         activity.startActivity(viewMailIntent);

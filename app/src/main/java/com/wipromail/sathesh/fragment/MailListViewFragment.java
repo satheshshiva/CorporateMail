@@ -282,7 +282,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             if (mailType == MailType.INBOX) {
                 NotificationProcessing.cancelAllNotifications(activity);
             }
-            //softRefreshList(); //this is done in OnCreate on setting the adapter
+            softRefreshList(); //when returning after a mail view
         } catch (Exception e) {
             e.printStackTrace();
         }
