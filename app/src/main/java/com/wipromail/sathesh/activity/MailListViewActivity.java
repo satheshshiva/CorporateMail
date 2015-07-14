@@ -3,6 +3,7 @@ package com.wipromail.sathesh.activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -72,7 +73,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     private static MailListViewActivity activityInstance;
     private MailListViewActivityListener activityListener;
-
+    private RecyclerView mDrawerList;
     private final String STATE_DRAWER_MENU_HIGHTLIGHTED="stateDrawerMenuHighlighted";
 
     public MailListViewActivity(){
@@ -137,7 +138,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO( context);
             List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
 
-            RecyclerView mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
+            mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
             mDrawerList.setScrollContainer(true);
 
             mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
@@ -266,9 +267,13 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     }
 
     @Override
+    /** close drawer or exit app or load inbox
+     *
+     */
     public void onBackPressed() {
-        //this will close the navigation drawer first if its open
+
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
+            //if drawer is open then close it
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             return;
         }
@@ -279,8 +284,32 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
                 return;
             }
         }
-        // else open the inbox
-        loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox),null);
+
+        // else case: pressed back from any other fragments other than inbox
+        // open the inbox
+        //  loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox),null);
+        mDrawerList.scrollToPosition(0);
+        final Handler handler = new Handler();
+
+        //wait for the scrollToPosition to happen.
+        // othewise findViewHolderForLayoutPosition(0) returns null if the drawer list was scrolled down
+        final Runnable r = new Runnable() {
+            public void run() {
+                RecyclerView.ViewHolder holder = mDrawerList.findViewHolderForLayoutPosition(0);
+                if (holder != null && holder.itemView != null) {
+                    holder.itemView.performClick();
+                    holder.itemView.setSelected(true);
+                }
+               // handler.postDelayed(this, 1000);
+            }
+        };
+
+        //wait for the scrollToPosition to happen.
+        //othewise findViewHolderForLayoutPosition(0) returns null if the drawer list was scrolled down
+        handler.postDelayed(r, 50);
+
+
+
     }
 
     //  ON CLICK METHODS
