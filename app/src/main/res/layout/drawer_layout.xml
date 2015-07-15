@@ -8,12 +8,34 @@
 
     <include layout="@layout/drawer_item_header_image" />
 
-    <!-- Drawer - Recycler View -->
-    <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        />
+        android:id="@+id/drawerLayoutPage1">
+        <!-- Drawer - Recycler View -->
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mainRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/drawerLayoutPage2"
+        android:visibility="gone">
+        <view
+            class="com.wipromail.sathesh.ui.customwidgets.FontIcon$ButtonView"
+            android:id="@+id/drawerBackButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:text="@string/drawer_back"
+            />
+    </FrameLayout>
+
 </LinearLayout>
