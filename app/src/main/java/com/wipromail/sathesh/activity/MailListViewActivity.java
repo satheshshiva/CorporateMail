@@ -21,6 +21,7 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
+import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
@@ -34,6 +35,7 @@ import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
+import com.wipromail.sathesh.ui.customwidgets.FontIcon;
 import com.wipromail.sathesh.ui.listeners.MailListViewActivityListener;
 
 import java.util.List;
@@ -74,7 +76,12 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private static MailListViewActivity activityInstance;
     private MailListViewActivityListener activityListener;
     private RecyclerView mDrawerList;
+    private FontIcon.ButtonView drawerBackButton;
     private final String STATE_DRAWER_MENU_HIGHTLIGHTED="stateDrawerMenuHighlighted";
+    private boolean drawerLayouPage2Open=false; //flag for use in the back navigation button
+
+    private View drawerLayoutpage1View ;
+    private View drawerLayoutpage2View;
 
     public MailListViewActivity(){
         activityInstance = this;
@@ -98,6 +105,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         activity = this;
         context = this;
         try {
+
             //while sign out is clicked, the enitire application will be closed by calling this activity since with clear top since this is the first
             //spawned activity.  if this is happening then we have to finish this first activity for sign out.
             if (getIntent().getBooleanExtra(SIGN_OUT_EXTRA, false)) {
@@ -110,40 +118,45 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
             appUpdateAvailble = getIntent().getBooleanExtra(APP_UPDATE_AVAILABLE, false);
 
-            if(mailType == MailType.INBOX) {
+            if (mailType == MailType.INBOX) {
                 MailApplication.getInstance().onEveryAppOpen(activity, context);
             }
             //note: this will trigger the OnCreateView in the fragment.
             setContentView(R.layout.activity_mail_list_view);
 
             //Initializing Listener for this activity
-            if(activityListener == null){
+            if (activityListener == null) {
                 activityListener = new MailListViewActivityListener(this);
             }
 
-            if(appUpdateAvailble){
+            if (appUpdateAvailble) {
                 loadAboutFragment(true);
-            }
-            else if(savedInstanceState==null){
-                if(mailType == -1){    //this is not passed when app opened from debugger or something
+            } else if (savedInstanceState == null) {
+                if (mailType == -1) {    //this is not passed when app opened from debugger or something
                     loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox), mailFolderId);
-                }
-                else {
+                } else {
                     loadMailListViewFragment(mailType, mailFolderName, mailFolderId);
                 }
             }
 
             // Initializing the Drawer Layout
             //Navigation Drawer
-            DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO( context);
+            DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO(context);
             List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
 
-            mDrawerList = (RecyclerView) activity.findViewById(R.id.recyclerView);
+            mDrawerList = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
             mDrawerList.setScrollContainer(true);
 
             mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
             mDrawerList.setLayoutManager(new LinearLayoutManager(context));
-            mDrawerLayout = (DrawerLayout)activity.findViewById(R.id.drawer_layout);
+            mDrawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+
+            //controls
+            drawerBackButton = (FontIcon.ButtonView) findViewById(R.id.drawerBackButton);
+            drawerBackButton.setOnClickListener(activityListener);
+
+            drawerLayoutpage1View =  activity.findViewById(R.id.drawerLayoutPage1);
+            drawerLayoutpage2View =  activity.findViewById(R.id.drawerLayoutPage2);
 
             //Navigation Drawer Slider Listener
 
@@ -165,8 +178,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             dispName.setText(SharedPreferencesAdapter.getUserDetailsDisplayName(context));
             companyName.setText(SharedPreferencesAdapter.getUserDetailsCompanyName(context));
 
-            if(savedInstanceState != null){
-                drawerLayoutSelectedPosition=savedInstanceState.getInt(STATE_DRAWER_MENU_HIGHTLIGHTED);
+            if (savedInstanceState != null) {
+                drawerLayoutSelectedPosition = savedInstanceState.getInt(STATE_DRAWER_MENU_HIGHTLIGHTED);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,7 +285,16 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
      */
     public void onBackPressed() {
 
-        if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
+        //drawer layout page 2 is visible then change it to page 1
+        if(drawerLayouPage2Open){
+            drawerLayoutpage1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
+            drawerLayoutpage1View.setVisibility(View.VISIBLE);
+            drawerLayoutpage2View.setVisibility(View.GONE);
+            drawerLayouPage2Open=false;
+            return;
+        }
+        //if drawer layout is open then close it
+        else if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
             //if drawer is open then close it
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             return;
@@ -391,5 +413,14 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     public void setCurrentlyLoadedFragment(Fragment currentlyLoadedFragment) {
         this.currentlyLoadedFragment = currentlyLoadedFragment;
+    }
+
+    public boolean isDrawerLayouPage2Open() {
+        return drawerLayouPage2Open;
+    }
+
+    @Override
+    public void setDrawerLayouPage2Open(boolean drawerLayouPage2Open) {
+        this.drawerLayouPage2Open = drawerLayouPage2Open;
     }
 }

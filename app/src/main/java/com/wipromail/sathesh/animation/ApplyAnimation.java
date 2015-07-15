@@ -37,6 +37,14 @@ public class ApplyAnimation {
 		return  AnimationUtils.loadAnimation(activity, R.anim.shake);
 	}
 
+	public static Animation getDrawerLayoutPage2InAnimation(Activity activity){
+		return  AnimationUtils.loadAnimation(activity, R.anim.slide_left);
+	}
+
+	public static Animation getDrawerLayoutPage1InAnimation(Activity activity){
+		return  AnimationUtils.loadAnimation(activity, R.anim.slide_right);
+	}
+
 	/*** Activity Transition Animations ***/
 
 	public static void setMainActivitySignedInAnim(Activity activity) {

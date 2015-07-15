@@ -6,9 +6,11 @@ package com.wipromail.sathesh.ui.listeners;
 import android.content.Intent;
 import android.view.View;
 
+import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
+import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
@@ -19,15 +21,19 @@ import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
  * @author sathesh
  *
  */
-public class MailListViewActivityListener implements  Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener {
+public class MailListViewActivityListener implements  Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener, View.OnClickListener {
 
     private MailListActivityDataPasser activityDataPasser;
     private MyActivity activity;
     private DrawerMenuVO drawerMenuVO;
+    private View page1View ;
+    private View page2View;
 
     public MailListViewActivityListener(MailListActivityDataPasser activityDataPasser){
         this.activity = (MyActivity)activityDataPasser;
         this.activityDataPasser = activityDataPasser;
+        page1View =  activity.findViewById(R.id.drawerLayoutPage1);
+        page2View =  activity.findViewById(R.id.drawerLayoutPage2);
     }
 
     @Override
@@ -49,6 +55,12 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
             case DrawerMenuRowType.DELETED_ITEMS:
                 activityDataPasser.getmDrawerLayout().closeDrawers();
                 activityDataPasser.loadMailListViewFragment(drawerMenuVO.getType(), WellKnownFolderName.DeletedItems.toString(), null);
+                break;
+            case DrawerMenuRowType.MORE_FOLDERS:
+                page1View.setVisibility(View.GONE);
+                page2View.setAnimation(ApplyAnimation.getDrawerLayoutPage2InAnimation(activity));
+                page2View.setVisibility(View.VISIBLE);
+                activityDataPasser.setDrawerLayouPage2Open(true);   //flag for use in the back navigation button
                 break;
 
             case DrawerMenuRowType.FAVOURITE_FOLDERS:
@@ -88,5 +100,18 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
     public void setDrawerMenuVO(DrawerMenuVO drawerMenuVO) {
         this.drawerMenuVO = drawerMenuVO;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.drawerBackButton:
+                page1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
+                page1View.setVisibility(View.VISIBLE);
+                page2View.setVisibility(View.GONE);
+                activityDataPasser.setDrawerLayouPage2Open(false); //flag for use in the back navigation button
+                break;
+
+        }
     }
 }

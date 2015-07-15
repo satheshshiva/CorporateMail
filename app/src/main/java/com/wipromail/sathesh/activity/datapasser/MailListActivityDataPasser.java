@@ -19,4 +19,6 @@ public interface MailListActivityDataPasser {
 
     String getString(int Resid);
 
+    void setDrawerLayouPage2Open(boolean drawerLayouPage2Open);
+
 }
