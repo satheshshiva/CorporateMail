@@ -239,7 +239,6 @@ public class OtherFoldersPageActivity extends MyActivity implements Constants{
 
 
 		private  String getConversationHistoryFolderId( ExchangeService service) throws Exception{
-			// TODO Auto-generated method stub
 			//EWS Call
 			FindFoldersResults findResults = NetworkCall.getFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot));
 
