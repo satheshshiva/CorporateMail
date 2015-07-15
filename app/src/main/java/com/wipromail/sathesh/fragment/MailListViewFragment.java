@@ -271,7 +271,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
         try {
             // show FAB
-            if(fabShown) {
+            if(!fabShown) {
                 fab.show();
                 fabShown=true;
             }
