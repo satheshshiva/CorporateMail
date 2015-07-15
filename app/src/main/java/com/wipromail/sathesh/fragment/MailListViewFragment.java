@@ -255,7 +255,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
+        // Save the user's current state
         savedInstanceState.putBoolean(STATE_FAB_SHOW, fabShown);
 
         // Always call the superclass so it can save the view hierarchy state
@@ -399,7 +399,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     public void updatingStatusUIChanges() {
         try {
             //swipe refresh layout - visible
-            swipeRefreshLayout.setRefreshing(true);
+          //  swipeRefreshLayout.setRefreshing(true);
             //if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
             totalCachedRecords = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
             if (totalCachedRecords > 0) {
