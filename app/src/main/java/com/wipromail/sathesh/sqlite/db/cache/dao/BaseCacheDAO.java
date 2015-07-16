@@ -109,7 +109,8 @@ public class BaseCacheDAO implements Constants{
 
 								//else if other types if needed
 							}
-							else if(("is" + columnName).equalsIgnoreCase(method.getName())){
+							else if(("is" + columnName).equalsIgnoreCase(method.getName())
+									|| (columnName.toLowerCase().startsWith("is") && columnName.equalsIgnoreCase(method.getName()))){
 								if(method.getReturnType().getName().equals("boolean")){
 									boolean boolValue = (Boolean)method.invoke(vo,null);
 									contentValues.put(columnName, boolValue);

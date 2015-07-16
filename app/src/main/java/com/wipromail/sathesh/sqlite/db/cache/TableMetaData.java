@@ -3,6 +3,7 @@ package com.wipromail.sathesh.sqlite.db.cache;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailBody;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableCachedMailHeader;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableDrawerMenu;
+import com.wipromail.sathesh.sqlite.db.cache.tables.TableMoreFolders;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableTempVariables;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class TableMetaData {
 		list.add(dbTable);
         dbTable= new TableDrawerMenu();
         list.add(dbTable);
+		dbTable= new TableMoreFolders();
+		list.add(dbTable);
 		dbTable= new TableTempVariables();
 		list.add(dbTable);
 		return list;
