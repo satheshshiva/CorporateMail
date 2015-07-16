@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
+import com.wipromail.sathesh.threads.ui.GetAllFoldersThread;
 import com.wipromail.sathesh.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;
@@ -263,6 +265,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
             }
 
             else if (progress[1].equalsIgnoreCase("COMPLETED")){
+                // successful login
                 try {
                     dialog.dismiss();	//gives this exception "View not attached to window manager" on a mobile
                 } catch (Exception e1) {
@@ -276,12 +279,17 @@ public class LoginPageActivity extends MyActivity implements Constants {
                     onProgressUpdate("0" ,"ERROR", "Error Occured!\n\nDetails: " + e.getMessage());
                 }
 
+                //start the mail list view activity
                 intent = new Intent(LoginPageActivity.this, MailListViewActivity.class);
                 intent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX);
                 intent.putExtra(MailListViewActivity.FOLDER_ID_EXTRA, "");
                 intent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, getString(R.string.drawer_menu_inbox));
 
                 startActivity(intent);
+
+                // starts a seperate thread for storing the all folders table
+                Thread t = new GetAllFoldersThread(activity, new Handler());
+                t.start();
 
                 LoginPageActivity.this.finish();
             }
