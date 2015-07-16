@@ -88,6 +88,20 @@ public class MoreFoldersDAO extends BaseCacheDAO {
         return returnList;
     }
 
+    /** Delete All records
+     * Where Clause - Folder Id
+     * @throws Exception
+     */
+    public void deleteAllRecords() throws Exception {
+
+        try{
+            open(cacheDbHelper);
+            database.execSQL(TableMoreFolders.getDeleteAllQuery());
+        }finally{
+            close(cacheDbHelper);
+        }
+    }
+
     /*** PRIVATE METHODS ***/
 
     /** private function which calls the insert query for a single VO

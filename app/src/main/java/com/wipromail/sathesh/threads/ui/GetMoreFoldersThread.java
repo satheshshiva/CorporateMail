@@ -15,6 +15,8 @@ import com.wipromail.sathesh.service.data.FindFoldersResults;
 import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
+import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 import com.wipromail.sathesh.util.Utilities;
 
 /**
@@ -25,6 +27,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     private Context context;
     private Handler handler;
     private ExchangeService service;
+    private MoreFoldersDAO dao;
 
     private enum Status{
         RUNNING,
@@ -36,6 +39,8 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     public GetMoreFoldersThread(Context context, Handler handler) {
         this.context = context;
         this.handler = handler;
+
+        this.dao = new MoreFoldersDAO(context);
     }
 
     @Override
@@ -43,6 +48,10 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
         try {
             sendHandlerMsg(Status.RUNNING);
             service = EWSConnection.getServiceFromStoredCredentials(this.context);
+
+            //clear the table before populating anything
+            dao.deleteAllRecords();
+
             // call the recursive folder search from the root
             recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot), "MsgFolderRoot");
 
@@ -56,36 +65,52 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     }
 
     private  void recursivePopulateFolders( ExchangeService service, FolderId folderId, String folderName) throws Exception{
+        MoreFoldersVO vo;
+        String subFolderDispName;
 
         if(BuildConfig.DEBUG) Log.i(TAG, "PROCESSING FOLDER " + folderName);
+        vo = new MoreFoldersVO();
+        vo.setIs_header(true);
+        vo.setName(folderName);
+        vo.setFolder_id(folderId.getUniqueId());
+        dao.createOrUpdate(vo);
 
         //EWS call
         FindFoldersResults findResults =  NetworkCall.getFolders(service, folderId);
 
         // prints the folders and their count
-        for(Folder folder : findResults.getFolders())
+        for(Folder subFolder : findResults.getFolders())
         {
+            subFolderDispName = subFolder.getDisplayName();
             //Dont consider these folder names in the message root
             if(!( folderName.equals("MsgFolderRoot") &&
-                    folder.getDisplayName().equals("Calendar") ||
-                    folder.getDisplayName().equals("Contacts") ||
-                    folder.getDisplayName().equals("Conversation Action Settings") ||
-                    folder.getDisplayName().equals("Deleted Items") ||
-                    folder.getDisplayName().equals("Drafts") ||
-                    folder.getDisplayName().equals("Inbox") ||
-                    folder.getDisplayName().equals("Journal") ||
-                    folder.getDisplayName().equals("Notes") ||
-                    folder.getDisplayName().equals("Quick Step Settings") ||
-                    folder.getDisplayName().equals("RSS Feeds") ||
-                    folder.getDisplayName().equals("Sent Items") ||
-                    folder.getDisplayName().equals("Sync Issues") ||
-                    folder.getDisplayName().equals("Tasks") ) )
+                    subFolderDispName.equals("Calendar") ||
+                    subFolderDispName.equals("Contacts") ||
+                    subFolderDispName.equals("Conversation Action Settings") ||
+                    subFolderDispName.equals("Deleted Items") ||
+                    subFolderDispName.equals("Drafts") ||
+                    subFolderDispName.equals("Inbox") ||
+                    subFolderDispName.equals("Journal") ||
+                    subFolderDispName.equals("Notes") ||
+                    subFolderDispName.equals("Quick Step Settings") ||
+                    subFolderDispName.equals("RSS Feeds") ||
+                    subFolderDispName.equals("Sent Items") ||
+                    subFolderDispName.equals("Sync Issues") ||
+                    subFolderDispName.equals("Tasks") ) )
             {
                 sendHandlerMsg(Status.FOLDER_RETRIEVED);
                 //Log.i(TAG, folderId.getFolderName().toString());
-                if(BuildConfig.DEBUG) Log.i(TAG, "Count======" + folder.getChildFolderCount());
-                if(BuildConfig.DEBUG) Log.i(TAG, "Name=======" + folder.getDisplayName());
-                if(BuildConfig.DEBUG) Log.i(TAG, "Folder id=======" + folder.getId().getUniqueId());
+                if(BuildConfig.DEBUG) Log.i(TAG, "Count======" + subFolder.getChildFolderCount());
+                if(BuildConfig.DEBUG) Log.i(TAG, "Name=======" + subFolderDispName);
+                if(BuildConfig.DEBUG) Log.i(TAG, "Folder id=======" + subFolder.getId().getUniqueId());
+
+                vo = new MoreFoldersVO();
+                vo.setIs_header(false);
+                vo.setName(subFolderDispName);
+                vo.setFolder_id(subFolder.getId().getUniqueId());
+                vo.setParent_name(folderName);
+                dao.createOrUpdate(vo);
+
             }
 
         }

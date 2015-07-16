@@ -53,7 +53,7 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 	/** DELETE QUERY
 	 * @return
 	 */
-	public String getDeleteQuery(){
+	public static String getDeleteAllQuery(){
 		return "DELETE from " + tableName ;
 	}
 
