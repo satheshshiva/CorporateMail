@@ -51,7 +51,6 @@ public class GetMoreMailsThread extends Thread implements Runnable, Constants{
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		int cacheRecordsCount ;
 
 		if (parent.getActivity() != null) {
