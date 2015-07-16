@@ -20,7 +20,7 @@ import com.wipromail.sathesh.util.Utilities;
 /**
  * Created by Sathesh on 7/16/15.
  */
-public class GetAllFoldersThread extends Thread implements Runnable, Constants {
+public class GetMoreFoldersThread extends Thread implements Runnable, Constants {
 
     private Context context;
     private Handler handler;
@@ -33,7 +33,7 @@ public class GetAllFoldersThread extends Thread implements Runnable, Constants {
         ERROR
     }
 
-    public GetAllFoldersThread( Context context, Handler handler) {
+    public GetMoreFoldersThread(Context context, Handler handler) {
         this.context = context;
         this.handler = handler;
     }

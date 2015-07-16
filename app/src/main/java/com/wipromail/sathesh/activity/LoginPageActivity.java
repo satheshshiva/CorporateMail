@@ -32,7 +32,7 @@ import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.HttpErrorException;
 import com.wipromail.sathesh.service.data.NameResolution;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
-import com.wipromail.sathesh.threads.ui.GetAllFoldersThread;
+import com.wipromail.sathesh.threads.ui.GetMoreFoldersThread;
 import com.wipromail.sathesh.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;
@@ -288,7 +288,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 startActivity(intent);
 
                 // starts a seperate thread for storing the all folders table
-                Thread t = new GetAllFoldersThread(activity, new Handler());
+                Thread t = new GetMoreFoldersThread(activity, new Handler());
                 t.start();
 
                 LoginPageActivity.this.finish();
