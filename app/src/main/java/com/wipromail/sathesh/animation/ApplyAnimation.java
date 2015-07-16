@@ -38,7 +38,7 @@ public class ApplyAnimation {
 	}
 
 	public static Animation getDrawerLayoutPage2InAnimation(Activity activity){
-		return  AnimationUtils.loadAnimation(activity, R.anim.slide_left);
+		return  AnimationUtils.loadAnimation(activity, R.anim.fade);
 	}
 
 	public static Animation getDrawerLayoutPage1InAnimation(Activity activity){
