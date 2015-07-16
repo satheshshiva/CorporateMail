@@ -33,7 +33,6 @@ import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.handlers.GetMoreMailsHandler;
 import com.wipromail.sathesh.handlers.GetNewMailsHandler;
 import com.wipromail.sathesh.sqlite.db.cache.vo.CachedMailHeaderVO;
-import com.wipromail.sathesh.threads.ui.GetMoreFoldersThread;
 import com.wipromail.sathesh.threads.ui.GetMoreMailsThread;
 import com.wipromail.sathesh.threads.ui.GetNewMailsThread;
 import com.wipromail.sathesh.ui.listeners.MailListViewListener;
@@ -116,9 +115,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             this.mailFolderName = getArguments().getString(ARG_MAIL_FOLDER_NAME);
             this.mailFolderId = getArguments().getString(ARG_MAIL_FOLDER_ID);
         }
-
-
-
     }
 
     @Override
@@ -146,10 +142,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
         activity = (MyActivity) getActivity();
         context = getActivity();
-        //REVERT THIS
-        // starts a seperate thread for storing the all folders table
-        Thread t = new GetMoreFoldersThread(activity, new Handler());
-        t.start();
         if (cacheMailHeaderAdapter == null) {
             cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
