@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.BuildConfig;
@@ -75,8 +76,9 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     private static MailListViewActivity activityInstance;
     private MailListViewActivityListener activityListener;
-    private RecyclerView mDrawerList;
-    private FontIcon.ButtonView drawerBackButton;
+    private RecyclerView mDrawerListRecyclerView1, mDrawerListRecyclerView2;
+    private FontIcon.IconView drawerBackButton;
+    private Button drawerBackButton1;
     private final String STATE_DRAWER_MENU_HIGHTLIGHTED="stateDrawerMenuHighlighted";
     private boolean drawerLayouPage2Open=false; //flag for use in the back navigation button
 
@@ -144,16 +146,24 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO(context);
             List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
 
-            mDrawerList = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
-            mDrawerList.setScrollContainer(true);
+            //Navigation Drawer - main recycler view
+            mDrawerListRecyclerView1 = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
+            mDrawerListRecyclerView1.setScrollContainer(true);
+            mDrawerListRecyclerView1.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
+            mDrawerListRecyclerView1.setLayoutManager(new LinearLayoutManager(context));
 
-            mDrawerList.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
-            mDrawerList.setLayoutManager(new LinearLayoutManager(context));
-            mDrawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+            //Navigation Drawer - more folders recycler view
+            mDrawerListRecyclerView2 = (RecyclerView) activity.findViewById(R.id.moreFoldersRecyclerView);
+            mDrawerListRecyclerView2.setScrollContainer(true);
+            mDrawerListRecyclerView2.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
+            mDrawerListRecyclerView2.setLayoutManager(new LinearLayoutManager(context));
 
             //controls
-            drawerBackButton = (FontIcon.ButtonView) findViewById(R.id.drawerBackButton);
+            mDrawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+            drawerBackButton = (FontIcon.IconView) findViewById(R.id.drawer_back_icon);
+            drawerBackButton1 = (Button) findViewById(R.id.drawer_back_btn);
             drawerBackButton.setOnClickListener(activityListener);
+            drawerBackButton1.setOnClickListener(activityListener);
 
             drawerLayoutpage1View =  activity.findViewById(R.id.drawerLayoutPage1);
             drawerLayoutpage2View =  activity.findViewById(R.id.drawerLayoutPage2);
@@ -163,7 +173,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             // ActionBarDrawerToggle ties together the the proper interactions
             // between the sliding drawer and the action bar app icon
             mDrawerToggle = new MyActionBarDrawerToggle(
-                    this,
+                    this,this,
                     mDrawerLayout,
                     R.string.drawer_open,  /* "open drawer" description for accessibility */
                     R.string.drawer_close  /* "close drawer" description for accessibility */
@@ -285,16 +295,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
      */
     public void onBackPressed() {
 
-        //drawer layout page 2 is visible then change it to page 1
-        if(drawerLayouPage2Open){
-            drawerLayoutpage1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
-            drawerLayoutpage1View.setVisibility(View.VISIBLE);
-            drawerLayoutpage2View.setVisibility(View.GONE);
-            drawerLayouPage2Open=false;
-            return;
-        }
-        //if drawer layout is open then close it
-        else if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
+       if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
             //if drawer is open then close it
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             return;
@@ -310,14 +311,14 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         // else case: pressed back from any other fragments other than inbox
         // open the inbox
         //  loadMailListViewFragment(MailType.INBOX, getString(R.string.drawer_menu_inbox),null);
-        mDrawerList.scrollToPosition(0);
+        mDrawerListRecyclerView1.scrollToPosition(0);
         final Handler handler = new Handler();
 
         //wait for the scrollToPosition to happen.
         // othewise findViewHolderForLayoutPosition(0) returns null if the drawer list was scrolled down
         final Runnable r = new Runnable() {
             public void run() {
-                RecyclerView.ViewHolder holder = mDrawerList.findViewHolderForLayoutPosition(0);
+                RecyclerView.ViewHolder holder = mDrawerListRecyclerView1.findViewHolderForLayoutPosition(0);
                 if (holder != null && holder.itemView != null) {
                     holder.itemView.performClick();
                     holder.itemView.setSelected(true);
@@ -339,6 +340,14 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     // Drawer layout header on click will call this. To prevent the underlying element click
     public void emptyClick(View view){
         //do nothing
+    }
+
+    @Override
+    public void closeDrawerLayoutPage2(){
+        drawerLayoutpage1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
+        drawerLayoutpage1View.setVisibility(View.VISIBLE);
+        drawerLayoutpage2View.setVisibility(View.GONE);
+        drawerLayouPage2Open=false;
     }
 
     /*** FRAGMENT LOADING ***/

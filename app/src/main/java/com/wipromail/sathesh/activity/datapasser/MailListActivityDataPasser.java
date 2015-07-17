@@ -21,4 +21,6 @@ public interface MailListActivityDataPasser {
 
     void setDrawerLayouPage2Open(boolean drawerLayouPage2Open);
 
+    void closeDrawerLayoutPage2();
+
 }

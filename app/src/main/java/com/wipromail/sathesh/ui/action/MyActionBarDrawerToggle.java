@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.wipromail.sathesh.activity.MailListViewActivity;
+import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
@@ -24,10 +25,12 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
     private Activity activity;
     private static boolean opening = true, closing=false;
     private static int existingNavigationBarColor;
+    private MailListActivityDataPasser activityDataPasser;
 
-    public MyActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+    public MyActionBarDrawerToggle(Activity activity, MailListActivityDataPasser activityDataPasser, DrawerLayout drawerLayout, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
         super(activity, drawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
         this.activity = activity;
+        this.activityDataPasser = activityDataPasser;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -97,6 +100,8 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
         if(mailListViewFragment!=null){
             mailListViewFragment.getFab().show();
         }
+
+        activityDataPasser.closeDrawerLayoutPage2();
 
     }
 

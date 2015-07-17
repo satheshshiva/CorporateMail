@@ -105,11 +105,9 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.drawerBackButton:
-                page1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
-                page1View.setVisibility(View.VISIBLE);
-                page2View.setVisibility(View.GONE);
-                activityDataPasser.setDrawerLayouPage2Open(false); //flag for use in the back navigation button
+            case R.id.drawer_back_icon:
+            case R.id.drawer_back_btn:
+                activityDataPasser.closeDrawerLayoutPage2();
                 break;
 
         }

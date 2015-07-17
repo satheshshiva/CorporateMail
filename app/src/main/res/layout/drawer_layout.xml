@@ -8,6 +8,7 @@
 
     <include layout="@layout/drawer_item_header_image" />
 
+    <!-- Main RecyclerView -->
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,20 +23,42 @@
             />
     </FrameLayout>
 
-    <FrameLayout
+    <!-- More Folders RecyclerView-->
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/drawerLayoutPage2"
+        android:orientation="vertical"
         android:visibility="gone">
-        <view
-            class="com.wipromail.sathesh.ui.customwidgets.FontIcon$ButtonView"
-            android:id="@+id/drawerBackButton"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:text="@string/drawer_back"
+            android:orientation="horizontal">
+            <view
+                class="com.wipromail.sathesh.ui.customwidgets.FontIcon$IconView"
+                android:id="@+id/drawer_back_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="18sp"
+                android:paddingRight="35sp"
+                android:text="@string/fontIcon_drawer_back"
+                />
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/drawer_back_btn"
+                android:gravity="start|center_vertical"
+                android:background="@android:color/transparent"
+                android:text="@string/drawer_back"/>
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/moreFoldersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
             />
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>
