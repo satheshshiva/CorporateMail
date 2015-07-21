@@ -21,6 +21,9 @@ import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 import com.wipromail.sathesh.util.Utilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Sathesh on 7/16/15.
  */
@@ -30,8 +33,10 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     private Handler handler;
     private ExchangeService service;
     private MoreFoldersDAO dao;
+    private List<MoreFoldersVO> listVos;
+    private Status currentStatus;
 
-    private enum Status{
+    public enum Status{
         RUNNING,
         FOLDER_RETRIEVED,
         COMPLETED,
@@ -41,7 +46,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     public GetMoreFoldersThread(Context context, Handler handler) {
         this.context = context;
         this.handler = handler;
-
+        listVos = new ArrayList<>();
         this.dao = new MoreFoldersDAO(context);
     }
 
@@ -50,10 +55,9 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
         MoreFoldersVO vo;
         try {
             sendHandlerMsg(Status.RUNNING);
+            listVos.clear();    //clear the vo list on every run
+            this.currentStatus = Status.RUNNING;
             service = EWSConnection.getServiceFromStoredCredentials(this.context);
-
-            //clear the table before populating anything
-            dao.deleteAllRecords();
 
             // call the recursive folder search from the root
             recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot), "MsgFolderRoot");
@@ -61,13 +65,19 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             // one empty row since last folder might hide inside the navigation bar
             vo = new MoreFoldersVO();
             vo.setType(DrawerMenuRowType.MoreFolders.EMPTY_ROW);
-            dao.createOrUpdate(vo);
+            listVos.add(vo);
+
+            //clear the table before populating anything
+            dao.deleteAllRecords();
+            dao.createOrUpdate(listVos);
 
             if (BuildConfig.DEBUG) Log.i(TAG, "RECURSIVE FOLDER PROCESS COMPLETED");
             sendHandlerMsg(Status.COMPLETED);
+            this.currentStatus = Status.COMPLETED;
 
         } catch (Exception e) {
             sendHandlerMsg(Status.ERROR);
+            this.currentStatus = Status.ERROR;
             Utilities.generalCatchBlock(e, this);
         }
     }
@@ -81,7 +91,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
         vo.setType(DrawerMenuRowType.MoreFolders.HEADER);
         vo.setName(folderName);
         vo.setFolder_id(folderId.getUniqueId());
-        dao.createOrUpdate(vo);
+        listVos.add(vo);
 
         //EWS call
         FindFoldersResults findResults =  NetworkCall.getFolders(service, folderId);
@@ -118,7 +128,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
                 vo.setFont_icon(getFontIcon(subFolderDispName, folderName));
                 vo.setFolder_id(subFolder.getId().getUniqueId());
                 vo.setParent_name(folderName);
-                dao.createOrUpdate(vo);
+                listVos.add(vo);
 
             }
 
@@ -184,6 +194,15 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             handler.sendMessage(msgObj);
         }
 
+    }
+
+    /** GETTER SETTER PART **/
+    public Status getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
     }
 }
 

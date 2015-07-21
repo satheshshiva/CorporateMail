@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.ListPreference;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +47,7 @@ import com.wipromail.sathesh.service.data.FileAttachment;
 import com.wipromail.sathesh.service.data.NameResolutionCollection;
 import com.wipromail.sathesh.service.data.ServiceVersionException;
 import com.wipromail.sathesh.threads.service.PullMailNotificationServiceThread;
+import com.wipromail.sathesh.threads.ui.GetMoreFoldersThread;
 import com.wipromail.sathesh.threads.ui.LoadEmailThread;
 import com.wipromail.sathesh.ui.components.ChangePasswordDialog;
 import com.wipromail.sathesh.update.AutoUpdater;
@@ -76,6 +78,8 @@ public class MailApplication implements Constants {
     private static MailApplication mailApplication=null;
     public static Toolbar toolbar;
     private boolean isWrongPwd = false;
+    private static GetMoreFoldersThread getMoreFoldersThread;
+
 
     /** All activities will call this method in the OnCreate to initialize the actionbar toolbar
      *
@@ -789,6 +793,19 @@ public class MailApplication implements Constants {
      */
     public static String getOffice365URL(Context context){
         return context.getString(R.string.webmail_365_url);
+    }
+
+    public static void startGetMoreFoldersThread(MyActivity activity, Handler handler){
+        // if already ran, then restart thread
+         if( getMoreFoldersThread==null
+                || (getMoreFoldersThread!=null  && getMoreFoldersThread.getCurrentStatus() != GetMoreFoldersThread.Status.RUNNING)){
+            getMoreFoldersThread = new GetMoreFoldersThread(activity, handler);
+            getMoreFoldersThread.start();
+        }
+    }
+
+    public static GetMoreFoldersThread getMoreFoldersThread(){
+        return getMoreFoldersThread;
     }
 
 }

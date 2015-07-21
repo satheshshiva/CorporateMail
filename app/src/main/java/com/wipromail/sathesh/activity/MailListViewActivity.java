@@ -34,7 +34,6 @@ import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
-import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 import com.wipromail.sathesh.tools.CacheClear;
@@ -88,6 +87,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     private View drawerLayoutpage1View ;
     private View drawerLayoutpage2View;
+    private TextView emptyRecyclerViewMsg;
 
     public MailListViewActivity(){
         activityInstance = this;
@@ -148,9 +148,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             // Initializing the Drawer Layout
             //Navigation Drawer
             DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO(context);
-            MoreFoldersDAO moreFoldersDAO = new MoreFoldersDAO(context);
+
             List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
-            List<MoreFoldersVO> drawerMenu2List = moreFoldersDAO.getAllRecords();
 
             //Navigation Drawer - main recycler view
             mDrawerListRecyclerView1 = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
@@ -161,7 +160,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             //Navigation Drawer - more folders recycler view
             mDrawerListRecyclerView2 = (RecyclerView) activity.findViewById(R.id.moreFoldersRecyclerView);
             mDrawerListRecyclerView2.setScrollContainer(true);
-            mDrawerListRecyclerView2.setAdapter(new DrawerRecyclerViewMoreFoldersAdapter(this, drawerMenu2List, activityListener));
+            mDrawerListRecyclerView2.setAdapter(new DrawerRecyclerViewMoreFoldersAdapter(this, activityListener));
             mDrawerListRecyclerView2.setLayoutManager(new LinearLayoutManager(context));
 
             //controls
@@ -175,6 +174,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
             drawerLayoutpage1View =  activity.findViewById(R.id.drawerLayoutPage1);
             drawerLayoutpage2View =  activity.findViewById(R.id.drawerLayoutPage2);
+
+            emptyRecyclerViewMsg = (TextView)findViewById(R.id.emptyRecyclerViewMsg);
 
             //Navigation Drawer Slider Listener
 
@@ -397,6 +398,23 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
         currentlyLoadedFragment = fragment;
+    }
+
+    // refreshes the more folders recycler view in the drawer list
+    @Override
+    public void refreshDrawerListRecyclerView2() throws Exception {
+        // refresh the vos before calling notifydata set changed
+        List<MoreFoldersVO> moreFoldersVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateVO();
+        if(moreFoldersVOs!=null && moreFoldersVOs.size() > 1) {
+            getmDrawerListRecyclerView2().setVisibility(View.VISIBLE);
+            emptyRecyclerViewMsg.setVisibility(View.GONE);
+            //refresh the list
+            getmDrawerListRecyclerView2().getAdapter().notifyDataSetChanged();
+        }
+        else{
+            emptyRecyclerViewMsg.setVisibility(View.VISIBLE);
+            getmDrawerListRecyclerView2().setVisibility(View.GONE);
+        }
     }
 
     /** GETTER SETTER PART **/
