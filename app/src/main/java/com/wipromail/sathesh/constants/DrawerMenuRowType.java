@@ -23,6 +23,7 @@ public interface DrawerMenuRowType {
     interface MoreFolders {
         int HEADER=1;
         int FOLDER=2;
+        int EMPTY_ROW=1010;
 
     }
 }

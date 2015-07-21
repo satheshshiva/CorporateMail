@@ -24,7 +24,6 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewMoreFoldersAdapter;
-import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
@@ -353,7 +352,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
     @Override
     public void closeDrawerLayoutPage2(){
-        drawerLayoutpage1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
+     //   drawerLayoutpage1View.setAnimation(ApplyAnimation.getDrawerLayoutPage1InAnimation(activity));
         drawerLayoutpage1View.setVisibility(View.VISIBLE);
         drawerLayoutpage2View.setVisibility(View.GONE);
         drawerLayouPage2Open=false;
