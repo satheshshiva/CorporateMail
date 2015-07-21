@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
+import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     private OnRecyclerViewClick2Listener listener;
     private List<MoreFoldersVO> drawerMenuVOList;
     private MailListActivityDataPasser activity;
+    private MoreFoldersDAO moreFoldersDAO;
 
     /**
      * Interface for receiving click events from cells.
@@ -32,11 +35,10 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     }
 
     // Constructor
-    public DrawerRecyclerViewMoreFoldersAdapter(final MailListActivityDataPasser activity, List<MoreFoldersVO> drawerMenuVOList, OnRecyclerViewClick2Listener listener) {
+    public DrawerRecyclerViewMoreFoldersAdapter(final MailListActivityDataPasser activity, OnRecyclerViewClick2Listener listener) {
         this.listener = listener;
-
-        this.drawerMenuVOList=drawerMenuVOList;
         this.activity = activity;
+        this.moreFoldersDAO = new MoreFoldersDAO((MyActivity)activity);
 
     }
 
@@ -156,5 +158,14 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     @Override
     public int getItemViewType(int position) {
        return drawerMenuVOList.get(position).getType();
+    }
+
+    /** Private method for updating local VOs. Should be called before every notifydataSetChanged.
+     *
+     */
+    public List<MoreFoldersVO> updateVO() throws Exception {
+        this.drawerMenuVOList = moreFoldersDAO.getAllRecords();
+        return drawerMenuVOList;
+
     }
 }
