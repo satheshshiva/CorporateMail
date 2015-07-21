@@ -4,6 +4,7 @@
 package com.wipromail.sathesh.ui.listeners;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.view.View;
 
 import com.wipromail.sathesh.R;
@@ -18,6 +19,7 @@ import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
+import com.wipromail.sathesh.threads.ui.GetMoreFoldersThread;
 
 /**
  * @author sathesh
@@ -27,7 +29,6 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
     private MailListActivityDataPasser activityDataPasser;
     private MyActivity activity;
-    private DrawerMenuVO drawerMenuVO;
     private View page1View ;
     private View page2View;
 
@@ -42,13 +43,11 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
     public void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO) {
         Intent intent;
 
-        this.drawerMenuVO = drawerMenuVO;
-
         switch(drawerMenuVO.getType()){
             case DrawerMenuRowType.INBOX:
             case DrawerMenuRowType.DRAFTS:
                 activityDataPasser.getmDrawerLayout().closeDrawers();
-                activityDataPasser.loadMailListViewFragment(drawerMenuVO.getType(), drawerMenuVO.getMenu_name(), null);
+                activityDataPasser.loadMailListViewFragment(drawerMenuVO.getType(), drawerMenuVO.getName(), null);
                 break;
             case DrawerMenuRowType.SENT_ITEMS:
                 activityDataPasser.getmDrawerLayout().closeDrawers();
@@ -59,15 +58,29 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
                 activityDataPasser.loadMailListViewFragment(drawerMenuVO.getType(), WellKnownFolderName.DeletedItems.toString(), null);
                 break;
             case DrawerMenuRowType.MORE_FOLDERS:
+                //hide the first recycler view
                 page1View.setVisibility(View.GONE);
+                //show the second recycler view with animation
                 page2View.setAnimation(ApplyAnimation.getDrawerLayoutPage2InAnimation(activity));
                 page2View.setVisibility(View.VISIBLE);
+
+                // reset the scroll position for the second recycler view if there was a selected item
+                if(!(activityDataPasser.getDrawerLayoutSelectedPosition2() > -1)) {
+                    activityDataPasser.getmDrawerListRecyclerView2().scrollToPosition(0);
+                }
+
+                // starts a seperate thread for storing the all folders table
+                Thread t = new GetMoreFoldersThread(activity, new Handler());
+                t.start();
+
                 activityDataPasser.setDrawerLayouPage2Open(true);   //flag for use in the back navigation button
+                activityDataPasser.setDrawerLayoutSelectedPosition(-1);
+                activityDataPasser.getmDrawerListRecyclerView2().getAdapter().notifyDataSetChanged();
                 break;
 
             case DrawerMenuRowType.FAVOURITE_FOLDERS:
                 activityDataPasser.getmDrawerLayout().closeDrawers();
-                activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, drawerMenuVO.getMenu_name(), drawerMenuVO.getFolder_id());
+                activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, drawerMenuVO.getName(), drawerMenuVO.getFolder_id());
                 break;
 
             case DrawerMenuRowType.SEARCH_CONTACT:
@@ -90,33 +103,46 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
                 //usuaully header will come here. do nothing.
                 break;
         }
-        // for setting we should nothightlight the row
-        if(drawerMenuVO.getType() != DrawerMenuRowType.SETTINGS){
+
+        //update the selected position
+        // since setting will open in a seperate activity we are not updating for it
+        if(drawerMenuVO.getType() != DrawerMenuRowType.SETTINGS && drawerMenuVO.getType() != DrawerMenuRowType.MORE_FOLDERS){
             activityDataPasser.setDrawerLayoutSelectedPosition(position);
+            activityDataPasser.setDrawerLayoutSelectedPosition2(-1);
         }
-    }
-
-    public DrawerMenuVO getDrawerMenuVO() {
-        return drawerMenuVO;
-    }
-
-    public void setDrawerMenuVO(DrawerMenuVO drawerMenuVO) {
-        this.drawerMenuVO = drawerMenuVO;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
+            ///back button is pressed in the drawer layout
             case R.id.drawer_back_icon:
             case R.id.drawer_back_btn:
+            case R.id.drawer_back_layout:
                 activityDataPasser.closeDrawerLayoutPage2();
                 break;
 
         }
     }
 
+    /** Second Recycler View in the Drawer list.. On click events handler
+     *
+     * @param view
+     * @param position
+     * @param moreFoldersVO
+     */
     @Override
-    public void onDrawerLayoutRecyclerView2Click(View view, int position, MoreFoldersVO drawerMenuVO) {
+    public void onDrawerLayoutRecyclerView2Click(View view, int position, MoreFoldersVO moreFoldersVO) {
+        switch(moreFoldersVO.getType()) {
+
+            case DrawerMenuRowType.MoreFolders.HEADER:
+                break;
+            case DrawerMenuRowType.MoreFolders.FOLDER:
+                activityDataPasser.getmDrawerLayout().closeDrawers();
+                activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, moreFoldersVO.getName(), moreFoldersVO.getFolder_id());
+                break;
+        }
+        activityDataPasser.setDrawerLayoutSelectedPosition2(position);
 
     }
 }

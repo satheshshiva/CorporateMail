@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.BuildConfig;
@@ -70,7 +71,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private Context context;
     private boolean appUpdateAvailble=false;
 
-    private int drawerLayoutSelectedPosition=0;
+    private int drawerLayoutSelectedPosition=0, drawerLayoutSelectedPosition2=-1;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private  AboutFragmentDataPasser aboutFragment;
@@ -82,6 +83,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private RecyclerView mDrawerListRecyclerView1, mDrawerListRecyclerView2;
     private FontIcon.IconView drawerBackButton;
     private Button drawerBackButton1;
+    private LinearLayout drawer_back_layout;
     private final String STATE_DRAWER_MENU_HIGHTLIGHTED="stateDrawerMenuHighlighted";
     private boolean drawerLayouPage2Open=false; //flag for use in the back navigation button
 
@@ -165,8 +167,10 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
             //controls
             mDrawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+            drawer_back_layout = (LinearLayout) activity.findViewById(R.id.drawer_back_layout);
             drawerBackButton = (FontIcon.IconView) findViewById(R.id.drawer_back_icon);
             drawerBackButton1 = (Button) findViewById(R.id.drawer_back_btn);
+            drawer_back_layout.setOnClickListener(activityListener);
             drawerBackButton.setOnClickListener(activityListener);
             drawerBackButton1.setOnClickListener(activityListener);
 
@@ -413,6 +417,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     public void setmDrawerToggle(ActionBarDrawerToggle mDrawerToggle) {
         this.mDrawerToggle = mDrawerToggle;
     }
+    @Override
     public int getDrawerLayoutSelectedPosition() {
         return drawerLayoutSelectedPosition;
     }
@@ -437,4 +442,25 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     public void setDrawerLayouPage2Open(boolean drawerLayouPage2Open) {
         this.drawerLayouPage2Open = drawerLayouPage2Open;
     }
+
+    @Override
+    public int getDrawerLayoutSelectedPosition2() {
+        return drawerLayoutSelectedPosition2;
+    }
+
+    @Override
+    public void setDrawerLayoutSelectedPosition2(int drawerLayoutSelectedPosition2) {
+        this.drawerLayoutSelectedPosition2 = drawerLayoutSelectedPosition2;
+    }
+
+    @Override
+    public RecyclerView getmDrawerListRecyclerView1() {
+        return mDrawerListRecyclerView1;
+    }
+
+    @Override
+    public RecyclerView getmDrawerListRecyclerView2() {
+        return mDrawerListRecyclerView2;
+    }
+
 }

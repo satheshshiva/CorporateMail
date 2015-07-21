@@ -21,7 +21,7 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 	private static String tableName = table.DRAWER_MENU;
 	
 	public static final String COLUMN_ID = "ID";
-    public static final String COLUMN_MENU_NAME = "MENU_NAME";
+    public static final String COLUMN_NAME = "NAME";
     public static final String COLUMN_FOLDER_ID = "FOLDER_ID";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_FONT_ICON = "FONT_ICON";
@@ -31,7 +31,7 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 		return "CREATE TABLE "
 				+ tableName + "(" 
 				+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_MENU_NAME + " TEXT,"
+                + COLUMN_NAME + " TEXT,"
                 + COLUMN_FOLDER_ID + " TEXT,"
 				+ COLUMN_TYPE + " INTEGER,"
                 + COLUMN_FONT_ICON + " TEXT"
@@ -47,7 +47,7 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 	 */
 	@Override
 	public List<String> getNewTableQueries(Context context) {
-        String sql1="INSERT INTO " + tableName + " (" + COLUMN_MENU_NAME + " ," + COLUMN_TYPE + " ," + COLUMN_FONT_ICON + ") VALUES ('";
+        String sql1="INSERT INTO " + tableName + " (" + COLUMN_NAME + " ," + COLUMN_TYPE + " ," + COLUMN_FONT_ICON + ") VALUES ('";
         List insertQueries =new ArrayList<String>();
         //adding Inbox Menu
         insertQueries.add(sql1 + context.getString(R.string.drawer_menu_inbox)+ "' ," + DrawerMenuRowType.INBOX+ " , '" + context.getString(R.string.fontIcon_drawer_inbox)+ "');");

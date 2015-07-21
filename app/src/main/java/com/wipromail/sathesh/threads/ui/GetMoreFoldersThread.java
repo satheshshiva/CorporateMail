@@ -7,7 +7,9 @@ import android.os.Message;
 import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
+import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.ews.EWSConnection;
 import com.wipromail.sathesh.ews.NetworkCall;
 import com.wipromail.sathesh.service.data.ExchangeService;
@@ -45,6 +47,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
 
     @Override
     public void run() {
+        MoreFoldersVO vo;
         try {
             sendHandlerMsg(Status.RUNNING);
             service = EWSConnection.getServiceFromStoredCredentials(this.context);
@@ -55,12 +58,16 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             // call the recursive folder search from the root
             recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot), "MsgFolderRoot");
 
-            if(BuildConfig.DEBUG) Log.i(TAG, "RECURSIVE FOLDER PROCESS COMPLETED");
+            // one empty row since last folder might hide inside the navigation bar
+            vo = new MoreFoldersVO();
+            dao.createOrUpdate(vo);
+
+            if (BuildConfig.DEBUG) Log.i(TAG, "RECURSIVE FOLDER PROCESS COMPLETED");
             sendHandlerMsg(Status.COMPLETED);
 
         } catch (Exception e) {
             sendHandlerMsg(Status.ERROR);
-            Utilities.generalCatchBlock(e,this);
+            Utilities.generalCatchBlock(e, this);
         }
     }
 
@@ -70,7 +77,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
 
         if(BuildConfig.DEBUG) Log.i(TAG, "PROCESSING FOLDER " + folderName);
         vo = new MoreFoldersVO();
-        vo.setIs_header(true);
+        vo.setType(DrawerMenuRowType.MoreFolders.HEADER);
         vo.setName(folderName);
         vo.setFolder_id(folderId.getUniqueId());
         dao.createOrUpdate(vo);
@@ -105,8 +112,9 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
                 if(BuildConfig.DEBUG) Log.i(TAG, "Folder id=======" + subFolder.getId().getUniqueId());
 
                 vo = new MoreFoldersVO();
-                vo.setIs_header(false);
+                vo.setType(DrawerMenuRowType.MoreFolders.FOLDER);
                 vo.setName(subFolderDispName);
+                vo.setFont_icon(getFontIcon(subFolderDispName, folderName));
                 vo.setFolder_id(subFolder.getId().getUniqueId());
                 vo.setParent_name(folderName);
                 dao.createOrUpdate(vo);
@@ -136,6 +144,30 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
                 }
             }
         }
+    }
+
+    /** private method for getting the font icon for the folder
+      *
+     * @param folderDispName
+     */
+    private String getFontIcon(String folderDispName, String parentFolderName) {
+
+        //assign the inbox icon for the subfolders also
+
+        if(folderDispName.equalsIgnoreCase("Junk E-mail"))
+            return context.getString(R.string.fontIcon_drawer_junk_email);
+        if(folderDispName.equalsIgnoreCase("Clutter"))
+            return context.getString(R.string.fontIcon_drawer_clutter);
+        if(folderDispName.equalsIgnoreCase("Outbox"))
+            return context.getString(R.string.fontIcon_drawer_outbox);
+
+        if(parentFolderName.equalsIgnoreCase("Inbox"))
+            return context.getString(R.string.fontIcon_drawer_inbox);
+        if(parentFolderName.equalsIgnoreCase("MsgFolderRoot"))
+            return context.getString(R.string.fontIcon_drawer_inbox);
+        //default more folder icon
+        return context.getString(R.string.fontIcon_drawer_folder);
+
     }
 
     /** Private method for bundling the message and sending it to the handler

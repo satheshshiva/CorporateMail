@@ -20,21 +20,21 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 	//COLUMN_FIELDNAME=FIELDNAME=Actual database column name = vo.variable_name
 	public static final String COLUMN_ID = "ID";
 	public static final String COLUMN_FOLDER_NAME = "NAME";
-	public static final String COLUMN__PARENT_NAME = "PARENT_NAME";
-	public static final String COLUMN__FOLDER_ID = "FOLDER_ID";
-	public static final String COLUMN__IS_HEADER = "IS_HEADER";
-	public static final String COLUMN_ORDERING = "ORDERING";
+	public static final String COLUMN_PARENT_NAME = "PARENT_NAME";
+	public static final String COLUMN_FOLDER_ID = "FOLDER_ID";
+	public static final String COLUMN_FONT_ICON = "FONT_ICON";
+	public static final String COLUMN_TYPE = "TYPE";
 
 	@Override
 	public String getCreateQuery(Context context){
 		return "CREATE TABLE "
 				+ tableName + "(" 
 				+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-				+ COLUMN_FOLDER_NAME + " TEXT NOT NULL,"
-				+ COLUMN__PARENT_NAME + " TEXT, "
-				+ COLUMN__FOLDER_ID + " TEXT, "
-				+ COLUMN__IS_HEADER + " TEXT, "
-				+ COLUMN_ORDERING + " INTEGER"
+				+ COLUMN_FOLDER_NAME + " TEXT,"
+				+ COLUMN_PARENT_NAME + " TEXT, "
+				+ COLUMN_FOLDER_ID + " TEXT, "
+				+ COLUMN_TYPE + " INTEGER,"
+				+ COLUMN_FONT_ICON + " TEXT "
 				+");";
 	}
 	

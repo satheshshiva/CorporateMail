@@ -42,7 +42,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup viewGroup, int viewType) {
         LayoutInflater vi = LayoutInflater.from(viewGroup.getContext());
-        View view=null;
+        View view;
         switch(viewType) {
             default:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
@@ -59,13 +59,13 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
         switch(holder.viewType) {
             default:
                 holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
-               // holder.fontIconView.setText(drawerMenuVO.getFont_icon());
+                holder.fontIconView.setText(drawerMenuVO.getFont_icon());
 
                 // setting row on click listener
                 if (holder.view != null) {
 
                     // Highlight the row if its a selected position
-                    if ( activity.getDrawerLayoutSelectedPosition() == position) {
+                    if ( activity.getDrawerLayoutSelectedPosition2() == position) {
                         //selected row
                         holder.itemView.setBackgroundColor(((Activity)activity).getResources().getColor(R.color.LightGrey));
                         //font icon
@@ -132,7 +132,6 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-       // return drawerMenuVOList.get(position).getType();
-        return 0;
+       return drawerMenuVOList.get(position).getType();
     }
 }

@@ -6,17 +6,17 @@ import java.io.Serializable;
  * Created by Sathesh on 5/9/15.
  */
 public class DrawerMenuVO  implements PojoVO, Serializable {
-    private String menu_name;
+    private String name;
     private String folder_id;
     private int type;
     private String font_icon;
 
-    public String getMenu_name() {
-        return menu_name;
+    public String getName() {
+        return name;
     }
 
-    public void setMenu_name(String menu_name) {
-        this.menu_name = menu_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getFolder_id() {
