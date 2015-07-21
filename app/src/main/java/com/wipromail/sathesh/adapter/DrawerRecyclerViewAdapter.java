@@ -58,7 +58,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
         switch(holder.viewType) {
             default:
-                holder.mailFolderNameTextView.setText(drawerMenuVO.getMenu_name());
+                holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
                 holder.fontIconView.setText(drawerMenuVO.getFont_icon());
 
                 // setting row on click listener

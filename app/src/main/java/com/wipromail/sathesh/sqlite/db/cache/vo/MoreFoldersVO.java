@@ -9,8 +9,8 @@ public class MoreFoldersVO implements PojoVO, Serializable {
     private String name;
     private String parent_name;
     private String folder_id;
-    private boolean is_header;
-    private int ordering;
+    private int type;
+    private String font_icon;
 
     public String getName() {
         return name;
@@ -36,20 +36,20 @@ public class MoreFoldersVO implements PojoVO, Serializable {
         this.folder_id = folder_id;
     }
 
-    public boolean is_header() {
-        return is_header;
+    public String getFont_icon() {
+        return font_icon;
     }
 
-    public void setIs_header(boolean is_header) {
-        this.is_header = is_header;
+    public void setFont_icon(String font_icon) {
+        this.font_icon = font_icon;
     }
 
-    public int getOrdering() {
-        return ordering;
+    public int getType() {
+        return type;
     }
 
-    public void setOrdering(int ordering) {
-        this.ordering = ordering;
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override
@@ -58,8 +58,8 @@ public class MoreFoldersVO implements PojoVO, Serializable {
         sb.append("name='").append(name).append('\'');
         sb.append(", parent_name='").append(parent_name).append('\'');
         sb.append(", folder_id='").append(folder_id).append('\'');
-        sb.append(", is_header=").append(is_header);
-        sb.append(", ordering=").append(ordering);
+        sb.append(", type=").append(type);
+        sb.append(", font_icon='").append(font_icon).append('\'');
         sb.append('}');
         return sb.toString();
     }
