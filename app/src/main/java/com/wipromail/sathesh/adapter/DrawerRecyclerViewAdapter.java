@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.constants.Constants;
+import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 
 import java.util.List;
@@ -44,6 +45,10 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         LayoutInflater vi = LayoutInflater.from(viewGroup.getContext());
         View view=null;
         switch(viewType) {
+            case DrawerMenuRowType.CONTACTS_HEADER:
+            case DrawerMenuRowType.FAVOURITES_HEADER:
+                view = vi.inflate(R.layout.drawer_header_row, viewGroup, false);
+                break;
             default:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
                 break;
@@ -57,6 +62,20 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         final DrawerMenuVO drawerMenuVO = drawerMenuVOList.get(position);
 
         switch(holder.viewType) {
+
+            case DrawerMenuRowType.CONTACTS_HEADER:
+            case DrawerMenuRowType.FAVOURITES_HEADER:
+                //for header row
+                holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
+                break;
+
+            //for empty clear everthing
+            case DrawerMenuRowType.EMPTY_ROW:
+                holder.mailFolderNameTextView.setText("");
+                holder.fontIconView.setText("");
+                break;
+
+            //for item row
             default:
                 holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
                 holder.fontIconView.setText(drawerMenuVO.getFont_icon());

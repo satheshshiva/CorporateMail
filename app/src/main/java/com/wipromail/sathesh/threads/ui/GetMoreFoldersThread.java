@@ -60,6 +60,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
 
             // one empty row since last folder might hide inside the navigation bar
             vo = new MoreFoldersVO();
+            vo.setType(DrawerMenuRowType.MoreFolders.EMPTY_ROW);
             dao.createOrUpdate(vo);
 
             if (BuildConfig.DEBUG) Log.i(TAG, "RECURSIVE FOLDER PROCESS COMPLETED");
