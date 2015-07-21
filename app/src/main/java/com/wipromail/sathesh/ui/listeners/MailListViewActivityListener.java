@@ -10,18 +10,20 @@ import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.MyPreferencesActivity;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
+import com.wipromail.sathesh.adapter.DrawerRecyclerViewMoreFoldersAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 
 /**
  * @author sathesh
  *
  */
-public class MailListViewActivityListener implements  Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener, View.OnClickListener {
+public class MailListViewActivityListener implements  Constants, DrawerRecyclerViewAdapter.OnRecyclerViewClickListener, DrawerRecyclerViewMoreFoldersAdapter.OnRecyclerViewClick2Listener, View.OnClickListener {
 
     private MailListActivityDataPasser activityDataPasser;
     private MyActivity activity;
@@ -111,5 +113,10 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
                 break;
 
         }
+    }
+
+    @Override
+    public void onDrawerLayoutRecyclerView2Click(View view, int position, MoreFoldersVO drawerMenuVO) {
+
     }
 }

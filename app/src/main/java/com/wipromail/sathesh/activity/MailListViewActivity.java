@@ -22,6 +22,7 @@ import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.adapter.DrawerRecyclerViewAdapter;
+import com.wipromail.sathesh.adapter.DrawerRecyclerViewMoreFoldersAdapter;
 import com.wipromail.sathesh.animation.ApplyAnimation;
 import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
@@ -33,7 +34,9 @@ import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
+import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.customwidgets.FontIcon;
@@ -144,7 +147,9 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             // Initializing the Drawer Layout
             //Navigation Drawer
             DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO(context);
+            MoreFoldersDAO moreFoldersDAO = new MoreFoldersDAO(context);
             List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
+            List<MoreFoldersVO> drawerMenu2List = moreFoldersDAO.getAllRecords();
 
             //Navigation Drawer - main recycler view
             mDrawerListRecyclerView1 = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
@@ -155,7 +160,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             //Navigation Drawer - more folders recycler view
             mDrawerListRecyclerView2 = (RecyclerView) activity.findViewById(R.id.moreFoldersRecyclerView);
             mDrawerListRecyclerView2.setScrollContainer(true);
-            mDrawerListRecyclerView2.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
+            mDrawerListRecyclerView2.setAdapter(new DrawerRecyclerViewMoreFoldersAdapter(this, drawerMenu2List, activityListener));
             mDrawerListRecyclerView2.setLayoutManager(new LinearLayoutManager(context));
 
             //controls
