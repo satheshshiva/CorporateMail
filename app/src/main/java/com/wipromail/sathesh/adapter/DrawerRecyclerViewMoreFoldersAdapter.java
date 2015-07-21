@@ -11,27 +11,27 @@ import android.widget.TextView;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 
 import java.util.List;
 
 /**
- * Main Drawer Menu adapter
+ * More Folders Drawer Menu adapter
  */
-public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> implements Constants{
-    private OnRecyclerViewClickListener listener;
-    private List<DrawerMenuVO> drawerMenuVOList;
+public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<DrawerRecyclerViewMoreFoldersAdapter.ViewHolder> implements Constants{
+    private OnRecyclerViewClick2Listener listener;
+    private List<MoreFoldersVO> drawerMenuVOList;
     private MailListActivityDataPasser activity;
 
     /**
      * Interface for receiving click events from cells.
      */
-    public interface OnRecyclerViewClickListener {
-        void onDrawerLayoutRecyclerViewClick(View view, int position, DrawerMenuVO drawerMenuVO);
+    public interface OnRecyclerViewClick2Listener {
+        void onDrawerLayoutRecyclerView2Click(View view, int position, MoreFoldersVO drawerMenuVO);
     }
 
     // Constructor
-    public DrawerRecyclerViewAdapter(final MailListActivityDataPasser activity, List<DrawerMenuVO> drawerMenuVOList, OnRecyclerViewClickListener listener) {
+    public DrawerRecyclerViewMoreFoldersAdapter(final MailListActivityDataPasser activity, List<MoreFoldersVO> drawerMenuVOList, OnRecyclerViewClick2Listener listener) {
         this.listener = listener;
 
         this.drawerMenuVOList=drawerMenuVOList;
@@ -54,12 +54,12 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final DrawerMenuVO drawerMenuVO = drawerMenuVOList.get(position);
+        final MoreFoldersVO drawerMenuVO = drawerMenuVOList.get(position);
 
         switch(holder.viewType) {
             default:
-                holder.mailFolderNameTextView.setText(drawerMenuVO.getMenu_name());
-                holder.fontIconView.setText(drawerMenuVO.getFont_icon());
+                holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
+               // holder.fontIconView.setText(drawerMenuVO.getFont_icon());
 
                 // setting row on click listener
                 if (holder.view != null) {
@@ -93,7 +93,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                         public void onClick(View view) {
                             //here you inform view that something was change - view will be invalidated
                             notifyDataSetChanged();
-                            listener.onDrawerLayoutRecyclerViewClick(view, position, drawerMenuVO);
+                            listener.onDrawerLayoutRecyclerView2Click(view, position, drawerMenuVO);
                         }
                     });
                 }
@@ -132,6 +132,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-        return drawerMenuVOList.get(position).getType();
+       // return drawerMenuVOList.get(position).getType();
+        return 0;
     }
 }
