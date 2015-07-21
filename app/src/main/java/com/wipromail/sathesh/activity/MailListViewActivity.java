@@ -34,7 +34,6 @@ import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
@@ -149,12 +148,10 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             //Navigation Drawer
             DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO(context);
 
-            List<DrawerMenuVO> drawerMenuList = drawerMenuDAO.getAllRecords();
-
             //Navigation Drawer - main recycler view
             mDrawerListRecyclerView1 = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
             mDrawerListRecyclerView1.setScrollContainer(true);
-            mDrawerListRecyclerView1.setAdapter(new DrawerRecyclerViewAdapter(this, drawerMenuList, activityListener));
+            mDrawerListRecyclerView1.setAdapter(new DrawerRecyclerViewAdapter(this, activityListener));
             mDrawerListRecyclerView1.setLayoutManager(new LinearLayoutManager(context));
 
             //Navigation Drawer - more folders recycler view

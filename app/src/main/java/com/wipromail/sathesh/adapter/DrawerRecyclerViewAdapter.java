@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
+import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
+import com.wipromail.sathesh.util.Utilities;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     private OnRecyclerViewClickListener listener;
     private List<DrawerMenuVO> drawerMenuVOList;
     private MailListActivityDataPasser activity;
+    private DrawerMenuDAO drawerMenuDAO;
 
     /**
      * Interface for receiving click events from cells.
@@ -32,12 +36,17 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     }
 
     // Constructor
-    public DrawerRecyclerViewAdapter(final MailListActivityDataPasser activity, List<DrawerMenuVO> drawerMenuVOList, OnRecyclerViewClickListener listener) {
+    public DrawerRecyclerViewAdapter(final MailListActivityDataPasser activity, OnRecyclerViewClickListener listener) {
         this.listener = listener;
-
-        this.drawerMenuVOList=drawerMenuVOList;
         this.activity = activity;
 
+        this.drawerMenuDAO = new DrawerMenuDAO((MyActivity) activity);
+
+        try {
+            updateVO();
+        } catch (Exception e) {
+            Utilities.generalCatchBlock(e,this);
+        }
     }
 
     @Override
@@ -152,5 +161,14 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     @Override
     public int getItemViewType(int position) {
         return drawerMenuVOList.get(position).getType();
+    }
+
+    /** Private method for updating local VOs. Should be called before every notifydataSetChanged.
+     *
+     */
+    public List<DrawerMenuVO> updateVO() throws Exception {
+        this.drawerMenuVOList = drawerMenuDAO.getAllRecords();
+        return drawerMenuVOList;
+
     }
 }

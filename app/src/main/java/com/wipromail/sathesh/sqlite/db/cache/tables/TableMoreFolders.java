@@ -23,6 +23,7 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 	public static final String COLUMN_PARENT_NAME = "PARENT_NAME";
 	public static final String COLUMN_FOLDER_ID = "FOLDER_ID";
 	public static final String COLUMN_FONT_ICON = "FONT_ICON";
+	public static final String COLUMN_IS_FAVE = "IS_FAVE";
 	public static final String COLUMN_TYPE = "TYPE";
 
 	@Override
@@ -34,6 +35,7 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 				+ COLUMN_PARENT_NAME + " TEXT, "
 				+ COLUMN_FOLDER_ID + " TEXT, "
 				+ COLUMN_TYPE + " INTEGER,"
+				+ COLUMN_IS_FAVE + " TEXT,"
 				+ COLUMN_FONT_ICON + " TEXT "
 				+");";
 	}
@@ -49,7 +51,15 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 	public static String getAllRecordsQuery(){
 		return "SELECT * from " + tableName  ;
 	}
-	
+
+	/** UPDATE QUERY
+	 * @return
+	 */
+	public static String updateRecordsQuery(){
+		return "UPDATE * from " + tableName  ;
+	}
+
+
 	/** DELETE QUERY
 	 * @return
 	 */
@@ -57,6 +67,10 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 		return "DELETE from " + tableName ;
 	}
 
+	/** WHERE CLAUSE **/
+	public static String getWhereForUpdateQuery() {
+		return COLUMN_FOLDER_ID + "=?";
+	}
 	
 	/* These queries will be executed when the table is newly created in the database. 
 	 * The default records which needs to be inserted can be mentioned here (like default settings record for settings table or trial data for development)
@@ -68,5 +82,6 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 		//queries.add("INSERT INTO " + tableName + " VALUES('','asd', ' asd')");
 		return queries;
 	}
-	
+
+
 }

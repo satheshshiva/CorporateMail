@@ -66,6 +66,19 @@ public class MoreFoldersDAO extends BaseCacheDAO {
         return insertId;
     }
 
+    /*** UPDATE QUERIES ***/
+    public long update(MoreFoldersVO vo) throws Exception {
+        long insertId=0;
+        try{
+            open(cacheDbHelper);
+            insertId= updateVOInDB(vo);
+        }
+        finally{
+            close(cacheDbHelper);
+        }
+        return insertId;
+    }
+
     /*** SELECT QUERIES ***/
 
     /** Get all records
@@ -111,5 +124,14 @@ public class MoreFoldersDAO extends BaseCacheDAO {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
         return database.insertWithOnConflict(CacheDbConstants.table.MORE_FOLDERS, null,
                 values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    /** private function which calls the update query for a single VO
+     *
+     */
+    private long updateVOInDB(MoreFoldersVO vo) {
+        ContentValues values = autoMapVoToContentValues(vo,tableClass);
+        return database.update(CacheDbConstants.table.MORE_FOLDERS,
+                values, TableMoreFolders.getWhereForUpdateQuery(), new String[]{vo.getFolder_id()});
     }
 }

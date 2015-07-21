@@ -36,4 +36,17 @@
         android:textSize="14sp"
         />
 
+    <!-- Fave icon -->
+    <view
+        class="com.wipromail.sathesh.ui.customwidgets.FontIcon$IconView"
+        android:id="@+id/fontIconViewFave"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10sp"
+        android:textSize="13sp"
+        android:gravity="center_vertical"
+        android:text="@string/fontIcon_drawer_fave_off"
+        android:layout_marginLeft="16dp"
+        />
 </RelativeLayout>
