@@ -121,14 +121,22 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            ///back button is pressed in the drawer layout
-            case R.id.drawer_back_icon:
-            case R.id.drawer_back_btn:
-            case R.id.drawer_back_layout:
-                activityDataPasser.closeDrawerLayoutPage2();
-                break;
+        try {
+            switch (v.getId()) {
+                ///back button is pressed in the drawer layout
+                case R.id.drawer_back_icon:
+                case R.id.drawer_back_btn:
+                case R.id.drawer_back_layout:
+                    //update the datasets
+                    ((DrawerRecyclerViewAdapter) activityDataPasser.getmDrawerListRecyclerView1().getAdapter()).updateVO();
+                    //call notify data set changed. to update if there is any change in the faves
+                    activityDataPasser.getmDrawerListRecyclerView1().getAdapter().notifyDataSetChanged();
+                    activityDataPasser.closeDrawerLayoutPage2();
+                    break;
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

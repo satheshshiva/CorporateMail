@@ -13,8 +13,11 @@ import com.wipromail.sathesh.activity.datapasser.MailListActivityDataPasser;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
+import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
+import com.wipromail.sathesh.util.Utilities;
 
 import java.util.List;
 
@@ -25,6 +28,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     private OnRecyclerViewClick2Listener listener;
     private List<MoreFoldersVO> drawerMenuVOList;
     private MailListActivityDataPasser activity;
+    private DrawerMenuDAO drawerMenuDAO;
     private MoreFoldersDAO moreFoldersDAO;
 
     /**
@@ -38,7 +42,13 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     public DrawerRecyclerViewMoreFoldersAdapter(final MailListActivityDataPasser activity, OnRecyclerViewClick2Listener listener) {
         this.listener = listener;
         this.activity = activity;
+        this.drawerMenuDAO = new DrawerMenuDAO((MyActivity) activity);
         this.moreFoldersDAO = new MoreFoldersDAO((MyActivity)activity);
+        try {
+            updateVO();
+        } catch (Exception e) {
+            Utilities.generalCatchBlock(e, this);
+        }
 
     }
 
@@ -53,7 +63,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                 break;
             default:
                 //for item row load this layout
-                view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
+                view = vi.inflate(R.layout.drawer_item_row_more_folders, viewGroup, false);
                 break;
         }
         return new ViewHolder(view, viewType);
@@ -62,29 +72,31 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final MoreFoldersVO drawerMenuVO = drawerMenuVOList.get(position);
+        final MoreFoldersVO moreFoldersVO = drawerMenuVOList.get(position);
 
         switch(holder.viewType) {
+            // for header
             case DrawerMenuRowType.MoreFolders.HEADER:
                 //for header row
-                if(drawerMenuVO.getName().equalsIgnoreCase("MsgFolderRoot")){
+                if(moreFoldersVO.getName().equalsIgnoreCase("MsgFolderRoot")){
                     // for root display text "More Folders"
                     holder.mailFolderNameTextView.setText(activity.getString(R.string.drawer_menu_more_folders));
                 }
                 else {
-                    holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
+                    holder.mailFolderNameTextView.setText(moreFoldersVO.getName());
                 }
                 break;
 
-            //for empty clear everthing
+            //for empty clear contents of the row
             case DrawerMenuRowType.EMPTY_ROW:
                 holder.mailFolderNameTextView.setText("");
                 holder.fontIconView.setText("");
                 break;
 
+            //normal item row
             default:
-                holder.mailFolderNameTextView.setText(drawerMenuVO.getName());
-                holder.fontIconView.setText(drawerMenuVO.getFont_icon());
+                holder.mailFolderNameTextView.setText(moreFoldersVO.getName());
+                holder.fontIconView.setText(moreFoldersVO.getFont_icon());
 
                 // setting row on click listener
                 if (holder.view != null) {
@@ -118,7 +130,37 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                         public void onClick(View view) {
                             //here you inform view that something was change - view will be invalidated
                             notifyDataSetChanged();
-                            listener.onDrawerLayoutRecyclerView2Click(view, position, drawerMenuVO);
+                            listener.onDrawerLayoutRecyclerView2Click(view, position, moreFoldersVO);
+                        }
+                    });
+
+                    //setting onClick listener for the fave icon
+                    holder.fontIconViewFave.setOnClickListener(new View.OnClickListener() {
+                        DrawerMenuVO drawerMenuVO ;
+                        @Override
+                        public void onClick(View view) {
+                            try {
+                                if (moreFoldersVO.is_fave()) {
+                                    //turn off the fave for this folder
+                                    holder.fontIconViewFave.setText(R.string.fontIcon_drawer_fave_off);
+                                    moreFoldersVO.setIs_fave(false);
+
+                                }
+                                else{
+                                    //turn on the fave for this folder
+                                    holder.fontIconViewFave.setText(R.string.fontIcon_drawer_fave_on);
+                                    moreFoldersVO.setIs_fave(true);
+                                    //create a record in the drawer menu table for the new favourite
+                                    drawerMenuVO = new DrawerMenuVO();
+                                    drawerMenuVO.setFolder_id(moreFoldersVO.getFolder_id());
+                                    drawerMenuVO.setFont_icon(moreFoldersVO.getFont_icon());
+                                    drawerMenuVO.setName(moreFoldersVO.getName());
+                                    drawerMenuVO.setType(DrawerMenuRowType.FAVOURITE_FOLDERS);
+                                    drawerMenuDAO.createOrUpdate(drawerMenuVO);
+                                }
+                            } catch (Exception e) {
+                                Utilities.generalCatchBlock(e, this);
+                            }
                         }
                     });
                 }
@@ -134,6 +176,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
         public  View view; // a row
         public  TextView mailFolderNameTextView;
         public  TextView fontIconView;
+        public TextView fontIconViewFave;
 
         public ViewHolder(View v, int viewType) {
             super(v);
@@ -144,6 +187,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                 default:
                     mailFolderNameTextView = (TextView) view.findViewById(R.id.mailFolderName);
                     fontIconView = (TextView) view.findViewById(R.id.fontIconView);
+                    fontIconViewFave = (TextView) view.findViewById(R.id.fontIconViewFave);
                     break;
             }
         }

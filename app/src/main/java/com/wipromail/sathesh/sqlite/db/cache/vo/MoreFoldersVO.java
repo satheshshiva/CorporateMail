@@ -10,6 +10,7 @@ public class MoreFoldersVO implements PojoVO, Serializable {
     private String parent_name;
     private String folder_id;
     private int type;
+    private boolean is_fave;
     private String font_icon;
 
     public String getName() {
@@ -50,6 +51,14 @@ public class MoreFoldersVO implements PojoVO, Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public boolean is_fave() {
+        return is_fave;
+    }
+
+    public void setIs_fave(boolean is_fave) {
+        this.is_fave = is_fave;
     }
 
     @Override
