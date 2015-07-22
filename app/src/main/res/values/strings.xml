@@ -203,7 +203,7 @@
     <string name="preferences_signout_summary">Clears all the data and logs out</string>
     <string name="preferences_clear_cache">Clear Cache</string>
     <string name="preferences_clear_cache_summary">Clears all the mail offline data stored in phone</string>
-    <string name="preferences_cache_cleared_msg">Cache Cleared</string>
+    <string name="preferences_cache_cleared_msg">Cache Cleared. Reopen app.</string>
     <string name="crash_toast_text">Ooooops ! Wipro Mail has just crashed. Crash log will be sent to the developer.</string>
     <string name="app_updater_downloading">Downloading latest version..</string>
     <string name="dialog_webmail_url_title">Webmail URL</string>
@@ -299,6 +299,6 @@
     <string name="drawer_menu_about">About</string>
     <string name="drawer_back">Back</string>
     <string name="drawer_menu_more_folders_empty">Loading Folders…</string>
-    <string name="drawer_favourite_help_text">You can add Favourites here from the More Folders</string>
+    <string name="drawer_favourite_help_text">Favourite folders are always updated like Inbox. You can add favourites here from the \"More Folders\". More number of favourite folders may increase network usage.</string>
 
 </resources>
