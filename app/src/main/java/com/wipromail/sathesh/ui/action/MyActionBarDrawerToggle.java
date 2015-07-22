@@ -14,6 +14,7 @@ import com.wipromail.sathesh.fragment.MailListViewFragment;
 import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.MailListFragmentDataPasser;
 import com.wipromail.sathesh.ui.util.UIutilities;
+import com.wipromail.sathesh.util.Utilities;
 
 /**
  * Created by Sathesh on 3/19/15.
@@ -23,7 +24,6 @@ import com.wipromail.sathesh.ui.util.UIutilities;
 public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
 
     private Activity activity;
-    private static boolean opening = true, closing=false;
     private static int existingNavigationBarColor;
     private MailListActivityDataPasser activityDataPasser;
 
@@ -37,31 +37,41 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
    @Override
     public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
-        activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-        // change the navigation bar color to translucent
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            changeNavigtionBarColor(true);
-        }
 
-        //check thecurrently loaded fragment in the MailListViewActivity
-        if (MailListViewActivity.getInstance() != null
-                && MailListViewActivity.getInstance().getCurrentlyLoadedFragment() != null) {
-            if ( MailListViewActivity.getInstance().getCurrentlyLoadedFragment() instanceof MailListViewFragment) {
+        try {
+            activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            // change the navigation bar color to translucent
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                changeNavigtionBarColor(true);
+            }
 
-                //MailListFragment instance
-                MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getInstance();
-                if (mailListViewFragment != null) {
-                    //hide the Floating Action Button
-                    mailListViewFragment.getFab().hide();
+            //refresh the list (may be favourites got changed
+            activityDataPasser.refreshDrawerListRecyclerView();
+
+            // Some Actions based on the current fragment like hiding FAB, keyboard etc.,
+            //check the currently loaded fragment in the MailListViewActivity
+            if (MailListViewActivity.getInstance() != null
+                    && MailListViewActivity.getInstance().getCurrentlyLoadedFragment() != null) {
+                if ( MailListViewActivity.getInstance().getCurrentlyLoadedFragment() instanceof MailListViewFragment) {
+
+                    //MailListFragment instance
+                    MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getInstance();
+                    if (mailListViewFragment != null) {
+                        //hide the Floating Action Button
+                        mailListViewFragment.getFab().hide();
+                    }
+                }
+                // Seach Fragment
+                else if(MailListViewActivity.getInstance().getCurrentlyLoadedFragment() instanceof SearchContactFragment){
+                    //hide keyboard
+                    SearchContactFragment searchContactFragment = SearchContactFragment.getInstance();
+                    UIutilities.hideKeyBoard(activity, searchContactFragment.getContactSearch());
                 }
             }
-            // Seach Fragment
-            else if(MailListViewActivity.getInstance().getCurrentlyLoadedFragment() instanceof SearchContactFragment){
-                //hide keyboard
-                SearchContactFragment searchContactFragment = SearchContactFragment.getInstance();
-                UIutilities.hideKeyBoard(activity, searchContactFragment.getContactSearch());
-            }
+        } catch (Exception e) {
+            Utilities.generalCatchBlock(e,this);
         }
+
     }
 
    /* @Override

@@ -18,7 +18,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.handlers.GetMoreFoldersHandler;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
-import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
 import com.wipromail.sathesh.util.Utilities;
 
 /**
@@ -40,23 +40,23 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
     }
 
     @Override
-    public void onDrawerLayoutRecyclerViewClick(View view, int position, FoldersVO foldersVO) {
+    public void onDrawerLayoutRecyclerViewClick(View view, int position, FolderVO folderVO) {
         Intent intent;
 
         try {
-            switch (foldersVO.getType()) {
+            switch (folderVO.getType()) {
                 case DrawerMenuRowType.INBOX:
                 case DrawerMenuRowType.DRAFTS:
                     activityDataPasser.getmDrawerLayout().closeDrawers();
-                    activityDataPasser.loadMailListViewFragment(foldersVO.getType(), foldersVO.getName(), null);
+                    activityDataPasser.loadMailListViewFragment(folderVO.getType(), folderVO.getName(), null);
                     break;
                 case DrawerMenuRowType.SENT_ITEMS:
                     activityDataPasser.getmDrawerLayout().closeDrawers();
-                    activityDataPasser.loadMailListViewFragment(foldersVO.getType(), WellKnownFolderName.SentItems.toString(), null);
+                    activityDataPasser.loadMailListViewFragment(folderVO.getType(), WellKnownFolderName.SentItems.toString(), null);
                     break;
                 case DrawerMenuRowType.DELETED_ITEMS:
                     activityDataPasser.getmDrawerLayout().closeDrawers();
-                    activityDataPasser.loadMailListViewFragment(foldersVO.getType(), WellKnownFolderName.DeletedItems.toString(), null);
+                    activityDataPasser.loadMailListViewFragment(folderVO.getType(), WellKnownFolderName.DeletedItems.toString(), null);
                     break;
                 case DrawerMenuRowType.MORE_FOLDERS:
                     //hide the first recycler view
@@ -83,7 +83,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
                 case DrawerMenuRowType.FAVOURITE_FOLDERS:
                     activityDataPasser.getmDrawerLayout().closeDrawers();
-                    activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, foldersVO.getName(), foldersVO.getFolder_id());
+                    activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, folderVO.getName(), folderVO.getFolder_id());
                     break;
 
                 case DrawerMenuRowType.SEARCH_CONTACT:
@@ -109,7 +109,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
             //update the selected position
             // since setting will open in a seperate activity we are not updating for it
-            if (foldersVO.getType() != DrawerMenuRowType.SETTINGS && foldersVO.getType() != DrawerMenuRowType.MORE_FOLDERS) {
+            if (folderVO.getType() != DrawerMenuRowType.SETTINGS && folderVO.getType() != DrawerMenuRowType.MORE_FOLDERS) {
                 activityDataPasser.setDrawerLayoutSelectedPosition(position);
                 activityDataPasser.setDrawerLayoutSelectedPosition2(-1);
             }
@@ -143,17 +143,17 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
      *
      * @param view
      * @param position
-     * @param moreFoldersVO
+     * @param moreFolderVO
      */
     @Override
-    public void onDrawerLayoutRecyclerView2Click(View view, int position, FoldersVO moreFoldersVO) {
-        switch(moreFoldersVO.getType()) {
+    public void onDrawerLayoutRecyclerView2Click(View view, int position, FolderVO moreFolderVO) {
+        switch(moreFolderVO.getType()) {
 
             case DrawerMenuRowType.MoreFolders.HEADER:
                 break;
             case DrawerMenuRowType.MoreFolders.FOLDER:
                 activityDataPasser.getmDrawerLayout().closeDrawers();
-                activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, moreFoldersVO.getName(), moreFoldersVO.getFolder_id());
+                activityDataPasser.loadMailListViewFragment(MailType.FOLDER_WITH_ID, moreFolderVO.getName(), moreFolderVO.getFolder_id());
                 break;
         }
         activityDataPasser.setDrawerLayoutSelectedPosition2(position);

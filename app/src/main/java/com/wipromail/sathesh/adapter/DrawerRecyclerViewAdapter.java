@@ -14,7 +14,7 @@ import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> implements Constants{
     private OnRecyclerViewClickListener listener;
-    private List<FoldersVO> foldersVOList;
+    private List<FolderVO> folderVOList;
     private MailListActivityDataPasser activity;
     private DrawerMenuDAO drawerMenuDAO;
 
@@ -32,7 +32,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
      * Interface for receiving click events from cells.
      */
     public interface OnRecyclerViewClickListener {
-        void onDrawerLayoutRecyclerViewClick(View view, int position, FoldersVO foldersVO);
+        void onDrawerLayoutRecyclerViewClick(View view, int position, FolderVO folderVO);
     }
 
     // Constructor
@@ -68,14 +68,14 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final FoldersVO foldersVO = foldersVOList.get(position);
+        final FolderVO folderVO = folderVOList.get(position);
 
         switch(holder.viewType) {
 
             case DrawerMenuRowType.CONTACTS_HEADER:
             case DrawerMenuRowType.FAVOURITES_HEADER:
                 //for header row
-                holder.mailFolderNameTextView.setText(foldersVO.getName());
+                holder.mailFolderNameTextView.setText(folderVO.getName());
                 break;
 
             //for empty clear everthing
@@ -86,8 +86,8 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
             //for item row
             default:
-                holder.mailFolderNameTextView.setText(foldersVO.getName());
-                holder.fontIconView.setText(foldersVO.getFont_icon());
+                holder.mailFolderNameTextView.setText(folderVO.getName());
+                holder.fontIconView.setText(folderVO.getFont_icon());
 
                 // setting row on click listener
                 if (holder.view != null) {
@@ -121,7 +121,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                         public void onClick(View view) {
                             //here you inform view that something was change - view will be invalidated
                             notifyDataSetChanged();
-                            listener.onDrawerLayoutRecyclerViewClick(view, position, foldersVO);
+                            listener.onDrawerLayoutRecyclerViewClick(view, position, folderVO);
                         }
                     });
                 }
@@ -154,21 +154,21 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
     @Override
     public int getItemCount() {
-        return this.foldersVOList.size();
+        return this.folderVOList.size();
     }
 
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-        return foldersVOList.get(position).getType();
+        return folderVOList.get(position).getType();
     }
 
     /** Private method for updating local VOs. Should be called before every notifydataSetChanged.
      *
      */
-    public List<FoldersVO> updateDataSets() throws Exception {
-        this.foldersVOList = drawerMenuDAO.getAllRecords();
-        return foldersVOList;
+    public List<FolderVO> updateDataSets() throws Exception {
+        this.folderVOList = drawerMenuDAO.getAllRecords();
+        return folderVOList;
 
     }
 }

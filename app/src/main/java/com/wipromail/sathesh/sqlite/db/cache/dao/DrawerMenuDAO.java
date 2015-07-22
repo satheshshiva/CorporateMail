@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableDrawerMenu;
-import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class DrawerMenuDAO extends BaseCacheDAO {
 
     //All the DAOs should have fully qualified class names of table class and vo class for auto wiring
     private Class tableClass= TableDrawerMenu.class;
-    private Class voClass= FoldersVO.class;
+    private Class voClass= FolderVO.class;
 
     /** Constructor for the DAO. initializes the Database helper
      * @param context
@@ -37,11 +37,11 @@ public class DrawerMenuDAO extends BaseCacheDAO {
     /** New records
      * @return
      */
-    public long createOrUpdate(List<FoldersVO> vos) throws Exception {
+    public long createOrUpdate(List<FolderVO> vos) throws Exception {
         long insertId=0;
         try{
             open(cacheDbHelper);
-            for(FoldersVO vo: vos){
+            for(FolderVO vo: vos){
                 insertId= saveVOInDB(vo);
             }
         }
@@ -54,7 +54,7 @@ public class DrawerMenuDAO extends BaseCacheDAO {
     /** New record
      * @return
      */
-    public long createOrUpdate(FoldersVO vo) throws Exception {
+    public long createOrUpdate(FolderVO vo) throws Exception {
         long insertId=0;
         try{
             open(cacheDbHelper);
@@ -72,9 +72,9 @@ public class DrawerMenuDAO extends BaseCacheDAO {
      * @param
      * @return List<VO>
      */
-    public List<FoldersVO> getAllRecords() throws Exception {
+    public List<FolderVO> getAllRecords() throws Exception {
 
-        List<FoldersVO> returnList =null;
+        List<FolderVO> returnList =null;
         Cursor cursor=null;
         try{
             open(cacheDbHelper);
@@ -92,9 +92,9 @@ public class DrawerMenuDAO extends BaseCacheDAO {
      * @param
      * @return List<VO>
      */
-    public List<FoldersVO> getFaves() throws Exception {
+    public List<FolderVO> getFaves() throws Exception {
 
-        List<FoldersVO> returnList =null;
+        List<FolderVO> returnList =null;
         Cursor cursor=null;
         try{
             open(cacheDbHelper);
@@ -108,14 +108,34 @@ public class DrawerMenuDAO extends BaseCacheDAO {
         return returnList;
     }
 
+    /** DELETE QUERIES
+     *
+     * @param vo
+     * @throws Exception
+     */
+    public void deleteVO(FolderVO vo) throws Exception {
+        try{
+            open(cacheDbHelper);
+            deleteVOInDb(vo);
+        }
+        finally{
+            close(cacheDbHelper);
+        }
+    }
+
     /*** PRIVATE METHODS ***/
 
     /** private function which calls the insert query for a single VO
      *
      */
-    private long saveVOInDB(FoldersVO vo) {
+    private long saveVOInDB(FolderVO vo) {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
         return database.insertWithOnConflict(CacheDbConstants.table.DRAWER_MENU, null,
                 values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    private long deleteVOInDb(FolderVO vo) {
+        ContentValues values = autoMapVoToContentValues(vo,tableClass);
+        return database.delete(CacheDbConstants.table.DRAWER_MENU, TableDrawerMenu.getWhereDeleteVO(), new String[]{vo.getFolder_id()});
     }
 }
