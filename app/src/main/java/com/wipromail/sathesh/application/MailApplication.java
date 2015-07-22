@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.ListPreference;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,7 +83,7 @@ public class MailApplication implements Constants {
     /** All activities will call this method in the OnCreate to initialize the actionbar toolbar
      *
      */
-    public static Toolbar toolbarInitialize(ActionBarActivity activity) {
+    public static Toolbar toolbarInitialize(MyActivity activity) {
         toolbar = (Toolbar) activity.findViewById(R.id.actionbar_toolbar);
         activity.setSupportActionBar(toolbar);
         return toolbar;
@@ -93,7 +92,7 @@ public class MailApplication implements Constants {
     /** All fragments will call this method in the OnCreate or similarr to initialize the actionbar toolbar
      *
      */
-    public static Toolbar toolbarInitialize( ActionBarActivity activity ,View view) {
+    public static Toolbar toolbarInitialize( MyActivity activity ,View view) {
         toolbar = (Toolbar) view.findViewById(R.id.actionbar_toolbar);
         activity.setSupportActionBar(toolbar);
         return toolbar;
@@ -418,6 +417,19 @@ public class MailApplication implements Constants {
     public static void openPlayStoreLink(Context context) throws Exception{
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse("market://details?id=" + context.getPackageName()));
+        context.startActivity(i);
+    }
+
+    /** Opens the Playstore link
+     *
+     * @param context
+     * @param packageName package name of the app
+     * @throws Exception
+     */
+
+    public static void openPlayStoreLink(Context context, String packageName) throws Exception{
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse("market://details?id=" + packageName));
         context.startActivity(i);
     }
 
