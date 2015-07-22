@@ -34,7 +34,7 @@ import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.customwidgets.FontIcon;
@@ -401,7 +401,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     public void refreshDrawerListRecyclerView2() throws Exception {
         // refresh the vos before calling notifydata set changed
-        List<MoreFoldersVO> moreFoldersVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateDataSets();
+        List<FoldersVO> moreFoldersVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateDataSets();
         if(moreFoldersVOs!=null && moreFoldersVOs.size() > 1) {
             getmDrawerListRecyclerView2().setVisibility(View.VISIBLE);
             emptyRecyclerViewMsg.setVisibility(View.GONE);
