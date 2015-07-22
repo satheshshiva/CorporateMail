@@ -16,6 +16,7 @@ import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
+import com.wipromail.sathesh.ui.components.FavouritesDialog;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.util.List;
@@ -142,16 +143,35 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                         }
                     });
 
+                    //setting Long Item Click listener for the row
+                    holder.view.setOnLongClickListener(new View.OnLongClickListener() {
+
+                        @Override
+                        public boolean onLongClick(View v) {
+                            if (moreFolderVO.getType() == DrawerMenuRowType.MoreFolders.FOLDER) {
+                                //if already favourites then ask to remove
+                                if (isFavourite) {
+                                    FavouritesDialog.removeFavourite(activity, moreFolderVO, drawerMenuDAO);
+                                }
+                                // if not favourites then ask to add
+                                else{
+                                    FavouritesDialog.addFavourite(activity, moreFolderVO, drawerMenuDAO);
+                                }
+                            }
+                            return true;
+                        }
+                    });
+
                     //setting onClick listener for the fave icon
                     holder.fontIconViewFave.setOnClickListener(new View.OnClickListener() {
                         FolderVO faveFolderVO;
                         @Override
                         public void onClick(View view) {
                             try {
-                                if (isFavourite) {
+                                if (isFavourite(moreFolderVO)) {    //always check from dataset bcos isFavourite is a final variable
                                     //turn off the fave for this folder
                                     holder.fontIconViewFave.setText(R.string.fontIcon_drawer_fave_off);
-                                    drawerMenuDAO.deleteVO(moreFolderVO);
+                                    drawerMenuDAO.deleteFavourite(moreFolderVO);
 
                                 }
                                 else{
@@ -159,13 +179,12 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                                     //turn on the fave for this folder
                                     holder.fontIconViewFave.setText(R.string.fontIcon_drawer_fave_on);
                                     //create a record in the drawer menu table for the new favourite
-                                    faveFolderVO = new FolderVO();
-                                    faveFolderVO.setFolder_id(moreFolderVO.getFolder_id());
-                                    faveFolderVO.setFont_icon(moreFolderVO.getFont_icon());
-                                    faveFolderVO.setName(moreFolderVO.getName());
+                                    faveFolderVO = moreFolderVO.clone();
                                     faveFolderVO.setType(DrawerMenuRowType.FAVOURITE_FOLDERS);
                                     drawerMenuDAO.createOrUpdate(faveFolderVO);
                                 }
+
+                                updateDataSets();
                             } catch (Exception e) {
                                 Utilities.generalCatchBlock(e, this);
                             }

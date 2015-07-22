@@ -100,6 +100,10 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
     public static String getWhereDeleteVO(){
         return  COLUMN_FOLDER_ID + "=?";
     }
+    public static String getWhereDeleteFaveVO(){
+        return  COLUMN_FOLDER_ID + "=? AND " + COLUMN_TYPE + " = " + DrawerMenuRowType.FAVOURITE_FOLDERS;
+    }
+
 
     public static String getFavesQuery(){
         return "SELECT * FROM " + tableName

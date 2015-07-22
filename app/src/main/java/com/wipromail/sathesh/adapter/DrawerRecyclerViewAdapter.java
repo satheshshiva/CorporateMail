@@ -3,7 +3,6 @@ package com.wipromail.sathesh.adapter;
 import android.app.Activity;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
+import com.wipromail.sathesh.ui.components.FavouritesDialog;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.util.List;
@@ -148,7 +148,9 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
 
                         @Override
                         public boolean onLongClick(View v) {
-                            Log.i(TAG, "Long CLICKED " + folderVO);
+                            if(folderVO.getType() == DrawerMenuRowType.FAVOURITE_FOLDERS){
+                                FavouritesDialog.removeFavourite(activity, folderVO, drawerMenuDAO);
+                            }
                             return true;
                         }
                     });

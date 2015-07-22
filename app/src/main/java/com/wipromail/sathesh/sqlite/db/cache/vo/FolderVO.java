@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Sathesh on 5/9/15.
  */
-public class FolderVO implements PojoVO, Serializable {
+public class FolderVO implements PojoVO, Serializable, Cloneable {
     private String name;
     private String folder_id;
     private int type;
@@ -75,5 +75,10 @@ public class FolderVO implements PojoVO, Serializable {
         sb.append(", parent_name='").append(parent_name).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public FolderVO clone() throws CloneNotSupportedException {
+        FolderVO folderVO = (FolderVO)super.clone();
+        return folderVO;
     }
 }
