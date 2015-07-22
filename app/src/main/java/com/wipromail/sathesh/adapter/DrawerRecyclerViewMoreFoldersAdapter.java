@@ -15,8 +15,7 @@ import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.constants.DrawerMenuRowType;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.DrawerMenuVO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.MoreFoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.util.List;
@@ -26,8 +25,8 @@ import java.util.List;
  */
 public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<DrawerRecyclerViewMoreFoldersAdapter.ViewHolder> implements Constants{
     private OnRecyclerViewClick2Listener listener;
-    private List<DrawerMenuVO> faves;
-    private List<MoreFoldersVO> drawerMenuVOList;
+    private List<FoldersVO> faves;
+    private List<FoldersVO> foldersVOList;
     private MailListActivityDataPasser activity;
     private DrawerMenuDAO drawerMenuDAO;
     private MoreFoldersDAO moreFoldersDAO;
@@ -36,7 +35,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
      * Interface for receiving click events from cells.
      */
     public interface OnRecyclerViewClick2Listener {
-        void onDrawerLayoutRecyclerView2Click(View view, int position, MoreFoldersVO drawerMenuVO);
+        void onDrawerLayoutRecyclerView2Click(View view, int position, FoldersVO foldersVO);
     }
 
     // Constructor
@@ -73,7 +72,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final MoreFoldersVO moreFoldersVO = drawerMenuVOList.get(position);
+        final FoldersVO moreFoldersVO = foldersVOList.get(position);
 
         switch(holder.viewType) {
             // for header
@@ -137,7 +136,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
 
                     //setting onClick listener for the fave icon
                     holder.fontIconViewFave.setOnClickListener(new View.OnClickListener() {
-                        DrawerMenuVO drawerMenuVO ;
+                        FoldersVO foldersVO;
                         @Override
                         public void onClick(View view) {
                             try {
@@ -152,12 +151,12 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                                     holder.fontIconViewFave.setText(R.string.fontIcon_drawer_fave_on);
                                     moreFoldersVO.setIs_fave(true);
                                     //create a record in the drawer menu table for the new favourite
-                                    drawerMenuVO = new DrawerMenuVO();
-                                    drawerMenuVO.setFolder_id(moreFoldersVO.getFolder_id());
-                                    drawerMenuVO.setFont_icon(moreFoldersVO.getFont_icon());
-                                    drawerMenuVO.setName(moreFoldersVO.getName());
-                                    drawerMenuVO.setType(DrawerMenuRowType.FAVOURITE_FOLDERS);
-                                    drawerMenuDAO.createOrUpdate(drawerMenuVO);
+                                    foldersVO = new FoldersVO();
+                                    foldersVO.setFolder_id(moreFoldersVO.getFolder_id());
+                                    foldersVO.setFont_icon(moreFoldersVO.getFont_icon());
+                                    foldersVO.setName(moreFoldersVO.getName());
+                                    foldersVO.setType(DrawerMenuRowType.FAVOURITE_FOLDERS);
+                                    drawerMenuDAO.createOrUpdate(foldersVO);
                                 }
                             } catch (Exception e) {
                                 Utilities.generalCatchBlock(e, this);
@@ -196,22 +195,22 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
 
     @Override
     public int getItemCount() {
-        return this.drawerMenuVOList.size();
+        return this.foldersVOList.size();
     }
 
     // Setting the view type as an int so that it will tell us back in row creation (onCreateViewHolder)
     @Override
     public int getItemViewType(int position) {
-       return drawerMenuVOList.get(position).getType();
+       return foldersVOList.get(position).getType();
     }
 
     /** Private method for updating local VOs. Should be called before every notifydataSetChanged.
      *
      */
-    public List<MoreFoldersVO> updateDataSets() throws Exception {
-        this.drawerMenuVOList = moreFoldersDAO.getAllRecords();
+    public List<FoldersVO> updateDataSets() throws Exception {
+        this.foldersVOList = moreFoldersDAO.getAllRecords();
         this.faves = drawerMenuDAO.getFaves();
-        return drawerMenuVOList;
+        return foldersVOList;
 
     }
 }
