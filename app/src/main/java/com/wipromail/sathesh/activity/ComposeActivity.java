@@ -1,6 +1,5 @@
 package com.wipromail.sathesh.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -57,7 +56,7 @@ import java.util.Set;
 
 public class ComposeActivity extends MyActivity implements Constants,IResolveNames{
 
-    private  static Activity activity;
+    private  static MyActivity activity;
     //making this change
     private  static EditText composeSubject;
     private  static EditText composeBody, composeSignature;
@@ -664,7 +663,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             catch (Exception e) {
                 Log.e(TAG, "Error Occured!\nDetails:" + e.getMessage());
                 e.printStackTrace();
-                publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails:" + e.getMessage());
+                publishProgress(STATUS_ERROR, msgSendingFailedLbl + "\n\nDetails:" + e.getMessage());
             }
             return true;
         }
@@ -777,8 +776,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        ApplyAnimation.setComposeActivityCloseAnim((MyActivity) activity);
+        activity.finish();
+        ApplyAnimation.setComposeActivityCloseAnim(activity);
     }
 
     private void cancelPage() {
