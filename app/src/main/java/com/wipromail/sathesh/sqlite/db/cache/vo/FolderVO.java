@@ -10,7 +10,6 @@ public class FolderVO implements PojoVO, Serializable {
     private String folder_id;
     private int type;
     private String font_icon;
-    private boolean is_fave;
     private String parent_name;
 
     public String getName() {
@@ -45,14 +44,6 @@ public class FolderVO implements PojoVO, Serializable {
         this.font_icon = font_icon;
     }
 
-    public boolean is_fave() {
-        return is_fave;
-    }
-
-    public void setIs_fave(boolean is_fave) {
-        this.is_fave = is_fave;
-    }
-
     public String getParent_name() {
         return parent_name;
     }
@@ -61,6 +52,7 @@ public class FolderVO implements PojoVO, Serializable {
         this.parent_name = parent_name;
     }
 
+    // we are using to check whether the folder is in favourites (comparing DrawerMenu table object and MoreFolder table object)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,7 +66,14 @@ public class FolderVO implements PojoVO, Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return folder_id.hashCode();
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("FolderVO{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", folder_id='").append(folder_id).append('\'');
+        sb.append(", type=").append(type);
+        sb.append(", font_icon='").append(font_icon).append('\'');
+        sb.append(", parent_name='").append(parent_name).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }
