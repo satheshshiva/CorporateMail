@@ -45,7 +45,7 @@
         android:layout_alignParentRight="true"
         android:paddingRight="23sp"
         android:textColor="@color/DarkGoldenrod"
-        android:textSize="19sp"
+        android:textSize="29sp"
         android:gravity="center_vertical"
         android:text="fave"
         android:layout_marginLeft="16dp"

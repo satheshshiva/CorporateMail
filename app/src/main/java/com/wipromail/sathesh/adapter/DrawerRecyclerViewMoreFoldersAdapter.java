@@ -92,6 +92,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
             case DrawerMenuRowType.EMPTY_ROW:
                 holder.mailFolderNameTextView.setText("");
                 holder.fontIconView.setText("");
+                holder.fontIconViewFave.setText("");
                 break;
 
             //normal item row
