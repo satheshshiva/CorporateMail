@@ -92,8 +92,13 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 
     /*** SELECT QUERIES ***/
 
-    public static String getAllRecords(){
+    public static String getAllRecordsQuery(){
         return "SELECT * FROM " + tableName + " ORDER BY " + COLUMN_TYPE + " ASC ";
     }
-	
+
+    public static String getFavesQuery(){
+        return "SELECT * FROM " + tableName
+                + " WHERE " + COLUMN_TYPE + "= " + DrawerMenuRowType.FAVOURITE_FOLDERS
+                + " ORDER BY " + COLUMN_TYPE + " ASC ";
+    }
 }
