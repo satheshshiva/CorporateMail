@@ -4,10 +4,10 @@
     android:layout_weight="1"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="10dip"
     android:paddingLeft="3dip"
     android:paddingRight="1dip"
-    android:paddingTop="10dip"
+    android:paddingTop="16dip"
+    android:paddingBottom="16dip"
     android:background="?android:attr/activatedBackgroundIndicator"> <!-- necessary for multiple selection -->
 
     <ImageView
