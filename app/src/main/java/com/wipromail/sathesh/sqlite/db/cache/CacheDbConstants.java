@@ -3,7 +3,7 @@ package com.wipromail.sathesh.sqlite.db.cache;
 public interface CacheDbConstants {
 
 	String DATABASE_NAME = "Cache.db";
-	int DATABASE_VERSION = 2;
+	int DATABASE_VERSION = 3;
 
 	interface table{
 		String CACHED_MAIL_HEADERS = "CACHED_MAIL_HEADERS";
