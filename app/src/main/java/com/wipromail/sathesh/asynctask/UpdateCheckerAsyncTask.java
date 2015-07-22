@@ -1,11 +1,11 @@
 package com.wipromail.sathesh.asynctask;
 
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.asynctask.interfaces.GenericAsyncTask;
 import com.wipromail.sathesh.constants.Constants;
 
@@ -30,14 +30,14 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 
 	public static final String STATUS_ERROR="ERROR";
 	private GenericAsyncTask caller;
-	private ActionBarActivity activity;
+	private MyActivity activity;
 	private InputStream input;
 
 	private String LatestVersionName="";
 	private String LatestVersionCode="";
 	private int currentVersionCode=0;
 
-	public UpdateCheckerAsyncTask(GenericAsyncTask caller, ActionBarActivity activity,int currentVersionCode) {
+	public UpdateCheckerAsyncTask(GenericAsyncTask caller, MyActivity activity,int currentVersionCode) {
 		this.caller=caller;
 		this.activity = activity;
 		this.currentVersionCode=currentVersionCode;

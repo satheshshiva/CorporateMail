@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,14 +19,14 @@ import com.wipromail.sathesh.application.MailApplication;
 import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
-import com.wipromail.sathesh.ui.util.OptionsUIContent;
 import com.wipromail.sathesh.ui.components.SignOutAlertDialog;
+import com.wipromail.sathesh.ui.util.OptionsUIContent;
 
 @Deprecated
 public class HomePageActivity extends MyActivity implements Constants{
 
 	private WebView webview;
-	private ActionBarActivity activity;
+	private MyActivity activity;
 	private Context context;
 	private Intent intent;
 	private ActionBar myActionBar;

@@ -4,7 +4,6 @@
 package com.wipromail.sathesh.ui.listeners;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -43,7 +42,7 @@ import java.util.ArrayList;
  */
 public class MailListViewListener implements  OnScrollListener, OnItemClickListener, AbsListView.MultiChoiceModeListener, Constants, View.OnClickListener {
     private MailListFragmentDataPasser fragment;
-    private ActionBarActivity activity;
+    private MyActivity activity;
 
     private int preLast=-1;
     private int preFirstItemVisible =-1;
@@ -461,7 +460,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 //start compose activity
                 Intent intent = new Intent(activity, ComposeActivity.class);
                 activity.startActivity(intent);
-                ApplyAnimation.setComposeActivityOpenAnim(activity);
+                ApplyAnimation.setComposeActivityOpenAnim((MyActivity) activity);
                 break;
         }
     }

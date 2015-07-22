@@ -778,7 +778,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ApplyAnimation.setComposeActivityCloseAnim(activity);
+        ApplyAnimation.setComposeActivityCloseAnim((MyActivity) activity);
     }
 
     private void cancelPage() {

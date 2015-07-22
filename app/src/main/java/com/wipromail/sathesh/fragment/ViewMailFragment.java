@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -29,13 +28,14 @@ import com.wipromail.sathesh.activity.ContactDetailsActivity;
 import com.wipromail.sathesh.activity.MailListViewActivity;
 import com.wipromail.sathesh.adapter.ComposeActivityAdapter;
 import com.wipromail.sathesh.application.MailApplication;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.application.SharedPreferencesAdapter;
-import com.wipromail.sathesh.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.cache.adapter.CachedMailHeaderAdapter;
 import com.wipromail.sathesh.constants.Constants;
 import com.wipromail.sathesh.customserializable.ContactSerializable;
 import com.wipromail.sathesh.ews.MailFunctions;
 import com.wipromail.sathesh.ews.MailFunctionsImpl;
+import com.wipromail.sathesh.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.wipromail.sathesh.handlers.LoadEmailHandler;
 import com.wipromail.sathesh.jsinterfaces.CommonWebChromeClient;
 import com.wipromail.sathesh.service.data.EmailMessage;
@@ -56,7 +56,7 @@ import java.util.List;
  */
 public class ViewMailFragment extends Fragment implements Constants, ViewMailFragmentDataPasser{
 
-    public ActionBarActivity activity ;
+    public MyActivity activity ;
     private Context context ;
 
     private TextView fromIdView ;
@@ -118,7 +118,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         View view = inflater.inflate(R.layout.fragment_view_mail,
                 container, false);
 
-        activity = (ActionBarActivity) getActivity();
+        activity = (MyActivity) getActivity();
         context = getActivity();
 
         setRetainInstance(true);

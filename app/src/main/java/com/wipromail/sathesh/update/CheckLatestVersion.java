@@ -2,7 +2,6 @@ package com.wipromail.sathesh.update;
 
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -82,12 +81,12 @@ public class CheckLatestVersion implements Constants, GenericAsyncTask {
 		}
 	}
 
-	public void noUpdateAvailable(ActionBarActivity activity) {
+	public void noUpdateAvailable(MyActivity activity) {
 		dialog.dismiss();
 		Notifications.showToast(activity,  activity.getText(R.string.app_updater_noupdates), Toast.LENGTH_SHORT);
 	}
 
-	public void updateAvailable(ActionBarActivity activity) {
+	public void updateAvailable(MyActivity activity) {
 
 		dialog.dismiss();
 		wv.loadUrl(LOADING_HTML_URL);

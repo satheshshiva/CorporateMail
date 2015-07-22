@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.wipromail.sathesh.R;
@@ -119,7 +118,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * 
 	 * @param activity
 	 */
-	public void noUpdateAvailable(ActionBarActivity activity) {
+	public void noUpdateAvailable(MyActivity activity) {
 
 		Log.i(TAG, "AutoUpdater -> no update available");
 		storeUpdateCheckTime(new Date());
@@ -129,7 +128,7 @@ public class AutoUpdater implements Constants, GenericAsyncTask{
 	 * 
 	 * @param activity
 	 */
-	public void updateAvailable(ActionBarActivity activity) {
+	public void updateAvailable(MyActivity activity) {
 
 		final Activity _activity = activity;
 		Log.i(TAG, "AutoUpdater -> update availble");
