@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.animation.ApplyAnimation;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 
 /**
@@ -38,7 +39,7 @@ public class WarningDisplayNotificationBar implements Constants{
 	public void showStatusBar(){
 		Log.d(TAG, "Show status bar clled");
 		//show resolving names notification layout
-		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim(activity);
+		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim((MyActivity) activity);
 		titleBar_Warning_linearLayout.setAnimation(animation);
 		titleBar_Warning_linearLayout.setVisibility(View.VISIBLE);
 	}
@@ -48,7 +49,7 @@ public class WarningDisplayNotificationBar implements Constants{
 	 */
 	public void hideStatusBar(){
 		Log.d(TAG, "hide status bar clled");
-		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim(activity);
+		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim((MyActivity) activity);
 		titleBar_Warning_linearLayout.setAnimation(animation);
 		titleBar_Warning_linearLayout.setVisibility(View.GONE);
 	}

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.wipromail.sathesh.BuildConfig;
 import com.wipromail.sathesh.R;
 import com.wipromail.sathesh.animation.ApplyAnimation;
+import com.wipromail.sathesh.application.MyActivity;
 import com.wipromail.sathesh.constants.Constants;
 
 /** Global class for displaying Progress Display Notification bar
@@ -48,7 +49,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 		Log.d(TAG, "Show status bar clled");
 		}
 		//show resolving names notification layout
-		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim(activity);
+		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim((MyActivity) activity);
 		titleBar_Progress_linearLayout.setAnimation(animation);
 		titleBar_Progress_linearLayout.setVisibility(View.VISIBLE);
 	}
@@ -60,7 +61,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 		if(BuildConfig.DEBUG){
 		Log.d(TAG, "hide status bar clled");
 		}
-		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim(activity);
+		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim((MyActivity) activity);
 		titleBar_Progress_linearLayout.setAnimation(animation);
 		titleBar_Progress_linearLayout.setVisibility(View.GONE);
 	}

@@ -122,14 +122,14 @@ public class LoginPageActivity extends MyActivity implements Constants {
         //validate user name
         if(username==null || username.equalsIgnoreCase("")) {
             //if user name is null then shake the edit text
-            login_username.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim(activity));
+            login_username.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim((MyActivity) activity));
             return;
         }
 
         //validate password
         if(password==null || password.equalsIgnoreCase("")) {
             //if password is null then shake the edit text
-            login_passwd.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim(activity));
+            login_passwd.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim((MyActivity) activity));
             return;
         }
 

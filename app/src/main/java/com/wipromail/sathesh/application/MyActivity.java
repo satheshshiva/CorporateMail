@@ -1,6 +1,6 @@
 package com.wipromail.sathesh.application;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -12,7 +12,7 @@ import com.wipromail.sathesh.R;
  *
  * All activities in the application will override this activity
  */
-public class MyActivity extends ActionBarActivity {
+public class MyActivity extends AppCompatActivity {
 
     /** The setSupportProgressBarIndeterminateVisibility() method is NA in toolbar
      * Since it was used across the appln in Actionbar have to override and call a custom progressbar created
