@@ -3,9 +3,11 @@ package com.wipromail.sathesh.adapter;
 import android.app.Activity;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wipromail.sathesh.R;
@@ -24,7 +26,7 @@ import java.util.List;
  */
 public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecyclerViewAdapter.ViewHolder> implements Constants{
     private OnRecyclerViewClickListener listener;
-    private List<FolderVO> folderVOList;
+    private List<FolderVO> faves, folderVOList;
     private MailListActivityDataPasser activity;
     private DrawerMenuDAO drawerMenuDAO;
 
@@ -58,6 +60,9 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
             case DrawerMenuRowType.FAVOURITES_HEADER:
                 view = vi.inflate(R.layout.drawer_header_row, viewGroup, false);
                 break;
+            case DrawerMenuRowType.FAVOURITE_HELPTEXT:
+                view = vi.inflate(R.layout.drawer_helptext_row, viewGroup, false);
+                break;
             default:
                 view = vi.inflate(R.layout.drawer_item_row, viewGroup, false);
                 break;
@@ -82,6 +87,18 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
             case DrawerMenuRowType.EMPTY_ROW:
                 holder.mailFolderNameTextView.setText("");
                 holder.fontIconView.setText("");
+                break;
+            // dedicated row to show the help text if there are no favourites
+            case DrawerMenuRowType.FAVOURITE_HELPTEXT:
+                if(faves !=null && faves.size()>0) {
+                    // Favourites are present. Hide the Help text
+                    holder.helptextLayout.getLayoutParams().height=0;
+                }
+                else{
+                    // No Favourites. Show the help text
+                    holder.faveHelptext.setText(folderVO.getName());
+                    holder.helptextLayout.getLayoutParams().height=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HELP_TEXT_LAYOUT_HEIGHT, ((MyActivity)activity).getResources().getDisplayMetrics());
+                }
                 break;
 
             //for item row
@@ -135,8 +152,8 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     public static class ViewHolder extends RecyclerView.ViewHolder implements Constants{
         public int viewType;
         public  View view; // a row
-        public  TextView mailFolderNameTextView;
-        public  TextView fontIconView;
+        public  TextView mailFolderNameTextView,fontIconView, faveHelptext;
+        public RelativeLayout helptextLayout;
 
         public ViewHolder(View v, int viewType) {
             super(v);
@@ -147,6 +164,8 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                 default:
                     mailFolderNameTextView = (TextView) view.findViewById(R.id.mailFolderName);
                     fontIconView = (TextView) view.findViewById(R.id.fontIconView);
+                    faveHelptext = (TextView) view.findViewById(R.id.helpText);
+                    helptextLayout = (RelativeLayout) view.findViewById(R.id.helptextLayout);
                     break;
             }
         }
@@ -168,6 +187,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
      */
     public List<FolderVO> updateDataSets() throws Exception {
         this.folderVOList = drawerMenuDAO.getAllRecords();
+        this.faves = drawerMenuDAO.getFaves();
         return folderVOList;
 
     }
