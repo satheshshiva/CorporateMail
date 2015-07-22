@@ -10,7 +10,8 @@ public interface DrawerMenuRowType {
     int MORE_FOLDERS=10;
 
     int FAVOURITES_HEADER=20;
-    int FAVOURITE_FOLDERS =21;
+    int FAVOURITE_HELPTEXT =21;
+    int FAVOURITE_FOLDERS =22;
 
     int CONTACTS_HEADER=120;
     int SEARCH_CONTACT =121;

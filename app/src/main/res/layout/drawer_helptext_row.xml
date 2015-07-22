@@ -1,23 +1,23 @@
 <!--?xml version="1.0" encoding="utf-8"?-->
+<!-- height in the layout is currently changed in the code (Constants.java-HELP_TEXT_LAYOUT_HEIGHT )-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="33dp"
-    android:layout_marginTop="5sp"
+    android:layout_height="50dp"
     android:orientation="horizontal"
+    android:id="@+id/helptextLayout"
     android:clickable="true"
-    android:background="@drawable/drawer_menu_top_border"
+    android:background="@android:color/transparent"
     >
 
 
     <TextView
-        android:id="@+id/mailFolderName"
+        android:id="@+id/helpText"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:gravity="center_vertical"
+        android:textColor="@color/DimGray"
         android:paddingLeft="18sp"
-        android:textColor="@color/Gray"
-        android:textAllCaps="true"
-        android:text="folder name"
-        android:textSize="12sp"
+        android:text="Help Text"
+        android:textSize="11sp"
         />
 </RelativeLayout>

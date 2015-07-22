@@ -78,6 +78,9 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
             insertQueries.add(sql1 + "' ," + DrawerMenuRowType.EMPTY_ROW + " , '');");
         }
 
+        //adding Sample Favourite folders
+        insertQueries.add(sql1 + context.getString(R.string.drawer_favourite_help_text) + "' ," + DrawerMenuRowType.FAVOURITE_HELPTEXT +  " , '');");
+
 		return insertQueries;
 	}
 

@@ -43,10 +43,11 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:paddingRight="10sp"
-        android:textSize="13sp"
+        android:paddingRight="23sp"
+        android:textColor="@color/DarkGoldenrod"
+        android:textSize="19sp"
         android:gravity="center_vertical"
-        android:text="@string/fontIcon_drawer_fave_off"
+        android:text="fave"
         android:layout_marginLeft="16dp"
         />
 </RelativeLayout>

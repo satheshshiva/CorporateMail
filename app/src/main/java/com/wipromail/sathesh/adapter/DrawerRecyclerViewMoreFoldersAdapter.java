@@ -25,8 +25,7 @@ import java.util.List;
  */
 public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<DrawerRecyclerViewMoreFoldersAdapter.ViewHolder> implements Constants{
     private OnRecyclerViewClick2Listener listener;
-    private List<FolderVO> faves;
-    private List<FolderVO> folderVOList;
+    private List<FolderVO> faves, folderVOList;
     private MailListActivityDataPasser activity;
     private DrawerMenuDAO drawerMenuDAO;
     private MoreFoldersDAO moreFoldersDAO;
@@ -59,7 +58,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
         switch(viewType) {
             //for header load this layout
             case DrawerMenuRowType.MoreFolders.HEADER:
-                view = vi.inflate(R.layout.drawer_header_row, viewGroup, false);
+                view = vi.inflate(R.layout.drawer_header_row_more_folders, viewGroup, false);
                 break;
             default:
                 //for item row load this layout
@@ -107,14 +106,15 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                     // Highlight the row if its a selected position
                     if ( activity.getDrawerLayoutSelectedPosition2() == position) {
                         //selected row
-                        holder.itemView.setBackgroundColor(((Activity)activity).getResources().getColor(R.color.LightGrey));
+                        holder.itemView.setBackgroundColor(((Activity) activity).getResources().getColor(R.color.LightGrey));
                         //font icon
                         holder.fontIconView.setTextColor(Color.BLACK);
                         holder.fontIconView.setAlpha(1f);
                         // text view
                         holder.mailFolderNameTextView.setTextColor(Color.BLACK);
                         holder.mailFolderNameTextView.setAlpha(1f);
-
+                        //fave icon
+                        holder.fontIconViewFave.setAlpha(1f);
                     }
                     //normal row
                     else {
@@ -125,6 +125,8 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                         // textview
                         holder.mailFolderNameTextView.setTextColor(Color.BLACK);
                         holder.mailFolderNameTextView.setAlpha(.8f);
+                        //fave icon
+                        holder.fontIconViewFave.setAlpha(.8f);
                     }
 
                     holder.fontIconViewFave.setText(isFavourite ? R.string.fontIcon_drawer_fave_on :
