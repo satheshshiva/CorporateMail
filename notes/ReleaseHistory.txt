@@ -20,6 +20,6 @@ VERSION NAME	CODE	DATE                                DB VERSION
                         orientation fixes.
 0.4 alpha       16      22Jan15(API 21 support library(Material design). Multiple select mails and do delete, read, unread.
                         Changed actionbar to toolbar widget)
-0.5 alpha       17      Folder navigation with drawer layout. provided app store link opening code for About Fragment.
+0.5 alpha       17      22July15 - Folder navigation with drawer layout. provided app store link opening code for About Fragment.
                         For the mail folders it will be loaded as fragments instead of seperate activity.
                         Possibly the last release as Wipro Mail
