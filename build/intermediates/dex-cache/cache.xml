@@ -135,18 +135,18 @@
         <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-a35ce46ffd25d8d386fadad4da44b4abb0a417c0.jar" />
     </item>
     <item
-        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.4/3fc542fe8bb8164e8d3e840fe7403bc0518053c0/servlet-api-2.4.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="3fc542fe8bb8164e8d3e840fe7403bc0518053c0">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/servlet-api-2.4-9ff1f9669a4e227d4f5dcd07afd3ee2002bdb281.jar" />
-    </item>
-    <item
         jar="/Users/Sathesh/MyContent/Java/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
         <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-279a9633ed665b6f942e2c1d7bd329a84d706b4c.jar" />
+    </item>
+    <item
+        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.4/3fc542fe8bb8164e8d3e840fe7403bc0518053c0/servlet-api-2.4.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3fc542fe8bb8164e8d3e840fe7403bc0518053c0">
+        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/servlet-api-2.4-9ff1f9669a4e227d4f5dcd07afd3ee2002bdb281.jar" />
     </item>
     <item
         jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/jcifs/jcifs/1.3.17/60e3805e7bcfe96bf1f1907b821d251cc9d789ec/jcifs-1.3.17.jar"
