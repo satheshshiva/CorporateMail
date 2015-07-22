@@ -23,7 +23,6 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 	public static final String COLUMN_PARENT_NAME = "PARENT_NAME";
 	public static final String COLUMN_FOLDER_ID = "FOLDER_ID";
 	public static final String COLUMN_FONT_ICON = "FONT_ICON";
-	public static final String COLUMN_IS_FAVE = "IS_FAVE";
 	public static final String COLUMN_TYPE = "TYPE";
 
 	@Override
@@ -35,7 +34,6 @@ public class TableMoreFolders implements CacheDbConstants, DbTable{
 				+ COLUMN_PARENT_NAME + " TEXT, "
 				+ COLUMN_FOLDER_ID + " TEXT, "
 				+ COLUMN_TYPE + " INTEGER,"
-				+ COLUMN_IS_FAVE + " TEXT,"
 				+ COLUMN_FONT_ICON + " TEXT "
 				+");";
 	}

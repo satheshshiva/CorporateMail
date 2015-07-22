@@ -3,6 +3,7 @@ package com.wipromail.sathesh.adapter;
 import android.app.Activity;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,6 +142,17 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                             listener.onDrawerLayoutRecyclerViewClick(view, position, folderVO);
                         }
                     });
+
+                    //setting onClick listener for the row
+                    holder.view.setOnLongClickListener(new View.OnLongClickListener(){
+
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Log.i(TAG, "Long CLICKED " + folderVO);
+                            return true;
+                        }
+                    });
+
                 }
                 break;
         }
