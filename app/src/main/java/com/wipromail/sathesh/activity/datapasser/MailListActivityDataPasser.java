@@ -29,6 +29,7 @@ public interface MailListActivityDataPasser {
     RecyclerView getmDrawerListRecyclerView1();
     RecyclerView getmDrawerListRecyclerView2();
 
+    void refreshDrawerListRecyclerView() throws Exception;
     void refreshDrawerListRecyclerView2() throws Exception;
 
 }

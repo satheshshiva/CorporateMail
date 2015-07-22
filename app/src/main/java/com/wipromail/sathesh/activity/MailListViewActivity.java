@@ -34,7 +34,7 @@ import com.wipromail.sathesh.fragment.SearchContactFragment;
 import com.wipromail.sathesh.fragment.datapasser.AboutFragmentDataPasser;
 import com.wipromail.sathesh.fragment.datapasser.SearchContactFragmentDataPasser;
 import com.wipromail.sathesh.sqlite.db.cache.dao.DrawerMenuDAO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
 import com.wipromail.sathesh.tools.CacheClear;
 import com.wipromail.sathesh.ui.action.MyActionBarDrawerToggle;
 import com.wipromail.sathesh.ui.customwidgets.FontIcon;
@@ -337,8 +337,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         //othewise findViewHolderForLayoutPosition(0) returns null if the drawer list was scrolled down
         handler.postDelayed(r, 50);
 
-
-
     }
 
     //  ON CLICK METHODS
@@ -397,12 +395,23 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         currentlyLoadedFragment = fragment;
     }
 
+    // refreshes the drawer menu recycler view
+    @Override
+    public void refreshDrawerListRecyclerView() throws Exception {
+        // refresh data sets
+        ((DrawerRecyclerViewAdapter) getmDrawerListRecyclerView1().getAdapter()).updateDataSets();
+        // notify datasetchanged
+        getmDrawerListRecyclerView1().getAdapter().notifyDataSetChanged();
+    }
+
     // refreshes the more folders recycler view in the drawer list
     @Override
     public void refreshDrawerListRecyclerView2() throws Exception {
-        // refresh the vos before calling notifydata set changed
-        List<FoldersVO> moreFoldersVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateDataSets();
-        if(moreFoldersVOs!=null && moreFoldersVOs.size() > 1) {
+        // refresh data sets
+        List<FolderVO> moreFolderVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateDataSets();
+        // if the list is empty then show "Loading.." message
+        if(moreFolderVOs !=null && moreFolderVOs.size() > 1) {
+            // if the size is more than 1
             getmDrawerListRecyclerView2().setVisibility(View.VISIBLE);
             emptyRecyclerViewMsg.setVisibility(View.GONE);
             //refresh the list

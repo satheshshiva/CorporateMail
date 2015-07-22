@@ -78,10 +78,6 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
             insertQueries.add(sql1 + "' ," + DrawerMenuRowType.EMPTY_ROW + " , '');");
         }
 
-        //adding Sample Favourite folders
-        insertQueries.add(sql1 + "fave1" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS +  " , '" + context.getString(R.string.fontIcon_drawer_fave_item)+"');");
-        insertQueries.add(sql1 + "fave2" + "' ," + DrawerMenuRowType.FAVOURITE_FOLDERS +  " , '" + context.getString(R.string.fontIcon_drawer_fave_item)+"');");
-
 		return insertQueries;
 	}
 
@@ -94,6 +90,12 @@ public class TableDrawerMenu implements CacheDbConstants, DbTable, Constants{
 
     public static String getAllRecordsQuery(){
         return "SELECT * FROM " + tableName + " ORDER BY " + COLUMN_TYPE + " ASC ";
+    }
+
+    /*** WHERE CLAUSE ***/
+
+    public static String getWhereDeleteVO(){
+        return  COLUMN_FOLDER_ID + "=?";
     }
 
     public static String getFavesQuery(){

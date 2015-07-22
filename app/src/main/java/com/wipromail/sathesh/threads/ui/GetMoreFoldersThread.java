@@ -18,7 +18,7 @@ import com.wipromail.sathesh.service.data.Folder;
 import com.wipromail.sathesh.service.data.FolderId;
 import com.wipromail.sathesh.service.data.WellKnownFolderName;
 import com.wipromail.sathesh.sqlite.db.cache.dao.MoreFoldersDAO;
-import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
 import com.wipromail.sathesh.util.Utilities;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     private Handler handler;
     private ExchangeService service;
     private MoreFoldersDAO dao;
-    private List<FoldersVO> listVos;
+    private List<FolderVO> listVos;
     private Status currentStatus;
 
     public enum Status{
@@ -52,7 +52,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
 
     @Override
     public void run() {
-        FoldersVO vo;
+        FolderVO vo;
         try {
             sendHandlerMsg(Status.RUNNING);
             listVos.clear();    //clear the vo list on every run
@@ -63,7 +63,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot), "MsgFolderRoot");
 
             // one empty row since last folder might hide inside the navigation bar
-            vo = new FoldersVO();
+            vo = new FolderVO();
             vo.setType(DrawerMenuRowType.MoreFolders.EMPTY_ROW);
             listVos.add(vo);
 
@@ -83,11 +83,11 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
     }
 
     private  void recursivePopulateFolders( ExchangeService service, FolderId folderId, String folderName) throws Exception{
-        FoldersVO vo;
+        FolderVO vo;
         String subFolderDispName;
 
         if(BuildConfig.DEBUG) Log.i(TAG, "PROCESSING FOLDER " + folderName);
-        vo = new FoldersVO();
+        vo = new FolderVO();
         vo.setType(DrawerMenuRowType.MoreFolders.HEADER);
         vo.setName(folderName);
         vo.setFolder_id(folderId.getUniqueId());
@@ -122,7 +122,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
                 if(BuildConfig.DEBUG) Log.i(TAG, "Name=======" + subFolderDispName);
                 if(BuildConfig.DEBUG) Log.i(TAG, "Folder id=======" + subFolder.getId().getUniqueId());
 
-                vo = new FoldersVO();
+                vo = new FolderVO();
                 vo.setType(DrawerMenuRowType.MoreFolders.FOLDER);
                 vo.setName(subFolderDispName);
                 vo.setFont_icon(getFontIcon(subFolderDispName, folderName));

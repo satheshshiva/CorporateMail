@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Sathesh on 5/9/15.
  */
-public class FoldersVO implements PojoVO, Serializable {
+public class FolderVO implements PojoVO, Serializable {
     private String name;
     private String folder_id;
     private int type;
@@ -59,5 +59,22 @@ public class FoldersVO implements PojoVO, Serializable {
 
     public void setParent_name(String parent_name) {
         this.parent_name = parent_name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if(folder_id==null) return false;
+
+        FolderVO folderVO = (FolderVO) o;
+
+        return folder_id.equals(folderVO.folder_id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return folder_id.hashCode();
     }
 }

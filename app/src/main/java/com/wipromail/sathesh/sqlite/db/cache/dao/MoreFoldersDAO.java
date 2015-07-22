@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbConstants;
 import com.wipromail.sathesh.sqlite.db.cache.CacheDbHelper;
 import com.wipromail.sathesh.sqlite.db.cache.tables.TableMoreFolders;
-import com.wipromail.sathesh.sqlite.db.cache.vo.FoldersVO;
+import com.wipromail.sathesh.sqlite.db.cache.vo.FolderVO;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class MoreFoldersDAO extends BaseCacheDAO {
 
     //All the DAOs should have fully qualified class names of table class and vo class for auto wiring
     private Class tableClass= TableMoreFolders.class;
-    private Class voClass= FoldersVO.class;
+    private Class voClass= FolderVO.class;
 
     /** Constructor for the DAO. initializes the Database helper
      * @param context
@@ -37,11 +37,11 @@ public class MoreFoldersDAO extends BaseCacheDAO {
     /** New records
      * @return
      */
-    public long createOrUpdate(List<FoldersVO> vos) throws Exception {
+    public long createOrUpdate(List<FolderVO> vos) throws Exception {
         long insertId=0;
         try{
             open(cacheDbHelper);
-            for(FoldersVO vo: vos){
+            for(FolderVO vo: vos){
                 insertId= saveVOInDB(vo);
             }
         }
@@ -54,7 +54,7 @@ public class MoreFoldersDAO extends BaseCacheDAO {
     /** New record
      * @return
      */
-    public long createOrUpdate(FoldersVO vo) throws Exception {
+    public long createOrUpdate(FolderVO vo) throws Exception {
         long insertId=0;
         try{
             open(cacheDbHelper);
@@ -67,7 +67,7 @@ public class MoreFoldersDAO extends BaseCacheDAO {
     }
 
     /*** UPDATE QUERIES ***/
-    public long update(FoldersVO vo) throws Exception {
+    public long update(FolderVO vo) throws Exception {
         long insertId=0;
         try{
             open(cacheDbHelper);
@@ -85,9 +85,9 @@ public class MoreFoldersDAO extends BaseCacheDAO {
      * @param
      * @return List<VO>
      */
-    public List<FoldersVO> getAllRecords() throws Exception {
+    public List<FolderVO> getAllRecords() throws Exception {
 
-        List<FoldersVO> returnList =null;
+        List<FolderVO> returnList =null;
         Cursor cursor=null;
         try{
             open(cacheDbHelper);
@@ -120,7 +120,7 @@ public class MoreFoldersDAO extends BaseCacheDAO {
     /** private function which calls the insert query for a single VO
      *
      */
-    private long saveVOInDB(FoldersVO vo) {
+    private long saveVOInDB(FolderVO vo) {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
         return database.insertWithOnConflict(CacheDbConstants.table.MORE_FOLDERS, null,
                 values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -129,7 +129,7 @@ public class MoreFoldersDAO extends BaseCacheDAO {
     /** private function which calls the update query for a single VO
      *
      */
-    private long updateVOInDB(FoldersVO vo) {
+    private long updateVOInDB(FolderVO vo) {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
         return database.update(CacheDbConstants.table.MORE_FOLDERS,
                 values, TableMoreFolders.getWhereForUpdateQuery(), new String[]{vo.getFolder_id()});
