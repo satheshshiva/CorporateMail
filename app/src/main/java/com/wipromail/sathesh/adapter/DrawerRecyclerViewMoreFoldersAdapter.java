@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<DrawerRecyclerViewMoreFoldersAdapter.ViewHolder> implements Constants{
     private OnRecyclerViewClick2Listener listener;
+    private List<DrawerMenuVO> faves;
     private List<MoreFoldersVO> drawerMenuVOList;
     private MailListActivityDataPasser activity;
     private DrawerMenuDAO drawerMenuDAO;
@@ -45,7 +46,7 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
         this.drawerMenuDAO = new DrawerMenuDAO((MyActivity) activity);
         this.moreFoldersDAO = new MoreFoldersDAO((MyActivity)activity);
         try {
-            updateVO();
+            updateDataSets();
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);
         }
@@ -207,8 +208,9 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
     /** Private method for updating local VOs. Should be called before every notifydataSetChanged.
      *
      */
-    public List<MoreFoldersVO> updateVO() throws Exception {
+    public List<MoreFoldersVO> updateDataSets() throws Exception {
         this.drawerMenuVOList = moreFoldersDAO.getAllRecords();
+        this.faves = drawerMenuDAO.getFaves();
         return drawerMenuVOList;
 
     }

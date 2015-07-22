@@ -79,7 +79,27 @@ public class DrawerMenuDAO extends BaseCacheDAO {
         try{
             open(cacheDbHelper);
             //call the select query with where clause as folder id
-            cursor = database.rawQuery(TableDrawerMenu.getAllRecords(), null);
+            cursor = database.rawQuery(TableDrawerMenu.getAllRecordsQuery(), null);
+            returnList =(List)autoMapCursorToVo(cursor,voClass);
+        }finally{
+            try{cursor.close();}catch(Exception e ){}
+            close(cacheDbHelper);
+        }
+        return returnList;
+    }
+
+    /** Get Favourite Folders
+     * @param
+     * @return List<VO>
+     */
+    public List<DrawerMenuVO> getFaves() throws Exception {
+
+        List<DrawerMenuVO> returnList =null;
+        Cursor cursor=null;
+        try{
+            open(cacheDbHelper);
+            //call the select query with where clause as folder id
+            cursor = database.rawQuery(TableDrawerMenu.getFavesQuery(), null);
             returnList =(List)autoMapCursorToVo(cursor,voClass);
         }finally{
             try{cursor.close();}catch(Exception e ){}

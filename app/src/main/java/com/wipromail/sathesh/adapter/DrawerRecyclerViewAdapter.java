@@ -43,7 +43,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
         this.drawerMenuDAO = new DrawerMenuDAO((MyActivity) activity);
 
         try {
-            updateVO();
+            updateDataSets();
         } catch (Exception e) {
             Utilities.generalCatchBlock(e,this);
         }
@@ -166,7 +166,7 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
     /** Private method for updating local VOs. Should be called before every notifydataSetChanged.
      *
      */
-    public List<DrawerMenuVO> updateVO() throws Exception {
+    public List<DrawerMenuVO> updateDataSets() throws Exception {
         this.drawerMenuVOList = drawerMenuDAO.getAllRecords();
         return drawerMenuVOList;
 

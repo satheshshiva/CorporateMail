@@ -128,7 +128,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
                 case R.id.drawer_back_btn:
                 case R.id.drawer_back_layout:
                     //update the datasets
-                    ((DrawerRecyclerViewAdapter) activityDataPasser.getmDrawerListRecyclerView1().getAdapter()).updateVO();
+                    ((DrawerRecyclerViewAdapter) activityDataPasser.getmDrawerListRecyclerView1().getAdapter()).updateDataSets();
                     //call notify data set changed. to update if there is any change in the faves
                     activityDataPasser.getmDrawerListRecyclerView1().getAdapter().notifyDataSetChanged();
                     activityDataPasser.closeDrawerLayoutPage2();

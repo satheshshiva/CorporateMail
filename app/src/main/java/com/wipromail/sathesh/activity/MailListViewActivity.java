@@ -401,7 +401,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     public void refreshDrawerListRecyclerView2() throws Exception {
         // refresh the vos before calling notifydata set changed
-        List<MoreFoldersVO> moreFoldersVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateVO();
+        List<MoreFoldersVO> moreFoldersVOs = ((DrawerRecyclerViewMoreFoldersAdapter) getmDrawerListRecyclerView2().getAdapter()).updateDataSets();
         if(moreFoldersVOs!=null && moreFoldersVOs.size() > 1) {
             getmDrawerListRecyclerView2().setVisibility(View.VISIBLE);
             emptyRecyclerViewMsg.setVisibility(View.GONE);
