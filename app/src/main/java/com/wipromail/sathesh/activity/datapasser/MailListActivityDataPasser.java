@@ -1,6 +1,7 @@
 package com.wipromail.sathesh.activity.datapasser;
 
 
+import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 
@@ -8,6 +9,7 @@ public interface MailListActivityDataPasser {
 
     DrawerLayout getmDrawerLayout();
 
+    Context getApplicationContext();
     int getDrawerLayoutSelectedPosition();
     int getDrawerLayoutSelectedPosition2();
 

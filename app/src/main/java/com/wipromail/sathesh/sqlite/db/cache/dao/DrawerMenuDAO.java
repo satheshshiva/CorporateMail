@@ -123,6 +123,16 @@ public class DrawerMenuDAO extends BaseCacheDAO {
         }
     }
 
+    public void deleteFavourite(FolderVO vo) throws Exception {
+        try{
+            open(cacheDbHelper);
+            deleteFavouriteinDb(vo);
+        }
+        finally{
+            close(cacheDbHelper);
+        }
+    }
+
     /*** PRIVATE METHODS ***/
 
     /** private function which calls the insert query for a single VO
@@ -137,5 +147,9 @@ public class DrawerMenuDAO extends BaseCacheDAO {
     private long deleteVOInDb(FolderVO vo) {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
         return database.delete(CacheDbConstants.table.DRAWER_MENU, TableDrawerMenu.getWhereDeleteVO(), new String[]{vo.getFolder_id()});
+    }
+    private long deleteFavouriteinDb(FolderVO vo) {
+        ContentValues values = autoMapVoToContentValues(vo,tableClass);
+        return database.delete(CacheDbConstants.table.DRAWER_MENU, TableDrawerMenu.getWhereDeleteFaveVO(), new String[]{vo.getFolder_id()});
     }
 }
