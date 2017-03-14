@@ -2,172 +2,283 @@
 <items version="2" >
 
     <item
-        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.4/3fc542fe8bb8164e8d3e840fe7403bc0518053c0/servlet-api-2.4.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="3fc542fe8bb8164e8d3e840fe7403bc0518053c0">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/servlet-api-2.4-9ff1f9669a4e227d4f5dcd07afd3ee2002bdb281.jar" />
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/b512359e200e5c14439da53407e8df6c7c127957/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4b868b833b0887aa48c4e581558eef4f1196f6a2">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0468df620f2935d1ee28857b10085373c6f9d177/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/library-2.4.0-1af16844a537b6a20b9d74c2b8d3ba82f754c864.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/acra-4.4.0.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="7864f0ac6c74d84e465aa5449fa14408b0a1418f">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/acra-4.4.0-a0e9458e8dd4b0b6496f858b32d8d3b34884215a.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-af0c38b6d331d72fe333fba0da1b1cd27d1ae5ee.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/GoogleAdMobAdsSdk-6.2.1.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="40ffb9188343d72dc46d596836a8dd8d464b41a3">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.2.1-e97492a178f816b2ddd64c7cf92f36752e556efa.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/commons-httpclient.jar"
-        jumboMode="false"
-        revision="22.0.1"
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/commons-httpclient.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
         sha1="9fe67c06f8411b5f906c0e1f84a1289d612a4b79">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/commons-httpclient-c795ede8133058bf5ff58d6e00399d44c9c20292.jar" />
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-httpclient_f9e1d84c27eae3b429bd4da3ae44a8efcd09376d/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/classes_repacked_v2.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="4f5040d53f4082980f3ebc0935ac6d7b3e273a05">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes_repacked_v2-c665f4431f6385263c70b4510608852f33bb22c6.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/b2aa5c38d0bbd616fb6a1aa87e503f0f0b16474f/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
         sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-844c49c6068e26aa243e62730c31aab1526ea328.jar" />
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_228bbfd093199bf9347f340d2b0d9cb591891937/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/commons-httpclient.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="9fe67c06f8411b5f906c0e1f84a1289d612a4b79">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/commons-httpclient-c795ede8133058bf5ff58d6e00399d44c9c20292.jar" />
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8fc613dfb075ac6a0ae920f1419f65067e46c01a">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_d91e5621b0947723de76c9c0b5fcabc4110a3ef8/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-0e2559bed24c0f83320612e9c2c3a2b412709f18.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/classes_repacked_v2.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="4f5040d53f4082980f3ebc0935ac6d7b3e273a05">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes_repacked_v2-c665f4431f6385263c70b4510608852f33bb22c6.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/acra-4.4.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="7864f0ac6c74d84e465aa5449fa14408b0a1418f">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/acra-4.4.0-a0e9458e8dd4b0b6496f858b32d8d3b34884215a.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.1/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="4b868b833b0887aa48c4e581558eef4f1196f6a2">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-16990e0565538e65bb6d9ffe8368b7065b40ac74.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/GoogleAdMobAdsSdk-6.2.1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="40ffb9188343d72dc46d596836a8dd8d464b41a3">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/GoogleAdMobAdsSdk-6.2.1-e97492a178f816b2ddd64c7cf92f36752e556efa.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/jcifs/jcifs/1.3.17/60e3805e7bcfe96bf1f1907b821d251cc9d789ec/jcifs-1.3.17.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="60e3805e7bcfe96bf1f1907b821d251cc9d789ec">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/jcifs-1.3.17-01b05add058c0ff472e6f8e858a417961d7b3a4c.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.3.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="8c6ebb7d087d1a30bf84356bd2aecf85309fc024">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-9a8f468ad3dee2a8728d741c10421b25fe68245f.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.1/classes.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="4b868b833b0887aa48c4e581558eef4f1196f6a2">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-16990e0565538e65bb6d9ffe8368b7065b40ac74.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/classes-fdb6d24257ff068d98676d7bf9625518e2f48b1e.jar" />
-    </item>
-    <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/02f11e9e30675848f6630554bb93509d5d690a1c/output/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
         sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-a35ce46ffd25d8d386fadad4da44b4abb0a417c0.jar" />
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-22.2.0_3929733944566b8abdd8c26b3a02092beb6c5617/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/MyContent/Java/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-279a9633ed665b6f942e2c1d7bd329a84d706b4c.jar" />
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/a8216c687cd7dc7b3ad825907568928af034dd3d/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_17998dee4520b1ca8c742d9b144fea79fafdf31d/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.4/3fc542fe8bb8164e8d3e840fe7403bc0518053c0/servlet-api-2.4.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="3fc542fe8bb8164e8d3e840fe7403bc0518053c0">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/servlet-api-2.4-9ff1f9669a4e227d4f5dcd07afd3ee2002bdb281.jar" />
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/27fad6d42c59f0084768cfaa0166ab4108bb7188/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8c6ebb7d087d1a30bf84356bd2aecf85309fc024">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ca5af207e7cd280fc8323d319d66d29cf148af80/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/.gradle/caches/modules-2/files-2.1/jcifs/jcifs/1.3.17/60e3805e7bcfe96bf1f1907b821d251cc9d789ec/jcifs-1.3.17.jar"
-        jumboMode="false"
-        revision="21.0.2"
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.gradle/caches/modules-2/files-2.1/jcifs/jcifs/1.3.17/60e3805e7bcfe96bf1f1907b821d251cc9d789ec/jcifs-1.3.17.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
         sha1="60e3805e7bcfe96bf1f1907b821d251cc9d789ec">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/jcifs-1.3.17-01b05add058c0ff472e6f8e858a417961d7b3a4c.jar" />
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/jcifs-1.3.17_66cd4206662f670c7f6adcd95175f2393e5384c5/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/libGoogleAnalyticsServices.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="db1e65d9e3ee616f871cb23120fbea8f18ad3e4c">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-0bf67259513430524877134a0fd7d5ae05c07e9e.jar" />
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_fbe861dfa6d5c8291aa78e366c6efb3b19b684df/classes.dex" />
     </item>
     <item
-        jar="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/libs/libGoogleAnalyticsServices.jar"
-        jumboMode="false"
-        revision="21.0.2"
+        is-multidex="true"
+        jar="/Users/ssiva17/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_fbe861dfa6d5c8291aa78e366c6efb3b19b684df/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/3167401131bd033ac21d11b048aafaa86e1a2471/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7b76d66b1b2ee822ba18e4c33e5e006cee954122/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/27fad6d42c59f0084768cfaa0166ab4108bb7188/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8c6ebb7d087d1a30bf84356bd2aecf85309fc024">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ca5af207e7cd280fc8323d319d66d29cf148af80/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/b512359e200e5c14439da53407e8df6c7c127957/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4b868b833b0887aa48c4e581558eef4f1196f6a2">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0468df620f2935d1ee28857b10085373c6f9d177/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b00ef3e4348097ae7d2048e07846e81da42a8592">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_d91e5621b0947723de76c9c0b5fcabc4110a3ef8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-22.2.0_c47d1bf62e4547c1fd1c13b8716acf95a9c78589/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/libGoogleAnalyticsServices.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
         sha1="db1e65d9e3ee616f871cb23120fbea8f18ad3e4c">
-        <dex dex="/Users/Sathesh/MyContent/workspaces/android_studio/WiproMail/app/build/intermediates/pre-dexed/debug/libGoogleAnalyticsServices-0bf67259513430524877134a0fd7d5ae05c07e9e.jar" />
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/libGoogleAnalyticsServices_016c2b6d1473894b4ab75ff90ac50ffcc3ad403d/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/GoogleAdMobAdsSdk-6.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="40ffb9188343d72dc46d596836a8dd8d464b41a3">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/GoogleAdMobAdsSdk-6.2.1_06d7fc4c7920ae7a027901c3a0585fbb6b1497a4/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.4/3fc542fe8bb8164e8d3e840fe7403bc0518053c0/servlet-api-2.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3fc542fe8bb8164e8d3e840fe7403bc0518053c0">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/servlet-api-2.4_8e8ad3a39a7949ae21a8d650025715039793b98e/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/classes_repacked_v2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4f5040d53f4082980f3ebc0935ac6d7b3e273a05">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/classes_repacked_v2_ad8d578554af32059964b734dbe4324cd6df427d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_495fb92d76dab202c915c491603ab1251745900c/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_495fb92d76dab202c915c491603ab1251745900c/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/02f11e9e30675848f6630554bb93509d5d690a1c/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_bb65d3b0af22d6f58df02d02138de3670884155f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/libGoogleAnalyticsServices.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="db1e65d9e3ee616f871cb23120fbea8f18ad3e4c">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/libGoogleAnalyticsServices_016c2b6d1473894b4ab75ff90ac50ffcc3ad403d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/a8216c687cd7dc7b3ad825907568928af034dd3d/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_17998dee4520b1ca8c742d9b144fea79fafdf31d/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/acra-4.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7864f0ac6c74d84e465aa5449fa14408b0a1418f">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/acra-4.4.0_0811f06dd5dd58493555e2f87756ed5f32225e11/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/02f11e9e30675848f6630554bb93509d5d690a1c/output/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-22.2.0_3929733944566b8abdd8c26b3a02092beb6c5617/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/libs/acra-4.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7864f0ac6c74d84e465aa5449fa14408b0a1418f">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/2/acra-4.4.0_0811f06dd5dd58493555e2f87756ed5f32225e11/classes.dex" />
+    </item>
+    <item
+        custom-flags="--core-library"
+        is-multidex="true"
+        jar="/Users/ssiva17/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-22.2.0_c47d1bf62e4547c1fd1c13b8716acf95a9c78589/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ssiva17/.android/build-cache/3167401131bd033ac21d11b048aafaa86e1a2471/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
+        <dex dex="/Users/ssiva17/workspaces/AndroidStudioProjects/WiproMail/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_7b76d66b1b2ee822ba18e4c33e5e006cee954122/classes.dex" />
     </item>
 
 </items>
