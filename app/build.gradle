@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.wipromail.sathesh"
@@ -15,6 +15,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        additionalParameters =["--core-library"]
     }
 }
 
