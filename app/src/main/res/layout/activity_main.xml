@@ -4,14 +4,14 @@
     android:layout_gravity="center_horizontal"
     >
 
-     <ImageView
+     <!--<ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:layout_centerHorizontal="true"
          android:layout_centerVertical="true"
         android:src="@drawable/wipro_logo_trans2"
-         />
+         />-->
  
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -20,5 +20,14 @@
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Corporate Mail"
+        android:textSize="@dimen/abc_text_size_large_material" />
+
 
 </RelativeLayout>
