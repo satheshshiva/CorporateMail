@@ -1,21 +1,21 @@
-package com.wipromail.sathesh.sync;
+package com.sathesh.corporatemail.sync;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 
-import com.wipromail.sathesh.application.SharedPreferencesAdapter;
-import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.customexceptions.NoInternetConnectionException;
-import com.wipromail.sathesh.ews.NetworkCall;
-import com.wipromail.sathesh.service.data.ChangeCollection;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.FolderId;
-import com.wipromail.sathesh.service.data.GetEventsResults;
-import com.wipromail.sathesh.service.data.ItemChange;
-import com.wipromail.sathesh.service.data.PullSubscription;
-import com.wipromail.sathesh.service.data.WellKnownFolderName;
+import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
+import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
+import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.service.data.ChangeCollection;
+import com.sathesh.corporatemail.service.data.ExchangeService;
+import com.sathesh.corporatemail.service.data.FolderId;
+import com.sathesh.corporatemail.service.data.GetEventsResults;
+import com.sathesh.corporatemail.service.data.ItemChange;
+import com.sathesh.corporatemail.service.data.PullSubscription;
+import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 
 public class SyncUsingPullSubscription implements Constants{
 

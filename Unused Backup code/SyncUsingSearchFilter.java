@@ -1,15 +1,15 @@
-package com.wipromail.sathesh.sync;
+package com.sathesh.corporatemail.sync;
 
 import java.util.Date;
 
 import android.content.Context;
 
-import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.ews.NetworkCall;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.FindItemsResults;
-import com.wipromail.sathesh.service.data.Item;
-import com.wipromail.sathesh.service.data.ItemView;
+import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.service.data.ExchangeService;
+import com.sathesh.corporatemail.service.data.FindItemsResults;
+import com.sathesh.corporatemail.service.data.Item;
+import com.sathesh.corporatemail.service.data.ItemView;
 
 public class SyncUsingSearchFilter implements Constants{
 

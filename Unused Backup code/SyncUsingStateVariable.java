@@ -1,13 +1,13 @@
-package com.wipromail.sathesh.sync;
+package com.sathesh.corporatemail.sync;
 
 import android.content.Context;
 
-import com.wipromail.sathesh.application.SharedPreferencesAdapter;
-import com.wipromail.sathesh.constants.Constants;
-import com.wipromail.sathesh.ews.NetworkCall;
-import com.wipromail.sathesh.service.data.ChangeCollection;
-import com.wipromail.sathesh.service.data.ExchangeService;
-import com.wipromail.sathesh.service.data.ItemChange;
+import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
+import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.service.data.ChangeCollection;
+import com.sathesh.corporatemail.service.data.ExchangeService;
+import com.sathesh.corporatemail.service.data.ItemChange;
 
 public class SyncUsingStateVariable implements Constants{
 
