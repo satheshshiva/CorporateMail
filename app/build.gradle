@@ -5,7 +5,7 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        applicationId "com.wipromail.sathesh"
+        applicationId "com.sathesh.corporatemail"
         minSdkVersion 11
         targetSdkVersion 22
     }

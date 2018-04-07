@@ -7,6 +7,6 @@
         android:id="@+id/viewMailFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        class="com.wipromail.sathesh.fragment.ViewMailFragment" ></fragment>
+        class="com.sathesh.corporatemail.fragment.ViewMailFragment" ></fragment>
 
 </LinearLayout>

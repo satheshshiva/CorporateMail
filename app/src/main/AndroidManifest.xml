@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wipromail.sathesh"
+    package="com.sathesh.corporatemail"
     android:installLocation="auto"
     android:versionCode="17"
     android:versionName="0.5 alpha" >
@@ -68,7 +68,7 @@
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.wipromail.sathesh.activity.MainActivity" />
+                android:value="com.sathesh.corporatemail.activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.SettingsActivity"

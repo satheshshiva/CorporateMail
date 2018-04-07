@@ -39,7 +39,7 @@
             android:elevation="10dp"
             android:id="@+id/drawer_back_layout">
             <view
-                class="com.wipromail.sathesh.ui.customwidgets.FontIcon$IconView"
+                class="com.sathesh.corporatemail.ui.customwidgets.FontIcon$IconView"
                 android:id="@+id/drawer_back_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
