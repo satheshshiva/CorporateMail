@@ -2,8 +2,8 @@ package com.sathesh.corporatemail.constants;
 
 public interface Constants {
 
-	public static final String TAG = "Wipro Mail";
-	public static final String TAG_MNS = "Wipro Mail Notification Service";
+	public static final String TAG = "Corporate Mail";
+	public static final String TAG_MNS = "Corporate Mail MNS";
 
 
 	/* -------------------------------------------------------------------------------------
@@ -191,6 +191,15 @@ public interface Constants {
 	public static final String ENCRYPTION_PASSPHRASE = "sJfDg3k4GgrEdbA5";	
 	public static final boolean IS_USERNAME_ENCRYPTION_ENABLED = false;
 	public static final boolean IS_PASSWORD_ENCRYPTION_ENABLED = true;
+
+	/* -------------------------------------------------------------------------------------
+	----------------------------------  Notification Channel ----------------------------
+	--------------------------------------------------------------------------------------*/
+
+	public static final String NOTIFICATION_CHANNEL_NEW_MAIL = "cm_channel_01";
+	public static final String NOTIFICATION_CHANNEL_LOGIN_ERROR = "cm_channel_02";
+	public static final String NOTIFICATION_CHANNEL_NEW_MAIL_DESC = "corp_mail_newmail_channel";
+	public static final String NOTIFICATION_CHANNEL_LOGIN_ERROR_DESC = "corp_mail_login_error_channel";
 
 	/*--- Rate App  ---*/
 	public static final int RATE_APP_DIALOG_OPEN_MAIL_FREQUENCY=20;	//open the rate app dialog for every 20 mails opened

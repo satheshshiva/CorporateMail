@@ -28,7 +28,7 @@
                 android:layout_height="88dp"
                 >
 
-                <!--<ImageView
+                <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="90dip"
                     android:layout_height="match_parent"
@@ -36,8 +36,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="5dp"
                     android:contentDescription="@string/contetn_desc_logo"
-                    android:src="@drawable/wipro_logo_trans"
-                     />-->
+                    android:src="@drawable/cm_hi_res_icon"
+                     />
 
                 <TextView
                     android:id="@+id/textView3"

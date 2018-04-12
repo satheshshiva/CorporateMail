@@ -9,18 +9,16 @@ import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.asynctask.interfaces.GenericAsyncTask;
 import com.sathesh.corporatemail.constants.Constants;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Properties;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> implements Constants{
 
@@ -36,6 +34,10 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 	private String LatestVersionName="";
 	private String LatestVersionCode="";
 	private int currentVersionCode=0;
+
+
+	HttpURLConnection connection ;
+
 
 	public UpdateCheckerAsyncTask(GenericAsyncTask caller, MyActivity activity,int currentVersionCode) {
 		this.caller=caller;
@@ -110,22 +112,21 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 
 	public void checkUpdate(String url) throws Exception{
 
-		HttpClient client = new DefaultHttpClient(); 
+		URL _url = new URL(url);
+		connection = (HttpURLConnection) _url.openConnection();
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:28.0) Gecko/20100101 Firefox/28.0");
 
-		HttpGet get = new HttpGet(url);
-		get.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:28.0) Gecko/20100101 Firefox/28.0");
-		HttpResponse responseGet = client.execute(get);  
-		HttpEntity resEntityGet = responseGet.getEntity();  
 
-		if (resEntityGet != null) {  
+
+		if (connection.getResponseCode() ==200) {
 
 
 			//do something with the response
-			Log.i(TAG, "UpdateCheckerAsyncTask -> LATEST VER DETAILS HTTP RESPONSE STATUS "+ responseGet.getStatusLine().getStatusCode());
+			Log.i(TAG, "UpdateCheckerAsyncTask -> LATEST VER DETAILS HTTP RESPONSE STATUS "+ connection.getResponseCode());
 
 			//  Log.i(TAG, "GET RESPONSE "+ EntityUtils.toString(resEntityGet));
 
-			input = resEntityGet.getContent();
+			input = connection.getInputStream();
 
 			Properties prop = new Properties();
 			prop.load(input);
@@ -150,7 +151,7 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 
 		}
 		else {
-			Log.e(TAG, "UpdateChecker -> resEntityGet null reponse");
+			Log.e(TAG, "UpdateChecker -> connection not 200 response");
 		}
 	}
 }
