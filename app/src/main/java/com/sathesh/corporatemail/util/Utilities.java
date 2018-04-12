@@ -44,12 +44,12 @@ public class Utilities implements Constants {
 	}
 
 	public static String encrypt(String cleartext) throws Exception{
-		return EncryptionDecryption.encrypt(ENCRYPTION_PASSPHRASE, cleartext);
+		return EncryptionDecryption.encrypt(cleartext);
 
 	}
 
 	public static String decrypt(String encrptedString) throws Exception{
-		return EncryptionDecryption.decrypt(ENCRYPTION_PASSPHRASE, encrptedString);
+		return EncryptionDecryption.decrypt( encrptedString);
 
 	}
 

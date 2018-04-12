@@ -7,6 +7,8 @@
 
     <!-- Login Page -->
     <string name="login_logo_bigText">Corporate Mail</string>
+    <string name="title_activity_main">Corp. Mail</string>
+
     <string name="login_logo_bigText_beta"></string>
     <string name="webmail1_url">https://webmail.wipro.com</string>
     <string name="webmail2_url">https://webmail2.wipro.com</string>
@@ -14,7 +16,7 @@
     <string name="webmail_365_username_append">\u0040wipro.com</string>
     <string name="webmail_url_EWS_extension">/EWS/Exchange.asmx</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">Corporate Mail</string>
+
     <string name="title_activity_login_page">Login</string>
     <string name="login_user_text">Wipro AD ID</string>
     <string name="login_pwd_text">Password</string>
@@ -58,10 +60,10 @@
     <string name="mnsServiceNewMailNotification">You have %d new email</string>
     <string name="mnsServiceNotificationWithNoSubject">(no subject)</string>
     <string name="mnsServiceNotificationWithNullMessage">New Email</string>
-    <string name="mns_service_started">Starting Wipro Mail Notification Service..</string>
-    <string name="mns_service_stopped">Wipro Mail Notification Service Stopped</string>
+    <string name="mns_service_started">Starting Corporate Mail Notification Service..</string>
+    <string name="mns_service_stopped">Corporate Mail Notification Service Stopped</string>
     <string name="mns_service_invalidUser_title">Error: Invalid UserName/Password</string>
-    <string name="mns_service_invalidUser_message">Have you recently changed your Wipro AD Username/Password? Please login to the application with your new Username/Password.</string>
+    <string name="mns_service_invalidUser_message">Have you recently changed your AD Username/Password? Please login to the application with your new Username/Password.</string>
 
     <!-- About -->
     <string name="title_activity_about">About</string>
@@ -86,7 +88,7 @@
     <string name="auto_update_check_new_update_pos_button">Continue</string>
     <string name="auto_update_check_new_update_neg_button">Dismiss</string>
     <string name="no_internet_connection_error_text">Connection problem</string>
-    <string name="contetn_desc_logo">Wipro Logo</string>
+    <string name="contetn_desc_logo">Corporate Email Logo</string>
 
     <!-- View Mail -->
     <string name="viewmail_from_lbl">From:</string>
@@ -214,7 +216,7 @@
 
     <!-- Bugs/Suggestion -->
     <string name="bugsOrSuggestion_developer_email">sathesh.shiva@wipro.com</string>
-    <string name="bugsOrSuggestion_email_subject">Wipro Mail v%s- Bugs/Suggestions</string>
+    <string name="bugsOrSuggestion_email_subject">Corporate Mail v%s- Bugs/Suggestions</string>
     <string name="bugsOrSuggestion_email_titlebar">Bugs/Suggestion</string>
 
     <!-- Rate this app -->
@@ -247,7 +249,7 @@
     <string name="dialog_favourite_add">Add this to Favourites?</string>
 
     <!-- Title bar -->
-    <string name="title_activity_home_page">Wipro Mail</string>
+    <string name="title_activity_home_page">Corporate Mail</string>
     <string name="title_activity_folders_page">Folders</string>
     <string name="title_activity_compose">New Email</string>
     <string name="title_activity_search_contacts">Search Contact</string>

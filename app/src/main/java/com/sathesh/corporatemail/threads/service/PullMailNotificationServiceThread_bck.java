@@ -264,11 +264,11 @@ extends Thread implements Constants
 		notification = new Notification(R.drawable.ic_launcher, context.getString(R.string.mns_service_invalidUser_title),
 				System.currentTimeMillis());
 
-		MailApplication.setLightNotificationWithPermission(notification);
+		/*MailApplication.setLightNotificationWithPermission(notification);
 		MailApplication.setSoundWithPermission(notification);
 		MailApplication.setVibrateNotificationWithPermission(notification);
 
-		notification.flags=Notification.FLAG_AUTO_CANCEL;
+		notification.flags=Notification.FLAG_AUTO_CANCEL;*/
 
 		// The PendingIntent to launch our activity if the user selects this notification
 		contentIntent = PendingIntent.getActivity(context, 0,
@@ -276,8 +276,22 @@ extends Thread implements Constants
 
 		mNM.cancelAll();
 		// Set the info for the views that show in the notification panel.
-		notification.setLatestEventInfo(context,  context.getString(R.string.mns_service_invalidUser_title),
-				context.getString(R.string.mns_service_invalidUser_message), contentIntent);
+
+		Notification.Builder builder = new Notification.Builder(context);
+
+		builder.setAutoCancel(false);
+		builder.setTicker("this is ticker text");
+		builder.setContentTitle(context.getString(R.string.mns_service_invalidUser_title));
+		builder.setContentText(context.getString(R.string.mns_service_invalidUser_message));
+		builder.setSmallIcon(R.drawable.ic_launcher);
+		builder.setContentIntent(pendingIntent);
+		//builder.setOngoing(true);
+		//builder.setSubText("This is subtext...");   //API level 16
+		builder.setNumber(100);
+		//builder.build();
+
+		notification = builder.getNotification();
+
 		mNM.notify(0, notification);
 
 	}

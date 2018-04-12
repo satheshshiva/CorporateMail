@@ -8,7 +8,7 @@
         android:contentDescription="@string/contetn_desc_logo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/wipro_logo_trans" />
+        android:src="@drawable/cm_hi_res_icon" />
 
     <TextView
         android:id="@+id/titlebar_title"

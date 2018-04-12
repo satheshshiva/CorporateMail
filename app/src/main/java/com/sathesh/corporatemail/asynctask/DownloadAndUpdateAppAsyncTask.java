@@ -13,18 +13,14 @@ import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customui.Notifications;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, String> implements Constants {
@@ -39,6 +35,8 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 	private static String STATUS_INSTALLING="INSTALLING";
 	private static String STATUS_ERROR="ERROR";
 	private static String STATUS_DOWNLOAD_COMPLETE="COMPLETE";
+
+	HttpURLConnection connection ;
 	
 	public DownloadAndUpdateAppAsyncTask(MyActivity activity) {
 		this.activity = activity;
@@ -52,14 +50,13 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 		final long fileLength;
 
 		try {
-			HttpClient client = new DefaultHttpClient(); 
+			URL _url = new URL(sUrl[0]);
+			connection = (HttpURLConnection) _url.openConnection();
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:28.0) Gecko/20100101 Firefox/28.0");
 
-			HttpGet get = new HttpGet( sUrl[0]);
-			HttpResponse responseGet = client.execute(get);  
-			HttpEntity resEntityGet = responseGet.getEntity();  
 
-			if (resEntityGet != null) {  
-				fileLength = resEntityGet.getContentLength();
+			if (connection != null) {
+				fileLength = connection.getContentLength();
 				
 				activity.runOnUiThread(new Runnable() {
 	                public void run() {
@@ -69,11 +66,11 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 	            });
 
 				//do something with the response
-				Log.i(TAG, "RESPONSE STATUS "+ responseGet.getStatusLine().getStatusCode());
+				Log.i(TAG, "RESPONSE STATUS "+ connection.getResponseCode());
 
 				//  Log.i(TAG, "GET RESPONSE "+ EntityUtils.toString(resEntityGet));
 
-				input = resEntityGet.getContent();
+				input = connection.getInputStream();
 
 
 

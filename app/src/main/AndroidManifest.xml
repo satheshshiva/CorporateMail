@@ -3,7 +3,7 @@
     package="com.sathesh.corporatemail"
     android:installLocation="auto"
     android:versionCode="17"
-    android:versionName="0.5 alpha" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="11"

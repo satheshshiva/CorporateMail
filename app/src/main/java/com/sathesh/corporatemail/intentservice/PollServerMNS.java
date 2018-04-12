@@ -1,11 +1,13 @@
 package com.sathesh.corporatemail.intentservice;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -72,6 +74,7 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 			this.context=this;
             cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
             cachedMailBodyAdapter = new CachedMailBodyAdapter(context);
+			mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
 
 			pollSound = MediaPlayer.create(context, R.raw.sound);
 			alarmManager = PullMailNotificationServiceThread.getAlarmManager();
@@ -225,6 +228,15 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 					}
 
 					private void showNewMailNotification(String... args) {
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+							// Create the NotificationChannel, but only on API 26+ because
+							// the NotificationChannel class is new and not in the support library
+							NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_NEW_MAIL, context.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
+							channel.setDescription(NOTIFICATION_CHANNEL_NEW_MAIL_DESC);
+							// Register the channel with the system
+							mNM.createNotificationChannel(channel);
+						}
 						NotificationProcessing.showNewMailNotification(context, thisnewMailCounter, MailNotificationService.newMailNotificationCounter, args);
 					}
 				}.run();
