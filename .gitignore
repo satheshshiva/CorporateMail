@@ -6,4 +6,4 @@
 app/app.iml
 corporatemail.iml
 local.properties
-/app/build/
+app/build/
