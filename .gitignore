@@ -2,4 +2,16 @@
 /.idea/
 /gradle/
 
-
+.gradle/
+app/app.iml
+app/build/generated/assets/
+app/build/generated/res/
+app/build/generated/source/aidl/
+app/build/generated/source/apt/
+app/build/generated/source/r/
+app/build/generated/source/rs/
+app/build/intermediates/
+app/build/outputs/
+app/build/tmp/
+corporatemail.iml
+local.properties
