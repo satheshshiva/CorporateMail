@@ -4,6 +4,6 @@
 
 .gradle/
 app/app.iml
-app/build/*
 corporatemail.iml
 local.properties
+/app/build/
