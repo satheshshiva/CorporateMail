@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
@@ -26,6 +28,7 @@ import com.sathesh.corporatemail.adapter.DrawerRecyclerViewAdapter;
 import com.sathesh.corporatemail.adapter.DrawerRecyclerViewMoreFoldersAdapter;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
+import com.sathesh.corporatemail.application.MyApplication;
 import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.AboutFragment;
@@ -96,6 +99,9 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         return activityInstance;
     }
 
+    MyApplication application;
+    Tracker mTracker;
+
     /** ON CREATE **
      *  Fragment : MailListViewFragment
      * Gets the mailType folder id and folder name from the intent params.
@@ -110,6 +116,10 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         activity = this;
         context = this;
         try {
+
+            application = (MyApplication) getApplication();
+            mTracker = application.getDefaultTracker();
+            mTracker.setScreenName("MailListViewActivity");
 
             //while sign out is clicked, the enitire application will be closed by calling this activity since with clear top since this is the first
             //spawned activity.  if this is happening then we have to finish this first activity for sign out.
@@ -276,6 +286,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             //cancel all the notifications
             // NotificationProcessing.cancelAllNotifications(this);
             // mailListViewFragmentDataPasser.softRefreshList();
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch (Exception e) {
             e.printStackTrace();
         }
