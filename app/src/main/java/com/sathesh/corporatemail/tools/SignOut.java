@@ -41,7 +41,7 @@ public class SignOut implements Constants{
 		try {
 			signOutGeneralActions(context);
 			//delete all the shared preferences from memory and file system. passing null will delete all the files
-			Utilities.deleteSharedPreferences(context, null);
+			Utilities.deleteSharedPreferences(context, (String[]) null);
 			
 			restartApp(activity, context);
 			

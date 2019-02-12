@@ -15,11 +15,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
 import com.sathesh.corporatemail.animation.ApplyAnimation;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
+import com.sathesh.corporatemail.application.MyApplication;
 import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
@@ -49,6 +52,9 @@ public class LoginPageActivity extends MyActivity implements Constants {
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
     private TextView urlDisp;
 
+    MyApplication application;
+    Tracker mTracker;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,10 @@ public class LoginPageActivity extends MyActivity implements Constants {
         context=this;
         // requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_login_page);
+
+        application = (MyApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        mTracker.setScreenName("MailListViewActivity");
 
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
@@ -339,6 +349,18 @@ public class LoginPageActivity extends MyActivity implements Constants {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    /** ON RESUME **/
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /** GETTER AND SETTER **/

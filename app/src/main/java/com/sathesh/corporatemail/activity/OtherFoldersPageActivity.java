@@ -323,7 +323,6 @@ public class OtherFoldersPageActivity extends MyActivity implements Constants{
 		return "<li><a href=\\\"javascript:onOpenInboxSubFolder('"  +folderId  + "', '" + linkName +"');\\\">" + linkName + "</a></li>";
 	}
 
-	//Google Analytics
 	@Override
 	public void onStart() {
 		super.onStart();

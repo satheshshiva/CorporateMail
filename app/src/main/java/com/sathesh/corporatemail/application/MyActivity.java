@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.sathesh.corporatemail.R;
 
 /**
@@ -34,18 +33,5 @@ public class MyActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
         else
             progressBar.setVisibility(View.GONE);
-    }
-
-    //Google Analytics
-    @Override
-    public void onStart() {
-        super.onStart();
-        EasyTracker.getInstance(this).activityStart(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EasyTracker.getInstance(this).activityStop(this);
     }
 }
