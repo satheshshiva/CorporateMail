@@ -5,12 +5,12 @@ import android.os.Message;
 import android.util.Log;
 
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.ews.EWSConnection;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FindItemsResults;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.ItemView;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.service.item.Item;
+import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.ItemView;
 
 public class Inbox implements Runnable, Constants {
 

@@ -86,24 +86,24 @@ public class BaseCacheDAO implements Constants{
 							if(("get" + columnName).equalsIgnoreCase(method.getName())){
 								//get the value of the method vo.getName()
 								if(method.getReturnType().getName().equals("java.lang.String")){
-									String strValue = (String)method.invoke(vo,null);
+									String strValue = (String)method.invoke(vo, (Object[]) null);
 									contentValues.put(columnName, strValue);
 								}
 								else if(method.getReturnType().getName().equals("java.util.Date")){
-									Date dateValue = (Date)method.invoke(vo,null);
+									Date dateValue = (Date)method.invoke(vo, (Object[]) null);
 									SimpleDateFormat sdf = new SimpleDateFormat(DB_DATE_FORMAT);
 									contentValues.put(columnName, sdf.format(dateValue));
 								}
 								else if(method.getReturnType().getName().equals("int")){
-									int intValue = (Integer)method.invoke(vo,null);
+									int intValue = (Integer)method.invoke(vo, (Object[]) null);
 									contentValues.put(columnName, intValue);
 								}
 								else if(method.getReturnType().getName().equals("long")){
-									long longValue = (Long)method.invoke(vo,null);
+									long longValue = (Long)method.invoke(vo, (Object[]) null);
 									contentValues.put(columnName, longValue);
 								}
 								else if(method.getReturnType().getName().equals("boolean")){
-									boolean boolValue = (Boolean)method.invoke(vo,null);
+									boolean boolValue = (Boolean)method.invoke(vo, (Object[]) null);
 									contentValues.put(columnName, boolValue);
 								}
 
@@ -112,7 +112,7 @@ public class BaseCacheDAO implements Constants{
 							else if(("is" + columnName).equalsIgnoreCase(method.getName())
 									|| (columnName.toLowerCase().startsWith("is") && columnName.equalsIgnoreCase(method.getName()))){
 								if(method.getReturnType().getName().equals("boolean")){
-									boolean boolValue = (Boolean)method.invoke(vo,null);
+									boolean boolValue = (Boolean)method.invoke(vo,(Object[]) null);
 									contentValues.put(columnName, boolValue);
 								}
 							}

@@ -8,40 +8,41 @@ import com.sathesh.corporatemail.application.Utils;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
-import com.sathesh.corporatemail.service.data.BasePropertySet;
-import com.sathesh.corporatemail.service.data.ChangeCollection;
-import com.sathesh.corporatemail.service.data.ConflictResolutionMode;
-import com.sathesh.corporatemail.service.data.DeleteMode;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.EventType;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FileAttachment;
-import com.sathesh.corporatemail.service.data.FindFoldersResults;
-import com.sathesh.corporatemail.service.data.FindItemsResults;
-import com.sathesh.corporatemail.service.data.FolderId;
-import com.sathesh.corporatemail.service.data.FolderView;
-import com.sathesh.corporatemail.service.data.GetEventsResults;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.ItemChange;
-import com.sathesh.corporatemail.service.data.ItemEvent;
-import com.sathesh.corporatemail.service.data.ItemId;
-import com.sathesh.corporatemail.service.data.ItemSchema;
-import com.sathesh.corporatemail.service.data.ItemView;
-import com.sathesh.corporatemail.service.data.MessageBody;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
-import com.sathesh.corporatemail.service.data.PropertySet;
-import com.sathesh.corporatemail.service.data.PullSubscription;
-import com.sathesh.corporatemail.service.data.ResolveNameSearchLocation;
-import com.sathesh.corporatemail.service.data.ResponseMessage;
-import com.sathesh.corporatemail.service.data.SearchFilter;
-import com.sathesh.corporatemail.service.data.SyncFolderItemsScope;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
+import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.search.ResolveNameSearchLocation;
+import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+import microsoft.exchange.webservices.data.core.enumeration.service.SyncFolderItemsScope;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.item.Item;
+import microsoft.exchange.webservices.data.core.service.response.ResponseMessage;
+import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+import microsoft.exchange.webservices.data.notification.GetEventsResults;
+import microsoft.exchange.webservices.data.notification.ItemEvent;
+import microsoft.exchange.webservices.data.notification.PullSubscription;
+import microsoft.exchange.webservices.data.property.complex.FileAttachment;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
+import microsoft.exchange.webservices.data.search.FindFoldersResults;
+import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.FolderView;
+import microsoft.exchange.webservices.data.search.ItemView;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import microsoft.exchange.webservices.data.sync.ChangeCollection;
+import microsoft.exchange.webservices.data.sync.ItemChange;
 
 public class NetworkCall implements Constants{
 
@@ -282,7 +283,7 @@ public class NetworkCall implements Constants{
 	public static FindFoldersResults getInboxFolders(ExchangeService service) throws Exception{
 
 
-		FindFoldersResults findResults = service.findFolders(WellKnownFolderName.Inbox,new  FolderView(Integer.MAX_VALUE));
+		FindFoldersResults findResults = service.findFolders(WellKnownFolderName.Inbox,new FolderView(Integer.MAX_VALUE));
 		return findResults;
 	}
 
@@ -290,7 +291,7 @@ public class NetworkCall implements Constants{
 	public static FindItemsResults<Item> getLatestMail(ExchangeService service, Date dateTime, ItemView latestMailsView) throws Exception{
 
 
-		FindItemsResults<Item>  findResults = service.findItems(WellKnownFolderName.Inbox, new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived,dateTime),
+		FindItemsResults<Item> findResults = service.findItems(WellKnownFolderName.Inbox, new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived,dateTime),
 
 				latestMailsView);
 		return findResults;
@@ -307,7 +308,7 @@ public class NetworkCall implements Constants{
 	}
 
 	public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception {
-		NameResolutionCollection nameResolutions = service.resolveName(username,ResolveNameSearchLocation.DirectoryOnly, retrieveContactDetails);
+		NameResolutionCollection nameResolutions = service.resolveName(username, ResolveNameSearchLocation.DirectoryOnly, retrieveContactDetails);
 		return nameResolutions;
 
 	}

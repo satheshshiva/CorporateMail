@@ -17,13 +17,14 @@ import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FindItemsResults;
-import com.sathesh.corporatemail.service.data.HttpErrorException;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 
 import java.net.UnknownHostException;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.service.item.Item;
+import microsoft.exchange.webservices.data.search.FindItemsResults;
 
 /** This Runnable will load more emails from the network asynchronously which will be triggered when the user is scolling
  * 

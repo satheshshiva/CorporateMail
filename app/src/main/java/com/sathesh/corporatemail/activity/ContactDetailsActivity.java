@@ -15,10 +15,11 @@ import com.sathesh.corporatemail.asynctask.interfaces.IResolveNames;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
 import com.sathesh.corporatemail.ews.EWSConnection;
-import com.sathesh.corporatemail.service.data.Contact;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
 import com.sathesh.corporatemail.util.Utilities;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.service.item.Contact;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 public class ContactDetailsActivity extends MyActivity implements Constants,IResolveNames {
     //test msg

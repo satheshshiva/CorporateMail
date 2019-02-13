@@ -4,8 +4,9 @@
 package com.sathesh.corporatemail.fragment.datapasser;
 
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
-import com.sathesh.corporatemail.service.data.EmailMessage;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
+
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 
 /**
  * @author sathesh

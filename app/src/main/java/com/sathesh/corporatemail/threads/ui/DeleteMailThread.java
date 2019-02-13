@@ -9,8 +9,9 @@ import android.util.Log;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.service.data.ExchangeService;
 import com.sathesh.corporatemail.util.Utilities;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
 
 /** Thread which deletes a single mail
  * Created by sathesh on 1/18/15.

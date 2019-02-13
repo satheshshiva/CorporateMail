@@ -37,14 +37,6 @@ import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.service.MailNotificationService;
-import com.sathesh.corporatemail.service.data.Attachment;
-import com.sathesh.corporatemail.service.data.AttachmentCollection;
-import com.sathesh.corporatemail.service.data.EmailAddress;
-import com.sathesh.corporatemail.service.data.EmailAddressCollection;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FileAttachment;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
-import com.sathesh.corporatemail.service.data.ServiceVersionException;
 import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThread;
 import com.sathesh.corporatemail.threads.ui.GetMoreFoldersThread;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
@@ -61,6 +53,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceVersionException;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
+import microsoft.exchange.webservices.data.property.complex.AttachmentCollection;
+import microsoft.exchange.webservices.data.property.complex.EmailAddress;
+import microsoft.exchange.webservices.data.property.complex.EmailAddressCollection;
+import microsoft.exchange.webservices.data.property.complex.FileAttachment;
 
 /**
  * @author sathesh

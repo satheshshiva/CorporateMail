@@ -1,12 +1,12 @@
 package com.sathesh.corporatemail.threads.sample;
 
 
-import com.sathesh.corporatemail.ews.EWSConnection;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.MessageBody;
 
 import android.os.AsyncTask;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
 
 public class Send extends AsyncTask<Void, Void, Boolean>{
 

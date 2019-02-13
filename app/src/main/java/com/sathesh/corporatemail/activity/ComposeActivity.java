@@ -36,11 +36,6 @@ import com.sathesh.corporatemail.customserializable.ContactSerializable;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.service.data.ArgumentOutOfRangeException;
-import com.sathesh.corporatemail.service.data.Contact;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
 import com.sathesh.corporatemail.ui.components.WarningDisplayNotificationBar;
 import com.sathesh.corporatemail.util.Utilities;
@@ -53,6 +48,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.item.Contact;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 public class ComposeActivity extends MyActivity implements Constants,IResolveNames{
 
@@ -648,7 +650,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Log.e(TAG, "Malformed Webmail URL");
                 publishProgress(STATUS_ERROR, "Message not sent!\n\nDetails: Malformed Webmail URL " );
             }
-            catch(com.sathesh.corporatemail.service.data.HttpErrorException e){
+            catch(HttpErrorException e){
                 if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
                     Log.e(TAG, "Authentication Failed!\nDetails: " + e.getMessage());
                     publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails: Authentication Failed ");

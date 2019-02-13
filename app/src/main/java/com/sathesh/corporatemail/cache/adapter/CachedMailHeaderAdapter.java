@@ -10,13 +10,14 @@ import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
 import com.sathesh.corporatemail.sqlite.db.cache.dao.CachedMailHeaderDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.item.Item;
 
 /**
  * @author sathesh

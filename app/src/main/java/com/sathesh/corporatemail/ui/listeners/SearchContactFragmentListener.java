@@ -11,8 +11,9 @@ import com.sathesh.corporatemail.asynctask.interfaces.IResolveNames;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.fragment.datapasser.SearchContactFragmentDataPasser;
-import com.sathesh.corporatemail.service.data.ExchangeService;
 import com.sathesh.corporatemail.ui.util.UIutilities;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
 
 /**
  * Created by Sathesh on 5/28/15.

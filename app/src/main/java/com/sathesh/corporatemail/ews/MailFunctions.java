@@ -1,10 +1,10 @@
 package com.sathesh.corporatemail.ews;
 
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
-
 import java.text.ParseException;
 import java.util.Date;
+
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.item.Item;
 
 
 public interface MailFunctions {

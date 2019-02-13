@@ -5,11 +5,12 @@ import android.content.Context;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.WebCredentials;
 
 import java.net.URI;
 import java.util.Map;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.credential.WebCredentials;
 
 public class EWSConnection implements Constants{
 

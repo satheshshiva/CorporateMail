@@ -10,12 +10,13 @@ import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.asynctask.interfaces.IResolveNames;
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
 
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 /**
  * @author Sathesh
@@ -40,7 +41,7 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 	private Exception pE;
 	private boolean showProgressDialog;
 	
-	public ResolveNamesAsyncTask(IResolveNames caller, Activity activity,ExchangeService service, String searchString,boolean showProgressDialog, String progressDialogString, String extra1) {
+	public ResolveNamesAsyncTask(IResolveNames caller, Activity activity, ExchangeService service, String searchString, boolean showProgressDialog, String progressDialogString, String extra1) {
 		this.caller=caller;
 		this.activity = activity;
 		this.service=service;

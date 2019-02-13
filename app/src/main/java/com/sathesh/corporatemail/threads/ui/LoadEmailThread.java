@@ -18,15 +18,16 @@ import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.fragment.ViewMailFragment.Status;
-import com.sathesh.corporatemail.service.data.AttachmentCollection;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FileAttachment;
-import com.sathesh.corporatemail.service.data.ItemId;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailBodyVO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 
 import java.util.List;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.property.complex.AttachmentCollection;
+import microsoft.exchange.webservices.data.property.complex.FileAttachment;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 
 /**
  * @author sathesh

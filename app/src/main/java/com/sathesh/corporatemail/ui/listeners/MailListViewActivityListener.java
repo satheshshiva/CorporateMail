@@ -17,9 +17,10 @@ import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.constants.DrawerMenuRowType;
 import com.sathesh.corporatemail.handlers.GetMoreFoldersHandler;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.FolderVO;
 import com.sathesh.corporatemail.util.Utilities;
+
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 
 /**
  * @author sathesh

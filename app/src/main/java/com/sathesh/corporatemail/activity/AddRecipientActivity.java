@@ -23,10 +23,6 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.NameResolution;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
 import com.sathesh.corporatemail.ui.util.UIutilities;
 import com.sathesh.corporatemail.util.Utilities;
 
@@ -34,6 +30,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.misc.NameResolution;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 public class AddRecipientActivity extends MyActivity implements Constants,IResolveNames {
 

@@ -10,10 +10,11 @@ import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.service.data.ExchangeService;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.util.ArrayList;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
 
 /**
  * Created by sathesh on 1/17/15.

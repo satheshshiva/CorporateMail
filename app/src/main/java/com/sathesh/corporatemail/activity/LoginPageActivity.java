@@ -29,15 +29,16 @@ import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FindFoldersResults;
-import com.sathesh.corporatemail.service.data.Folder;
-import com.sathesh.corporatemail.service.data.HttpErrorException;
-import com.sathesh.corporatemail.service.data.NameResolution;
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
 import com.sathesh.corporatemail.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
+import microsoft.exchange.webservices.data.misc.NameResolution;
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+import microsoft.exchange.webservices.data.search.FindFoldersResults;
 
 public class LoginPageActivity extends MyActivity implements Constants {
 
