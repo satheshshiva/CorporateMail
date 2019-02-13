@@ -13,7 +13,8 @@ import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.service.MailNotificationService;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
+
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 
 public class NotificationProcessing implements Constants{
 

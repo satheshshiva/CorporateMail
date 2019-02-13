@@ -38,7 +38,6 @@ import com.sathesh.corporatemail.ews.MailFunctionsImpl;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.handlers.LoadEmailHandler;
 import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
-import com.sathesh.corporatemail.service.data.EmailMessage;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
@@ -49,6 +48,8 @@ import com.sathesh.corporatemail.web.StandardWebView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 
 /**
  * @author sathesh

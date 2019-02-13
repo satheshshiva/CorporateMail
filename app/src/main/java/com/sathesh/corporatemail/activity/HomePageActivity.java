@@ -18,9 +18,10 @@ import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 import com.sathesh.corporatemail.ui.components.SignOutAlertDialog;
 import com.sathesh.corporatemail.ui.util.OptionsUIContent;
+
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 
 @Deprecated
 public class HomePageActivity extends MyActivity implements Constants{

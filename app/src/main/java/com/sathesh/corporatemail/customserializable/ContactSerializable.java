@@ -3,12 +3,13 @@ package com.sathesh.corporatemail.customserializable;
 import android.util.Log;
 
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.service.data.Contact;
-import com.sathesh.corporatemail.service.data.PhoneNumberKey;
-import com.sathesh.corporatemail.service.data.PhysicalAddressKey;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
 
 import java.io.Serializable;
+
+import microsoft.exchange.webservices.data.core.enumeration.property.PhoneNumberKey;
+import microsoft.exchange.webservices.data.core.enumeration.property.PhysicalAddressKey;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.item.Contact;
 
 public class ContactSerializable implements Serializable, Constants{
 

@@ -25,18 +25,19 @@ import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.service.MailNotificationService;
-import com.sathesh.corporatemail.service.data.AttachmentCollection;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.EventType;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.GetEventsResults;
-import com.sathesh.corporatemail.service.data.HttpErrorException;
-import com.sathesh.corporatemail.service.data.ItemEvent;
-import com.sathesh.corporatemail.service.data.PullSubscription;
 import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThread;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.net.UnknownHostException;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
+import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.notification.GetEventsResults;
+import microsoft.exchange.webservices.data.notification.ItemEvent;
+import microsoft.exchange.webservices.data.notification.PullSubscription;
+import microsoft.exchange.webservices.data.property.complex.AttachmentCollection;
 
 public class PollServerMNS extends WakefulIntentService implements Constants{
 
@@ -146,7 +147,7 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 		events = NetworkCall.pullSubscriptionPoll(context,subscription);
 
 		// Loop through all item-related events.
-		for(final ItemEvent itemEvent : events.getItemEvents())      
+		for(final ItemEvent itemEvent : events.getItemEvents())
 		{   
 			if(itemEvent.getEventType()== EventType.NewMail)
 			{

@@ -23,12 +23,13 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FindFoldersResults;
-import com.sathesh.corporatemail.service.data.Folder;
-import com.sathesh.corporatemail.service.data.FolderId;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 import com.sathesh.corporatemail.ui.util.OptionsUIContent;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.search.FindFoldersResults;
 
 @Deprecated
 public class OtherFoldersPageActivity extends MyActivity implements Constants{
@@ -191,7 +192,7 @@ public class OtherFoldersPageActivity extends MyActivity implements Constants{
 		}
 
 
-		private  void recursivePopulateFolders( ExchangeService service, FolderId folderId, boolean isInboxSubfolder) throws Exception{
+		private  void recursivePopulateFolders(ExchangeService service, FolderId folderId, boolean isInboxSubfolder) throws Exception{
 			//EWS call
 			if(BuildConfig.DEBUG){
 				Log.i(TAG, "OtherFoldersPageActivity -> EWS Call");

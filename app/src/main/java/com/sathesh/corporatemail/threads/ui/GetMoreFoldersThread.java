@@ -12,17 +12,18 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.constants.DrawerMenuRowType;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FindFoldersResults;
-import com.sathesh.corporatemail.service.data.Folder;
-import com.sathesh.corporatemail.service.data.FolderId;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
 import com.sathesh.corporatemail.sqlite.db.cache.dao.MoreFoldersDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.FolderVO;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.search.FindFoldersResults;
 
 /**
  * Created by Sathesh on 7/16/15.

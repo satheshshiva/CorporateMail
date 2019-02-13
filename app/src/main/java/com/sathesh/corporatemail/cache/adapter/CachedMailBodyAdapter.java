@@ -10,13 +10,14 @@ import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.constants.Constants.MailType;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
 import com.sathesh.corporatemail.sqlite.db.cache.dao.CachedMailBodyDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailBodyVO;
 
 import java.util.List;
+
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.item.Item;
 
 /**
  * @author sathesh
@@ -145,7 +146,7 @@ public class CachedMailBodyAdapter {
      * @param mailFolderName
      *
      */
-    private CachedMailBodyVO covertItemToVO(int mailType, Item item, String mailFolderName,  String strFolderId, String from_delimited, String to_delimited, String cc_delimited, String bcc_delimited) throws ServiceLocalException, Exception{
+    private CachedMailBodyVO covertItemToVO(int mailType, Item item, String mailFolderName, String strFolderId, String from_delimited, String to_delimited, String cc_delimited, String bcc_delimited) throws ServiceLocalException, Exception{
         CachedMailBodyVO vo = new CachedMailBodyVO();
         mailFunctions = MailFunctionsImpl.getInbox();
 

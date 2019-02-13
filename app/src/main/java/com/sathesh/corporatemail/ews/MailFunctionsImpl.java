@@ -1,15 +1,15 @@
 package com.sathesh.corporatemail.ews;
 
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.text.ParseException;
 import java.util.Date;
 
-import static com.sathesh.corporatemail.service.data.MessageBody.getStringFromMessageBody;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.item.Item;
 
+import static microsoft.exchange.webservices.data.property.complex.MessageBody.getStringFromMessageBody;
 
 public class MailFunctionsImpl implements MailFunctions{
 

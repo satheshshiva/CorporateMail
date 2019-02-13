@@ -12,29 +12,28 @@ import android.util.Log;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
 import com.sathesh.corporatemail.ews.EWSConnection;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.EventType;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FolderId;
-import com.sathesh.corporatemail.service.data.GetItemResponse;
-import com.sathesh.corporatemail.service.data.ItemEvent;
-import com.sathesh.corporatemail.service.data.ItemId;
-import com.sathesh.corporatemail.service.data.ItemSchema;
-import com.sathesh.corporatemail.service.data.MessageBody;
-import com.sathesh.corporatemail.service.data.NotificationEvent;
-import com.sathesh.corporatemail.service.data.NotificationEventArgs;
-import com.sathesh.corporatemail.service.data.PropertySet;
-import com.sathesh.corporatemail.service.data.ServiceLocalException;
-import com.sathesh.corporatemail.service.data.ServiceResponseCollection;
-import com.sathesh.corporatemail.service.data.StreamingSubscription;
-import com.sathesh.corporatemail.service.data.StreamingSubscriptionConnection;
-import com.sathesh.corporatemail.service.data.SubscriptionErrorEventArgs;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
-import com.sathesh.corporatemail.service.data.StreamingSubscriptionConnection.INotificationEventDelegate;
-import com.sathesh.corporatemail.service.data.StreamingSubscriptionConnection.ISubscriptionErrorDelegate;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.response.GetItemResponse;
+import microsoft.exchange.webservices.data.core.response.ServiceResponseCollection;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
+import microsoft.exchange.webservices.data.notification.ItemEvent;
+import microsoft.exchange.webservices.data.notification.NotificationEvent;
+import microsoft.exchange.webservices.data.notification.NotificationEventArgs;
+import microsoft.exchange.webservices.data.notification.StreamingSubscription;
+import microsoft.exchange.webservices.data.notification.StreamingSubscriptionConnection;
+import microsoft.exchange.webservices.data.notification.SubscriptionErrorEventArgs;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
 
 public class StreamMailNotificationServiceThread
-extends Thread implements Constants,INotificationEventDelegate, ISubscriptionErrorDelegate
+extends Thread implements Constants, StreamingSubscriptionConnection.INotificationEventDelegate, StreamingSubscriptionConnection.ISubscriptionErrorDelegate
 {
 	StreamingSubscriptionConnection conn;
 	StreamingSubscription subscription ;
@@ -62,7 +61,7 @@ extends Thread implements Constants,INotificationEventDelegate, ISubscriptionErr
 			service = EWSConnection.getServiceFromStoredCredentials(context);
 
 			Log.i("MailNotificationService", service.getUrl().toString());
-			folder.add(new FolderId(WellKnownFolderName.Inbox));  
+			folder.add(new FolderId(WellKnownFolderName.Inbox));
 
 
 			WellKnownFolderName sd = WellKnownFolderName.Inbox;
@@ -150,7 +149,7 @@ extends Thread implements Constants,INotificationEventDelegate, ISubscriptionErr
 		}	
 	}	
 	@Override
-	public void subscriptionErrorDelegate(Object sender,SubscriptionErrorEventArgs args) {
+	public void subscriptionErrorDelegate(Object sender, SubscriptionErrorEventArgs args) {
 		try {
 			connection_OnDisconnect(sender,args);
 		} catch (Exception e) {

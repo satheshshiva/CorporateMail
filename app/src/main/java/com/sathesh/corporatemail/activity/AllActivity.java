@@ -14,15 +14,16 @@ import android.widget.TextView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.service.data.EmailMessage;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FindItemsResults;
-import com.sathesh.corporatemail.service.data.HttpErrorException;
-import com.sathesh.corporatemail.service.data.Item;
-import com.sathesh.corporatemail.service.data.MessageBody;
 import com.sathesh.corporatemail.threads.sample.Inbox;
 
 import java.net.URISyntaxException;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.item.Item;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
+import microsoft.exchange.webservices.data.search.FindItemsResults;
 
 public class AllActivity extends Activity implements Constants{
 

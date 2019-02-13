@@ -3,7 +3,8 @@
  */
 package com.sathesh.corporatemail.asynctask.interfaces;
 
-import com.sathesh.corporatemail.service.data.NameResolutionCollection;
+
+import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
 /**
  * @author Sathesh

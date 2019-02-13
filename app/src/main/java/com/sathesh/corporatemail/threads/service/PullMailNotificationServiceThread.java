@@ -26,12 +26,13 @@ import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.service.data.ExchangeService;
-import com.sathesh.corporatemail.service.data.FolderId;
-import com.sathesh.corporatemail.service.data.GetEventsResults;
-import com.sathesh.corporatemail.service.data.HttpErrorException;
-import com.sathesh.corporatemail.service.data.PullSubscription;
-import com.sathesh.corporatemail.service.data.WellKnownFolderName;
+
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.notification.GetEventsResults;
+import microsoft.exchange.webservices.data.notification.PullSubscription;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
 
 public class PullMailNotificationServiceThread
 extends Thread implements Constants
@@ -91,7 +92,7 @@ extends Thread implements Constants
 
 			service.setTraceEnabled(false);
 
-			folder.add(new FolderId(WellKnownFolderName.Inbox));  
+			folder.add(new FolderId(WellKnownFolderName.Inbox));
 
 
 			WellKnownFolderName sd = WellKnownFolderName.Inbox;
