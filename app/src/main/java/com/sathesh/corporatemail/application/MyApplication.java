@@ -1,26 +1,14 @@
 package com.sathesh.corporatemail.application;
 
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.constants.Constants;
 
-//@ReportsCrashes(formKey = "", // will not be used
-//mailTo = "satheshshiva@gmail.com",
-//mode = ReportingInteractionMode.TOAST,
-//resToastText = R.string.crash_toast_text)
-@ReportsCrashes(formKey = "dDkwdFJDQTEwWkUySGpHcUF5SjBPMWc6MQ",
-forceCloseDialogAfterToast = false ,
-mode = ReportingInteractionMode.TOAST,
-resToastText = R.string.crash_toast_text) 
-
-public class MyApplication extends Application implements Constants{
+public class MyApplication extends MultiDexApplication implements Constants{
 
 	private static GoogleAnalytics sAnalytics;
 	private static Tracker sTracker;
