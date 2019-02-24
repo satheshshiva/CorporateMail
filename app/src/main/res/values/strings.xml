@@ -68,8 +68,8 @@
     <!-- About -->
     <string name="title_activity_about">About</string>
     <string name="title_activity_please_like_my_fb_beg_you">Like our Facebook page for latest app updates.</string>
-    <string name="title_activity_Apk_download_Url">Latest Apk can be downloaded from, \n http://tiny.cc/wipromail</string>
-    <string name="title_activity_url">Like our Facebook page for latest app updates. \nApk Manual Download URL \n http://tiny.cc/wipromail</string>
+    <string name="title_activity_Apk_download_Url">Latest Apk can be downloaded from, \n https://bit.ly/corporatemail</string>
+    <string name="title_activity_url">Like our Facebook page for latest app updates. \nApk Manual Download URL \n https://bit.ly/corporatemail</string>
     <string name="about_activity_update_btn">Check for Updates</string>
     <string name="about_activity_bugOrSuggestion_btn">Bugs/Suggestion</string>
     <string name="about_activity_rate_app_btn">Rate this app</string>
@@ -82,7 +82,7 @@
     <string name="app_updater_noupdates">You have the latest version</string>
     <string name="app_updater_installing">Installing..</string>
     <string name="app_updater_checking">Checking for Updates..</string>
-    <string name="auto_update_check_dismiss_dialog">Later you can check for updates using the \"Check For Updates\" button in About section</string>
+    <string name="auto_update_check_dismiss_dialog">You can check for updates later using the \"Check For Updates\" button in About section</string>
     <string name="auto_update_check_new_update_title">Update Available</string>
     <string name="auto_update_check_new_update_msg">New version update is available</string>
     <string name="auto_update_check_new_update_pos_button">Continue</string>
