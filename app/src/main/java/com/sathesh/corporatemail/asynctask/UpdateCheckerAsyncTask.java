@@ -116,10 +116,7 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 		connection = (HttpURLConnection) _url.openConnection();
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:28.0) Gecko/20100101 Firefox/28.0");
 
-
-
 		if (connection.getResponseCode() ==200) {
-
 
 			//do something with the response
 			Log.i(TAG, "UpdateCheckerAsyncTask -> LATEST VER DETAILS HTTP RESPONSE STATUS "+ connection.getResponseCode());

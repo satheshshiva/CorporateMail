@@ -158,18 +158,18 @@ public interface Constants {
 	--------------------------------------------------------------------------------------*/
 
 	public static final long UPDATE_AUTO_CHECK_NO_OF_DAYS = 2;
-	public static final String APPLICATION_APK_DOWNLOAD_URL1_DEV = "http://tiny.cc/wipromaildev";
-	public static final String APPLICATION_LATEST_VERSION_PROP_URL_DEV = "http://tiny.cc/wipromailpropdev";
-	public static final String APPLICATION_CHANGELOG_URL_DEV = "http://tiny.cc/wipromailchangelogdev";
+	public static final String APPLICATION_APK_DOWNLOAD_URL1_DEV = "https://tiny.cc/wipromaildev";
+	public static final String APPLICATION_LATEST_VERSION_PROP_URL_DEV = "https://tiny.cc/wipromailpropdev";
+	public static final String APPLICATION_CHANGELOG_URL_DEV = "https://tiny.cc/wipromailchangelogdev";
 
-	public static final String APPLICATION_APK_DOWNLOAD_URL1_REL = "http://tiny.cc/wipromail";
-	public static final String APPLICATION_LATEST_VERSION_PROP_URL_REL = "http://tiny.cc/wipromailprop";
-	public static final String APPLICATION_CHANGELOG_URL_REL = "http://tiny.cc/wipromailchangelog";
+	public static final String APPLICATION_APK_DOWNLOAD_URL1_REL = "https://tiny.cc/wipromail";
+	public static final String APPLICATION_LATEST_VERSION_PROP_URL_REL = "https://tiny.cc/wipromailprop";
+	public static final String APPLICATION_CHANGELOG_URL_REL = "https://tiny.cc/wipromailchangelog";
 
 	//public static final String APPLICATION_APK_DOWNLOAD_URL1 = "https://dl.dropbox.com/s/dn6nvxpk4a4fs6h/MainActivity-debug.apk?dl=1";
-	public static final String APPLICATION_APK_DOWNLOAD_TEMPLOC = "/WiproMail/download/";
+	public static final String APPLICATION_APK_DOWNLOAD_TEMPLOC = "/CorporateMail/download/";
 
-	public static final String APPLICATION_APK_DOWNLOAD_TEMP_FILENAME = "WiproMail.apk";
+	public static final String APPLICATION_APK_DOWNLOAD_TEMP_FILENAME = "CorporateMail.apk";
 	public static final String LATEST_VERSION_CODE = "LATEST_VERSION_CODE";	//look for this prop in remote prop file 
 	public static final String LATEST_VERSION_NAME = "LATEST_VERSION_NAME";	//look for this prop in remote prop file 
 
@@ -177,8 +177,8 @@ public interface Constants {
 	----------------------------------  External ----------------------------
 	--------------------------------------------------------------------------------------*/
 	//public static final String FB_LIKE_URL_APP = "fb://profile/370304669770278"; 
-	public static final String FB_LIKE_URL_APP = "https://www.facebook.com/wipromail"; 
-	public static final String FB_LIKE_URL_BROWSER = "https://www.facebook.com/wipromail"; 
+	public static final String FB_LIKE_URL_APP = "https://www.facebook.com/corporatemail";
+	public static final String FB_LIKE_URL_BROWSER = "https://www.facebook.com/corporatemail";
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  Sqlite db ----------------------------
