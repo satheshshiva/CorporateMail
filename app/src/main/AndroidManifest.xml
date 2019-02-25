@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sathesh.corporatemail"
     android:installLocation="auto"
-    android:versionCode="17"
+    android:versionCode="19"
     android:versionName="1.0" >
 
     <!-- Allow Internet Access to the application -->

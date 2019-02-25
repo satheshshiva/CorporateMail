@@ -3,7 +3,7 @@
 
     <!-- Application -->
     <string name="app_name">Corporate Mail</string>
-    <string name="app_version">1.0</string>
+    <string name="app_version">1.0.1</string>
 
     <!-- Login Page -->
     <string name="login_logo_bigText">Corporate Mail</string>
