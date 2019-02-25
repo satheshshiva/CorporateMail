@@ -19,8 +19,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
@@ -100,7 +98,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     }
 
     MyApplication application;
-    Tracker mTracker;
 
     /** ON CREATE **
      *  Fragment : MailListViewFragment
@@ -118,8 +115,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         try {
 
             application = (MyApplication) getApplication();
-            mTracker = application.getDefaultTracker();
-            mTracker.setScreenName("MailListViewActivity");
 
             //while sign out is clicked, the enitire application will be closed by calling this activity since with clear top since this is the first
             //spawned activity.  if this is happening then we have to finish this first activity for sign out.
@@ -281,15 +276,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     public void onResume() {
         super.onResume();
-
-        try {
-            //cancel all the notifications
-            // NotificationProcessing.cancelAllNotifications(this);
-            // mailListViewFragmentDataPasser.softRefreshList();
-            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
  /*   @Override

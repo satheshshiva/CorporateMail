@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
 import com.sathesh.corporatemail.animation.ApplyAnimation;
@@ -54,7 +52,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
     private TextView urlDisp;
 
     MyApplication application;
-    Tracker mTracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,8 +62,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
         setContentView(R.layout.activity_login_page);
 
         application = (MyApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.setScreenName("MailListViewActivity");
 
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
@@ -356,12 +351,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
     @Override
     public void onResume() {
         super.onResume();
-
-        try {
-            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /** GETTER AND SETTER **/

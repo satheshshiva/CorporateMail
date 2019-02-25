@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.animation.ApplyAnimation;
 import com.sathesh.corporatemail.application.MailApplication;
@@ -26,7 +24,6 @@ public class MainActivity extends Activity implements Constants{
 	TextView textView1 ;
 	public FindItemsResults<Item> findResults ;
 	MyApplication application;
-	Tracker mTracker;
 
 	int no=0;
 	ProgressBar progressBar;
@@ -42,9 +39,6 @@ public class MainActivity extends Activity implements Constants{
 
 		activity=this;
 		application = (MyApplication) getApplication();
-		mTracker = application.getDefaultTracker();
-		mTracker.setScreenName("MainActivity");
-
 	}
 
 	@Override
@@ -61,11 +55,6 @@ public class MainActivity extends Activity implements Constants{
 	@Override
 	public void onResume() {
 		super.onResume();
-		try {
-			mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private class CheckLogin extends AsyncTask<Void, Void, Void>{
