@@ -51,5 +51,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     //fire base crashlytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    //firebase messaging
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
 }
 apply plugin: 'com.google.gms.google-services'
