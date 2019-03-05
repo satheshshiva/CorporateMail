@@ -3,8 +3,8 @@ package com.sathesh.corporatemail.ui.action;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.view.WindowManager;
 

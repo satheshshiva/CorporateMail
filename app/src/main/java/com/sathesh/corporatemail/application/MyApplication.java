@@ -1,6 +1,6 @@
 package com.sathesh.corporatemail.application;
 
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import com.sathesh.corporatemail.constants.Constants;
 

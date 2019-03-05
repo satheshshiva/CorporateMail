@@ -2,7 +2,7 @@ package com.sathesh.corporatemail.ui.components;
 
 import android.graphics.Color;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,7 +32,7 @@ public class UndoBarBuilder implements View.OnClickListener, Constants
 
         //change the color for the snackbar text
         View snackbarView = snackbar.getView();
-        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = (TextView) snackbarView.findViewById(R.id.snackbar_text);
         textView.setTextColor(Color.WHITE);
         this.undoBarAction = undoBarAction;
 
