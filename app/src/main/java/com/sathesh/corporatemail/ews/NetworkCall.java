@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import microsoft.exchange.webservices.data.autodiscover.IAutodiscoverRedirectionUrl;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
@@ -74,6 +75,31 @@ public class NetworkCall implements Constants{
 		}
 		else{	throw new NoInternetConnectionException(); }
 
+	}
+
+
+	//the following method is not used (not working)
+	public static String autoDiscover(String email, final boolean followRedirect) throws Exception{
+		ExchangeService service = new ExchangeService();
+		try {
+			service.autodiscoverUrl(email, new IAutodiscoverRedirectionUrl() {
+				@Override
+				public boolean autodiscoverRedirectionUrlValidationCallback(
+						String redirectionUrl) {
+					return followRedirect;
+				}
+			});
+
+			if(service.getUrl() != null ){
+				return service.getUrl().toString();
+			}
+		}catch (Exception e){
+			Log.e(TAG, "Could not auto discover with the given email:: " + e.getMessage());
+			return null;
+		}
+
+		Log.e(TAG, "Could not auto discover with the given email:: returning null");
+		return null;
 	}
 
 	public static Item bindItem(Context context, ExchangeService service, ItemId itemid) throws NoInternetConnectionException, Exception{
