@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -480,7 +480,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
      * Fragment Interation Listner
      */
     public interface ActivityDataPasser {
-        android.support.v7.app.ActionBarDrawerToggle getmDrawerToggle();
+        androidx.appcompat.app.ActionBarDrawerToggle getmDrawerToggle();
     }
 
     /**

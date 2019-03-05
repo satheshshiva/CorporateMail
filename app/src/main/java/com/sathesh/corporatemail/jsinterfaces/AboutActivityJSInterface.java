@@ -1,7 +1,7 @@
 package com.sathesh.corporatemail.jsinterfaces;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 
 import com.sathesh.corporatemail.BuildConfig;

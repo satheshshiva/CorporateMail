@@ -2,8 +2,8 @@ package com.sathesh.corporatemail.activity.datapasser;
 
 
 import android.content.Context;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.RecyclerView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 public interface MailListActivityDataPasser {
 

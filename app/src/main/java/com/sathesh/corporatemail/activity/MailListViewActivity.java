@@ -4,13 +4,14 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -104,7 +105,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
      * Gets the mailType folder id and folder name from the intent params.
      * Makes it ready by getters so that fragment can make use of
      * (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+     * @see FragmentActivity#onCreate(android.os.Bundle)
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -211,7 +212,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     /** ON START **
      * Starts the MNS service
      * (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onStart()
+     * @see FragmentActivity#onStart()
      */
     @Override
     public void onStart() {
