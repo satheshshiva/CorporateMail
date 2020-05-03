@@ -10,19 +10,16 @@
     <string name="title_activity_main">Corp. Mail</string>
 
     <string name="login_logo_bigText_beta"></string>
-    <string name="webmail1_url">https://webmail.wipro.com</string>
-    <string name="webmail2_url">https://webmail2.wipro.com</string>
     <string name="webmail_365_url">https://outlook.office365.com</string>
-    <string name="webmail_365_username_append">\u0040wipro.com</string>
     <string name="webmail_url_EWS_extension">/EWS/Exchange.asmx</string>
     <string name="menu_settings">Settings</string>
 
     <string name="title_activity_login_page">Login</string>
-    <string name="login_user_text">Wipro AD ID</string>
+    <string name="login_url">Mail Server Url</string>
+    <string name="login_url_text">https://</string>
+    <string name="login_user_text">ADS Id or Email Id</string>
     <string name="login_pwd_text">Password</string>
     <string name="login_btn_text">Login</string>
-    <string name="login_username_hint">wipro\\</string>
-    <string name="login_username_office365_hint">\u0040wipro.com</string>
     <string name="alertdialog_save_lbl">Save</string>
     <string name="alertdialog_positive_lbl">OK</string>
     <string name="alertdialog_negative_lbl">Cancel</string>
@@ -302,5 +299,6 @@
     <string name="drawer_back">Back</string>
     <string name="drawer_menu_more_folders_empty">Loading Folders…</string>
     <string name="drawer_favourite_help_text">Add favorites here from the \"More Folders\"</string>
+
 
 </resources>

@@ -14,13 +14,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.ListPreference;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -99,8 +100,8 @@ public class MailApplication implements Constants {
         return toolbar;
     }
 
-    public static String getWebmailURL(Context context){
-        return generalSettings.getServerURL(context) + context.getString(R.string.webmail_url_EWS_extension);
+    public static String getWebmailURL(Context context, String url){
+        return url + context.getString(R.string.webmail_url_EWS_extension);
     }
     /**
      * @param context
@@ -790,22 +791,6 @@ public class MailApplication implements Constants {
                 .create();
         AlertDialog webmailURL = builder.create();
         webmailURL.show();
-    }
-
-    /**Returns the default webmail URL
-     *
-     * @return
-     */
-    public static String getDefaultWebmailURL(Context context){
-        return context.getString(R.string.webmail1_url);
-    }
-
-    /**Returns the Office 365 Server URL
-     *
-     * @return
-     */
-    public static String getOffice365URL(Context context){
-        return context.getString(R.string.webmail_365_url);
     }
 
     public static void startGetMoreFoldersThread(MyActivity activity, Handler handler){
