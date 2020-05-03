@@ -2,8 +2,9 @@ package com.sathesh.corporatemail.fragment.datapasser;
 
 
 import android.content.Context;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.widget.ListView;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.sathesh.corporatemail.adapter.MailListViewAdapter;
