@@ -6,14 +6,7 @@
 
         <!-- NOTE: When updating defaultValues here, please also update default values in GeneralPrefernceAdapter -->
         <!-- Webmail URL -->
-        <com.sathesh.corporatemail.customwidgets.WebmailURLPreference
-            android:defaultValue="@string/webmail1_url"
-            android:dialogTitle="@string/preference_serverurl_title"
-            android:entries="@array/preferences_serverlist_text"
-            android:entryValues="@array/preferences_serverlist_values"
-            android:key="webmail_server"
-            android:summary="@string/prefernce_serverurl_message"
-            android:title="@string/preference_serverurl_title" />
+        <!-- TODO Provide text box to change the webmail url-->
     </PreferenceCategory>
 
     <!-- Compose -->

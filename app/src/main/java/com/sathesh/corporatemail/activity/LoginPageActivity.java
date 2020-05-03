@@ -12,8 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
@@ -27,7 +25,6 @@ import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
-import com.sathesh.corporatemail.ui.listeners.LoginPageListener;
 
 import java.net.URISyntaxException;
 
@@ -40,16 +37,12 @@ import microsoft.exchange.webservices.data.search.FindFoldersResults;
 
 public class LoginPageActivity extends MyActivity implements Constants {
 
-    private String username=USERNAME_NULL, password=PASSWORD_NULL;
+    private String username=USERNAME_NULL, password=PASSWORD_NULL, loginUrl;
     private Intent intent;
-    //	private  boolean customTitleSupported = false;
     private Activity activity;
     private Context context;
-    private EditText login_username;
-    private EditText login_passwd;
-    private Spinner serverSpinner;
+    private EditText login_url, login_username, login_passwd;
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
-    private TextView urlDisp;
 
     MyApplication application;
 
@@ -66,17 +59,9 @@ public class LoginPageActivity extends MyActivity implements Constants {
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
 
+        login_url = (EditText) findViewById(R.id.login_url);
         login_username = (EditText)findViewById(R.id.login_username);
         login_passwd = (EditText)findViewById(R.id.login_passwd);
-        serverSpinner = (Spinner)findViewById(R.id.serverSpinner);
-        serverSpinner.setOnItemSelectedListener(new LoginPageListener(activity, this));
-        urlDisp = (TextView) findViewById(R.id.serverURLDisp);
-
-        //Reset the URL preference to default one. Since we have to manually update the spinner if it ws changed
-        sharedPref.storeServerURL(context, MailApplication.getDefaultWebmailURL(context));
-
-        //show the current url in display
-        urlDisp.setText(sharedPref.getServerURL(context));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         //testingdb(activity);
@@ -87,8 +72,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
-        MenuItem menuItem;
 
      /*   menuItem=menu.add(ACTIONBAR_ABOUT)
                 .setIcon(OptionsUIContent.getAboutDarkIcon());
@@ -122,30 +105,35 @@ public class LoginPageActivity extends MyActivity implements Constants {
      *
      */
     private void loginButtonClicked() {
+        loginUrl = login_url.getText().toString();
         username = login_username.getText().toString();
         password = login_passwd.getText().toString();
 
         //validate user name
-        if(username==null || username.equalsIgnoreCase("")) {
+        if(loginUrl.equalsIgnoreCase("")) {
+            //if user name is null then shake the edit text
+            login_url.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim((MyActivity) activity));
+            return;
+        }
+
+
+        //validate user name
+        if(username.equalsIgnoreCase("")) {
             //if user name is null then shake the edit text
             login_username.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim((MyActivity) activity));
             return;
         }
 
         //validate password
-        if(password==null || password.equalsIgnoreCase("")) {
+        if(password.equalsIgnoreCase("")) {
             //if password is null then shake the edit text
             login_passwd.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim((MyActivity) activity));
             return;
         }
 
-        // for office 365 URL append "@wipro.com" to the username
-        if(serverSpinner.getSelectedItemPosition() == MyPreferencesActivity.OFFICE365_URL_POSITION){
-            username+=getString(R.string.webmail_365_username_append);
-        }
         //Log.d(TAG, "USERNAME " + username + " PASSWORD " + password);
         //Validation successful. Login
-        new Login().execute(username, password);
+        new Login().execute(loginUrl, username, password);
     }
 
     private class Login extends AsyncTask<String, String, Long>{
@@ -173,7 +161,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
                 publishProgress("2" ,"RUNNING", LOGGING_IN_PROG1_TEXT);
 
-                service = EWSConnection.getService(activity, paramArrayOfParams[0], paramArrayOfParams[1]);
+                service = EWSConnection.getService(activity, paramArrayOfParams[0], paramArrayOfParams[1], paramArrayOfParams[2]);
 
                 //get and store userd detials
                 //EWS call
@@ -277,7 +265,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
                     e1.printStackTrace();
                 }
                 try {
-                    saveCredentials(username, password);
+                    saveDetails(loginUrl, username, password);
                     //	MailApplication.onFirstTimeSuccessfulLogin(activity);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -304,7 +292,8 @@ public class LoginPageActivity extends MyActivity implements Constants {
             }
         }
 
-        private void saveCredentials(String username, String password) throws Exception {
+        private void saveDetails(String url, String username, String password) throws Exception {
+            GeneralPreferenceAdapter.storeServerURL(context, url);
             SharedPreferencesAdapter.storeCredentials(LoginPageActivity.this.getApplicationContext(), username, password);
         }
 
@@ -315,21 +304,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
     }   //end async task
 
 
-
-    /** Private method which updates the Server Spinner selection based on the stored preference value
-     * For Custom URL it wont switch to Custom URL because when Custom URL option is selcted it wont trigger the dialog
-     *
-     */
-    private void updateServerSpinnerSelection() {
-        String[] serversText = getResources().getStringArray(R.array.preferences_serverlist_values);
-        String storedServerURL=sharedPref.getServerURL(activity);
-        // for the primary and secondary URLs
-        for(int i=0; i<serversText.length; i++){
-            if(serversText[i].equalsIgnoreCase(storedServerURL)){	//i=3 means the user clicked Custom URL 4th option. It is handled in WebmailURLPreference.java
-                serverSpinner.setSelection(i);
-            }
-        }
-    }
     private String trimUserName(String username) {
         if(username.contains("@")){
             return username.substring(0, username.indexOf("@"));
@@ -351,15 +325,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    /** GETTER AND SETTER **/
-    public TextView getUrlDisp() {
-        return urlDisp;
-    }
-
-    public void setUrlDisp(TextView urlDisp) {
-        this.urlDisp = urlDisp;
     }
 
 }

@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MyPreferencesActivity;
-import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.constants.Constants;
 /**
  * @author Sathesh
@@ -25,7 +24,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	public String getServerURL(Context context){
 		loadPreference(context);
 		//the second param specifies the value which will be the default when the fetch to the shared preference fails.
-		return sharedPreferences.getString(MyPreferencesActivity.KEY_WEBMAIL_SERVER, MailApplication.getDefaultWebmailURL(context));
+		return sharedPreferences.getString(MyPreferencesActivity.KEY_WEBMAIL_SERVER, "");
 	}
 
 	/** This will store the given URL to use as the webmail url in the application. Warning: calling this function will trigger the OnSharedPreferenceschangeListener in the PrefernecesActivity

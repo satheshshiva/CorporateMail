@@ -9,7 +9,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -221,47 +220,34 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences pref, String key) {
-        if(key.equals(KEY_WEBMAIL_SERVER)){
-            try {
-                Calendar now = Calendar.getInstance();
-                if( !(MyPreferencesActivity.timeOfLastCustomURL!=null && ((now.getTimeInMillis() - MyPreferencesActivity.timeOfLastCustomURL.getTimeInMillis() ) < 2000))){
-                    //when the custom url is saved, this event will be invoked again. so to preven that, the last custom url save shld be > than 2secs.
-                    updateWebmailServerPrefernceSummary();
-                }
-                else{
-                    Log.i(TAG, "PreferenceActivity -> Last prefernce save was save less than 2 secs. So url changing fn not invoked");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else if(key.equals(KEY_COMPOSE_SIGNATURE_ENABLE)){
-            updateComposeSignatureEnablePrefernceSummary();
-        }
-        else if(key.equals(KEY_NOTIFICATION_ENABLE)){
+        switch (key) {
+            case KEY_COMPOSE_SIGNATURE_ENABLE:
+                updateComposeSignatureEnablePrefernceSummary();
+                break;
+            case KEY_NOTIFICATION_ENABLE:
 
-            if(sharedPref.isNotificationEnabled(this)){
-                MailApplication.startMNSService(this);
-            }
-            else{
-                MailApplication.stopMNSService(this);
-            }
-            updateNotificationEnablePrefernceSummary();
+                if (sharedPref.isNotificationEnabled(this)) {
+                    MailApplication.startMNSService(this);
+                } else {
+                    MailApplication.stopMNSService(this);
+                }
+                updateNotificationEnablePrefernceSummary();
 
-        }
-        else if(key.equals(KEY_NOTIFICATION_TYPE)){
-            updateSubscriptionTypePrefernceSummary();
-        }
-        else if(key.equals(KEY_PULL_FREQUENCY)){
-            try {
-                MailApplication.onChangeMNSResetPullDuration();
-                updatePullDurationPrefernceSummary();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else if(key.equals(KEY_AUTO_UPDATE_NOTIFY)){
-            updateAutoUpdateNotifySummary();
+                break;
+            case KEY_NOTIFICATION_TYPE:
+                updateSubscriptionTypePrefernceSummary();
+                break;
+            case KEY_PULL_FREQUENCY:
+                try {
+                    MailApplication.onChangeMNSResetPullDuration();
+                    updatePullDurationPrefernceSummary();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case KEY_AUTO_UPDATE_NOTIFY:
+                updateAutoUpdateNotifySummary();
+                break;
         }
     }
 
@@ -270,22 +256,6 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
      */
     private void oncreateWebmailServerFromSummary() {
         webMailServer.setSummary(sharedPref.getServerURL(context));
-    }
-
-    /** called everytime when this preference is changed
-     *
-     */
-    private void updateWebmailServerPrefernceSummary() {
-
-        String[] serversText = getResources().getStringArray(R.array.preferences_serverlist_text);
-        // for the primary and secondary URLs
-        for(int i=0; i<serversText.length; i++){
-            if(i!=CUSTOM_URL_POSITION){	//i=3 means the user clicked Custom URL 4th option. It is handled in WebmailURLPreference.java
-                if(serversText[i].equalsIgnoreCase(webMailServer.getEntry().toString())){
-                    webMailServer.setSummary(getResources().getStringArray(R.array.preferences_serverlist_values)[i]);
-                }
-            }
-        }
     }
 
     @Override
