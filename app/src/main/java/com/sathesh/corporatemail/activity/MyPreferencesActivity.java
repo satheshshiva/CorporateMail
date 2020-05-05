@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -48,7 +49,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
     //The following are not in the preferences page
     public final static String COMPOSE_SIGNATURE="compose_signature";
 
-    private static ListPreference webMailServer;
+    private static EditTextPreference webMailServer;
     private static CheckBoxPreference notificationEnable,composeSignatureEnable,autoUpdateNotifyEnable;
     private static Preference changePassword, signOut, clearCache;
     private static ListPreference subscrpyionType;
@@ -68,7 +69,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
         context = this;
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.mainpreferences);
-        webMailServer=(ListPreference)getPreferenceScreen().findPreference(
+        webMailServer=(EditTextPreference)getPreferenceScreen().findPreference(
                 KEY_WEBMAIL_SERVER);
         composeSignatureEnable=(CheckBoxPreference)getPreferenceScreen().findPreference(
                 KEY_COMPOSE_SIGNATURE_ENABLE);
@@ -89,8 +90,9 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
 		signOut = (Preference)getPreferenceScreen().findPreference(
 				KEY_SIGN_OUT);
 
+        webMailServer.setText(sharedPref.getServerURL(context));
+
         //Will call the function to initialize the summary. The summary will change when the option changes
-        oncreateWebmailServerFromSummary();
         updateComposeSignatureEnablePrefernceSummary();
         updateNotificationEnablePrefernceSummary();
         updateSubscriptionTypePrefernceSummary();
@@ -249,13 +251,6 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
                 updateAutoUpdateNotifySummary();
                 break;
         }
-    }
-
-    /** called on oncreate. reads the webmail URL from storage
-     *
-     */
-    private void oncreateWebmailServerFromSummary() {
-        webMailServer.setSummary(sharedPref.getServerURL(context));
     }
 
     @Override

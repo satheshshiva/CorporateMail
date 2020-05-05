@@ -189,6 +189,7 @@
     <string name="preference_pull_ferequency_12h_summary">Polls server every 12 hours. </string>
     <string name="preferences_compose_title">Compose</string>
     <string name="preferences_compose_signature_enable_title">Signature</string>
+    <string name="preferences_webmail_server">Mail Server</string>
     <string name="preferences_updater_title">Update</string>
     <string name="preferences_updater_enable_autoupdate_notify">Notify App Updates</string>
     <string name="preferences_updater_ON_autoupdate_notify_summary">Notifies when a new version update is available</string>
