@@ -2,11 +2,13 @@ package com.sathesh.corporatemail.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import androidx.preference.PreferenceManager;
 
 import com.sathesh.corporatemail.R;
-import com.sathesh.corporatemail.activity.MyPreferencesActivity;
 import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.fragment.SettingsFragment;
+
 /**
  * @author Sathesh
  *
@@ -24,7 +26,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	public String getServerURL(Context context){
 		loadPreference(context);
 		//the second param specifies the value which will be the default when the fetch to the shared preference fails.
-		return sharedPreferences.getString(MyPreferencesActivity.KEY_WEBMAIL_SERVER, "");
+		return sharedPreferences.getString(SettingsFragment.KEY_WEBMAIL_SERVER, "");
 	}
 
 	/** This will store the given URL to use as the webmail url in the application. Warning: calling this function will trigger the OnSharedPreferenceschangeListener in the PrefernecesActivity
@@ -36,7 +38,7 @@ public class GeneralPreferenceAdapter implements Constants{
 		_sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		//the second param specifies the value which will be the default when the fetch to the shared preference fails.
 		SharedPreferences.Editor editor =_sharedPreferences.edit();
-		editor.putString(MyPreferencesActivity.KEY_WEBMAIL_SERVER, url);
+		editor.putString(SettingsFragment.KEY_WEBMAIL_SERVER, url);
 		editor.commit();
 	}
 	
@@ -47,7 +49,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public String getComposeSignature(Context context) throws Exception{
 		loadPreference(context);
-		return sharedPreferences.getString(MyPreferencesActivity.COMPOSE_SIGNATURE, context.getString(R.string.compose_signature_default));
+		return sharedPreferences.getString(SettingsFragment.COMPOSE_SIGNATURE, context.getString(R.string.compose_signature_default));
 	}
 
 
@@ -60,7 +62,7 @@ public class GeneralPreferenceAdapter implements Constants{
 		SharedPreferences _sharedPreferences ;
 		_sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = _sharedPreferences.edit();
-		editor.putString(MyPreferencesActivity.COMPOSE_SIGNATURE, text);
+		editor.putString(SettingsFragment.COMPOSE_SIGNATURE, text);
 
 		editor.commit();
 
@@ -72,7 +74,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public boolean isNotificationEnabled(Context context){
 		loadPreference(context);
-		return sharedPreferences.getBoolean(MyPreferencesActivity.KEY_NOTIFICATION_ENABLE, true);
+		return sharedPreferences.getBoolean(SettingsFragment.KEY_NOTIFICATION_ENABLE, true);
 	}
 	
 	/** gets whether Compose Signature is enabled
@@ -81,7 +83,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public boolean isComposeSignatureEnabled(Context context){
 		loadPreference(context);
-		return sharedPreferences.getBoolean(MyPreferencesActivity.KEY_COMPOSE_SIGNATURE_ENABLE, true);
+		return sharedPreferences.getBoolean(SettingsFragment.KEY_COMPOSE_SIGNATURE_ENABLE, true);
 	}
 	/** notification type
 	 * @param context
@@ -89,7 +91,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public String getNotificationType(Context context){
 		loadPreference(context);
-		return sharedPreferences.getString(MyPreferencesActivity.KEY_NOTIFICATION_TYPE, "pull");
+		return sharedPreferences.getString(SettingsFragment.KEY_NOTIFICATION_TYPE, "pull");
 	}
 	
 	/** pull frequency
@@ -98,17 +100,6 @@ public class GeneralPreferenceAdapter implements Constants{
 	 */
 	public Long getNotificationPullFrequency(Context context){
 		loadPreference(context);
-		long time=Long.valueOf(sharedPreferences.getString(MyPreferencesActivity.KEY_PULL_FREQUENCY, "900000"));
-		
-		return time;
-	}
-	
-	/**auto update notification
-	 * @param context
-	 * @return
-	 */
-	public boolean isAutoUdpateNotifyEnabled(Context context){
-		loadPreference(context);
-		return sharedPreferences.getBoolean(MyPreferencesActivity.KEY_AUTO_UPDATE_NOTIFY, true);
+		return Long.valueOf(sharedPreferences.getString(SettingsFragment.KEY_PULL_FREQUENCY, "900000"));
 	}
 }

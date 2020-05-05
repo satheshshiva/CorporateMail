@@ -8,8 +8,7 @@
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ></FrameLayout>https://github.com/makovkastar/FloatingActionButton
+        android:layout_height="wrap_content" />https://github.com/makovkastar/FloatingActionButton
 
     <!-- Drawer layout -->
     <include layout="@layout/drawer_layout" />

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
@@ -27,7 +28,6 @@ import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.fragment.datapasser.AboutFragmentDataPasser;
 import com.sathesh.corporatemail.jsinterfaces.AboutActivityJSInterface;
 import com.sathesh.corporatemail.ui.listeners.AboutFragmentListener;
-import com.sathesh.corporatemail.update.CheckLatestVersion;
 
 
 public class AboutFragment extends Fragment implements Constants,AboutFragmentDataPasser{
@@ -41,7 +41,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
     private WebView wv;
     private ActionBar myActionBar;
     private final static String ARG_CHECK_FOR_UPDATES="ARG_CHECK_FOR_UPDATES";
-    private boolean onLoadCheckForUpdates=false;
     private ActivityDataPasser mListener;
 
     /** Factory for this fragment
@@ -68,9 +67,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            this.onLoadCheckForUpdates = getArguments().getBoolean(ARG_CHECK_FOR_UPDATES);
-        }
     }
 
     @Override
@@ -101,8 +97,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         activityDataPasser =   (ActivityDataPasser)getActivity();
         context =  getActivity();
 
-        wv = (WebView)view.findViewById(R.id.aboutActivityWebView);
-
         //the following code will prevent new webview from opening when loading url
         wv.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view1, String url) {
@@ -124,8 +118,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
 
         AboutFragmentListener listener = new AboutFragmentListener(activity, context, this);
 
-        bugOrSuggestionBtn = (Button)view.findViewById(R.id.about_activity_bugOrSuggestion_btn);
-        checkUpdatesBtn = (Button)view.findViewById(R.id.about_activity_check_update_btn);
         fbButton = (ImageButton)view.findViewById(R.id.fbButton);
 
         //setting on click listeners for buttons
@@ -152,9 +144,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         myActionBar.setDisplayHomeAsUpEnabled(true);
         myActionBar.setHomeButtonEnabled(true);
 
-        if(onLoadCheckForUpdates){
-            checkForUpdates();
-        }
         return view;
     }
 
@@ -182,7 +171,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
 
     @Override
     public void checkForUpdates() {
-        new CheckLatestVersion(activity,wv).startAsyncCheck();
+
     }
 
     /** Unused right now

@@ -179,7 +179,7 @@
     <string name="preferences_notification_type_title">Subscription Type</string>
     <string name="preference_compose_signature_enable_ON_summary">Adds signature while composing email</string>
     <string name="preference_compose_signature_enable_OFF_summary">Doesn\'t add signature while composing email.</string>
-    <string name="preference_notification_enable_ON_summary">Notifies about new email even during display sleep</string>
+    <string name="preference_notification_enable_ON_summary">Notifies about new email</string>
     <string name="preference_notification_enable_OFF_summary">Doesn\'t notify incoming emails</string>
     <string name="preference_notification_type_summary">Only Pull subscription is supported at this time</string>
     <string name="preference_pull_ferequency_30s_summary">Polls server every 30 seconds. Longer the interval, better the battery life. </string>
@@ -190,10 +190,6 @@
     <string name="preferences_compose_title">Compose</string>
     <string name="preferences_compose_signature_enable_title">Signature</string>
     <string name="preferences_webmail_server">Mail Server</string>
-    <string name="preferences_updater_title">Update</string>
-    <string name="preferences_updater_enable_autoupdate_notify">Notify App Updates</string>
-    <string name="preferences_updater_ON_autoupdate_notify_summary">Notifies when a new version update is available</string>
-    <string name="preferences_updater_OFF_autoupdate_notify_summary">Doesn\'t notify when a new version update is available</string>
     <string name="preferences_account_title">Account Settings</string>
     <string name="preferences_change_password_title">Change Password</string>
     <string name="preferences_change_password_lbl">New Password</string>
@@ -213,7 +209,7 @@
     <string name="dialog_signout_reset_settings_desc">Resets all the application settings to their defaults including signature, pull frequency etc.,</string>
 
     <!-- Bugs/Suggestion -->
-    <string name="bugsOrSuggestion_developer_email">satheshshiva@gmail.com</string>
+    <string name="bugsOrSuggestion_developer_email">innovative.aps@gmail.com</string>
     <string name="bugsOrSuggestion_email_subject">Corporate Mail v%s- Bugs/Suggestions</string>
     <string name="bugsOrSuggestion_email_titlebar">Bugs/Suggestion</string>
 
