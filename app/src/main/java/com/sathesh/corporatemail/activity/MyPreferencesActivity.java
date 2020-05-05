@@ -31,7 +31,6 @@ import java.util.Calendar;
  */
 public class MyPreferencesActivity extends PreferenceActivity implements Constants ,OnSharedPreferenceChangeListener{
 
-    public static int OFFICE365_URL_POSITION = 0;
     public static int CUSTOM_URL_POSITION = 3;
 
     public final static String KEY_WEBMAIL_SERVER="webmail_server";
