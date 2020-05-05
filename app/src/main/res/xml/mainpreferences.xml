@@ -3,6 +3,10 @@
 
     <!-- General -->
     <PreferenceCategory android:title="@string/preference_general_title" >
+        <EditTextPreference
+            android:defaultValue="true"
+            android:key="webmail_server"
+            android:title="@string/preferences_webmail_server" />
 
         <!-- NOTE: When updating defaultValues here, please also update default values in GeneralPrefernceAdapter -->
         <!-- Webmail URL -->
