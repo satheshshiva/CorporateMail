@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.view.View;
 
 import com.sathesh.corporatemail.R;
-import com.sathesh.corporatemail.activity.MyPreferencesActivity;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
 import com.sathesh.corporatemail.adapter.DrawerRecyclerViewAdapter;
 import com.sathesh.corporatemail.adapter.DrawerRecyclerViewMoreFoldersAdapter;
@@ -94,8 +93,7 @@ public class MailListViewActivityListener implements  Constants, DrawerRecyclerV
 
                 case DrawerMenuRowType.SETTINGS:
                     activityDataPasser.getmDrawerLayout().closeDrawers();
-                    intent = new Intent(activity, MyPreferencesActivity.class);
-                    activity.startActivity(intent);
+                    activityDataPasser.loadSettingsFragment();
                     break;
 
                 case DrawerMenuRowType.ABOUT:

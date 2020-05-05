@@ -13,12 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.preference.ListPreference;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -26,7 +22,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MainActivity;
-import com.sathesh.corporatemail.activity.MyPreferencesActivity;
 import com.sathesh.corporatemail.adapter.ComposeActivityAdapter;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
 import com.sathesh.corporatemail.cache.CacheDirectories;
@@ -42,7 +37,6 @@ import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThre
 import com.sathesh.corporatemail.threads.ui.GetMoreFoldersThread;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ChangePasswordDialog;
-import com.sathesh.corporatemail.update.AutoUpdater;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.io.File;
@@ -147,14 +141,6 @@ public class MailApplication implements Constants {
 
         return generalSettings.getNotificationPullFrequency(context);
 
-    }
-
-    /** gets the boolean value whether the auto update notify is enabled
-     * @param context
-     * @return
-     */
-    public static boolean isAutoUdpateNotifyEnabled(Context context){
-        return generalSettings.isAutoUdpateNotifyEnabled(context);
     }
 
     /**
@@ -522,8 +508,6 @@ public class MailApplication implements Constants {
     }
 
     public void onEveryAppOpen(MyActivity activity, Context context) {
-        //checking updates
-        AutoUpdater.autoCheckForUpdates(activity);
         if(getInstance().isWrongPwd()){
             ChangePasswordDialog.showAlertdialog(activity, context);
         }
@@ -746,51 +730,6 @@ public class MailApplication implements Constants {
                 Log.e(TAG, "ViewMailActivity -> The attachment or its content type is null. Not processing this attachment!");
             }
         }
-    }
-
-    /**Builds and shows a CustomServer URL dialog for entering a manual URL.
-     * Called by WebMailURLPreference and LoginPageListener
-     *
-     * @param context
-     * @param listPreference - Component of PreferenceActivity. Pass null for other activities
-     * @param textView - Component of LoginPageActivity. Pass null for other activities
-     */
-    public static void showCustomServerURLDialog(final Context context , final ListPreference listPreference, final TextView textView){
-
-        //build the dialog for change password using the xml layout
-        LayoutInflater factory = LayoutInflater.from(context);
-        final View textEntryView = factory.inflate(R.layout.dialog_webmail_url, null);
-
-        //update the passowrd field with the old password
-        final EditText changeURLEdit = (EditText)textEntryView.findViewById(R.id.url_edit);
-
-        changeURLEdit.setText(generalSettings.getServerURL(context));
-
-        //build the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dialog_webmail_url_title)
-                .setView(textEntryView)
-                .setPositiveButton(R.string.alertdialog_save_lbl, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String _url = changeURLEdit.getText().toString();
-                        MyPreferencesActivity.timeOfLastCustomURL = Calendar.getInstance();        //will prevent from invoking the code inside OnSharedPreferenceChange event again, which will be invoked on next line while saving the shared prefs
-                        GeneralPreferenceAdapter.storeServerURL(context, _url);
-                        if (listPreference !=null){             //component of PreferenceActivity
-                            listPreference.setSummary(_url);
-                        }
-                        if(textView!=null){                     //component of LoginPageActivity
-                            textView.setText(_url);
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.alertdialog_negative_lbl, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
-                })
-                .create();
-        AlertDialog webmailURL = builder.create();
-        webmailURL.show();
     }
 
     public static void startGetMoreFoldersThread(MyActivity activity, Handler handler){

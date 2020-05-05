@@ -1,19 +1,19 @@
 package com.sathesh.corporatemail.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import androidx.core.view.MenuItemCompat;
+
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MyActivity;
-import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
+import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.ui.components.MailDeleteDialog;
 import com.sathesh.corporatemail.ui.util.OptionsUIContent;
 import com.sathesh.corporatemail.util.Utilities;
@@ -154,12 +154,6 @@ public class ViewMailActivity extends MyActivity implements Constants{
                 Utilities.generalCatchBlock(e,this);
             }
         }
-
-        else if(item!=null && item.getTitle().equals(ACTIONBAR_SETTINGS)){
-            Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

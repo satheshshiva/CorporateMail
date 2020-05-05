@@ -48,13 +48,6 @@
             android:key="notification_pull_frequency"
             android:title="@string/notification_pull_frequency" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_updater_title" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="auto_update_notify_enable"
-            android:summary="@string/preferences_updater_ON_autoupdate_notify_summary"
-            android:title="@string/preferences_updater_enable_autoupdate_notify" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_account_title" >
         <Preference
             android:key="change_password"
