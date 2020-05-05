@@ -8,7 +8,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,7 +90,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
 				KEY_SIGN_OUT);
 
         webMailServer.setText(sharedPref.getServerURL(context));
-
+        webMailServer.setSummary(sharedPref.getServerURL(context));
         //Will call the function to initialize the summary. The summary will change when the option changes
         updateComposeSignatureEnablePrefernceSummary();
         updateNotificationEnablePrefernceSummary();
@@ -111,30 +110,31 @@ public class MyPreferencesActivity extends PreferenceActivity implements Constan
      */
     private void initializeEventsForAccount() {
 
+        webMailServer.setOnPreferenceChangeListener((Preference preference, Object newValue) -> {
+            webMailServer.setSummary(newValue.toString());
+            return true;
+        });
         //initializing the click event for Change Password button
-        changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
+        changePassword.setOnPreferenceClickListener((Preference preference) ->{
                 ChangePasswordDialog.showAlertdialog(activity, context);
                 return true;
             }
-        });
+        );
 
         //initializing the click event for Clear Cache button
-        clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
+        clearCache.setOnPreferenceClickListener((Preference preference) ->{
                 CacheClear.clearFullCacheAndDbDir(activity);
                 Notifications.showToast(activity, activity.getString(R.string.preferences_cache_cleared_msg) , Toast.LENGTH_SHORT);
                 return true;
             }
-        });
+        );
 
         //initializing the click event for Sign Out  button
-		signOut.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
+		signOut.setOnPreferenceClickListener((Preference preference) ->{
 				SignOutAlertDialog.showAlertdialog(activity, context);
 				return true;
 			}
-		});
+		);
 
     }
 
