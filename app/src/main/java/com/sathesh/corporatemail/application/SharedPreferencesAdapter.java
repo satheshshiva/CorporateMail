@@ -50,7 +50,7 @@ public class SharedPreferencesAdapter implements Constants{
 		editor.putString(CRED_PREFS_PASSWORD, password);
 
 		// Commit the edits!
-		editor.commit();
+		editor.apply();
 
 	}
 	
@@ -71,7 +71,7 @@ public class SharedPreferencesAdapter implements Constants{
 		editor.putString(CRED_PREFS_PASSWORD, password);
 
 		// Commit the edits!
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -94,7 +94,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(EWS_SYNC_STATE, syncState);
 
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -116,7 +116,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(COUNTER_OPENED_MAILS, count);
 
-		editor.commit();
+		editor.apply();
 
 	}
 	
@@ -137,7 +137,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putBoolean(DO_NOT_RATE_APP, flag);
 
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -160,7 +160,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(INBOX_SYNC_PULL_WATERMARK, watermark);
 
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -181,7 +181,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(LAST_SUCCESSFUL_INBOX_UPDATE, date.toString());
 
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -202,7 +202,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(LAST_SUCCESSFUL_AUTO_UPDATE_CHECK, date.toString());
 
-		editor.commit();
+		editor.apply();
 
 	}
 	
@@ -223,7 +223,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(IS_INBOX_INITIAL_SYNC_DONE, value);
 
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -244,7 +244,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(SIGNED_IN_USER_DISP_NAME, value);
 
-		editor.commit();
+		editor.apply();
 
 	}
 
@@ -265,7 +265,7 @@ public class SharedPreferencesAdapter implements Constants{
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(SIGNED_IN_USER_COMP_NAME, value);
 
-        editor.commit();
+        editor.apply();
 
     }
 
@@ -286,7 +286,7 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(SIGNED_IN_USER_EMAIL, value);
 
-		editor.commit();
+		editor.apply();
 
 	}
 }
