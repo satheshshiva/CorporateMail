@@ -6,11 +6,9 @@
         <EditTextPreference
             android:defaultValue="true"
             android:key="webmail_server"
-            android:title="@string/preferences_webmail_server" />
+            android:title="@string/preferences_webmail_server"
+            android:inputType="textUri"/>
 
-        <!-- NOTE: When updating defaultValues here, please also update default values in GeneralPrefernceAdapter -->
-        <!-- Webmail URL -->
-        <!-- TODO Provide text box to change the webmail url-->
     </PreferenceCategory>
 
     <!-- Compose -->
