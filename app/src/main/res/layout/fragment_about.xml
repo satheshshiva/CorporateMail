@@ -98,9 +98,6 @@
             -->
 
 
-            <!-- remove android:layout_marginBottom when removing ads for this page -->
-
-
             <!--
                      <LinearLayout
                     android:id="@+id/linearLayout3"
@@ -112,42 +109,6 @@
 
             <!-- </LinearLayout> -->
             <!-- </ScrollView> -->
-            <!--
-            <include
-                android:id="@+id/ads"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                layout="@layout/ads" />
-            -->
-
-            <Button
-                android:id="@+id/about_activity_bugOrSuggestion_btn"
-                style="@style/Style.Button"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/aboutActivityWebView"
-                android:layout_marginLeft="21dp"
-                android:layout_toRightOf="@+id/about_activity_check_update_btn"
-                android:text="@string/about_activity_bugOrSuggestion_btn"
-                android:visibility="visible" />
-
-            <Button
-                android:id="@+id/about_activity_check_update_btn"
-                style="@style/Style.Button"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/aboutActivityWebView"
-                android:layout_below="@+id/fbButton"
-                android:layout_marginLeft="17dp"
-                android:text="@string/about_activity_update_btn"
-                android:visibility="visible" />
-
-            <WebView
-                android:id="@+id/aboutActivityWebView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/about_activity_check_update_btn" />
 
             <ImageButton
                 android:id="@+id/fbButton"
@@ -169,17 +130,6 @@
                 android:autoLink="web"
                 android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="@string/title_activity_Apk_download_Url"
-                android:layout_below="@+id/aboutActivityWebView"
-                android:layout_marginTop="4dp"
-                android:autoLink="web"
-                android:paddingTop="2dp"
-                android:textSize="12sp" />
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

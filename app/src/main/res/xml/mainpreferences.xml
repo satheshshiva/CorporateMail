@@ -3,17 +3,12 @@
 
     <!-- General -->
     <PreferenceCategory android:title="@string/preference_general_title" >
-
-        <!-- NOTE: When updating defaultValues here, please also update default values in GeneralPrefernceAdapter -->
-        <!-- Webmail URL -->
-        <com.sathesh.corporatemail.customwidgets.WebmailURLPreference
-            android:defaultValue="@string/webmail1_url"
-            android:dialogTitle="@string/preference_serverurl_title"
-            android:entries="@array/preferences_serverlist_text"
-            android:entryValues="@array/preferences_serverlist_values"
+        <EditTextPreference
+            android:defaultValue="true"
             android:key="webmail_server"
-            android:summary="@string/prefernce_serverurl_message"
-            android:title="@string/preference_serverurl_title" />
+            android:title="@string/preferences_webmail_server"
+            android:inputType="textUri"/>
+
     </PreferenceCategory>
 
     <!-- Compose -->
@@ -52,13 +47,6 @@
             android:entryValues="@array/preferences_pull_notification_frequency_values"
             android:key="notification_pull_frequency"
             android:title="@string/notification_pull_frequency" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_updater_title" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="auto_update_notify_enable"
-            android:summary="@string/preferences_updater_ON_autoupdate_notify_summary"
-            android:title="@string/preferences_updater_enable_autoupdate_notify" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_account_title" >
         <Preference

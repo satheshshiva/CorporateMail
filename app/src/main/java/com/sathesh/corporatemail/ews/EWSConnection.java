@@ -2,6 +2,7 @@ package com.sathesh.corporatemail.ews;
 
 import android.content.Context;
 
+import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
@@ -19,14 +20,14 @@ public class EWSConnection implements Constants{
 	private static String SignedInAccUser=USERNAME_NULL,SignedInAccPassword=PASSWORD_NULL ;
 
 
-	public static ExchangeService getService(Context context, String username, String password) throws Exception{
+	public static ExchangeService getService(Context context, String url, String username, String password) throws Exception{
 		service = new ExchangeService();
 
 		try {
 
 			service.setCredentials(new WebCredentials(username,	password));
 			//System.out.println("Username " + username + "\nPassword " + password);
-			service.setUrl(new URI(MailApplication.getWebmailURL(context)));
+			service.setUrl(new URI(MailApplication.getWebmailURL(context, url)));
 			//service.setUrl(new URI("https://mail.cognizant.com/EWS/Exchange.asmx"));
 			//service.setTraceEnabled(true);
 		} catch (Exception e) {
@@ -56,7 +57,7 @@ public class EWSConnection implements Constants{
 			else{
 				service.setCredentials(new WebCredentials(SignedInAccUser,	SignedInAccPassword));
 
-				service.setUrl(new URI(MailApplication.getWebmailURL(context)));
+				service.setUrl(new URI(MailApplication.getWebmailURL(context, new GeneralPreferenceAdapter().getServerURL(context))));
 				//service.setUrl(new URI("https://mail.cognizant.com/EWS/Exchange.asmx"));
 				//service.setTraceEnabled(true);
 

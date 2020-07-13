@@ -2,13 +2,14 @@ package com.sathesh.corporatemail.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
@@ -134,25 +135,18 @@ public class DrawerRecyclerViewAdapter extends RecyclerView.Adapter<DrawerRecycl
                     }
 
                     //setting onClick listener for the row
-                    holder.view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //here you inform view that something was change - view will be invalidated
-                            notifyDataSetChanged();
-                            listener.onDrawerLayoutRecyclerViewClick(view, position, folderVO);
-                        }
+                    holder.view.setOnClickListener(view -> {
+                        //here you inform view that something was change - view will be invalidated
+                        notifyDataSetChanged();
+                        listener.onDrawerLayoutRecyclerViewClick(view, position, folderVO);
                     });
 
                     //setting onClick listener for the row
-                    holder.view.setOnLongClickListener(new View.OnLongClickListener(){
-
-                        @Override
-                        public boolean onLongClick(View v) {
-                            if(folderVO.getType() == DrawerMenuRowType.FAVOURITE_FOLDERS){
-                                FavouritesDialog.removeFavourite(activity, folderVO, drawerMenuDAO);
-                            }
-                            return true;
+                    holder.view.setOnLongClickListener(v -> {
+                        if(folderVO.getType() == DrawerMenuRowType.FAVOURITE_FOLDERS){
+                            FavouritesDialog.removeFavourite(activity, folderVO, drawerMenuDAO);
                         }
+                        return true;
                     });
 
                 }

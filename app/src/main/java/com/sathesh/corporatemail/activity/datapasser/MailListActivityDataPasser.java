@@ -19,6 +19,7 @@ public interface MailListActivityDataPasser {
     void loadMailListViewFragment(int mailType, String mailFolderName, String mailFolderId);
 
     void loadAboutFragment(boolean checkForUpdates);
+    void loadSettingsFragment();
 
     void loadSearchContactFragment();
 

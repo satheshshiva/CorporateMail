@@ -34,8 +34,7 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.AboutFragment;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
 import com.sathesh.corporatemail.fragment.SearchContactFragment;
-import com.sathesh.corporatemail.fragment.datapasser.AboutFragmentDataPasser;
-import com.sathesh.corporatemail.fragment.datapasser.SearchContactFragmentDataPasser;
+import com.sathesh.corporatemail.fragment.SettingsFragment;
 import com.sathesh.corporatemail.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.FolderVO;
 import com.sathesh.corporatemail.tools.CacheClear;
@@ -52,7 +51,7 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser, SearchContactFragment.ActivityDataPasser{
+public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser, SearchContactFragment.ActivityDataPasser, SettingsFragment.ActivityDataPasser{
 
     public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -74,8 +73,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     private int drawerLayoutSelectedPosition=0, drawerLayoutSelectedPosition2=-1;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private  AboutFragmentDataPasser aboutFragment;
-    private SearchContactFragmentDataPasser searchContactFragment;
     private Fragment currentlyLoadedFragment;
 
     private static MailListViewActivity activityInstance;
@@ -377,6 +374,19 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         FragmentTransaction ft = fm.beginTransaction();
 
         AboutFragment fragment = AboutFragment.newInstance(onLoadCheckForUpdates);
+        ft.replace(R.id.fragmentContainer, fragment);
+        ft.commit();
+        currentlyLoadedFragment = fragment;
+    }
+
+    @Override
+    //loads the AboutFragment inside the MailListViewActivity
+    public void loadSettingsFragment() {
+        //using fragment transaction, replace the fragment
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        SettingsFragment fragment = SettingsFragment.newInstance();
         ft.replace(R.id.fragmentContainer, fragment);
         ft.commit();
         currentlyLoadedFragment = fragment;
