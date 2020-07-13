@@ -87,24 +87,9 @@ public class AboutFragmentListener implements Constants, OnClickListener{
      */
     @Override
     public void onClick(View view) {
-        try {
-            switch (view.getId()) {
-
-                case R.id.about_activity_check_update_btn:
-                    onClickChkUpdate(view);
-                    break;
-
-                case R.id.about_activity_bugOrSuggestion_btn:
-                    onBugOrSuggestion(view);
-                    break;
-
-                case R.id.fbButton:
-                    fbOnclick(view);
-                    break;
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (view.getId() == R.id.fbButton) {
+            fbOnclick(view);
         }
-    }
+        }
+
 }
