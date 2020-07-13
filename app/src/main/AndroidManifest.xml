@@ -78,16 +78,6 @@
             android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
-        <!--
-         <activity
-        android:name="com.google.ads.AdActivity"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-        -->
-        <!--
-     <provider android:name=".contentprovider.ImageContentProvider"
-      android:authorities="com.wipromail.sathesh.localfile"
-  />
-        -->
         <activity
             android:name=".activity.AddRecipientActivity"
             android:label="@string/title_activity_add_recipient">

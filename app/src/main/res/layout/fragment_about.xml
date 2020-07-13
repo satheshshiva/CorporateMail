@@ -98,9 +98,6 @@
             -->
 
 
-            <!-- remove android:layout_marginBottom when removing ads for this page -->
-
-
             <!--
                      <LinearLayout
                     android:id="@+id/linearLayout3"
@@ -112,14 +109,6 @@
 
             <!-- </LinearLayout> -->
             <!-- </ScrollView> -->
-            <!--
-            <include
-                android:id="@+id/ads"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                layout="@layout/ads" />
-            -->
 
             <ImageButton
                 android:id="@+id/fbButton"
