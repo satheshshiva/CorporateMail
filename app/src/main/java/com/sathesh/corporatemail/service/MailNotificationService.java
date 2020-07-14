@@ -13,12 +13,12 @@ import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.NotificationProcessing;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customui.Notifications;
-import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThread;
+import com.sathesh.corporatemail.threads.service.PullSubscriptionThread;
 
 /**
  * @author Sathesh
  *
- *This service will create a thread PullMailNotificationServiceThread(MNSThread in DDMS) which subscribes for Pull Subscription and schedules an alarm for Polling the server. 
+ *This service will create a thread PullSubscriptionThread(MNSThread in DDMS) which subscribes for Pull Subscription and schedules an alarm for Polling the server.
  *The Pull subscription thread is always active and it renews itself for 
  *every 23 hours. The Alarm will call the class PollServerMNS on the interval specified.
  *If the MNSThread is in TIMED_WAIT then it is waiting normally for renewal subscription time elapse, if it is in WAIT state then an exception has made it to wait..
@@ -28,7 +28,7 @@ import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThre
  *
  */
 public class MailNotificationService extends Service implements Constants {
-    private static PullMailNotificationServiceThread mnsthread ;
+    private static PullSubscriptionThread mnsthread ;
     private String mnsThreadState="";
     private AlarmManager am;
   
@@ -49,14 +49,14 @@ public class MailNotificationService extends Service implements Constants {
     	Log.d(TAG, "MailNoificationService -> OnCreate called "); 
       //  mnsthread = new StreamMailNotificationServiceThread(this);
     	 mnsthread =createNewNotificationThread();
-        // new PullMailNotificationServiceThread(this , mNM);
+        // new PullSubscriptionThread(this , mNM);
       
     }
 
-    private  PullMailNotificationServiceThread createNewNotificationThread() {
+    private PullSubscriptionThread createNewNotificationThread() {
 		// TODO Auto-generated method stub
-		return (new PullMailNotificationServiceThread(this));
-    	//return (new PullMailNotificationServiceThread());
+		return (new PullSubscriptionThread(this));
+    	//return (new PullSubscriptionThread());
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class MailNotificationService extends Service implements Constants {
         }
         else
         {
-        	Log.e(TAG_MNS, "PullMailNotificationServiceThread is null");
+        	Log.e(TAG_MNS, "PullSubscriptionThread is null");
         }
         return START_STICKY;
     }
@@ -145,7 +145,7 @@ public class MailNotificationService extends Service implements Constants {
 	public static void cancelRepeatingSubscriptionAndPolling() {
 		// TODO Auto-generated method stub
 		
-		PullMailNotificationServiceThread.cancelRepeatingPollAlarm();
+		PullSubscriptionThread.cancelRepeatingPollAlarm();
 		mnsthread.interrupt();
 		
 	}

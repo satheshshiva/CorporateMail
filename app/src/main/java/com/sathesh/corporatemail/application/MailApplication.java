@@ -33,7 +33,7 @@ import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.service.MailNotificationService;
-import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThread;
+import com.sathesh.corporatemail.threads.service.PullSubscriptionThread;
 import com.sathesh.corporatemail.threads.ui.GetMoreFoldersThread;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ChangePasswordDialog;
@@ -382,7 +382,7 @@ public class MailApplication implements Constants {
      * @throws Exception
      */
     public static void onChangeMNSResetPullDuration(Long millis) throws Exception {
-        PullMailNotificationServiceThread.resetAlarm(millis);
+        PullSubscriptionThread.resetAlarm(millis);
     }
 
     public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception{

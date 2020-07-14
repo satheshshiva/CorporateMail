@@ -25,7 +25,7 @@ import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.service.MailNotificationService;
-import com.sathesh.corporatemail.threads.service.PullMailNotificationServiceThread;
+import com.sathesh.corporatemail.threads.service.PullSubscriptionThread;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.net.UnknownHostException;
@@ -76,9 +76,9 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 			mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
 
 			pollSound = MediaPlayer.create(context, R.raw.sound);
-			alarmManager = PullMailNotificationServiceThread.getAlarmManager();
-			pendingIntent=PullMailNotificationServiceThread.getPendingIntent();
-			subscription = PullMailNotificationServiceThread.getPullSubscription();
+			alarmManager = PullSubscriptionThread.getAlarmManager();
+			pendingIntent= PullSubscriptionThread.getPendingIntent();
+			subscription = PullSubscriptionThread.getPullSubscription();
 			service = EWSConnection.getServiceFromStoredCredentials(context);
 			//REMOVE THIS
 			//Log.d(TAG, "Polling using the password " +  ((WebCredentials)service.getCredentials()).getPwd());
