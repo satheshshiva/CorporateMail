@@ -381,8 +381,8 @@ public class MailApplication implements Constants {
     /** When pull duration for PullMNS is changed, call this to update the time in thread
      * @throws Exception
      */
-    public static void onChangeMNSResetPullDuration() throws Exception {
-        PullMailNotificationServiceThread.resetAlarm();
+    public static void onChangeMNSResetPullDuration(Long millis) throws Exception {
+        PullMailNotificationServiceThread.resetAlarm(millis);
     }
 
     public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception{

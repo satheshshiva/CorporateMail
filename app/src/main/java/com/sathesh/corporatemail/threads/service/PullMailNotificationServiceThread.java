@@ -1,9 +1,5 @@
 package com.sathesh.corporatemail.threads.service;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -26,6 +22,10 @@ import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
+
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
@@ -268,25 +268,25 @@ extends Thread implements Constants
 	 * 
 	 */
 	private static void setNewRepeatingPoll() throws Exception {
-		// TODO Auto-generated method stub
-		
-		Log.i(TAG_MNS, "PullMailNotificationServiceThread -> Setting up alarm ");
-		AlarmManager mgr=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+		setNewRepeatingPoll(MailApplication.getPullFrequency(context));
+	}
+	private static void setNewRepeatingPoll(Long millis) throws Exception {
+	Log.i(TAG_MNS, "PullMailNotificationServiceThread -> Setting up alarm ");
+	AlarmManager mgr=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
-		Intent i  = new Intent(context, MNSAlarmSetter.class);
-		
-		//intent.putExtra("asd", context);
-		pendingIntent = PendingIntent.getBroadcast(context, 0,
-				  i, PendingIntent.FLAG_CANCEL_CURRENT);
-		
-		mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-	            SystemClock.elapsedRealtime()+60000,
-	            Long.valueOf(MailApplication.getPullFrequency(context)),
-	            pendingIntent);
-		
-		Log.d(TAG_MNS, "Alarm set " );
-		
-		
+	Intent i  = new Intent(context, MNSAlarmSetter.class);
+
+	//intent.putExtra("asd", context);
+	pendingIntent = PendingIntent.getBroadcast(context, 0,
+			i, PendingIntent.FLAG_CANCEL_CURRENT);
+
+	mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+			SystemClock.elapsedRealtime()+60000,
+			Long.valueOf(millis),
+			pendingIntent);
+
+
+	Log.d(TAG_MNS, "Alarm set: " + millis/1000 + " seconds" );
 	}
 
 	private void handleGeneralException(Exception ne) {
@@ -321,10 +321,10 @@ extends Thread implements Constants
 	 * @throws Exception 
 	 * 
 	 */
-	public static void resetAlarm() throws Exception {
+	public static void resetAlarm(Long millis) throws Exception {
 		// TODO Auto-generated method stub
 		cancelRepeatingPollAlarm();
-		setNewRepeatingPoll();
+		setNewRepeatingPoll(millis);
 		
 	}
 

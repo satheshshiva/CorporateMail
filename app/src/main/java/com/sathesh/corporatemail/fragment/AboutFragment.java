@@ -8,10 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -26,7 +22,6 @@ import com.sathesh.corporatemail.asynctask.DownloadAndUpdateAppAsyncTask;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.fragment.datapasser.AboutFragmentDataPasser;
-import com.sathesh.corporatemail.jsinterfaces.AboutActivityJSInterface;
 import com.sathesh.corporatemail.ui.listeners.AboutFragmentListener;
 
 
@@ -36,9 +31,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
     private ActivityDataPasser activityDataPasser;
     private static AboutFragment fragment;
     private Context context ;
-    private Button bugOrSuggestionBtn, checkUpdatesBtn;
     private ImageButton fbButton;
-    private WebView wv;
     private ActionBar myActionBar;
     private final static String ARG_CHECK_FOR_UPDATES="ARG_CHECK_FOR_UPDATES";
     private ActivityDataPasser mListener;
@@ -97,42 +90,11 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         activityDataPasser =   (ActivityDataPasser)getActivity();
         context =  getActivity();
 
-        //the following code will prevent new webview from opening when loading url
-        wv.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view1, String url) {
-
-                view1.loadUrl(url);
-                return true;
-            }});
-
-        WebSettings webSettings = wv.getSettings();
-        webSettings.setSavePassword(false);
-        webSettings.setSaveFormData(false);
-        webSettings.setJavaScriptEnabled(true);	//this is important
-        webSettings.setSupportZoom(false);
-        //for displaying js alert in console
-
-        //	wv.setWebChromeClient(new CommonWebChromeClient());
-
-        wv.addJavascriptInterface(new AboutActivityJSInterface(this), AboutActivityJSInterface.ABOUT_ACTIVITY_JS_INTERFACE_NAME);
-
         AboutFragmentListener listener = new AboutFragmentListener(activity, context, this);
 
         fbButton = (ImageButton)view.findViewById(R.id.fbButton);
 
-        //setting on click listeners for buttons
-        bugOrSuggestionBtn.setOnClickListener(listener);
-        checkUpdatesBtn.setOnClickListener(listener);
         fbButton.setOnClickListener(listener);
-
-        //hide the Bug/suggestion buttton if no user signed in.
-        try {
-            if(!(MailApplication.checkUserIfSignedIn(context))){
-                bugOrSuggestionBtn.setVisibility(View.GONE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         //Initialize toolbar
         MailApplication.toolbarInitialize(activity, view);
