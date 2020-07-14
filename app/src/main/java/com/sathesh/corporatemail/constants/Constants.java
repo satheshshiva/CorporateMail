@@ -109,6 +109,7 @@ public interface Constants {
 
 	//public static long PULL_DURATION = 30*1000;	//30 secs
 	public static long PULL_SUBSCRIPTION_RENEWAL = 23*60*60*1000;	//23 hours
+	public static int PULL_SUBSCRIPTION_TIMEOUT = 5;	//in mins
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  ACTIONBAR CONSTANTS -------------------------------------------

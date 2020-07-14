@@ -50,21 +50,10 @@ public class NetworkCall implements Constants{
 	//The following method is used for Pull sibscription by Mail Notification Service
 	public static PullSubscription subscribePull(Context context, ExchangeService service, List folder) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
-			return service.subscribeToPullNotifications(folder,1440,
+			return service.subscribeToPullNotifications(folder,PULL_SUBSCRIPTION_TIMEOUT,
 					//timeOut: the subscription will end if the server is not polled within x minutes.  min:1 max:1440,
 					null  /*watermark: null to start a new subscription*/,
 					EventType.NewMail);
-		}
-		else{	throw new NoInternetConnectionException(); }
-	}
-
-	//The following method is used for Pull subscription by MailFunctions Update Sync
-	public static PullSubscription subscribePullInboxSync(Context context, ExchangeService service, List folder, String watermark) throws NoInternetConnectionException, Exception{
-		if(Utils.checkInternetConnection(context)){
-			return service.subscribeToPullNotifications(folder,1440,
-					//timeOut: the subscription will end if the server is not polled within x minutes.  min:1 max:1440,
-					watermark  ,
-					EventType.NewMail,EventType.Modified, EventType.Created, EventType.Deleted);
 		}
 		else{	throw new NoInternetConnectionException(); }
 	}
