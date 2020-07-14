@@ -52,8 +52,6 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 	private Context context;
 
 
-	public boolean shutdownCurrentThread=false;
-
 	private MediaPlayer pollSound;
 	private PullSubscription subscription;
 	private NotificationManager mNM ;
@@ -89,7 +87,7 @@ public class PollServerMNS extends WakefulIntentService implements Constants{
 				if(BuildConfig.DEBUG){
 					Log.i(TAG_MNS, "PollServerMNS -> Polling Server");
 					if (BuildConfig.DEBUG){
-						//pollSound.start();
+						pollSound.start();
 					}
 				}
 				pollServer();

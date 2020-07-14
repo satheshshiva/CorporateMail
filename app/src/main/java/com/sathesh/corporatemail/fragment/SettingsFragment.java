@@ -180,8 +180,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
         pullDuration.setOnPreferenceChangeListener( (p,value) -> {
             updatePullDurationPrefernceSummary(context, Long.parseLong(value.toString()));
             try {
-
-            MailApplication.onChangeMNSResetPullDuration();
+                MailApplication.onChangeMNSResetPullDuration(Long.parseLong(value.toString()));
             }catch(Exception e){
                 e.printStackTrace();
             }
