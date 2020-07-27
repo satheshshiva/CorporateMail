@@ -224,7 +224,7 @@ public class BaseCacheDAO implements Constants{
 									}
 									else{
 										if(BuildConfig.DEBUG)
-											Log.w(TAG, "BaseCacheDAO -> the VO set parameter is of type boolean but the value is not of type boolean");
+											Log.w(LOG_TAG, "BaseCacheDAO -> the VO set parameter is of type boolean but the value is not of type boolean");
 									}
 								}
 								else if(setParameterType.equals("java.util.Date"))
@@ -236,7 +236,7 @@ public class BaseCacheDAO implements Constants{
 										method.invoke(vo,date);
 									} catch (Exception e) {
 										if(BuildConfig.DEBUG){
-											Log.w(TAG, "BaseCacheDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
+											Log.w(LOG_TAG, "BaseCacheDAO -> the VO set parameter is of type java.util.Date but the value is not of type Date");
 											e.printStackTrace();
 										}
 									}
@@ -246,7 +246,7 @@ public class BaseCacheDAO implements Constants{
 							}
 							else{
 								if(BuildConfig.DEBUG){
-									Log.w(TAG, "BaseCacheDAO -> the VO set parameter has more than 1 parameter types");
+									Log.w(LOG_TAG, "BaseCacheDAO -> the VO set parameter has more than 1 parameter types");
 								}
 							}
 

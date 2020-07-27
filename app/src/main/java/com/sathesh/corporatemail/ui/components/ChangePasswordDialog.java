@@ -33,7 +33,6 @@ public class ChangePasswordDialog  implements Constants{
 		try {
 			changePasswordEdit.setText(SharedPreferencesAdapter.getSignedInPassword(context));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -61,12 +60,11 @@ public class ChangePasswordDialog  implements Constants{
 						//starting MNS service so that it will start again by issuing a notify() if it was previously on wait() bcos of an auth issue
 						
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						Log.e(TAG, "ChangePasswordDialog -> Error while storing password");
+						Log.e(LOG_TAG, "ChangePasswordDialog -> Error while storing password");
 						e.printStackTrace();
 					}
 					
-					MailApplication.startMNSService(_context);
+					MailApplication.startMNWorker(_context);
 				}
 
 			}

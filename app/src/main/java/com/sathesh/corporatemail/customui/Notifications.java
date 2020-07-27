@@ -15,8 +15,7 @@ public class Notifications implements Constants {
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			Log.e(TAG, "Notifications -> Error occured while showing text: " + text);
+			Log.e(LOG_TAG, "Notifications -> Error occured while showing text: " + text);
 			e.printStackTrace();
 		}
 	}
@@ -33,15 +32,14 @@ public class Notifications implements Constants {
 				}
 			});
 			AlertDialog alert = builder.create();
-			Log.i(TAG, "Notifications -> Showing alert: " + text);
+			Log.i(LOG_TAG, "Notifications -> Showing alert: " + text);
 			alert.show();
 		} 
 		catch(IllegalStateException ie){
 			showToast(context, text, Toast.LENGTH_SHORT);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			Log.e(TAG, "Notifications -> Error occured while showing alert box with message " + text);
+			Log.e(LOG_TAG, "Notifications -> Error occured while showing alert box with message " + text);
 			e.printStackTrace();
 		}
 	}
@@ -58,15 +56,14 @@ public class Notifications implements Constants {
 				}
 			});
 			AlertDialog alert = builder.create();
-			Log.i(TAG, "Notifications -> Showing info alert: " + text);
+			Log.i(LOG_TAG, "Notifications -> Showing info alert: " + text);
 			alert.show();
 		} 
 		catch(IllegalStateException ie){
 			showToast(context, text, Toast.LENGTH_SHORT);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			Log.e(TAG, "Notifications -> Error occured while showing info box with message " + text);
+			Log.e(LOG_TAG, "Notifications -> Error occured while showing info box with message " + text);
 			e.printStackTrace();
 		}
 	}

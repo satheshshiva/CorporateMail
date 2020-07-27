@@ -49,7 +49,7 @@ public class DeleteMailThread extends Thread implements Runnable, Constants {
 
                 threadMsg(Status.DELETED);
             }else{
-                Log.e(TAG, "MarkMailsReadUnreadThread -> Item count 0 or null");
+                Log.e(LOG_TAG, "MarkMailsReadUnreadThread -> Item count 0 or null");
                 threadMsg(Status.ERROR);
             }
         }

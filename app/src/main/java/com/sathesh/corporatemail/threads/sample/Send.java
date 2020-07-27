@@ -15,8 +15,6 @@ public class Send extends AsyncTask<Void, Void, Boolean>{
 	
 	@Override
 	protected Boolean doInBackground(Void... paramArrayOfParams) {
-		// TODO Auto-generated method stub
-		
 		try {
 			String username="";
 			String password="";
@@ -30,7 +28,6 @@ public class Send extends AsyncTask<Void, Void, Boolean>{
 			msg.send();
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

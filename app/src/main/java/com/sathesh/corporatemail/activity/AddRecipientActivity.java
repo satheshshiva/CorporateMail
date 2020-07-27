@@ -225,7 +225,7 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 
 		ContactSerializable sContact;
 
-		Log.d(TAG, "handle called "+ outputCollection);
+		Log.d(LOG_TAG, "handle called "+ outputCollection);
 		try {
 			if(outputCollection!=null && outputCollection.getCount()>0){
 
@@ -244,8 +244,8 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 						dispContactsMap.put(resolveNameIndex, sContact);
 					}
 				}
-				Log.d(TAG, "dispNameList "+dispNameList);
-				Log.d(TAG, "dispMap" +dispMap);
+				Log.d(LOG_TAG, "dispNameList "+dispNameList);
+				Log.d(LOG_TAG, "dispMap" +dispMap);
 				ListAdapter adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_multiple_choice,dispNameList);
 				listView.setAdapter(adapter);
 			}

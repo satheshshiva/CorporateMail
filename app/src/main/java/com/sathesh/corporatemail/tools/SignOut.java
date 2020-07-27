@@ -47,7 +47,7 @@ public class SignOut implements Constants{
 			
 			return true;
 		} catch (Exception e) {
-			Log.e(TAG, "SignOut -> Error occured : signOutAndResetAllSettings :" + e.getMessage());
+			Log.e(LOG_TAG, "SignOut -> Error occured : signOutAndResetAllSettings :" + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -63,13 +63,13 @@ public class SignOut implements Constants{
 
 			signOutGeneralActions(context);
 			//delete the explicitly given files in the function getSharedPreferencesFilesToDelete
-			Log.d(TAG, "SignOut -> Files for delettion " + getSharedPreferencesFilesToDelete().length);
+			Log.d(LOG_TAG, "SignOut -> Files for delettion " + getSharedPreferencesFilesToDelete().length);
 			Utilities.deleteSharedPreferences(context, getSharedPreferencesFilesToDelete());
 			restartApp(activity, context);
 			return true;
 
 		} catch (Exception e) {
-			Log.e(TAG, "SignOut -> Error occured : signOutAndRetainSettings :" + e.getMessage());
+			Log.e(LOG_TAG, "SignOut -> Error occured : signOutAndRetainSettings :" + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -85,7 +85,7 @@ public class SignOut implements Constants{
 		CacheClear.clearFullCacheAndDbDir(context);
 
 		//stop the MNS service
-		MailApplication.stopMNSService(context);
+		MailApplication.stopMNWorker(context);
 		
 		//clear all notification
 		NotificationProcessing.cancelAllNotifications(context);

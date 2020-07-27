@@ -72,7 +72,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             dao.deleteAllRecords();
             dao.createOrUpdate(listVos);
 
-            if (BuildConfig.DEBUG) Log.i(TAG, "RECURSIVE FOLDER PROCESS COMPLETED");
+            if (BuildConfig.DEBUG) Log.i(LOG_TAG, "RECURSIVE FOLDER PROCESS COMPLETED");
             sendHandlerMsg(Status.COMPLETED);
             this.currentStatus = Status.COMPLETED;
 
@@ -87,7 +87,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
         FolderVO vo;
         String subFolderDispName;
 
-        if(BuildConfig.DEBUG) Log.i(TAG, "PROCESSING FOLDER " + folderName);
+        if(BuildConfig.DEBUG) Log.i(LOG_TAG, "PROCESSING FOLDER " + folderName);
         vo = new FolderVO();
         vo.setType(DrawerMenuRowType.MoreFolders.HEADER);
         vo.setName(folderName);
@@ -119,9 +119,9 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             {
                 sendHandlerMsg(Status.FOLDER_RETRIEVED);
                 //Log.i(TAG, folderId.getFolderName().toString());
-                if(BuildConfig.DEBUG) Log.i(TAG, "Count======" + subFolder.getChildFolderCount());
-                if(BuildConfig.DEBUG) Log.i(TAG, "Name=======" + subFolderDispName);
-                if(BuildConfig.DEBUG) Log.i(TAG, "Folder id=======" + subFolder.getId().getUniqueId());
+                if(BuildConfig.DEBUG) Log.i(LOG_TAG, "Count======" + subFolder.getChildFolderCount());
+                if(BuildConfig.DEBUG) Log.i(LOG_TAG, "Name=======" + subFolderDispName);
+                if(BuildConfig.DEBUG) Log.i(LOG_TAG, "Folder id=======" + subFolder.getId().getUniqueId());
 
                 vo = new FolderVO();
                 vo.setType(DrawerMenuRowType.MoreFolders.FOLDER);

@@ -50,7 +50,7 @@ public class CacheDbHelper extends SQLiteOpenHelper implements Constants, CacheD
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(TAG,
+		Log.w(LOG_TAG,
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
 		ArrayList<DbTable> listTables = TableMetaData.getListOfAllTables();

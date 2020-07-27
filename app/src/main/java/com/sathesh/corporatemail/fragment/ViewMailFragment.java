@@ -6,7 +6,6 @@ package com.sathesh.corporatemail.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -20,6 +19,8 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -193,7 +194,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
 
         if(BuildConfig.DEBUG){
-            Log.d(TAG, "ViewMailFragment -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
+            Log.d(LOG_TAG, "ViewMailFragment -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
         }
         try {
             date = mailHeader.getMail_datetimereceived();
@@ -279,7 +280,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             }
         }
         if(BuildConfig.DEBUG){
-            Log.d(TAG, "quote in ViewMailFragment " + processedHtml);
+            Log.d(LOG_TAG, "quote in ViewMailFragment " + processedHtml);
         }
         ComposeActivityAdapter.startForward(context, ComposeActivity.PREFILL_TYPE_FORWARD, itemId, toBundle, ccBundle, bccBundle, replySubject, replySubject, true, processedHtml);
     }
@@ -305,14 +306,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             if(isToExist){
                 //prepare the ccBundle for reply with the "to" String
                 if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "toReceivers");
-                    Log.d(TAG, toReceivers.toString());
+                    Log.d(LOG_TAG, "toReceivers");
+                    Log.d(LOG_TAG, toReceivers.toString());
                 }
                 //if there are more than 1 To receivers then add them to CC except the same person
                 for(ContactSerializable toContact : toReceivers){
                     displayName = toContact.getDisplayName();
                     if(BuildConfig.DEBUG) {
-                        Log.d(TAG, "ViewMailFragment -> Receiver " + displayName);
+                        Log.d(LOG_TAG, "ViewMailFragment -> Receiver " + displayName);
                     }
                     if(displayName!=null){
                         displayName = displayName.trim();
@@ -322,12 +323,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                         }
                         else{
                             if(BuildConfig.DEBUG) {
-                                Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user from To to CC in new mail");
+                                Log.d(LOG_TAG, "ViewMailFragment -> Skipped adding the logged in user from To to CC in new mail");
                             }
                         }
                     }
                     else{
-                        Log.e(TAG, "ViewMailFragment -> Receiver " + displayName + " is null");
+                        Log.e(LOG_TAG, "ViewMailFragment -> Receiver " + displayName + " is null");
                     }
                 }
             }
@@ -343,12 +344,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                             ccBundle.putSerializable(ccContact.getEmail(), ccContact);  //key,value
                         }else{
                             if(BuildConfig.DEBUG) {
-                                Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user from CC to CC in new mail");
+                                Log.d(LOG_TAG, "ViewMailFragment -> Skipped adding the logged in user from CC to CC in new mail");
                             }
                         }
                     }
                     else{
-                        Log.e(TAG, "ViewMailFragment -> Receiver "+ displayName + " is null");
+                        Log.e(LOG_TAG, "ViewMailFragment -> Receiver "+ displayName + " is null");
                     }
                 }
             }
@@ -364,12 +365,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                             bccBundle.putSerializable(displayName, bccContact);
                         }else{
                             if(BuildConfig.DEBUG) {
-                                Log.d(TAG, "ViewMailFragment -> Skipped adding the logged in user in BCC");
+                                Log.d(LOG_TAG, "ViewMailFragment -> Skipped adding the logged in user in BCC");
                             }
                         }
                     }
                     else{
-                        Log.e(TAG, "ViewMailFragment -> Receiver "+ displayName + " is null");
+                        Log.e(LOG_TAG, "ViewMailFragment -> Receiver "+ displayName + " is null");
                     }
                 }
             }
@@ -392,7 +393,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
 
         if(BuildConfig.DEBUG) {
-            Log.d(TAG, "quote in ViewMailFragment  " + processedHtml);
+            Log.d(LOG_TAG, "quote in ViewMailFragment  " + processedHtml);
         }
 
         if(!(replyAll)){
@@ -566,7 +567,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
         if(null!=html1 && !(html1.equals(""))){
             if(BuildConfig.DEBUG) {
-                Log.d(TAG, "Loading html " + html1);
+                Log.d(LOG_TAG, "Loading html " + html1);
             }
 
             //webview.loadData(dispBody, CommonWebChromeClient.MIME_TYPE_HTML,CommonWebChromeClient.ENCODING);
@@ -611,7 +612,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                     @Override
                     public void onClick(View arg0) {
                         if (BuildConfig.DEBUG) {
-                            Log.d(TAG, contact + " clicked");
+                            Log.d(LOG_TAG, contact + " clicked");
                         }
                         Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
                         contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);

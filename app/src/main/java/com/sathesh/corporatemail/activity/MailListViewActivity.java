@@ -217,8 +217,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         super.onStart();
         //Notification Service
         if(BuildConfig.DEBUG)
-            Log.i(TAG, "MailListViewActivity -> Starting MNS Service");
-        MailApplication.startMNSService(this);
+            Log.i(LOG_TAG, "MailListViewActivity -> Starting MNS Service");
+        MailApplication.startMNWorker(this);
     }
 
     /** ON STOP  **
@@ -254,7 +254,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
         } catch (Exception e) {
             if(BuildConfig.DEBUG){
-                Log.d(TAG, "MailListViewActivity -> Exception while deleting cache" + e.getMessage());
+                Log.d(LOG_TAG, "MailListViewActivity -> Exception while deleting cache" + e.getMessage());
                 e.printStackTrace();
             }
         }

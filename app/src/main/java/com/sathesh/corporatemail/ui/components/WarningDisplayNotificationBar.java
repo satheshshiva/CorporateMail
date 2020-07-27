@@ -37,7 +37,7 @@ public class WarningDisplayNotificationBar implements Constants{
 	 * 
 	 */
 	public void showStatusBar(){
-		Log.d(TAG, "Show status bar clled");
+		Log.d(LOG_TAG, "Show status bar clled");
 		//show resolving names notification layout
 		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim((MyActivity) activity);
 		titleBar_Warning_linearLayout.setAnimation(animation);
@@ -48,7 +48,7 @@ public class WarningDisplayNotificationBar implements Constants{
 	 * 
 	 */
 	public void hideStatusBar(){
-		Log.d(TAG, "hide status bar clled");
+		Log.d(LOG_TAG, "hide status bar clled");
 		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim((MyActivity) activity);
 		titleBar_Warning_linearLayout.setAnimation(animation);
 		titleBar_Warning_linearLayout.setVisibility(View.GONE);

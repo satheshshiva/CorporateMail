@@ -83,11 +83,11 @@ public class NetworkCall implements Constants{
 				return service.getUrl().toString();
 			}
 		}catch (Exception e){
-			Log.e(TAG, "Could not auto discover with the given email:: " + e.getMessage());
+			Log.e(LOG_TAG, "Could not auto discover with the given email:: " + e.getMessage());
 			return null;
 		}
 
-		Log.e(TAG, "Could not auto discover with the given email:: returning null");
+		Log.e(LOG_TAG, "Could not auto discover with the given email:: returning null");
 		return null;
 	}
 
@@ -150,11 +150,11 @@ public class NetworkCall implements Constants{
 			msg.setSubject(subject); 
 			msg.setBody(MessageBody.getMessageBodyFromText(body));
             if(BuildConfig.DEBUG) {
-                Log.d(TAG, "To receipients for sending email " + to);
+                Log.d(LOG_TAG, "To receipients for sending email " + to);
             }
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
-					Log.d(TAG, "adding " + tempRecipient);
+					Log.d(LOG_TAG, "adding " + tempRecipient);
 					msg.getToRecipients().add(tempRecipient.getEmail());
 				}
 
@@ -196,17 +196,17 @@ public class NetworkCall implements Constants{
 	public static void replyMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body, boolean replyAll) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
 
-			Log.d(TAG, "NetworkCall -> replyMail Item id " + itemIdStr);
+			Log.d(LOG_TAG, "NetworkCall -> replyMail Item id " + itemIdStr);
 			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
 
 			EmailMessage msg = EmailMessage.bind(service, itemId);
 			ResponseMessage replyMsg= msg.createReply(replyAll);
 			replyMsg.setSubject(subject); 
 			replyMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
-			Log.d(TAG, "To receipients for sending email " + to);
+			Log.d(LOG_TAG, "To receipients for sending email " + to);
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
-					Log.d(TAG, "adding " + tempRecipient);
+					Log.d(LOG_TAG, "adding " + tempRecipient);
 					replyMsg.getToRecipients().add(tempRecipient.getEmail());
 				}
 
@@ -248,17 +248,17 @@ public class NetworkCall implements Constants{
 	public static void forwardMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
 
-			Log.d(TAG, "NetworkCall -> forwardMail Item id " + itemIdStr);
+			Log.d(LOG_TAG, "NetworkCall -> forwardMail Item id " + itemIdStr);
 			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
 
 			EmailMessage msg = EmailMessage.bind(service, itemId);
 			ResponseMessage forwardMsg= msg.createForward();
 			forwardMsg.setSubject(subject); 
 			forwardMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
-			Log.d(TAG, "To receipients for sending email " + to);
+			Log.d(LOG_TAG, "To receipients for sending email " + to);
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
-					Log.d(TAG, "adding " + tempRecipient);
+					Log.d(LOG_TAG, "adding " + tempRecipient);
 					forwardMsg.getToRecipients().add(tempRecipient.getEmail());
 				}
 
@@ -353,7 +353,6 @@ public class NetworkCall implements Constants{
 	 * @throws Exception
 	 */
 	public static FindItemsResults<Item> getNItemsFromFolder(WellKnownFolderName folderName, ExchangeService service, int offset, int n) throws Exception {
-		// TODO Auto-generated method stub
 		ItemView view = new ItemView(n);
 		FindItemsResults<Item> findResults = null;
 		if(offset>0){
@@ -373,7 +372,6 @@ public class NetworkCall implements Constants{
 	 * @throws Exception
 	 */
 	public static FindItemsResults<Item> getNItemsFromFolder(FolderId folderId, ExchangeService service, int offset, int n) throws Exception {
-		// TODO Auto-generated method stub
 		ItemView view = new ItemView(n);
 		FindItemsResults<Item> findResults = null;
 		if(offset>0){
@@ -392,7 +390,6 @@ public class NetworkCall implements Constants{
 	 * @throws Exception
 	 */
 	public static FindItemsResults<Item> getNItemsFromFolder(String strFolderId, ExchangeService service, int offset, int n) throws Exception {
-		// TODO Auto-generated method stub
 		FolderId folderId = FolderId.getFolderIdFromString(strFolderId);
 		return getNItemsFromFolder(folderId, service,offset, n);
 	}

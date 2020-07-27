@@ -66,7 +66,6 @@ public class ContactSerializable implements Serializable, Constants{
 					sContact.setMobilephone(contact.getPhoneNumbers().getPhoneNumber(PhoneNumberKey.MobilePhone));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 			//Setting fax
@@ -76,7 +75,6 @@ public class ContactSerializable implements Serializable, Constants{
 					sContact.setFax(contact.getPhoneNumbers().getPhoneNumber(PhoneNumberKey.BusinessFax));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 		}
@@ -92,7 +90,6 @@ public class ContactSerializable implements Serializable, Constants{
 					sContact.setOfficeLocation_countryOrRegion(contact.getPhysicalAddresses().getPhysicalAddress(PhysicalAddressKey.Business).getCountryOrRegion());
 					sContact.setOfficeLocation_postalCode(contact.getPhysicalAddresses().getPhysicalAddress(PhysicalAddressKey.Business).getPostalCode());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -101,7 +98,7 @@ public class ContactSerializable implements Serializable, Constants{
 		}
 		else{
 			//contact is null
-			Log.d(TAG, "ContactSerializable -> Given contact is null. Hence populating email id as display name");
+			Log.d(LOG_TAG, "ContactSerializable -> Given contact is null. Hence populating email id as display name");
 			sContact.setDisplayName(email);
 			sContact.setEmail(email);
 		}

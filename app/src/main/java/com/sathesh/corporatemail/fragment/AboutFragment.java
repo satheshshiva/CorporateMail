@@ -142,7 +142,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
      */
     public void onClickRateApp(View view) {
         if(BuildConfig.DEBUG) {
-            Log.d(TAG, "OnClickRate app");
+            Log.d(LOG_TAG, "OnClickRate app");
         }
         try {
             MailApplication.openPlayStoreLink(activity);

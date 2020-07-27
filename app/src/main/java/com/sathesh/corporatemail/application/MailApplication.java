@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -32,12 +35,11 @@ import com.sathesh.corporatemail.customserializable.ContactSerializable;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
-import com.sathesh.corporatemail.service.MailNotificationService;
-import com.sathesh.corporatemail.threads.service.PullSubscriptionThread;
 import com.sathesh.corporatemail.threads.ui.GetMoreFoldersThread;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ChangePasswordDialog;
 import com.sathesh.corporatemail.util.Utilities;
+import com.sathesh.corporatemail.worker.PullMnWorker;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceVersionException;
@@ -57,6 +60,8 @@ import microsoft.exchange.webservices.data.property.complex.AttachmentCollection
 import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import microsoft.exchange.webservices.data.property.complex.EmailAddressCollection;
 import microsoft.exchange.webservices.data.property.complex.FileAttachment;
+
+import static com.sathesh.corporatemail.constants.Constants.MailType.WORKER_TAG_PULL_MN;
 
 /**
  * @author sathesh
@@ -358,31 +363,39 @@ public class MailApplication implements Constants {
      * It will check for the status of the thread.
      * @param context
      */
-    public static void startMNSService(final Context context) {
+    public static void startMNWorker(final Context context) {
 
+        WorkManager.getInstance(context).cancelAllWorkByTag(WORKER_TAG_PULL_MN);
         if(generalSettings.isNotificationEnabled(context)){
             //not creating a log here since this iscalled everytime when opening inbox
-            context.startService(new Intent(context,MailNotificationService.class));
+            //context.startService(new Intent(context,MailNotificationService.class));
+
+            PeriodicWorkRequest pullMnWork =
+                    new PeriodicWorkRequest.Builder(PullMnWorker.class, PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
+                            .addTag(WORKER_TAG_PULL_MN)
+                            .build();
+            WorkManager
+                    .getInstance(context)
+                    .enqueueUniquePeriodicWork(WORKER_TAG_PULL_MN, ExistingPeriodicWorkPolicy.KEEP, pullMnWork);
         }
         else{
-            Log.e(TAG, "Notification not enabled in prefernce. Hence cant start Mail Notification Service.");
+            Log.e(LOG_TAG, "Notification not enabled in preference. Hence cannot start Mail Notification Worker.");
         }
     }
 
     /** This method will stop the MNS service, the alarm for polling and subscription and clear any notification messages
      * @param context
      */
-    public static void stopMNSService(final Context context) {
-
-        Log.d(TAG, "Stopping service");
-        context.stopService(new Intent(context,MailNotificationService.class));
+    public static void stopMNWorker(final Context context) {
+        //TODO implement this
+        WorkManager.getInstance(context).cancelUniqueWork(WORKER_TAG_PULL_MN);
     }
 
     /** When pull duration for PullMNS is changed, call this to update the time in thread
      * @throws Exception
      */
     public static void onChangeMNSResetPullDuration(Long millis) throws Exception {
-        PullSubscriptionThread.resetAlarm(millis);
+        //PullSubscriptionThread.resetAlarm(millis);
     }
 
     public static NameResolutionCollection resolveName(ExchangeService service, String username, boolean retrieveContactDetails) throws NoInternetConnectionException, Exception{
@@ -482,7 +495,7 @@ public class MailApplication implements Constants {
 
         }
         else{
-            Log.e(TAG, "MailApplication-> composeEmailForContact() => ContactSerializable is null");
+            Log.e(LOG_TAG, "MailApplication-> composeEmailForContact() => ContactSerializable is null");
         }
     }
 
@@ -618,17 +631,17 @@ public class MailApplication implements Constants {
                 //if(null != attachment && attachment.getIsInline() && attachment.getContentType()!=null && attachment.getContentType().contains("image")){
                 if(null != attachment && attachment.getIsInline()){
                     if(BuildConfig.DEBUG){
-                        Log.d(TAG, "ViewMailActivity -> processBodyHTMLWithImages() -> Processing attachment " + attachment.getName());
+                        Log.d(LOG_TAG, "ViewMailActivity -> processBodyHTMLWithImages() -> Processing attachment " + attachment.getName());
                     }
                     cid="cid:"+ attachment.getContentId();
                     if(BuildConfig.DEBUG){
-                        Log.d(TAG, "ViewMailActivity ->cid "+cid);
+                        Log.d(LOG_TAG, "ViewMailActivity ->cid "+cid);
                     }
                     imagePath=CacheDirectories.getMailCacheImageDirectory(context) + "/" + itemId + "/"+attachment.getName();
 
                     imageHtmlUrl=Utilities.getHTMLImageUrl(attachment.getContentType(), imagePath);
                     if(BuildConfig.DEBUG){
-                        Log.d(TAG, "Replacing " + cid + " in body with " + imageHtmlUrl);
+                        Log.d(LOG_TAG, "Replacing " + cid + " in body with " + imageHtmlUrl);
                     }
                     bodyWithImage=bodyWithImage.replaceAll(cid, imageHtmlUrl);
                 }
@@ -671,7 +684,7 @@ public class MailApplication implements Constants {
 
             if(attachment!=null ){
                 if(BuildConfig.DEBUG){
-                    Log.d(TAG, "LoadEmailRunnable -> cacheInlineImages() -> Processing attachment: " + attachment.getName() + " Attachment type " + attachment.getContentType());
+                    Log.d(LOG_TAG, "LoadEmailRunnable -> cacheInlineImages() -> Processing attachment: " + attachment.getName() + " Attachment type " + attachment.getContentType());
                 }
                 //if(!(attachment.getContentType().equalsIgnoreCase("message/rfc822")) ){
                 if(!(attachment.getContentType()!=null && attachment.getContentType().equalsIgnoreCase("message/rfc822")) ){
@@ -696,7 +709,7 @@ public class MailApplication implements Constants {
                             path=file.getPath() + "/" + attachment.getName();
 
                             if(BuildConfig.DEBUG){
-                                Log.d(TAG, "Caching image file " +fileAttachment.getName() );
+                                Log.d(LOG_TAG, "Caching image file " +fileAttachment.getName() );
                             }
                             if(!((new File(path)).exists())){
                                 //EWS call
@@ -705,7 +718,7 @@ public class MailApplication implements Constants {
                                     NetworkCall.downloadAttachment(fileAttachment, fos);
                                 }
                                 catch(Exception e){
-                                    Log.e(TAG, "ViewMailActivity -> Exception while downloading attachment");
+                                    Log.e(LOG_TAG, "ViewMailActivity -> Exception while downloading attachment");
                                     e.printStackTrace();
                                 }
                             }
@@ -715,7 +728,7 @@ public class MailApplication implements Constants {
                             }
                         }
                         else{
-                            Log.d(TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: " + fileAttachment.getFileName() + " as it is not an inline image" );
+                            Log.d(LOG_TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: " + fileAttachment.getFileName() + " as it is not an inline image" );
                         }
                     } catch (Exception e) {
                         Utilities.generalCatchBlock(e, thisClass);
@@ -723,11 +736,11 @@ public class MailApplication implements Constants {
 
                 }
                 else{
-                    Log.d(TAG, "ViewMailActivity -> Skipping message attachment of the content type message/rfc822");
+                    Log.d(LOG_TAG, "ViewMailActivity -> Skipping message attachment of the content type message/rfc822");
                 }
             }
             else{
-                Log.e(TAG, "ViewMailActivity -> The attachment or its content type is null. Not processing this attachment!");
+                Log.e(LOG_TAG, "ViewMailActivity -> The attachment or its content type is null. Not processing this attachment!");
             }
         }
     }
