@@ -54,7 +54,6 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		int totalCachedRecords ;
 
 		if (parent.getActivity() != null) {
@@ -68,7 +67,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
-					Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
+					Log.d(LOG_TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
 				}
 
 				//if the cache is present, then get the same number of rows from EWS as of the local no of rows
@@ -121,7 +120,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 			}
 		}
 		else{
-			Log.e(TAG, "GetNewMails -> activity is null");
+			Log.e(LOG_TAG, "GetNewMails -> activity is null");
 		}
 	}	//end run()
 

@@ -1,11 +1,12 @@
 package com.sathesh.corporatemail.activity;
 
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import androidx.core.view.MenuItemCompat;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
@@ -107,7 +108,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
             loadUI(sContact);    //refreshes the text fields
         }
         else{
-            Log.e(TAG, "ContactDetailsActivity => sContact is null");
+            Log.e(LOG_TAG, "ContactDetailsActivity => sContact is null");
         }
 
     }
@@ -206,8 +207,8 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
             }
             else{
                 //if more than 1 contact is returned then do nothing
-                Log.e(TAG, "ContactDetailsActivity -> outputCollection is null or more than 1.");
-                Log.e(TAG , "outputCollection Count " + ((outputCollection!=null)?outputCollection.getCount() : outputCollection).toString());
+                Log.e(LOG_TAG, "ContactDetailsActivity -> outputCollection is null or more than 1.");
+                Log.e(LOG_TAG, "outputCollection Count " + ((outputCollection!=null)?outputCollection.getCount() : outputCollection).toString());
             }
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);

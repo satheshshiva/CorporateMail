@@ -1,8 +1,9 @@
 package com.sathesh.corporatemail.jsinterfaces;
 
 import android.content.Context;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
+
+import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.application.MailApplication;
@@ -22,7 +23,7 @@ public final class AboutActivityJSInterface implements Constants{
 	@android.webkit.JavascriptInterface
 	public void updateButtonOnClick() {
 		if(BuildConfig.DEBUG) {
-			Log.d(TAG, "UPDATE ONCLICK CALLED");
+			Log.d(LOG_TAG, "UPDATE ONCLICK CALLED");
 		}
 		fragmentDataPasser.downloadAndUpdate();
 	}
@@ -30,7 +31,7 @@ public final class AboutActivityJSInterface implements Constants{
 	@android.webkit.JavascriptInterface
 	public void playstoreLink(String packageUrl) {
 		if(BuildConfig.DEBUG) {
-			Log.d(TAG, "packageUrl " + packageUrl);
+			Log.d(LOG_TAG, "packageUrl " + packageUrl);
 		}
 		try {
 			MailApplication.openPlayStoreLink((Context)(((Fragment)fragmentDataPasser).getActivity()),packageUrl);

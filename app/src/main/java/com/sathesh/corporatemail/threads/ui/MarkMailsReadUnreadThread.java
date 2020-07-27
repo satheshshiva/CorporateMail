@@ -39,7 +39,7 @@ public class MarkMailsReadUnreadThread extends Thread implements Runnable, Const
             threadMsg(Status.CONNECTING);
             if(itemIds!=null && itemIds.size()>0) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "MarkMailsReadUnreadThread -> Item count for read/unread " + itemIds.size());
+                    Log.d(LOG_TAG, "MarkMailsReadUnreadThread -> Item count for read/unread " + itemIds.size());
                 }
                 //loop all the item ids and make each call for each item
                 for(String itemId : itemIds) {
@@ -47,7 +47,7 @@ public class MarkMailsReadUnreadThread extends Thread implements Runnable, Const
                 }
                 threadMsg(Status.COMPLETED);
             }else{
-                Log.e(TAG, "MarkMailsReadUnreadThread -> Item count 0 or null");
+                Log.e(LOG_TAG, "MarkMailsReadUnreadThread -> Item count 0 or null");
                 threadMsg(Status.ERROR);
             }
 

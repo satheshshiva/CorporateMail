@@ -115,7 +115,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
             try {
                 viewMailFragment.replyMail(false);
             } catch (Exception e) {
-                Log.e(TAG, "ViewMailActivity -> Reply Mail exception");
+                Log.e(LOG_TAG, "ViewMailActivity -> Reply Mail exception");
                 e.printStackTrace();
             }
         }
@@ -123,7 +123,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
             try {
                 viewMailFragment.replyMail(true);
             } catch (Exception e) {
-                Log.e(TAG, "ViewMailActivity -> Reply Mail exception");
+                Log.e(LOG_TAG, "ViewMailActivity -> Reply Mail exception");
                 e.printStackTrace();
             }
         }
@@ -131,7 +131,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
             try {
                 viewMailFragment.forwardMail();
             } catch (Exception e) {
-                Log.e(TAG, "ViewMailActivity -> Forward Mail exception");
+                Log.e(LOG_TAG, "ViewMailActivity -> Forward Mail exception");
                 e.printStackTrace();
             }
         }

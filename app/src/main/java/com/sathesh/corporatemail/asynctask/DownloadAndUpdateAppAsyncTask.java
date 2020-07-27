@@ -46,7 +46,7 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 	@Override
 	protected String doInBackground(String... sUrl) {
 
-		Log.i(TAG, "initial URL: "+ sUrl[0]  );
+		Log.i(LOG_TAG, "initial URL: "+ sUrl[0]  );
 		final long fileLength;
 
 		try {
@@ -66,7 +66,7 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 	            });
 
 				//do something with the response
-				Log.i(TAG, "RESPONSE STATUS "+ connection.getResponseCode());
+				Log.i(LOG_TAG, "RESPONSE STATUS "+ connection.getResponseCode());
 
 				//  Log.i(TAG, "GET RESPONSE "+ EntityUtils.toString(resEntityGet));
 
@@ -96,7 +96,7 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 
 			}
 			else {
-				Log.i(TAG, "null reponse");
+				Log.i(LOG_TAG, "null reponse");
 			}
 
 
@@ -146,7 +146,7 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 				output.write(data, 0, count);
 			}
 			 */
-			Log.i(TAG, "Download Complete.");
+			Log.i(LOG_TAG, "Download Complete.");
 			publishProgress(STATUS_DOWNLOAD_COMPLETE , "");
 
 			//The following 3 lines will install the app..
@@ -172,12 +172,12 @@ public class DownloadAndUpdateAppAsyncTask extends AsyncTask<String, String, Str
 
 	}
 		catch (Exception e) {
-				Log.e(TAG, "DownloadAndUpdateAppAsyncTask -> Error occured: " + e.getMessage());
+				Log.e(LOG_TAG, "DownloadAndUpdateAppAsyncTask -> Error occured: " + e.getMessage());
 				e.printStackTrace();
 				//publishProgress(STATUS_ERROR, e.getMessage());
 				//should not display any url to user
 				publishProgress(STATUS_ERROR, e.getMessage());
-				Log.d(TAG, "after publishing");
+				Log.d(LOG_TAG, "after publishing");
 
 		}
 		finally{

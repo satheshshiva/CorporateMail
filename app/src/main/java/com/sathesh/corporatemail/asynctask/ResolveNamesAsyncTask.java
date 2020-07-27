@@ -63,7 +63,7 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 			publishProgress(STATUS_CHECKING, "Checking");
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.e(TAG, "Exception occured on preexecute");
+			Log.e(LOG_TAG, "Exception occured on preexecute");
 		}
 
 	}
@@ -90,7 +90,7 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 			
 		}
 		catch (Exception e) {
-			Log.e(TAG, "ResolveNamesAsyncTask -> Error occured: " + e.getMessage());
+			Log.e(LOG_TAG, "ResolveNamesAsyncTask -> Error occured: " + e.getMessage());
 			e.printStackTrace();
 			//publishProgress(STATUS_ERROR, e.getMessage());
 			//should not display any url to user
@@ -115,7 +115,7 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 				dialog.dismiss();
 				}
                 if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "Resolve names -> got the output. returning to caller " + caller.getClass().getName());
+                    Log.d(LOG_TAG, "Resolve names -> got the output. returning to caller " + caller.getClass().getName());
                 }
 				caller.handleResolveNamesOutput(outputCollection,extra1);
 			}
@@ -124,7 +124,7 @@ public class ResolveNamesAsyncTask extends AsyncTask<String, String, String> imp
 				dialog.dismiss();
 				}
 				if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "exception name " + pE.getMessage());
+                    Log.d(LOG_TAG, "exception name " + pE.getMessage());
                 }
 				caller.handleResolveNamesOutputError(outputCollection,extra1,pE);
 			}

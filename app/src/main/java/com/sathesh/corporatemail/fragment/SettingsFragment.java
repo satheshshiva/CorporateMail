@@ -225,10 +225,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
     private void updateNotificationEnablePrefernceSummary(Context context, boolean value) {
         if(value){
             notificationEnable.setSummary(getString(R.string.preference_notification_enable_ON_summary));
-            MailApplication.startMNSService(context);
+            MailApplication.startMNWorker(context);
         }else{
             notificationEnable.setSummary(getString(R.string.preference_notification_enable_OFF_summary));
-            MailApplication.stopMNSService(context);
+            MailApplication.stopMNWorker(context);
         }
     }
     private void updateComposeSignatureEnablePrefernceSummary(Context context, boolean value) {

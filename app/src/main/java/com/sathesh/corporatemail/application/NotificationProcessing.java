@@ -7,18 +7,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.service.MailNotificationService;
 
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 
 public class NotificationProcessing implements Constants{
 
-	private static Notification notification;
 	private static PendingIntent pendingIntent;
 	private static CharSequence title = "" , message="";
 
@@ -26,11 +25,10 @@ public class NotificationProcessing implements Constants{
 	/** New Mail Notificaion
      *
      * @param context
-     * @param thisnewMailCounter
      * @param totNewMailNotificationCounter
      * @param args
      */
-    public static void showNewMailNotification(Context context, int thisnewMailCounter, int totNewMailNotificationCounter, String... args) {
+    public static void showNewMailNotification(Context context, int totNewMailNotificationCounter, String... args) {
 
 		NotificationManager mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
 
@@ -91,7 +89,7 @@ public class NotificationProcessing implements Constants{
 		//builder.build();
 
 		mNM.notify(totNewMailNotificationCounter, notification);
-		
+
 
 		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		//may display a badge of unread notification
@@ -156,7 +154,6 @@ public class NotificationProcessing implements Constants{
      * @param context
      */
     public static void cancelAllNotifications(Context context){
-		MailNotificationService.newMailNotificationCounter=0;
 		NotificationManager mNM = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNM.cancelAll();
 	}

@@ -46,7 +46,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 	 */
 	public void showStatusBar(){
 		if(BuildConfig.DEBUG){
-		Log.d(TAG, "Show status bar clled");
+		Log.d(LOG_TAG, "Show status bar clled");
 		}
 		//show resolving names notification layout
 		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim((MyActivity) activity);
@@ -59,7 +59,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 	 */
 	public void hideStatusBar(){
 		if(BuildConfig.DEBUG){
-		Log.d(TAG, "hide status bar clled");
+		Log.d(LOG_TAG, "hide status bar clled");
 		}
 		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim((MyActivity) activity);
 		titleBar_Progress_linearLayout.setAnimation(animation);

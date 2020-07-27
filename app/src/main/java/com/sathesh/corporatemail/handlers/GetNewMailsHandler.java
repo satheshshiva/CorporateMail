@@ -50,7 +50,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 					parent.getSwipeRefreshLayout().setRefreshing(false);
 
 					if(BuildConfig.DEBUG){
-						Log.d(TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
+						Log.d(LOG_TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
 					}
 
 					//if the other thread (GetMoreMailsRunnable) is waiting for this to complete, then call it again
@@ -63,7 +63,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 						if(totalCachedRecords < parent.getTotalMailsInFolder()){
 							parent.getMoreMails();
 							if(BuildConfig.DEBUG){
-								Log.d(TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
+								Log.d(LOG_TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
 							}
 						}
 						else{
@@ -89,10 +89,10 @@ public class GetNewMailsHandler extends Handler implements Constants {
 						AuthFailedAlertDialog.showAlertdialog(parent.getActivity(), parent.getActivity().getApplicationContext());
 					}
 					else{
-						Log.e(TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
+						Log.e(LOG_TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
 					}
 					// stop the MNS service
-					MailApplication.stopMNSService(parent.getActivity().getApplicationContext());
+					MailApplication.stopMNWorker(parent.getActivity().getApplicationContext());
 				} catch (Exception e) {
 					Utilities.generalCatchBlock(e, this);
 				}

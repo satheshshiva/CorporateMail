@@ -91,7 +91,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
 
                 // Network call to mark the item as read
                 if(BuildConfig.DEBUG){
-                    Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
+                    Log.d(LOG_TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
                 }
 
                 NetworkCall.markEmailAsReadUnread( parent.getContext(), parent.getItemId(), true);
@@ -138,7 +138,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                     cacheMailBodyAdapter.cacheNewData(message, parent.getMailType(), parent.getMailFolderName(), parent.getMailFolderId() );
 
                     if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "No inline images in this email. Inline images counter: "
+                        Log.d(LOG_TAG, "No inline images in this email. Inline images counter: "
                                 + parent.getRemainingInlineImages());
                     }
                 }
@@ -147,7 +147,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
 
                 // Network call to mark the item as read
                 if(BuildConfig.DEBUG){
-                    Log.d(TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
+                    Log.d(LOG_TAG, "LoadEmailRunnable -> Making network call for setting mail as read");
                 }
                 NetworkCall.markEmailAsReadUnread(parent.getContext(), message.getId().toString(),true);
             } // end else cache NOT exist

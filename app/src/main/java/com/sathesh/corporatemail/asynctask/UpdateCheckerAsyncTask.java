@@ -18,8 +18,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import javax.net.ssl.HttpsURLConnection;
-
 public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> implements Constants{
 
 	public static final String STATUS_CHECKING="CHECKING";
@@ -63,7 +61,7 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 			url = APPLICATION_LATEST_VERSION_PROP_URL_REL;	
 
 		}
-		Log.i(TAG, "UpdateCheckerAsyncTask -> URL to get version details: "+ url  );
+		Log.i(LOG_TAG, "UpdateCheckerAsyncTask -> URL to get version details: "+ url  );
 
 		publishProgress(STATUS_CHECKING , activity.getString(R.string.app_updater_checking));
 		try{
@@ -83,7 +81,7 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 
 		}
 		catch (Exception e) {
-			Log.e(TAG, "UpdateCheckerAsyncTask -> Error occured: " + e.getMessage());
+			Log.e(LOG_TAG, "UpdateCheckerAsyncTask -> Error occured: " + e.getMessage());
 			e.printStackTrace();
 			//publishProgress(STATUS_ERROR, e.getMessage());
 			//should not display any url to user
@@ -119,7 +117,7 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 		if (connection.getResponseCode() ==200) {
 
 			//do something with the response
-			Log.i(TAG, "UpdateCheckerAsyncTask -> LATEST VER DETAILS HTTP RESPONSE STATUS "+ connection.getResponseCode());
+			Log.i(LOG_TAG, "UpdateCheckerAsyncTask -> LATEST VER DETAILS HTTP RESPONSE STATUS "+ connection.getResponseCode());
 
 			//  Log.i(TAG, "GET RESPONSE "+ EntityUtils.toString(resEntityGet));
 
@@ -133,22 +131,22 @@ public class UpdateCheckerAsyncTask extends AsyncTask<String, String, Void> impl
 			LatestVersionCode=prop.getProperty(LATEST_VERSION_CODE);
 
 			int latestVerCode = Integer.parseInt(LatestVersionCode);
-			Log.i(TAG, "UpdateCheckerAsyncTask -> Currrent Version: " + currentVersionCode);
-			Log.i(TAG, "UpdateCheckerAsyncTask -> Latest Version: " + latestVerCode);
+			Log.i(LOG_TAG, "UpdateCheckerAsyncTask -> Currrent Version: " + currentVersionCode);
+			Log.i(LOG_TAG, "UpdateCheckerAsyncTask -> Latest Version: " + latestVerCode);
 
 			//check current version is lesser than ltest verssion
 			if(currentVersionCode < latestVerCode){
-				Log.i(TAG , "UpdateCheckerAsyncTask -> update available");
+				Log.i(LOG_TAG, "UpdateCheckerAsyncTask -> update available");
 				publishProgress(STATUS_UPDATE_AVAILABLE , activity.getString(R.string.app_updater_checking));
 			}
 			else{
-				Log.i(TAG , "UpdateCheckerAsyncTask -> No app updates");
+				Log.i(LOG_TAG, "UpdateCheckerAsyncTask -> No app updates");
 				publishProgress(STATUS_NO_UPDATE , activity.getString(R.string.app_updater_checking));
 			}
 
 		}
 		else {
-			Log.e(TAG, "UpdateChecker -> connection not 200 response");
+			Log.e(LOG_TAG, "UpdateChecker -> connection not 200 response");
 		}
 	}
 }

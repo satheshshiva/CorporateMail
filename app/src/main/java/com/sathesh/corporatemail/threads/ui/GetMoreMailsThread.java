@@ -65,7 +65,7 @@ public class GetMoreMailsThread extends Thread implements Runnable, Constants{
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
-					Log.d(TAG, "GetMoreMailsRunnable -> Total records in cache"+cacheRecordsCount);
+					Log.d(LOG_TAG, "GetMoreMailsRunnable -> Total records in cache"+cacheRecordsCount);
 				}
 
 				if(parent.getMailFolderId()!=null && !(parent.getMailFolderId().equals("")))
@@ -113,7 +113,7 @@ public class GetMoreMailsThread extends Thread implements Runnable, Constants{
 			}
 		}
 		else{
-			Log.e(TAG, "GetMoreMailsRunnable -> activity is null");
+			Log.e(LOG_TAG, "GetMoreMailsRunnable -> activity is null");
 		}
 	}	//end run()
 

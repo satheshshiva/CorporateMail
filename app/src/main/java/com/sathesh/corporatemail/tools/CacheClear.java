@@ -65,7 +65,7 @@ public class CacheClear implements Constants{
                 Utilities.deleteDirectory(dir);
             }
         } catch (Exception e) {
-            Log.e(TAG, "CacheClear -> Error while deleting the cache directory " + e.getMessage());
+            Log.e(LOG_TAG, "CacheClear -> Error while deleting the cache directory " + e.getMessage());
         }
     }
 

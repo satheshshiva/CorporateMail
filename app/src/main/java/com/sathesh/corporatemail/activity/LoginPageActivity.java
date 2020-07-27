@@ -42,7 +42,6 @@ public class LoginPageActivity extends MyActivity implements Constants {
     private Activity activity;
     private Context context;
     private EditText login_url, login_username, login_passwd;
-    private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
 
     MyApplication application;
 
@@ -150,7 +149,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG, "Exception occured on preexecute");
+                Log.e(LOG_TAG, "Exception occured on preexecute");
             }
         }
 
@@ -176,8 +175,8 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
                 for(Folder folder : findResults.getFolders())
                 {
-                    Log.i(TAG, "Count======"+folder.getChildFolderCount());
-                    Log.i(TAG, "Name======="+folder.getDisplayName());
+                    Log.i(LOG_TAG, "Count======"+folder.getChildFolderCount());
+                    Log.i(LOG_TAG, "Name======="+folder.getDisplayName());
                 }
 
                 publishProgress("10" ,"COMPLETED", "");

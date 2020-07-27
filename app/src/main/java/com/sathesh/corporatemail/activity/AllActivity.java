@@ -62,7 +62,7 @@ public class AllActivity extends Activity implements Constants{
 		textView1.setText("Logging in");
 		try{
 
-			Log.d(TAG, "Starting thread");
+			Log.d(LOG_TAG, "Starting thread");
 
 			//do
 			//{
@@ -155,7 +155,7 @@ public class AllActivity extends Activity implements Constants{
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Log.e(TAG, "Exception occured on preexecute");
+				Log.e(LOG_TAG, "Exception occured on preexecute");
 			}
 
 		}
