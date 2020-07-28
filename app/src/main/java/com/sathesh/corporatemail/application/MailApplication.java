@@ -20,8 +20,10 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MainActivity;
@@ -50,6 +52,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -365,7 +368,21 @@ public class MailApplication implements Constants {
      */
     public static void startMNWorker(final Context context) {
 
-        WorkManager.getInstance(context).cancelAllWorkByTag(WORKER_TAG_PULL_MN);
+        ListenableFuture<List<WorkInfo>> wif =  WorkManager.getInstance(context).getWorkInfosByTag(WORKER_TAG_PULL_MN);
+        try {
+            List<WorkInfo> workInfos = wif.get();
+            if (workInfos.size() >0){
+                for (WorkInfo wi : workInfos) {
+                    Log.d(LOG_TAG_PullMnWorker, workInfos.size() + " Worker(s) already present: " + wi);
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Log.d(LOG_TAG_PullMnWorker, "startMNWorker -> Number of workers: " + )
         if(generalSettings.isNotificationEnabled(context)){
             //not creating a log here since this iscalled everytime when opening inbox
             //context.startService(new Intent(context,MailNotificationService.class));
@@ -394,6 +411,7 @@ public class MailApplication implements Constants {
     /** When pull duration for PullMNS is changed, call this to update the time in thread
      * @throws Exception
      */
+    @Deprecated
     public static void onChangeMNSResetPullDuration(Long millis) throws Exception {
         //PullSubscriptionThread.resetAlarm(millis);
     }

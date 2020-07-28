@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -46,9 +45,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
     private CheckBoxPreference notificationEnable,composeSignatureEnable;
     private Preference changePassword, signOut, clearCache;
     private ListPreference subscrpyionType;
+    @Deprecated
     private ListPreference pullDuration;
     private Context context ;
-    private ActionBar myActionBar;
 
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
 
@@ -88,6 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
                 KEY_NOTIFICATION_TYPE);
         pullDuration=(ListPreference)getPreferenceScreen().findPreference(
                 KEY_PULL_FREQUENCY);
+        pullDuration.setVisible(false);
         changePassword = (Preference)getPreferenceScreen().findPreference(
                 KEY_CHANGE_PASSWORD);
         clearCache = (Preference)getPreferenceScreen().findPreference(
@@ -200,6 +200,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
         });
     }
 
+    @Deprecated
     private void updatePullDurationPrefernceSummary(Context context, long value) {
         if(value==30000){
             pullDuration.setSummary(getString(R.string.preference_pull_ferequency_30s_summary));
