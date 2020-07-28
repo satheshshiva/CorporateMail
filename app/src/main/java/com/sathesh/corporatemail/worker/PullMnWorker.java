@@ -34,6 +34,7 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.notification.EventType;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.notification.GetEventsResults;
 import microsoft.exchange.webservices.data.notification.ItemEvent;
@@ -103,7 +104,7 @@ public class PullMnWorker extends Worker implements Constants{
 				return handleGeneralException(new Exception("Subscription is null"));
 			}
 		}
-		catch(HttpErrorException e){
+		catch(HttpErrorException | ServiceRequestException e){
 			if(e.getMessage()!=null && e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 				//unauthorised
 				MailApplication.stopMNWorker(context);

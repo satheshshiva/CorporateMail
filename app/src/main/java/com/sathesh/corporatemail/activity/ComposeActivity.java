@@ -54,6 +54,7 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
@@ -651,7 +652,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Log.e(LOG_TAG, "Malformed Webmail URL");
                 publishProgress(STATUS_ERROR, "Message not sent!\n\nDetails: Malformed Webmail URL " );
             }
-            catch(HttpErrorException e){
+            catch(HttpErrorException  | ServiceRequestException e){
                 if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
                     Log.e(LOG_TAG, "Authentication Failed!\nDetails: " + e.getMessage());
                     publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails: Authentication Failed ");
