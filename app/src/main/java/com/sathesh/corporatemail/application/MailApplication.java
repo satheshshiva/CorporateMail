@@ -373,8 +373,11 @@ public class MailApplication implements Constants {
             List<WorkInfo> workInfos = wif.get();
             if (workInfos.size() >0){
                 for (WorkInfo wi : workInfos) {
-                    Log.d(LOG_TAG_PullMnWorker, workInfos.size() + " Worker(s) already present: " + wi);
+                    Log.d(LOG_TAG_PullMnWorker, workInfos.size() + " Worker(s) present for tag: " + WORKER_TAG_PULL_MN + ": " + wi);
                 }
+            }else{
+                Log.d(LOG_TAG_PullMnWorker, "No pull mail worker present");
+
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -404,7 +407,7 @@ public class MailApplication implements Constants {
      * @param context
      */
     public static void stopMNWorker(final Context context) {
-        //TODO implement this
+        Log.w(LOG_TAG_PullMnWorker, "Stopping PullMnWorker");
         WorkManager.getInstance(context).cancelUniqueWork(WORKER_TAG_PULL_MN);
     }
 
