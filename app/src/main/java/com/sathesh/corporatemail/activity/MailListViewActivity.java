@@ -216,8 +216,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     public void onStart() {
         super.onStart();
         //Notification Service
-        if(BuildConfig.DEBUG)
-            Log.i(LOG_TAG, "MailListViewActivity -> Starting MNS Service");
+        // triggering this everytime because after an application upgrade (tried the run button from IDE), the workinfo status is showing enqueued, but the job
+        // is not actually queued when checked with `adb shell dumpsys jobscheduler`
         MailApplication.startMNWorker(this);
     }
 
