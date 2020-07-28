@@ -19,6 +19,7 @@ import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
 import com.sathesh.corporatemail.cache.adapter.CachedMailBodyAdapter;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.datamodels.PullSubscriptionParams;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.MailFunctions;
@@ -90,7 +91,7 @@ public class PullMnWorker extends Worker implements Constants{
 			}
 
 			if(subscription != null){
-				//The time out for the doWork is 10 minutes. We have to make the doWork occupied for 9.x mins to make our notification efficient.
+				//The time out for the doWork is 10 minutes. We have to make the doWork occupied for 9.x mins to make our notifications efficient.
 				//
 				for(int i=0; i<18; i++){
 					pollServer(subscription);
@@ -111,6 +112,10 @@ public class PullMnWorker extends Worker implements Constants{
 			}
 			return handleGeneralException(e);
 		}
+		catch(NoInternetConnectionException e){
+			Log.e(LOG_TAG_PullMnWorker, "No internet. Sending the worker to the retry queue");
+			return Result.retry();
+		}
 		catch(Exception e){
 			return handleGeneralException(e);
 		}finally {
@@ -121,7 +126,7 @@ public class PullMnWorker extends Worker implements Constants{
 	private void subscribe(List<FolderId> folder) throws Exception{
 		Log.i(LOG_TAG_PullMnWorker, "PullMnWorker -> Making a new pull subscription");
 		subscription = NetworkCall.subscribePull(context, service, folder);
-		Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Storing subscription: ID :" + subscription.getId() + " Watermark: " + subscription.getWaterMark());
+		Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Storing subscription id/watermark");
 		SharedPreferencesAdapter.setPullSubscriptionParams(context, new PullSubscriptionParams(subscription.getId(), subscription.getWaterMark()));
 	}
 
@@ -174,7 +179,7 @@ public class PullMnWorker extends Worker implements Constants{
 			}
 		}
 		if (!subscription.getId().equals(id) || !subscription.getWaterMark().equals(watermark)) {
-			Log.d(LOG_TAG_PullMnWorker, "Storing subscription details to shared prefs: ID:" + subscription.getId() + " WaterMark: " + subscription.getWaterMark());
+			Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Storing subscription id/watermark");
 			SharedPreferencesAdapter.setPullSubscriptionParams(context, new PullSubscriptionParams(subscription.getId(), subscription.getWaterMark()));
 		}
 		Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> poll completed successfully");
