@@ -93,9 +93,9 @@ public class PullMnWorker extends Worker implements Constants{
 			if(subscription != null){
 				//The time out for the doWork is 10 minutes. We have to make the doWork occupied for 9.x mins to make our notifications efficient.
 				//
-				for(int i=0; i<18; i++){
+				for(int i=0; i<3; i++){
 					pollServer(subscription);
-					Thread.sleep(30 * 1000);
+					Thread.sleep(15 * 1000);
 				}
 				return pollServer(subscription);
 			}
