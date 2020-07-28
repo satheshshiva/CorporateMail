@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.NotificationProcessing;
@@ -135,10 +134,9 @@ public class PullMnWorker extends Worker implements Constants{
 		String id = subscription.getId();
 		String watermark = subscription.getWaterMark();
 
-		if(BuildConfig.DEBUG){
-			Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Polling Server");
-			pollSound.start();
-		}
+		Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Polling Server");
+		//pollSound.start();
+
 		//EWS Call
 		events = NetworkCall.pullSubscriptionPoll(context,subscription);
 
