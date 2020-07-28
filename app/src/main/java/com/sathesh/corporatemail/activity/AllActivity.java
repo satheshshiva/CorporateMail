@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
@@ -183,7 +184,7 @@ public class AllActivity extends Activity implements Constants{
 			catch (URISyntaxException e) {
 				publishProgress("0" ,"ERROR", "Malformed Webmail URL");
 			}
-			catch(HttpErrorException e){
+			catch(HttpErrorException  | ServiceRequestException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					publishProgress("0" ,"ERROR", "Authentication Failed!\nDetails: " + e.getMessage());
 				}

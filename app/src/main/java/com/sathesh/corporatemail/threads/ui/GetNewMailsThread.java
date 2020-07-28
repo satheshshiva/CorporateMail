@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 
@@ -103,7 +104,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 				threadMsg(Status.ERROR);
 				nic.printStackTrace();
 			}
-			catch(HttpErrorException e){
+			catch(HttpErrorException | ServiceRequestException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
 					threadMsg(Status.ERROR_AUTH_FAILED);

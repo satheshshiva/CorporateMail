@@ -30,6 +30,7 @@ import java.net.URISyntaxException;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.misc.NameResolution;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
@@ -188,7 +189,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
             catch (URISyntaxException e) {
                 publishProgress("0" ,"ERROR", MALFORMED_WEBMAIL_URL_TEXT);
             }
-            catch(HttpErrorException e){
+            catch(HttpErrorException  | ServiceRequestException e){
                 if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
                     publishProgress("0" ,"ERROR", AUTHENICATION_FAILED_TEXT);
                 }
