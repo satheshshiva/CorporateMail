@@ -47,7 +47,6 @@ public class PullMnWorker extends Worker implements Constants{
 	private Context context;
 
 
-	private PullSubscription subscription;
 	private NotificationManager mNM ;
 	public static CachedMailHeaderAdapter cachedMailHeaderAdapter;
 	public static CachedMailBodyAdapter cachedMailBodyAdapter;
@@ -82,24 +81,16 @@ public class PullMnWorker extends Worker implements Constants{
 			PullSubscriptionParams pullSubscriptionParams = SharedPreferencesAdapter.getPullSubscriptionParams(context);
 			if ("".equals(pullSubscriptionParams.getSubscriptionId()) ){
 				subscribe(folder);
-			}else{
-				subscription = new PullSubscription(service);
-				subscription.setId(pullSubscriptionParams.getSubscriptionId());
-				subscription.setWaterMark(pullSubscriptionParams.getWatermark());
 			}
 
-			if(subscription != null){
-				//The time out for the doWork is 10 minutes. We have to make the doWork occupied for 9.x mins to make our notifications efficient.
-				//
-				for(int i=0; i<3; i++){
-					pollServer(subscription);
-					Thread.sleep(15 * 1000);
-				}
-				return pollServer(subscription);
+			//The time out for the doWork is 10 minutes. We have to make the doWork occupied for 9.x mins to make our notifications efficient.
+			//
+			for(int i=0; i<3; i++){
+				pollServer(service);
+				Thread.sleep(15 * 1000);
 			}
-			else{
-				return handleGeneralException(new Exception("Subscription is null"));
-			}
+			return pollServer(service);
+
 		}
 		catch(HttpErrorException | ServiceRequestException e){
 			if(e.getMessage()!=null && e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
@@ -118,22 +109,28 @@ public class PullMnWorker extends Worker implements Constants{
 			return handleGeneralException(e);
 		}finally {
 			Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Exiting PullMnWorker");
+			pollSound.release();
 		}
 	}
 
 	private void subscribe(List<FolderId> folder) throws Exception{
 		Log.i(LOG_TAG_PullMnWorker, "PullMnWorker -> Making a new pull subscription");
-		subscription = NetworkCall.subscribePull(context, service, folder);
+		PullSubscription subscription = NetworkCall.subscribePull(context, service, folder);
 		Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Storing subscription id/watermark");
 		SharedPreferencesAdapter.setPullSubscriptionParams(context, new PullSubscriptionParams(subscription.getId(), subscription.getWaterMark()));
 	}
 
-	private Result pollServer(PullSubscription subscription) throws Exception {
-		String id = subscription.getId();
-		String watermark = subscription.getWaterMark();
-
+	private synchronized Result pollServer(ExchangeService service) throws Exception {
 		Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Polling Server");
 		//pollSound.start();
+		// Getting the id and watermark from the persistence. Doing this on every poll because poll from a different thread might have changed it.
+		PullSubscriptionParams params = SharedPreferencesAdapter.getPullSubscriptionParams(context);
+		String id = params.getSubscriptionId();
+		String watermark = params.getWatermark();
+
+		PullSubscription subscription = new PullSubscription(service);
+		subscription.setId(id);
+		subscription.setWaterMark(watermark);
 
 		//EWS Call
 		events = NetworkCall.pullSubscriptionPoll(context,subscription);
@@ -175,6 +172,7 @@ public class PullMnWorker extends Worker implements Constants{
 				}
 			}
 		}
+		//check if the watermark has been modified. Otherwise save the new watermark. The id would remain the same, but still saving id.
 		if (!subscription.getId().equals(id) || !subscription.getWaterMark().equals(watermark)) {
 			Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Storing subscription id/watermark");
 			SharedPreferencesAdapter.setPullSubscriptionParams(context, new PullSubscriptionParams(subscription.getId(), subscription.getWaterMark()));
@@ -241,7 +239,7 @@ public class PullMnWorker extends Worker implements Constants{
 				|| ge.getMessage().contains("watermark is invalid")
 				|| ge.getMessage().contains("watermark not valid") )){
 			try {
-				Log.e(LOG_TAG_PullMnWorker, "PullMnWorker -> Subscription expired. Renewing subscription " );
+				Log.e(LOG_TAG_PullMnWorker, "PullMnWorker -> watermark/ subscription error. Renewing subscription " );
 				subscribe(folder);
 				return doWork();
 			}catch(Exception e){
