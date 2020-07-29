@@ -199,10 +199,8 @@ public interface Constants {
 	----------------------------------  Notification Channel ----------------------------
 	--------------------------------------------------------------------------------------*/
 
-	String NOTIFICATION_CHANNEL_NEW_MAIL = "cm_channel_01";
-	String NOTIFICATION_CHANNEL_LOGIN_ERROR = "cm_channel_02";
-	String NOTIFICATION_CHANNEL_NEW_MAIL_DESC = "corp_mail_newmail_channel";
-	String NOTIFICATION_CHANNEL_LOGIN_ERROR_DESC = "corp_mail_login_error_channel";
+	String NOTIFICATION_CHANNEL_ID_NEW_MAIL = "mn_channel_01";
+	String NOTIFICATION_CHANNEL_ID_LOGIN_ERROR = "mn_channel_02";
 
 	/*--- Rate App  ---*/
 	int RATE_APP_DIALOG_OPEN_MAIL_FREQUENCY=20;	//open the rate app dialog for every 20 mails opened

@@ -10,9 +10,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -64,6 +67,7 @@ import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import microsoft.exchange.webservices.data.property.complex.EmailAddressCollection;
 import microsoft.exchange.webservices.data.property.complex.FileAttachment;
 
+import static android.content.Context.POWER_SERVICE;
 import static com.sathesh.corporatemail.constants.Constants.MailType.WORKER_TAG_PULL_MN;
 
 /**
@@ -82,7 +86,48 @@ public class MailApplication implements Constants {
     public static Toolbar toolbar;
     private boolean isWrongPwd = false;
     private static GetMoreFoldersThread getMoreFoldersThread;
+    private boolean isNotificationChannelInitialized;
 
+    public void onEveryAppOpen(Activity activity, Context context){
+
+        //Check wrong password dialog
+        MailApplication app = getInstance();
+        if(app.isWrongPwd())
+        {
+            ChangePasswordDialog.showAlertdialog(activity, context);
+        }
+        new Thread( () -> {
+
+            //Notification Service initialization
+            // triggering this everytime because after an application upgrade (tried the run button from IDE), the workinfo status is showing enqueued, but the job
+            // is not actually queued when checked with `adb shell dumpsys jobscheduler`
+            MailApplication.startMNWorker(context);
+
+            // Battery optimization question dialog
+            if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.M)
+
+            {
+                Intent intent = new Intent();
+                String packageName = context.getPackageName();
+                PowerManager pm = (PowerManager) context.getSystemService(POWER_SERVICE);
+                if (pm != null && !pm.isIgnoringBatteryOptimizations(packageName)) {
+                    Log.e(LOG_TAG, "Permission Always run in background: NOT ENABLED");
+                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + packageName));
+                    context.startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Permission Always run in background: ENABLED");
+                }
+            }
+
+            if(!app.isNotificationChannelInitialized()) {
+                // Initialize all the notification channels
+                NotificationProcessing.initNotificationChannels(context);
+                app.setNotificationChannelInitialized(true);
+
+            }
+        }).start();
+    }
 
     /** All activities will call this method in the OnCreate to initialize the actionbar toolbar
      *
@@ -385,21 +430,24 @@ public class MailApplication implements Constants {
             e.printStackTrace();
         }
 
-        //Log.d(LOG_TAG_PullMnWorker, "startMNWorker -> Number of workers: " + )
-        if(generalSettings.isNotificationEnabled(context)){
-            //not creating a log here since this iscalled everytime when opening inbox
-            //context.startService(new Intent(context,MailNotificationService.class));
+        if (!getInstance().isWrongPwd()) {
+            //Log.d(LOG_TAG_PullMnWorker, "startMNWorker -> Number of workers: " + )
+            if (generalSettings.isNotificationEnabled(context)) {
+                //not creating a log here since this is called everytime when opening inbox
+                //context.startService(new Intent(context,MailNotificationService.class));
 
-            PeriodicWorkRequest pullMnWork =
-                    new PeriodicWorkRequest.Builder(PullMnWorker.class, PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
-                            .addTag(WORKER_TAG_PULL_MN)
-                            .build();
-            WorkManager
-                    .getInstance(context)
-                    .enqueueUniquePeriodicWork(WORKER_TAG_PULL_MN, ExistingPeriodicWorkPolicy.KEEP, pullMnWork);
-        }
-        else{
-            Log.e(LOG_TAG, "Notification not enabled in preference. Hence cannot start Mail Notification Worker.");
+                PeriodicWorkRequest pullMnWork =
+                        new PeriodicWorkRequest.Builder(PullMnWorker.class, PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS, TimeUnit.MILLISECONDS)
+                                .addTag(WORKER_TAG_PULL_MN)
+                                .build();
+                WorkManager
+                        .getInstance(context)
+                        .enqueueUniquePeriodicWork(WORKER_TAG_PULL_MN, ExistingPeriodicWorkPolicy.KEEP, pullMnWork);
+            } else {
+                Log.e(LOG_TAG_PullMnWorker, "Notification not enabled in preference. Hence cannot start Mail Notification Worker.");
+            }
+        }else{
+            Log.w(LOG_TAG_PullMnWorker, "Not starting Mail Notification worker because of the wrong password");
         }
     }
 
@@ -407,7 +455,7 @@ public class MailApplication implements Constants {
      * @param context
      */
     public static void stopMNWorker(final Context context) {
-        Log.w(LOG_TAG_PullMnWorker, "Stopping PullMnWorker");
+        Log.w(LOG_TAG_PullMnWorker, "Cancelling "+ WORKER_TAG_PULL_MN + " - Stopping Mail Notification worker");
         WorkManager.getInstance(context).cancelUniqueWork(WORKER_TAG_PULL_MN);
     }
 
@@ -520,7 +568,7 @@ public class MailApplication implements Constants {
         }
     }
 
-    /** will be true when the the password is wrong which is set by (NotificationProcessing.showLoginErrorNotification()). This will be set back to false when the user saves a
+    /** will be true when the the password is wrong. This will be set back to false when the user saves a
      * new passoword in ChangePasswordDialog
      * @return
      */
@@ -539,12 +587,6 @@ public class MailApplication implements Constants {
             mailApplication = new MailApplication();
         }
         return mailApplication;
-    }
-
-    public void onEveryAppOpen(MyActivity activity, Context context) {
-        if(getInstance().isWrongPwd()){
-            ChangePasswordDialog.showAlertdialog(activity, context);
-        }
     }
 
     /** Gets SwipeRefreshLayout color resources
@@ -779,4 +821,11 @@ public class MailApplication implements Constants {
         return getMoreFoldersThread;
     }
 
+    public boolean isNotificationChannelInitialized() {
+        return isNotificationChannelInitialized;
+    }
+
+    public void setNotificationChannelInitialized(boolean notificationChannelInitialized) {
+        isNotificationChannelInitialized = notificationChannelInitialized;
+    }
 }

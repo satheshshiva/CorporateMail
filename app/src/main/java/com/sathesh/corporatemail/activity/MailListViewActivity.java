@@ -1,14 +1,9 @@
 package com.sathesh.corporatemail.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -132,9 +127,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
             appUpdateAvailble = getIntent().getBooleanExtra(APP_UPDATE_AVAILABLE, false);
 
-            if (mailType == MailType.INBOX) {
-                MailApplication.getInstance().onEveryAppOpen(activity, context);
-            }
             //note: this will trigger the OnCreateView in the fragment.
             setContentView(R.layout.activity_mail_list_view);
 
@@ -220,23 +212,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     public void onStart() {
         super.onStart();
-        //Notification Service
-        // triggering this everytime because after an application upgrade (tried the run button from IDE), the workinfo status is showing enqueued, but the job
-        // is not actually queued when checked with `adb shell dumpsys jobscheduler`
-        MailApplication.startMNWorker(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent();
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Log.e(LOG_TAG, "Permission Always run in background: NOT ENABLED");
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivity(intent);
-            }else{
-                Log.d(LOG_TAG, "Permission Always run in background: ENABLED");
-            }
-        }
+        MailApplication.getInstance().onEveryAppOpen(activity, context);
     }
 
     /** ON STOP  **
