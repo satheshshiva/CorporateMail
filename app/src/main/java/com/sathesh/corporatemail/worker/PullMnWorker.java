@@ -1,10 +1,8 @@
 package com.sathesh.corporatemail.worker;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -186,15 +184,6 @@ public class PullMnWorker extends Worker implements Constants{
 	}
 
 	private void showNewMailNotification(String... args) {
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			// Create the NotificationChannel, but only on API 26+ because
-			// the NotificationChannel class is new and not in the support library
-			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_NEW_MAIL, context.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
-			channel.setDescription(NOTIFICATION_CHANNEL_NEW_MAIL_DESC);
-			// Register the channel with the system
-			mNM.createNotificationChannel(channel);
-		}
 		NotificationProcessing.showNewMailNotification(context, thisnewMailCounter, args);
 	}
 

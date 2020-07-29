@@ -6,9 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MailListViewActivity;
@@ -21,6 +25,33 @@ public class NotificationProcessing implements Constants{
 	private static PendingIntent pendingIntent;
 	private static CharSequence title = "" , message="";
 
+	public static void initNotificationChannels(Context context){
+		NotificationChannel channel1, channel2;
+		NotificationManagerCompat notificationManager;
+			notificationManager = NotificationManagerCompat.from(context);
+			// Create the NotificationChannel, but only on API 26+ because
+			// the NotificationChannel class is new and not in the support library
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				// New mail notification channel
+				channel1 = new NotificationChannel(NOTIFICATION_CHANNEL_ID_NEW_MAIL,
+						context.getString(R.string.notification_channel_new_mail_name),
+						NotificationManager.IMPORTANCE_HIGH);
+				channel1.setDescription(context.getString(R.string.notification_channel_new_mail_desc));
+				channel1.enableLights(true);
+				channel1.enableVibration(false);
+				notificationManager.createNotificationChannel(channel1);
+
+				// Important alerts notification channel
+				channel2 = new NotificationChannel(NOTIFICATION_CHANNEL_ID_LOGIN_ERROR,
+						context.getString(R.string.notification_channel_alert_name),
+						NotificationManager.IMPORTANCE_HIGH);
+				channel1.enableLights(true);
+				channel1.enableVibration(false);
+				channel2.setDescription(context.getString(R.string.notification_channel_alert_desc));
+				// Register the channel with the system
+				notificationManager.createNotificationChannel(channel2);
+		}
+	}
 
 	/** New Mail Notificaion
      *
@@ -30,8 +61,7 @@ public class NotificationProcessing implements Constants{
      */
     public static void showNewMailNotification(Context context, int totNewMailNotificationCounter, String... args) {
 
-		NotificationManager mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
-
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 		switch(args.length){
 		case 1:
 		{
@@ -46,12 +76,6 @@ public class NotificationProcessing implements Constants{
 		}
 
 		}
-		// Set the icon, scrolling text and timestamp
-		/*notification = new Notification(R.drawable.ic_launcher, 
-				String.format(context.getString(R.string.mnsServiceNewMailNotification), thisnewMailCounter),
-				System.currentTimeMillis());
-*/
-		
 
 		Intent pIntent=new Intent(context, MailListViewActivity.class);
 		pIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -61,45 +85,23 @@ public class NotificationProcessing implements Constants{
 		pendingIntent = PendingIntent.getActivity(context, 0,
 				pIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
+		Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
 
-/*		MailApplication.setLightNotificationWithPermission(notification);
-		MailApplication.setSoundWithPermission(notification);
-		MailApplication.setVibrateNotificationWithPermission(notification);*/
-
-
-
-
-		Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_NEW_MAIL)
-				.setSmallIcon(R.drawable.ic_launcher)
+		Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NEW_MAIL)
+				.setSmallIcon(R.drawable.ic_notification)
+				.setLargeIcon(largeIcon)
 				.setContentTitle(title)
 				.setContentText(message)
+				.setColor(Color.parseColor("#2cb3f5"))
+				.setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setAutoCancel(false)
 				.setContentIntent(pendingIntent)
 				.build();
 
-
-		//builder.addAction(R.drawable.cm_hi_res_icon, "SDSDFSDFS", pendingIntent);
-
-	//	builder.setContentIntent(pendingIntent);
-//		builder.setAutoCancel(false);
-//		builder.setOngoing(true);
-//		builder.setNumber(100);
-		//builder.setOngoing(true);
-		//builder.setSubText("This is subtext...");   //API level 16
-		//builder.build();
-
-		mNM.notify(totNewMailNotificationCounter, notification);
-
-
-		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		//may display a badge of unread notification
-		//notification.number = thisnewMailCounter;	//when getting multiple mails on  a single poll it says 1,2,3 instead of 3
+		notificationManager.notify(totNewMailNotificationCounter, notification);
 
 	}
-	
-	private static CharSequence getScrollingText() {
-		return title.toString() +"\n"+ message.toString();
-	}
+
 
     /** Login Error Notification
      *
@@ -107,46 +109,29 @@ public class NotificationProcessing implements Constants{
      */
     public static void showLoginErrorNotification(Context context) {
 
-		MailApplication mailApplication = MailApplication.getInstance();
-		/*will be true when the the password is wrong which is set by (NotificationProcessing.showLoginErrorNotification()). This will be set back to false when the user saves a 
-		 new password in ChangePasswordDialog*/
-		mailApplication.setWrongPwd(true);
-		
-		NotificationManager mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
-		
-		/*MailApplication.setLightNotificationWithPermission(notification);
-		MailApplication.setSoundWithPermission(notification);
-		MailApplication.setVibrateNotificationWithPermission(notification);
-		*/
-		/*notification.flags|=Notification.FLAG_ONGOING_EVENT;*/
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 		
 		// The PendingIntent to launch our activity if the user selects this notification
 		pendingIntent = PendingIntent.getActivity(context, 0,
 				new Intent(context, MailApplication.mainApplicationActivity()), PendingIntent.FLAG_CANCEL_CURRENT);
-		
-		mNM.cancelAll();
+
+		notificationManager.cancelAll();
 		// Set the info for the views that show in the notification panel.
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			// Create the NotificationChannel, but only on API 26+ because
-			// the NotificationChannel class is new and not in the support library
-			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_LOGIN_ERROR, context.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
-			channel.setDescription(NOTIFICATION_CHANNEL_LOGIN_ERROR_DESC);
-			// Register the channel with the system
-			mNM.createNotificationChannel(channel);
-		}
-
-		Notification notification = new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_LOGIN_ERROR )
+		Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+		Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_LOGIN_ERROR )
 				.setAutoCancel(false)
 				.setContentTitle(context.getString(R.string.mns_service_invalidUser_title))
 				.setContentText(context.getString(R.string.mns_service_invalidUser_message))
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setSmallIcon(R.drawable.ic_notification)
+				.setLargeIcon(largeIcon)
+				.setColor(Color.parseColor("#FF0000"))
+				.setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setContentIntent(pendingIntent)
 				.setNumber(100)
 				.build();
 
 
-		mNM.notify(0, notification);
+		notificationManager.notify(0, notification);
 	}
 
     /** Cancels all the current notifications
@@ -154,7 +139,7 @@ public class NotificationProcessing implements Constants{
      * @param context
      */
     public static void cancelAllNotifications(Context context){
-		NotificationManager mNM = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNM.cancelAll();
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+		notificationManager.cancelAll();
 	}
 }

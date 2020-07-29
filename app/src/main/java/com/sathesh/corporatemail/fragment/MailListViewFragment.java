@@ -329,7 +329,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             swipeRefreshLayout.setRefreshing(false);
         } else if (newMailsThreadState != Status.UPDATING) {
             //network call for getting the new mails and corresponding UI changes
-            Handler getNewMailsHandler = new GetNewMailsHandler(this);
+            Handler getNewMailsHandler = new GetNewMailsHandler(this, getActivity());
             Thread t = new GetNewMailsThread(this, getNewMailsHandler);
             t.start();
         }
