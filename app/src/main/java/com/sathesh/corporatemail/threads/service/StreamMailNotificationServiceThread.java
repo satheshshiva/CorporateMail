@@ -1,17 +1,17 @@
 package com.sathesh.corporatemail.threads.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
 import com.sathesh.corporatemail.ews.EWSConnection;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -99,7 +99,6 @@ extends Thread implements Constants, StreamingSubscriptionConnection.INotificati
 			try {
 				Thread.sleep(120*1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
@@ -114,7 +113,6 @@ extends Thread implements Constants, StreamingSubscriptionConnection.INotificati
 
 
 	private void recursiveOpen(StreamingSubscriptionConnection conn2) {
-		// TODO Auto-generated method stub
 		try {
 			System.out.println("reopening connection");
 			if(conn2.getIsOpen()){
@@ -123,10 +121,8 @@ extends Thread implements Constants, StreamingSubscriptionConnection.INotificati
 			conn2.open();
 			Thread.sleep(30*1000);
 		} catch (ServiceLocalException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -144,7 +140,6 @@ extends Thread implements Constants, StreamingSubscriptionConnection.INotificati
 
 			connection_OnNotificationEvent(sender,args);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}	

@@ -41,21 +41,20 @@ android {
 
 dependencies {
     api files('libs/ews-java-api-android-1.0.jar')
-    api 'androidx.appcompat:appcompat:1.2.0-beta01'
+    api 'androidx.appcompat:appcompat:1.3.0-alpha01'
     api 'androidx.preference:preference:1.1.1'
-    api 'com.google.android.material:material:1.2.0-alpha06'
-    api 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
+    api 'com.google.android.material:material:1.3.0-alpha02'
+    api 'androidx.recyclerview:recyclerview:1.2.0-alpha05'
     //3rd parties
     api 'de.hdodenhof:circleimageview:3.1.0'
     api 'com.melnykov:floatingactionbutton:1.3.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     testImplementation 'junit:junit:4.13'
     //firebase
-    implementation 'com.google.firebase:firebase-core:17.4.0'
-    //fire base crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.firebase:firebase-core:17.4.4'
     //firebase messaging
-    implementation 'com.google.firebase:firebase-messaging:20.1.6'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    implementation 'com.google.firebase:firebase-messaging:20.2.3'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.work:work-runtime:2.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

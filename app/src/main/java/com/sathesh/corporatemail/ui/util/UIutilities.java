@@ -21,7 +21,7 @@ public class UIutilities implements Constants{
 			      Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 		} catch (Exception e) {
-			Log.e(TAG, "UIutilities -> Error while closing keyboard ");
+			Log.e(LOG_TAG, "UIutilities -> Error while closing keyboard ");
 			e.printStackTrace();
 		}
 	}
@@ -39,7 +39,7 @@ public class UIutilities implements Constants{
 				imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "UIutilities -> Error while opening keyboard ");
+			Log.e(LOG_TAG, "UIutilities -> Error while opening keyboard ");
 			e.printStackTrace();
 		}
 	}

@@ -297,5 +297,11 @@
     <string name="drawer_menu_more_folders_empty">Loading Folders…</string>
     <string name="drawer_favourite_help_text">Add favorites here from the \"More Folders\"</string>
 
+    <!-- Notifications -->
+    <string name="notification_channel_new_mail_name">New Mail</string>
+    <string name="notification_channel_new_mail_desc">Notifies new email</string>
+    <string name="notification_channel_alert_name">Important alerts</string>
+    <string name="notification_channel_alert_desc">Notifies important alerts like wrong password, etc.,</string>
+
 
 </resources>

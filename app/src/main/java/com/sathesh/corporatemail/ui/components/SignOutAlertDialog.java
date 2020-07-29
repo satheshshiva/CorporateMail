@@ -41,8 +41,7 @@ public class SignOutAlertDialog  implements Constants{
 					try {
 						_signOut.signOutAndResetAllSettings(_activity, _context);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						Log.e(TAG, "SignOut -> Error while Signing out " + e.getMessage());
+						Log.e(LOG_TAG, "SignOut -> Error while Signing out " + e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -51,8 +50,7 @@ public class SignOutAlertDialog  implements Constants{
 					try {
 						_signOut.signOutAndRetainSettings(_activity, _context);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						Log.e(TAG, "SignOut -> Error while Signing out " + e.getMessage());
+						Log.e(LOG_TAG, "SignOut -> Error while Signing out " + e.getMessage());
 						e.printStackTrace();
 					}
 				}

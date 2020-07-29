@@ -98,6 +98,7 @@ public class GeneralPreferenceAdapter implements Constants{
 	 * @param context
 	 * @return
 	 */
+	@Deprecated
 	public Long getNotificationPullFrequency(Context context){
 		loadPreference(context);
 		return Long.valueOf(sharedPreferences.getString(SettingsFragment.KEY_PULL_FREQUENCY, "900000"));

@@ -127,9 +127,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             mailFolderName = getIntent().getStringExtra(FOLDER_NAME_EXTRA);
             appUpdateAvailble = getIntent().getBooleanExtra(APP_UPDATE_AVAILABLE, false);
 
-            if (mailType == MailType.INBOX) {
-                MailApplication.getInstance().onEveryAppOpen(activity, context);
-            }
             //note: this will trigger the OnCreateView in the fragment.
             setContentView(R.layout.activity_mail_list_view);
 
@@ -215,10 +212,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     public void onStart() {
         super.onStart();
-        //Notification Service
-        if(BuildConfig.DEBUG)
-            Log.i(TAG, "MailListViewActivity -> Starting MNS Service");
-        MailApplication.startMNSService(this);
+        MailApplication.getInstance().onEveryAppOpen(activity, context);
     }
 
     /** ON STOP  **
@@ -254,7 +248,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
 
         } catch (Exception e) {
             if(BuildConfig.DEBUG){
-                Log.d(TAG, "MailListViewActivity -> Exception while deleting cache" + e.getMessage());
+                Log.d(LOG_TAG, "MailListViewActivity -> Exception while deleting cache" + e.getMessage());
                 e.printStackTrace();
             }
         }

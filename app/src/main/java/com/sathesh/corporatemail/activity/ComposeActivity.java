@@ -8,7 +8,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.core.view.MenuItemCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -22,6 +21,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.view.MenuItemCompat;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -53,6 +54,7 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 
@@ -349,7 +351,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             actualToReceivers.put(actualToReceiversId, contact);
             refreshDisplayString(compose_to_disp,actualToReceivers,TYPE_TO);
             if(BuildConfig.DEBUG) {
-                Log.d(TAG, "actualToReceivers after adding a recipient " + actualToReceivers);
+                Log.d(LOG_TAG, "actualToReceivers after adding a recipient " + actualToReceivers);
             }
 
             //if the contact is set to resolve names in directory flag then do that now.
@@ -366,7 +368,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             }
         }
         else{
-            Log.e(TAG, "ComposeActivity -> addTorecipient() -> Contact is null. Hence not adding this contact");
+            Log.e(LOG_TAG, "ComposeActivity -> addTorecipient() -> Contact is null. Hence not adding this contact");
         }
     }
 
@@ -375,7 +377,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         actualToReceivers.remove(contactKey);
         refreshDisplayString(compose_to_disp,actualToReceivers,TYPE_TO);
         if(BuildConfig.DEBUG) {
-            Log.d(TAG, "actualToReceivers after removing a recipient" + actualToReceivers);
+            Log.d(LOG_TAG, "actualToReceivers after removing a recipient" + actualToReceivers);
         }
     }
 
@@ -396,7 +398,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 extraMessage.append(TYPE_CC);
                 extraMessage.append(actualCCReceiversId);
                 if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "ComposeActivity -> addCCrecipient() -> Extramessage " + extraMessage.toString());
+                    Log.d(LOG_TAG, "ComposeActivity -> addCCrecipient() -> Extramessage " + extraMessage.toString());
                 }
                 if(null!= contact.getEmail() && (!(contact.getEmail().equals("")))){
                     new ResolveNamesAsyncTask(this,this,service,contact.getEmail().toString(),false,"",extraMessage.toString()).execute();
@@ -407,7 +409,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             }
         }
         else{
-            Log.e(TAG, "ComposeActivity -> addCCrecipient() -> Contact is null. Hence not adding this contact");
+            Log.e(LOG_TAG, "ComposeActivity -> addCCrecipient() -> Contact is null. Hence not adding this contact");
         }
     }
     // Remove a CC Recipient
@@ -415,7 +417,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         actualCCReceivers.remove(contactKey);
         refreshDisplayString(compose_cc_disp,actualCCReceivers,TYPE_CC);
         if(BuildConfig.DEBUG) {
-            Log.d(TAG, "actualCCReceivers after removing a recipient" + actualCCReceivers);
+            Log.d(LOG_TAG, "actualCCReceivers after removing a recipient" + actualCCReceivers);
         }
     }
 
@@ -443,7 +445,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             }
         }
         else{
-            Log.e(TAG, "ComposeActivity -> addBCCrecipient() -> Contact is null. Hence not adding this contact");
+            Log.e(LOG_TAG, "ComposeActivity -> addBCCrecipient() -> Contact is null. Hence not adding this contact");
         }
     }
 
@@ -452,7 +454,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         actualBCCReceivers.remove(contactKey);
         refreshDisplayString(compose_bcc_disp,actualBCCReceivers,TYPE_BCC);
         if(BuildConfig.DEBUG) {
-            Log.d(TAG, "actualBCCReceivers after removing a recipient" + actualBCCReceivers);
+            Log.d(LOG_TAG, "actualBCCReceivers after removing a recipient" + actualBCCReceivers);
         }
     }
 
@@ -497,7 +499,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     @Override
                     public void onClick(View arg0) {
                         if(BuildConfig.DEBUG) {
-                            Log.d(TAG, contactKey + " clicked");
+                            Log.d(LOG_TAG, contactKey + " clicked");
                         }
                         (new AlertDialog.Builder(ComposeActivity.this))
                                 .setTitle(sContact.getDisplayName())
@@ -542,7 +544,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 sBuilder.append("\n");
             }
             else{
-                Log.e(TAG, "ComposeActivity -> actualReceivers.get(contactKey) is null");
+                Log.e(LOG_TAG, "ComposeActivity -> actualReceivers.get(contactKey) is null");
             }
         }
         return sBuilder;
@@ -608,7 +610,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                         activity.getString(R.string.compose_sending), true);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG, "Exception occured on preexecute");
+                Log.e(LOG_TAG, "Exception occured on preexecute");
             }
         }
 
@@ -647,23 +649,23 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 }
             } catch (URISyntaxException e) {
                 
-                Log.e(TAG, "Malformed Webmail URL");
+                Log.e(LOG_TAG, "Malformed Webmail URL");
                 publishProgress(STATUS_ERROR, "Message not sent!\n\nDetails: Malformed Webmail URL " );
             }
-            catch(HttpErrorException e){
+            catch(HttpErrorException  | ServiceRequestException e){
                 if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
-                    Log.e(TAG, "Authentication Failed!\nDetails: " + e.getMessage());
+                    Log.e(LOG_TAG, "Authentication Failed!\nDetails: " + e.getMessage());
                     publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails: Authentication Failed ");
                 }
                 else
                 {
-                    Log.e(TAG, "Error Occured!\nDetails:" + e.getMessage());
+                    Log.e(LOG_TAG, "Error Occured!\nDetails:" + e.getMessage());
                     e.printStackTrace();
                     publishProgress(STATUS_ERROR, msgSendingFailedLbl +"\n\nDetails:" + e.getMessage());
                 }
             }
             catch (Exception e) {
-                Log.e(TAG, "Error Occured!\nDetails:" + e.getMessage());
+                Log.e(LOG_TAG, "Error Occured!\nDetails:" + e.getMessage());
                 e.printStackTrace();
                 publishProgress(STATUS_ERROR, msgSendingFailedLbl + "\n\nDetails:" + e.getMessage());
             }
@@ -820,7 +822,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Contact contact = outputCollection.nameResolutionCollection(0).getContact();
                 String email = outputCollection.nameResolutionCollection(0).getMailbox().getAddress();
                 if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> Extramessage " + extra1);
+                    Log.d(LOG_TAG, "ComposeActivity - > handleResolveNamesOutput() -> Extramessage " + extra1);
                 }
                 if(extra1!=null && (extra1.length() ==2 || extra1.length() ==3)){
                     int type=Character.getNumericValue(extra1.charAt(0));
@@ -832,12 +834,12 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                         id=Integer.valueOf(String.valueOf(extra1.charAt(1)) + String.valueOf(extra1.charAt(2))) ;
                     }
                     if(BuildConfig.DEBUG) {
-                        Log.d(TAG, "type " + type);
-                        Log.d(TAG, "id" + id);
+                        Log.d(LOG_TAG, "type " + type);
+                        Log.d(LOG_TAG, "id" + id);
                     }
                     if(type == TYPE_TO){
                         if(BuildConfig.DEBUG) {
-                            Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE TO; Id:" + id);
+                            Log.d(LOG_TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE TO; Id:" + id);
                         }
                         actualToReceivers.put(id, ContactSerializable.getContactSerializableFromContact(contact,email ));
                         refreshDisplayString(compose_to_disp,actualToReceivers,TYPE_TO);
@@ -845,14 +847,14 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     }
                     if(type== TYPE_CC){
                         if(BuildConfig.DEBUG) {
-                            Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE CC; Id:" + id);
+                            Log.d(LOG_TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE CC; Id:" + id);
                         }
                         actualCCReceivers.put(id, ContactSerializable.getContactSerializableFromContact(contact,email ));
                         refreshDisplayString(compose_cc_disp,actualCCReceivers,TYPE_CC);
                     }
                     if(type == TYPE_BCC){
                         if(BuildConfig.DEBUG) {
-                            Log.d(TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE BCC; Id:" + id);
+                            Log.d(LOG_TAG, "ComposeActivity - > handleResolveNamesOutput() -> TYPE BCC; Id:" + id);
                         }
                         actualBCCReceivers.put(id, ContactSerializable.getContactSerializableFromContact(contact,email ));
                         refreshDisplayString(compose_bcc_disp,actualBCCReceivers,TYPE_BCC);
@@ -861,16 +863,16 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 }
                 else
                 {
-                    Log.e(TAG, "ComposeActivity -> Extra message to Resolve Names extra param length is not 2");
+                    Log.e(LOG_TAG, "ComposeActivity -> Extra message to Resolve Names extra param length is not 2");
                 }
             }
             else{
                 // the directory returned no or more than one names for the search. so remove that entry from the list and display a notification to the user.
                 //NOT RESOLVED EMAIL REMOVING SECTION
-                Log.e(TAG, "ComposeActivity -> Resolve Names output collections is null or output collection count is not 1");
-                Log.e(TAG, "ComposeActivity -> Output collection count:" + ((outputCollection!=null)?String.valueOf(outputCollection.getCount()):"null"));
+                Log.e(LOG_TAG, "ComposeActivity -> Resolve Names output collections is null or output collection count is not 1");
+                Log.e(LOG_TAG, "ComposeActivity -> Output collection count:" + ((outputCollection!=null)?String.valueOf(outputCollection.getCount()):"null"));
                 if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "Removing recipient");
+                    Log.d(LOG_TAG, "Removing recipient");
                 }
                 int id=0;
                 if(extra1!=null && (extra1.length() ==2 || extra1.length() ==3)){
@@ -899,7 +901,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                                     refreshDisplayString(compose_cc_disp,actualCCReceivers,TYPE_CC);
                                 }
                                 else{
-                                    Log.d(TAG, "ComposeActivity -> Contact has an email id which is in directory. so the email may be gmail, yahoo, etc. and s not removed");
+                                    Log.d(LOG_TAG, "ComposeActivity -> Contact has an email id which is in directory. so the email may be gmail, yahoo, etc. and s not removed");
                                 }
                             }
                             else{
@@ -914,7 +916,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                             }
                         }
                         else{
-                            Log.e(TAG, "ComposeActivity -> Contact is null");
+                            Log.e(LOG_TAG, "ComposeActivity -> Contact is null");
 
                         }
                     }
@@ -933,7 +935,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                                     refreshDisplayString(compose_bcc_disp,actualBCCReceivers,TYPE_BCC);
                                 }
                                 else{
-                                    Log.d(TAG, "ComposeActivity -> Contact has an email id which is in directory. so the email may be gmail, yahoo, etc. and s not removed");
+                                    Log.d(LOG_TAG, "ComposeActivity -> Contact has an email id which is in directory. so the email may be gmail, yahoo, etc. and s not removed");
                                 }
                             }
                             else{
@@ -949,7 +951,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
                         }
                         else{
-                            Log.e(TAG, "ComposeActivity -> Contact is null");
+                            Log.e(LOG_TAG, "ComposeActivity -> Contact is null");
 
                         }
                     }

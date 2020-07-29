@@ -170,14 +170,14 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
         }
         catch (ArrayIndexOutOfBoundsException e1) {
             if(BuildConfig.DEBUG){
-                Log.e(TAG, "MailListViewAdapter - arrayindex out of bounds");
+                Log.e(LOG_TAG, "MailListViewAdapter - arrayindex out of bounds");
                 e1.printStackTrace();
             }
         }
         catch (Exception e) {
             if(BuildConfig.DEBUG){
                 e.printStackTrace();
-                Log.e(TAG, "MailListViewAdapter - Cannot get details for the item");
+                Log.e(LOG_TAG, "MailListViewAdapter - Cannot get details for the item");
             }
         }
 

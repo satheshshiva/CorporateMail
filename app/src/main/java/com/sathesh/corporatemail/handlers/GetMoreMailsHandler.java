@@ -47,7 +47,7 @@ public class GetMoreMailsHandler extends Handler implements Constants {
 		case ERROR_AUTH_FAILED:
 			parent.setMoreMailsThreadState(Status.ERROR_AUTH_FAILED);
 			// stop the MNS service
-			MailApplication.stopMNSService(parent.getActivity().getApplicationContext());
+			MailApplication.stopMNWorker(parent.getActivity().getApplicationContext());
 			break;
 
 		case ERROR:

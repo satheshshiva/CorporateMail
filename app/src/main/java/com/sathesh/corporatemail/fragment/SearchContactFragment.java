@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,9 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -170,13 +171,13 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         dispContactsMap.clear();		// map containing ContactSerializable which can be passed to next intent
 
         if(BuildConfig.DEBUG) {
-            Log.d(TAG, "handle called " + outputCollection);
+            Log.d(LOG_TAG, "handle called " + outputCollection);
         }
         try {
             if(outputCollection!=null && outputCollection.getCount()>0){
 
                 int resolveNameIndex=-1;
-                Log.i(TAG, "index 1 " +String.valueOf(resolveNameIndex));
+                Log.i(LOG_TAG, "index 1 " +String.valueOf(resolveNameIndex));
                 for(NameResolution nameResolution : outputCollection)
                 {
                     if(nameResolution!=null && null!=nameResolution.getContact() && null!=nameResolution.getContact().getDisplayName()){
@@ -189,9 +190,9 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
                     }
                 }
                 if(BuildConfig.DEBUG) {
-                    Log.d(TAG, "dispNameList " + dispNameList);
-                    Log.d(TAG, "dispMap" + dispMap);
-                    Log.d(TAG, "dispContactsMap" + dispContactsMap);
+                    Log.d(LOG_TAG, "dispNameList " + dispNameList);
+                    Log.d(LOG_TAG, "dispMap" + dispMap);
+                    Log.d(LOG_TAG, "dispContactsMap" + dispContactsMap);
                 }
                 ListAdapter adapter = new ArrayAdapter<String>(context,R.layout.simple_list_item_1,dispNameList);
                 listView.setAdapter(adapter);
@@ -203,7 +204,7 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
                     public void onItemClick(AdapterView<?> adapter, View view, int position,
                                             long arg) {
                         if(BuildConfig.DEBUG) {
-                            Log.d(TAG, String.valueOf(position));
+                            Log.d(LOG_TAG, String.valueOf(position));
                         }
                         Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
                         contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, dispContactsMap.get(position));

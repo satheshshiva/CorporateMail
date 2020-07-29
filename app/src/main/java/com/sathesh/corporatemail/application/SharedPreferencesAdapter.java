@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.datamodels.PullSubscriptionParams;
 import com.sathesh.corporatemail.util.Utilities;
 
 public class SharedPreferencesAdapter implements Constants{
@@ -82,14 +83,14 @@ public class SharedPreferencesAdapter implements Constants{
 	 */
 	public static String getSyncState(Context context) throws Exception{
 		sharedPreferences = context.getSharedPreferences(SYSTEM_VARIABLES, 0);
-		Log.i(TAG, "Getting  Sync State " + sharedPreferences.getString(EWS_SYNC_STATE, ""));
+		Log.i(LOG_TAG, "Getting  Sync State " + sharedPreferences.getString(EWS_SYNC_STATE, ""));
 		return sharedPreferences.getString(EWS_SYNC_STATE, "");
 	}
 
 
 	public synchronized static void storeSyncState(Context context, String syncState) throws Exception{ 
 
-		Log.d(TAG, "Storing Sync State " + syncState);
+		Log.d(LOG_TAG, "Storing Sync State " + syncState);
 		sharedPreferences = context.getSharedPreferences(SYSTEM_VARIABLES, 0);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(EWS_SYNC_STATE, syncState);
@@ -148,14 +149,14 @@ public class SharedPreferencesAdapter implements Constants{
 	 */
 	public static String getSyncPullMethodWatermark(Context context) throws Exception{
 		sharedPreferences = context.getSharedPreferences(SYSTEM_VARIABLES, 0);
-		Log.i(TAG, "Getting  Sync State watermark " + sharedPreferences.getString(EWS_SYNC_STATE, ""));
+		Log.i(LOG_TAG, "Getting  Sync State watermark " + sharedPreferences.getString(EWS_SYNC_STATE, ""));
 		return sharedPreferences.getString(INBOX_SYNC_PULL_WATERMARK, "");
 	}
 
 
 	public synchronized static void storeSyncPullMethodWatermark(Context context, String watermark) throws Exception{ 
 
-		Log.d(TAG, "Storing Sync State watermark " + watermark);
+		Log.d(LOG_TAG, "Storing Sync State watermark " + watermark);
 		sharedPreferences = context.getSharedPreferences(SYSTEM_VARIABLES, 0);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(INBOX_SYNC_PULL_WATERMARK, watermark);
@@ -286,6 +287,29 @@ public class SharedPreferencesAdapter implements Constants{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(SIGNED_IN_USER_EMAIL, value);
 
+		editor.apply();
+
+	}
+
+	/** Stores the user account details Company Name
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public static PullSubscriptionParams getPullSubscriptionParams(Context context) throws Exception{
+		sharedPreferences = context.getSharedPreferences(SYSTEM_VARIABLES, 0);
+		PullSubscriptionParams pullSubscriptionParams = new PullSubscriptionParams(sharedPreferences.getString(PULL_SUBSCRIPTION_ID, ""),
+				sharedPreferences.getString(PULL_WATERMARK, ""));
+		return pullSubscriptionParams;
+
+	}
+
+	public synchronized static void setPullSubscriptionParams(Context context, PullSubscriptionParams value) throws Exception{
+
+		sharedPreferences = context.getSharedPreferences(SYSTEM_VARIABLES, 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(PULL_WATERMARK, value.getWatermark());
+		editor.putString(PULL_SUBSCRIPTION_ID, value.getSubscriptionId());
 		editor.apply();
 
 	}

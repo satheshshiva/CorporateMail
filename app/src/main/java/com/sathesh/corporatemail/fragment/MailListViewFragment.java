@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.sathesh.corporatemail.BuildConfig;
@@ -328,7 +329,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             swipeRefreshLayout.setRefreshing(false);
         } else if (newMailsThreadState != Status.UPDATING) {
             //network call for getting the new mails and corresponding UI changes
-            Handler getNewMailsHandler = new GetNewMailsHandler(this);
+            Handler getNewMailsHandler = new GetNewMailsHandler(this, getActivity());
             Thread t = new GetNewMailsThread(this, getNewMailsHandler);
             t.start();
         }
@@ -341,7 +342,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     @Override
     public void softRefreshList() {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, ((Object) this).getClass() + " ->  Called Soft refresh list");
+            Log.d(LOG_TAG, ((Object) this).getClass() + " ->  Called Soft refresh list");
         }
         try {
             //update the list view
