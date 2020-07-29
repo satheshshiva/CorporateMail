@@ -129,7 +129,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                                         // if the new mails thread is not updating
                                         if(fragment.getNewMailsThreadState() != Status.UPDATING){
                                             if(BuildConfig.DEBUG){
-                                                Log.d(TAG, "MailListViewFragment -> Last Item listener");
+                                                Log.d(LOG_TAG, "MailListViewFragment -> Last Item listener");
                                             }
                                             //Call the More mails thread
                                             fragment.getMoreMails();	// spawns a thread for network call
@@ -140,13 +140,13 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                                             // when New Mail Loading thread is done it will invoke More Mails Loading thread again
                                             fragment.setMoreMailsThreadState(Status.WAITING);
                                             fragment.showMoreLoadingAnimation(); // shows the loading symbol in the end of list view
-                                            if(BuildConfig.DEBUG) Log.d(TAG, "MailListViewListener -> went in wait state as GetNewMails is currently updating");
+                                            if(BuildConfig.DEBUG) Log.d(LOG_TAG, "MailListViewListener -> went in wait state as GetNewMails is currently updating");
                                         }
                                     }
                                 }
                             }
                             if(BuildConfig.DEBUG){
-                                Log.d(TAG, "PreLast "+ preLast + " Last Item "+ lastItem);
+                                Log.d(LOG_TAG, "PreLast "+ preLast + " Last Item "+ lastItem);
                             }
                             preLast = lastItem;
                         }
@@ -264,7 +264,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 }
             }
             else{
-                Log.e(TAG, "fragment.getAdapter().getItem(position) is null");
+                Log.e(LOG_TAG, "fragment.getAdapter().getItem(position) is null");
             }
 
 

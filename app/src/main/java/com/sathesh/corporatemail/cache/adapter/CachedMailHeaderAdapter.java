@@ -213,7 +213,7 @@ public class CachedMailHeaderAdapter implements Constants{
             dao.deleteItemId(vo.getItem_id());
         }
         else{
-            Log.e(TAG, "CachedMailHeaderAdapter-> deleteItemVo() -> vo is null" );
+            Log.e(LOG_TAG, "CachedMailHeaderAdapter-> deleteItemVo() -> vo is null" );
         }
     }
 

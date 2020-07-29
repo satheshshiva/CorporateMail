@@ -3,6 +3,7 @@
  */
 package com.sathesh.corporatemail.handlers;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -27,9 +28,11 @@ public class GetNewMailsHandler extends Handler implements Constants {
 
 	/*** HANDLER ****/
 	private MailListViewFragment parent;
+	private Activity activity;
 
-	public GetNewMailsHandler(MailListViewFragment parent){
+	public GetNewMailsHandler(MailListViewFragment parent, Activity activity){
 		this.parent=parent;
+		this.activity = activity;
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 					parent.getSwipeRefreshLayout().setRefreshing(false);
 
 					if(BuildConfig.DEBUG){
-						Log.d(TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
+						Log.d(LOG_TAG, "GetNewMailsRunnable ->  GetNewMail Thread state is updated. GetMoreMails thread state is  " + parent.getMoreMailsThreadState());
 					}
 
 					//if the other thread (GetMoreMailsRunnable) is waiting for this to complete, then call it again
@@ -63,7 +66,7 @@ public class GetNewMailsHandler extends Handler implements Constants {
 						if(totalCachedRecords < parent.getTotalMailsInFolder()){
 							parent.getMoreMails();
 							if(BuildConfig.DEBUG){
-								Log.d(TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
+								Log.d(LOG_TAG, "GetNewMailsRunnable ->  Calling the GetMoreMails as it was in the Wait state");
 							}
 						}
 						else{
@@ -80,19 +83,21 @@ public class GetNewMailsHandler extends Handler implements Constants {
 					parent.setNewMailsThreadState(Status.ERROR_AUTH_FAILED);
 					// for auth failed show an alert box
 					parent.getTextswitcher().setText(parent.getActivity().getText(R.string.folder_auth_error));
+					parent.updateTextSwitcherIcons(View.GONE,View.GONE, View.VISIBLE, View.GONE, View.GONE);
+					MailApplication.getInstance().setWrongPwd(true);
 					NotificationProcessing.showLoginErrorNotification(parent.getActivity().getApplicationContext());
 					if(parent.getMoreMailsThreadState() == Status.WAITING){
 						parent.setMoreMailsThreadState(Status.ERROR_AUTH_FAILED);
 						parent.softRefreshList();
 					}
 					if(parent.isAdded()){
-						AuthFailedAlertDialog.showAlertdialog(parent.getActivity(), parent.getActivity().getApplicationContext());
+						AuthFailedAlertDialog.showAlertdialog(activity, activity.getApplicationContext());
 					}
 					else{
-						Log.e(TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
+						Log.e(LOG_TAG, "Authentication failed. Not able to add the alert dialog due to isAdded() is false");
 					}
-					// stop the MNS service
-					MailApplication.stopMNSService(parent.getActivity().getApplicationContext());
+					// stop the Mail notification worker
+					MailApplication.stopMNWorker(parent.getActivity().getApplicationContext());
 				} catch (Exception e) {
 					Utilities.generalCatchBlock(e, this);
 				}

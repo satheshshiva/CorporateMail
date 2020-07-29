@@ -21,16 +21,14 @@ public class Inbox implements Runnable, Constants {
 	Message msgInbox;
 	
 	public Inbox(FindItemsResults<Item> findResults, Handler handlerInbox) {
-		// TODO Auto-generated constructor stub
 		this.handlerInbox = handlerInbox;
 
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		try{
-			Log.d(TAG, "Thread has started");
+			Log.d(LOG_TAG, "Thread has started");
 			
 			msgInbox = Message.obtain();
 			msgInbox.arg1 = 2;
@@ -67,7 +65,7 @@ public class Inbox implements Runnable, Constants {
 			else
 			{
 				e.printStackTrace();
-				Log.e(TAG, "Error occured");
+				Log.e(LOG_TAG, "Error occured");
 			}
 		}
 	}

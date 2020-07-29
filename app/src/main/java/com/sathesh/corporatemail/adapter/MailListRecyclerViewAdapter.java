@@ -3,7 +3,6 @@ package com.sathesh.corporatemail.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
@@ -336,7 +337,7 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
             localContent = this.listLocalContent.get(position);
         }
         else {
-            Log.e(TAG, "MailListRecyclerViewAdapter -> listconent is null");
+            Log.e(LOG_TAG, "MailListRecyclerViewAdapter -> listconent is null");
         }
         return localContent.type;
     }

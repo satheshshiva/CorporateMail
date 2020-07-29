@@ -46,7 +46,7 @@ public class LoadEmailHandler extends Handler implements Constants{
 			parent.setCurrentStatus(Status.LOADING);
 			parent.getWebview().loadUrl(LOADING_HTML_URL);
 			if(BuildConfig.DEBUG){
-				Log.d(TAG, "LoadEmailHandler-> Loading");
+				Log.d(LOG_TAG, "LoadEmailHandler-> Loading");
 			}
 			break;
 		case SHOW_BODY:

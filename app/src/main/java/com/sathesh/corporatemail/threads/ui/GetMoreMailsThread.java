@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 
@@ -65,7 +66,7 @@ public class GetMoreMailsThread extends Thread implements Runnable, Constants{
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
-					Log.d(TAG, "GetMoreMailsRunnable -> Total records in cache"+cacheRecordsCount);
+					Log.d(LOG_TAG, "GetMoreMailsRunnable -> Total records in cache"+cacheRecordsCount);
 				}
 
 				if(parent.getMailFolderId()!=null && !(parent.getMailFolderId().equals("")))
@@ -96,7 +97,7 @@ public class GetMoreMailsThread extends Thread implements Runnable, Constants{
 				sendHandlerMsg(Status.ERROR);
 				nic.printStackTrace();
 			}
-			catch(HttpErrorException e){
+			catch(HttpErrorException |ServiceRequestException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
 					sendHandlerMsg(Status.ERROR_AUTH_FAILED);
@@ -113,7 +114,7 @@ public class GetMoreMailsThread extends Thread implements Runnable, Constants{
 			}
 		}
 		else{
-			Log.e(TAG, "GetMoreMailsRunnable -> activity is null");
+			Log.e(LOG_TAG, "GetMoreMailsRunnable -> activity is null");
 		}
 	}	//end run()
 

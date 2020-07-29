@@ -13,14 +13,14 @@ public class CommonWebChromeClient extends WebChromeClient implements Constants{
 	
 	 @Override
      public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-         Log.d(TAG, message);
+         Log.d(LOG_TAG, message);
          result.confirm();
          return true;
      }
 	 
 	 @Override
      public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-         Log.e(TAG, "JS Line no:"+ consoleMessage.lineNumber() +" - " + consoleMessage.message() );
+         Log.e(LOG_TAG, "JS Line no:"+ consoleMessage.lineNumber() +" - " + consoleMessage.message() );
          return true;
         
      }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- General -->
     <PreferenceCategory android:title="@string/preference_general_title" >
@@ -39,7 +40,7 @@
             android:key="notification_type"
             android:title="@string/preferences_notification_type_title" />
 
-        <!-- Pull Frequency -->
+        <!-- Pull Frequency - Not visible-->
         <ListPreference
             android:defaultValue="900000"
             android:dependency="notification_enable"

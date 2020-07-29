@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
+import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 
@@ -54,7 +55,6 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		int totalCachedRecords ;
 
 		if (parent.getActivity() != null) {
@@ -68,7 +68,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
-					Log.d(TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
+					Log.d(LOG_TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);
 				}
 
 				//if the cache is present, then get the same number of rows from EWS as of the local no of rows
@@ -104,7 +104,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 				threadMsg(Status.ERROR);
 				nic.printStackTrace();
 			}
-			catch(HttpErrorException e){
+			catch(HttpErrorException | ServiceRequestException e){
 				if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
 					//unauthorised
 					threadMsg(Status.ERROR_AUTH_FAILED);
@@ -121,7 +121,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 			}
 		}
 		else{
-			Log.e(TAG, "GetNewMails -> activity is null");
+			Log.e(LOG_TAG, "GetNewMails -> activity is null");
 		}
 	}	//end run()
 

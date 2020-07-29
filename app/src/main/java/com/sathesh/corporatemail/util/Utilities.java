@@ -78,7 +78,6 @@ public class Utilities implements Constants {
 	 * @return
 	 */
 	public static String getHTMLImageUrl(String contentType , String imagePath) {
-		// TODO Auto-generated method stub
 		/*System.out.println( "MyUtilities imagepath" + imagePath);
 		String base64= getBase64DataUrl(contentType, imagePath);
 		Log.d(TAG, "MyUtilities base 64" + base64);
@@ -93,7 +92,6 @@ public class Utilities implements Constants {
 	 * @return
 	 */
 	public static String getBase64DataUrl(String contentType , String imagePath) {
-		// TODO Auto-generated method stub
 		byte[] a=convertImageToByteArray(contentType , imagePath);
 
 		return Base64.encodeToString(convertImageToByteArray(contentType , imagePath), Base64.DEFAULT);
@@ -201,12 +199,12 @@ public class Utilities implements Constants {
 		File dir = new File(Context.getFilesDir().getParent() + "/shared_prefs/");
 
 		if (filesToDel==null || filesToDel.length<1 ){
-			Log.d(TAG, "filesToDel " + filesToDel);
+			Log.d(LOG_TAG, "filesToDel " + filesToDel);
 			filesToDel = dir.list();
 		}
-		Log.d(TAG, "Files for deletion " );
+		Log.d(LOG_TAG, "Files for deletion " );
 		for(int i=0;i<filesToDel.length; i++){
-			Log.d(TAG, filesToDel[i]);
+			Log.d(LOG_TAG, filesToDel[i]);
 		}
 
 		for (int i = 0; i < filesToDel.length; i++) {
@@ -217,9 +215,9 @@ public class Utilities implements Constants {
 		try { Thread.sleep(1000); } catch (InterruptedException e) {}
 		for (int i = 0; i < filesToDel.length; i++) {
 			// delete the files
-			Log.d(TAG, "Deleting file " + dir + filesToDel[i]);
+			Log.d(LOG_TAG, "Deleting file " + dir + filesToDel[i]);
 			new File(dir, filesToDel[i]).delete();
-			Log.d(TAG, "Deleting file " + dir + filesToDel[i].replace(".xml", ".bak"));
+			Log.d(LOG_TAG, "Deleting file " + dir + filesToDel[i].replace(".xml", ".bak"));
 			//delete the back up files if exists
 			new File(dir, filesToDel[i].replace(".xml", ".bak")).delete();
 		}
@@ -238,11 +236,11 @@ public class Utilities implements Constants {
      * @param e
      */
     public static void generalCatchBlock( Exception e, String additionalMsg, Object thisClass){
-        Log.e(TAG, "Exception Occured ");
+        Log.e(LOG_TAG, "Exception Occured ");
         if(additionalMsg!=null && !additionalMsg.equals("")){
-            Log.e(TAG, additionalMsg);
+            Log.e(LOG_TAG, additionalMsg);
         }
-        Log.e(TAG, new StringBuffer()
+        Log.e(LOG_TAG, new StringBuffer()
                 .append(e.getClass().getName()).append(":").append(e.getMessage())
                 .append(" on ")
                 .append(thisClass.getClass().getName()).append(":").append(e.getStackTrace()[0].getLineNumber())
@@ -255,11 +253,11 @@ public class Utilities implements Constants {
      * @param e
      */
     public static void generalCatchBlock( Exception e, String additionalMsg){
-        Log.e(TAG, "Exception Occured ");
+        Log.e(LOG_TAG, "Exception Occured ");
         if(additionalMsg!=null && !additionalMsg.equals("")){
-            Log.e(TAG, additionalMsg);
+            Log.e(LOG_TAG, additionalMsg);
         }
-        Log.e(TAG, new StringBuffer()
+        Log.e(LOG_TAG, new StringBuffer()
                 .append(e.getClass().getName()).append(":").append(e.getMessage())
                 .toString());
         if(BuildConfig.DEBUG)

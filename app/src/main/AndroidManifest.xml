@@ -3,15 +3,14 @@
     package="com.sathesh.corporatemail"
     android:installLocation="auto"
     android:versionCode="19"
-    android:versionName="1.0" >
+    android:versionName="1.0.1" >
 
     <!-- Allow Internet Access to the application -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <uses-feature
         android:name="android.hardware.screen.portrait"
@@ -22,24 +21,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.MainTheme" >
-
-        <!--
-    <application
-    android:name="com.wipromail.sathesh.application.MyApplication"
-    android:icon="@drawable/ic_launcher"
-    android:label="@string/app_name"
-    android:theme="@style/customTheme" >
-        -->
-        <service android:name=".service.MailNotificationService" />
-
-        <receiver android:name=".broadcastreceiver.OnBoot" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".broadcastreceiver.MNSAlarmSetter" />
-
-        <service android:name=".intentservice.PollServerMNS" />
 
         <activity
             android:name=".activity.MainActivity"
