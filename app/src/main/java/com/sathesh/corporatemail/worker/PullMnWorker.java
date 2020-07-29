@@ -2,7 +2,6 @@ package com.sathesh.corporatemail.worker;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -53,8 +52,8 @@ public class PullMnWorker extends Worker implements Constants{
 	private MailFunctions mailFunctions = new MailFunctionsImpl();
 	private EmailMessage message;
 	private int thisnewMailCounter=0;	// this will reset for every poll
-	List<FolderId> folder  = new ArrayList<>();;
-	MediaPlayer pollSound;
+	List<FolderId> folder  = new ArrayList<>();
+	//MediaPlayer pollSound;
 
 	public PullMnWorker(
 			@NonNull Context context,
@@ -62,7 +61,7 @@ public class PullMnWorker extends Worker implements Constants{
 		super(context, params);
 		this.context = context;
 		folder.add(new FolderId(WellKnownFolderName.Inbox));
-		pollSound=MediaPlayer.create(context, R.raw.sound);
+		//pollSound=MediaPlayer.create(context, R.raw.sound);
 	}
 
 	/* this method will be invoked when the Alarm Manager interval time elapses. This is the entry point
@@ -74,7 +73,7 @@ public class PullMnWorker extends Worker implements Constants{
 		try{
 			cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
 			cachedMailBodyAdapter = new CachedMailBodyAdapter(context);
-			mNM  = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
+			mNM  = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 			service = EWSConnection.getServiceFromStoredCredentials(context);
 
@@ -109,7 +108,8 @@ public class PullMnWorker extends Worker implements Constants{
 			return handleGeneralException(e);
 		}finally {
 			Log.d(LOG_TAG_PullMnWorker, "PullMnWorker -> Exiting PullMnWorker");
-			pollSound.release();
+			//pollSound.release();
+
 		}
 	}
 
@@ -187,11 +187,11 @@ public class PullMnWorker extends Worker implements Constants{
 
 	/** Writes the message item to cache
 	 *
-	 * @param message
+	 * @param message the email msg obj
 	 */
 	private void writeToCache(EmailMessage message) {
 		AttachmentCollection attachmentCollection;
-		int totalInlineImgs =0;
+		int totalInlineImgs;
 
 		//CACHING MAIL HEADER
 		try {
