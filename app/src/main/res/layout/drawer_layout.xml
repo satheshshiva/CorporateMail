@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="320dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="left|start"
+    android:layout_gravity="start"
     android:background="@color/white">
 
     <include layout="@layout/drawer_item_header_image" />
 
     <!-- Main RecyclerView -->
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/drawerLayoutPage1">
         <!-- Drawer - Recycler View -->
         <androidx.recyclerview.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            />
+            android:scrollbars="vertical" />
     </FrameLayout>
 
     <!-- More Folders RecyclerView-->
