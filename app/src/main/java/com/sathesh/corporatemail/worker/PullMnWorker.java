@@ -51,7 +51,7 @@ public class PullMnWorker extends Worker implements Constants{
 	public static CachedMailBodyAdapter cachedMailBodyAdapter;
 	private MailFunctions mailFunctions = new MailFunctionsImpl();
 	private EmailMessage message;
-	private int thisnewMailCounter=0;	// this will reset for every poll
+	private static int thisnewMailCounter=0;	// this will reset for every poll
 	List<FolderId> folder  = new ArrayList<>();
 	//MediaPlayer pollSound;
 
@@ -143,7 +143,7 @@ public class PullMnWorker extends Worker implements Constants{
 				Log.i(LOG_TAG_PullMnWorker, "PullMnWorker -> New Mail received");
 
 				message = NetworkCall.bindEmailMessage(context, service, itemEvent);
-				thisnewMailCounter++;	// new mails in this poll
+				thisnewMailCounter++;	// used as the notification id
 				if(null!= message){
 					writeToCache(message);
 
