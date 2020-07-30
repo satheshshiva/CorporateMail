@@ -404,9 +404,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
             //if total cached records in the folder is more than 0 then show msg "Checking for new mails" otherwise "Update folder"
             totalCachedRecords = cacheMailHeaderAdapter.getRecordsCount(mailType, mailFolderId);
             if (totalCachedRecords > 0) {
-                textswitcher.setText(activity.getString(R.string.folder_updater_checking, getMailFolderDisplayName(mailType)).toString());
+                textswitcher.setText(activity.getString(R.string.folder_updater_checking));
             } else {
-                textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)).toString());
+                textswitcher.setText(activity.getString(R.string.folder_updater_updating, getMailFolderDisplayName(mailType)));
             }
             //text switcher - refreshing icon
             updateTextSwitcherIcons(View.VISIBLE, View.GONE, View.GONE, View.GONE, View.GONE);
@@ -444,8 +444,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         else if (totalUnread == 1) {
             //update text in text switcher. for inbox alone show as "new mail" for other folders show "unread"
             successMsg = (mailType == MailType.INBOX || mailType == MailType.INBOX_SUBFOLDER_WITH_ID) ?
-                    getString(R.string.new_mail_1, totalUnread) :
-                    getString(R.string.unread_item_1, totalUnread);
+                    getString(R.string.new_mail_1) :
+                    getString(R.string.unread_item_1);
             //update icon
             updateTextSwitcherIcons(View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
         }

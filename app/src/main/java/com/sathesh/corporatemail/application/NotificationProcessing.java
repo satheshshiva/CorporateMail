@@ -33,7 +33,7 @@ public class NotificationProcessing implements Constants{
 			// the NotificationChannel class is new and not in the support library
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 				// New mail notification channel
-				channel1 = new NotificationChannel(NOTIFICATION_CHANNEL_ID_NEW_MAIL,
+				channel1 = new NotificationChannel(NotificationConstants.channelIdNewEmail,
 						context.getString(R.string.notification_channel_new_mail_name),
 						NotificationManager.IMPORTANCE_HIGH);
 				channel1.setDescription(context.getString(R.string.notification_channel_new_mail_desc));
@@ -42,7 +42,7 @@ public class NotificationProcessing implements Constants{
 				notificationManager.createNotificationChannel(channel1);
 
 				// Important alerts notification channel
-				channel2 = new NotificationChannel(NOTIFICATION_CHANNEL_ID_LOGIN_ERROR,
+				channel2 = new NotificationChannel(NotificationConstants.channelIdImportantAlerts,
 						context.getString(R.string.notification_channel_alert_name),
 						NotificationManager.IMPORTANCE_HIGH);
 				channel1.enableLights(true);
@@ -61,20 +61,20 @@ public class NotificationProcessing implements Constants{
      */
     public static void showNewMailNotification(Context context, int totNewMailNotificationCounter, String... args) {
 
+    	int summaryId=0;	//For individual messages the counter should never be this.
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 		switch(args.length){
-		case 1:
-		{
-			title = args[0];
-			break;
-		}
-		case 2:
-		{
-			title = args[0];
-			message = args[1];
-			break;
-		}
-
+			case 1:
+			{
+				title = args[0];
+				break;
+			}
+			case 2:
+			{
+				title = args[0];
+				message = args[1];
+				break;
+			}
 		}
 
 		Intent pIntent=new Intent(context, MailListViewActivity.class);
@@ -87,19 +87,47 @@ public class NotificationProcessing implements Constants{
 
 		Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
 
-		Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_NEW_MAIL)
+		//Individual notification
+		Notification notification = new NotificationCompat.Builder(context, NotificationConstants.channelIdNewEmail)
 				.setSmallIcon(R.drawable.ic_notification)
 				.setLargeIcon(largeIcon)
 				.setContentTitle(title)
 				.setContentText(message)
-				.setColor(Color.parseColor("#2cb3f5"))
+				.setColor(Color.parseColor(NotificationConstants.notificationIconColorString))
 				.setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setAutoCancel(false)
 				.setContentIntent(pendingIntent)
+				.setGroup(NotificationConstants.groupNameMultiEmail)
 				.build();
 
-		notificationManager.notify(totNewMailNotificationCounter, notification);
+		//Group Notification - when more than 1 email
+		//style
+		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
+				.setSummaryText(context.getString(R.string.notification_group_summary));
 
+		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.N) {
+			// setting these values for the pre api 24 devices. For the current devices it already sets this value from the given notification.
+			// not needed to add this if condition, but adding it so that the following text will never be replaced with the extracted notification
+			inboxStyle.addLine(context.getString(R.string.notification_group_summary_pre_api24_more, title))
+					.setBigContentTitle(context.getString(R.string.notification_group_summary));
+		}
+
+		//actual group notification
+		Notification summaryNotification =
+				new NotificationCompat.Builder(context, NotificationConstants.channelIdNewEmail)
+						.setSmallIcon(R.drawable.ic_notification)
+						.setLargeIcon(largeIcon)
+						.setColor(Color.parseColor(NotificationConstants.notificationIconColorString))
+						//build summary info into InboxStyle template
+						.setStyle(inboxStyle)
+						//specify which group this notification belongs to
+						.setGroup(NotificationConstants.groupNameMultiEmail)
+						//set this notification as the summary for the group
+						.setGroupSummary(true)
+						.setContentIntent(pendingIntent)
+						.build();
+		notificationManager.notify(summaryId, summaryNotification);
+		notificationManager.notify(totNewMailNotificationCounter, notification);
 	}
 
 
@@ -118,16 +146,16 @@ public class NotificationProcessing implements Constants{
 		notificationManager.cancelAll();
 		// Set the info for the views that show in the notification panel.
 		Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
-		Notification notification = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_LOGIN_ERROR )
+		Notification notification = new NotificationCompat.Builder(context, NotificationConstants.channelIdImportantAlerts )
 				.setAutoCancel(false)
 				.setContentTitle(context.getString(R.string.mns_service_invalidUser_title))
 				.setContentText(context.getString(R.string.mns_service_invalidUser_message))
 				.setSmallIcon(R.drawable.ic_notification)
 				.setLargeIcon(largeIcon)
-				.setColor(Color.parseColor("#FF0000"))
+				.setColor(Color.parseColor(NotificationConstants.notificationAlertIconColorString))
 				.setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setContentIntent(pendingIntent)
-				.setNumber(100)
+				.setNumber(100)	//??
 				.build();
 
 
