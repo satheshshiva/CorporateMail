@@ -81,7 +81,7 @@ public class NotificationProcessing implements Constants{
 		pIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		pIntent.putExtra(MailListViewActivity.MAIL_TYPE_EXTRA, MailType.INBOX);
         pIntent.putExtra(MailListViewActivity.FOLDER_NAME_EXTRA, WellKnownFolderName.Inbox.toString());
-		// The PendingIntent to launch our activity if the user selects this notifi cation
+		// The PendingIntent to launch our activity if the user selects this notification
 		pendingIntent = PendingIntent.getActivity(context, 0,
 				pIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -152,10 +152,10 @@ public class NotificationProcessing implements Constants{
 				.setContentText(context.getString(R.string.mns_service_invalidUser_message))
 				.setSmallIcon(R.drawable.ic_notification)
 				.setLargeIcon(largeIcon)
-				.setColor(Color.parseColor("#FF0000"))
+				.setColor(Color.parseColor(NotificationConstants.notificationAlertIconColorString))
 				.setPriority(NotificationCompat.PRIORITY_HIGH)
 				.setContentIntent(pendingIntent)
-				.setNumber(100)
+				.setNumber(100)	//??
 				.build();
 
 

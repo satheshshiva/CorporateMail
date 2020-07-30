@@ -204,6 +204,7 @@ public interface Constants {
 		String channelIdImportantAlerts= "mn_channel_02";
 		String groupNameMultiEmail = "NewEmailsGroup";
 		String notificationIconColorString = "#2cb3f5";	//the color string shown in the small notification icon
+		String notificationAlertIconColorString = "#FF0000";	//the color string shown in the small notification icon - during important alerts like expired pwd
 	}
 
 	/*--- Rate App  ---*/
