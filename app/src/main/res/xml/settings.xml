@@ -48,6 +48,13 @@
             android:entryValues="@array/preferences_pull_notification_frequency_values"
             android:key="notification_pull_frequency"
             android:title="@string/notification_pull_frequency" />
+
+        <!-- Notification - advanced settings -->
+        <Preference
+            android:key="notification_advanced"
+            android:title="@string/preference_notification_advanced_title"
+            android:summary="@string/preference_notification_advanced_summary"/>
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_account_title" >
         <Preference

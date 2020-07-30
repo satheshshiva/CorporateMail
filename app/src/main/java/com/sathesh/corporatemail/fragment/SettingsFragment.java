@@ -2,7 +2,10 @@ package com.sathesh.corporatemail.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.preference.CheckBoxPreference;
@@ -33,6 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
     public final static String KEY_COMPOSE_SIGNATURE_ENABLE="compose_signature_enable";
     public final static String KEY_NOTIFICATION_ENABLE="notification_enable";
     public final static String KEY_NOTIFICATION_TYPE="notification_type";
+    public final static String KEY_NOTIFICATION_ADV="notification_advanced";
     public final static String KEY_PULL_FREQUENCY="notification_pull_frequency";
     private final static String KEY_CHANGE_PASSWORD="change_password";
     private final static String KEY_CLEAR_CACHE="clear_cache";
@@ -43,11 +47,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
 
     private EditTextPreference webMailServer;
     private CheckBoxPreference notificationEnable,composeSignatureEnable;
-    private Preference changePassword, signOut, clearCache;
+    private Preference changePassword, signOut, clearCache, notificationAdv;
     private ListPreference subscrpyionType;
     @Deprecated
     private ListPreference pullDuration;
-    private Context context ;
 
     private GeneralPreferenceAdapter sharedPref = new GeneralPreferenceAdapter();
 
@@ -75,7 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
         super.onCreate(savedInstanceState);
         activity =   (MyActivity)getActivity();
         activityDataPasser =   (SettingsFragment.ActivityDataPasser)getActivity();
-        context =  getActivity();
+        Context context = getActivity();
 
         webMailServer=getPreferenceScreen().findPreference(
                 KEY_WEBMAIL_SERVER);
@@ -85,6 +88,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
                 KEY_NOTIFICATION_ENABLE);
         subscrpyionType=(ListPreference)getPreferenceScreen().findPreference(
                 KEY_NOTIFICATION_TYPE);
+        notificationAdv = (Preference)getPreferenceScreen().findPreference(
+                KEY_NOTIFICATION_ADV);
         pullDuration=(ListPreference)getPreferenceScreen().findPreference(
                 KEY_PULL_FREQUENCY);
         pullDuration.setVisible(false);
@@ -107,7 +112,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.mainpreferences, rootKey);
+        setPreferencesFromResource(R.xml.settings, rootKey);
     }
 
     @Override
@@ -196,6 +201,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
 
         notificationEnable.setOnPreferenceChangeListener((p,value) -> {
             updateNotificationEnablePrefernceSummary(context, Boolean.parseBoolean(value.toString()));
+            return true;
+        });
+
+        notificationAdv.setOnPreferenceClickListener(preference -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationConstants.channelIdNewEmail);
+                startActivity(intent);
+            }else{
+                Notifications.showToast(context, context.getString(R.string.api_version_low));
+            }
             return true;
         });
     }

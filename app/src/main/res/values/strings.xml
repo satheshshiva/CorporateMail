@@ -6,6 +6,9 @@
     <string name="app_version">1.0.1</string>
 
     <!-- Login Page -->
+    <string name="api_version_low">You are using an older version of Android</string>
+
+    <!-- Login Page -->
     <string name="login_logo_bigText">Corporate Mail</string>
     <string name="title_activity_main">Corp. Mail</string>
 
@@ -182,6 +185,8 @@
     <string name="preference_notification_enable_ON_summary">Notifies about new email</string>
     <string name="preference_notification_enable_OFF_summary">Doesn\'t notify incoming emails</string>
     <string name="preference_notification_type_summary">Only Pull subscription is supported at this time</string>
+    <string name="preference_notification_advanced_title">Advanced</string>
+    <string name="preference_notification_advanced_summary">Notification sound, vibration, etc.,</string>
     <string name="preference_pull_ferequency_30s_summary">Polls server every 30 seconds. Longer the interval, better the battery life. </string>
     <string name="preference_pull_ferequency_15m_summary">Polls server every 15 mins.</string>
     <string name="preference_pull_ferequency_1h_summary">Polls server every hour. </string>
