@@ -1,6 +1,5 @@
 package com.sathesh.corporatemail.worker;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.util.Log;
 
@@ -46,12 +45,11 @@ public class PullMnWorker extends Worker implements Constants{
 	private Context context;
 
 
-	private NotificationManager mNM ;
 	public static CachedMailHeaderAdapter cachedMailHeaderAdapter;
 	public static CachedMailBodyAdapter cachedMailBodyAdapter;
 	private MailFunctions mailFunctions = new MailFunctionsImpl();
 	private EmailMessage message;
-	private static int thisnewMailCounter=0;	// this will reset for every poll
+	private static int newMailNotificationId =1;	//0 is reserved for group summary notification
 	List<FolderId> folder  = new ArrayList<>();
 	//MediaPlayer pollSound;
 
@@ -73,7 +71,6 @@ public class PullMnWorker extends Worker implements Constants{
 		try{
 			cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
 			cachedMailBodyAdapter = new CachedMailBodyAdapter(context);
-			mNM  = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 			service = EWSConnection.getServiceFromStoredCredentials(context);
 
@@ -143,7 +140,7 @@ public class PullMnWorker extends Worker implements Constants{
 				Log.i(LOG_TAG_PullMnWorker, "PullMnWorker -> New Mail received");
 
 				message = NetworkCall.bindEmailMessage(context, service, itemEvent);
-				thisnewMailCounter++;	// used as the notification id
+				newMailNotificationId++;	// used as the notification id
 				if(null!= message){
 					writeToCache(message);
 
@@ -182,7 +179,7 @@ public class PullMnWorker extends Worker implements Constants{
 	}
 
 	private void showNewMailNotification(String... args) {
-		NotificationProcessing.showNewMailNotification(context, thisnewMailCounter, args);
+		NotificationProcessing.showNewMailNotification(context, newMailNotificationId, args);
 	}
 
 	/** Writes the message item to cache
