@@ -374,7 +374,7 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     }
 
     @Override
-    //loads the AboutFragment inside the MailListViewActivity
+    //loads the Settings inside the MailListViewActivity
     public void loadSettingsFragment() {
         //using fragment transaction, replace the fragment
         FragmentManager fm = getSupportFragmentManager();
