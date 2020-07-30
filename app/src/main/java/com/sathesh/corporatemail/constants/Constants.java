@@ -196,11 +196,15 @@ public interface Constants {
 	boolean IS_PASSWORD_ENCRYPTION_ENABLED = true;
 
 	/* -------------------------------------------------------------------------------------
-	----------------------------------  Notification Channel ----------------------------
+	----------------------------------  Notifications ----------------------------
 	--------------------------------------------------------------------------------------*/
 
-	String NOTIFICATION_CHANNEL_ID_NEW_MAIL = "mn_channel_01";
-	String NOTIFICATION_CHANNEL_ID_LOGIN_ERROR = "mn_channel_02";
+	interface NotificationConstants {
+		String channelIdNewEmail = "mn_channel_01";
+		String channelIdImportantAlerts= "mn_channel_02";
+		String groupNameMultiEmail = "NewEmailsGroup";
+		String notificationIconColorString = "#2cb3f5";	//the color string shown in the small notification icon
+	}
 
 	/*--- Rate App  ---*/
 	int RATE_APP_DIALOG_OPEN_MAIL_FREQUENCY=20;	//open the rate app dialog for every 20 mails opened
