@@ -36,12 +36,12 @@
     <string name="mailListView_1_year">Last Year</string>
     <string name="mailListView_x_years">%s Years</string>
     <string name="new_mail_1">1 New Mail</string>
-    <string name="new_mail_x">%s New Mails</string>
+    <string name="new_mail_x">%d New Mails</string>
     <string name="unread_item_1">1 Unread Item</string>
-    <string name="unread_item_x">%s Unread Items</string>
+    <string name="unread_item_x">%d Unread Items</string>
     <string name="no_new_mail">No New Mail</string>
     <string name="no_mail">No Mail</string>
-    <string name="folder_updater_checking">Checking for new mails</string>
+    <string name="folder_updater_checking">Checking for new mail</string>
     <string name="folder_updater_success">Done</string>
     <string name="folder_updater_error">Update failed</string>
     <string name="folder_auth_error">Authentication failed</string>
@@ -276,7 +276,7 @@
     <string name="actionMode_mark_unflagMail">Unflag</string>
 
     <!-- Undo Bar -->
-    <string name="undoBar_deletedMails">%s item(s) deleted</string>
+    <string name="undoBar_deletedMails">%d item(s) deleted</string>
     <string name="undoBar_undo_lbl">Undo</string>
 
     <!-- Navigation Drawer -->
@@ -302,6 +302,7 @@
     <string name="notification_channel_new_mail_desc">Notifies new email</string>
     <string name="notification_channel_alert_name">Important alerts</string>
     <string name="notification_channel_alert_desc">Notifies important alerts like wrong password, etc.,</string>
-
+    <string name="notification_group_summary">New Messages</string>
+    <string name="notification_group_summary_pre_api24_more">From %s &amp; more..</string>
 
 </resources>
