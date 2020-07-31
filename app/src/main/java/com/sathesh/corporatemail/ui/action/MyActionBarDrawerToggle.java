@@ -3,10 +3,11 @@ package com.sathesh.corporatemail.ui.action;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
@@ -110,8 +111,6 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
         if(mailListViewFragment!=null){
             mailListViewFragment.getFab().show();
         }
-
-        activityDataPasser.closeDrawerLayoutPage2();
 
     }
 
