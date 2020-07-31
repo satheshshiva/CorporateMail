@@ -4,7 +4,7 @@
     android:layout_height="48dp"
     android:orientation="horizontal"
     android:clickable="true"
-    android:background="?attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
     android:focusable="true">
 
     <view
