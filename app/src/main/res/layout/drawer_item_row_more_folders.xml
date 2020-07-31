@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:clickable="true"
     android:background="?attr/selectableItemBackground"
-    >
+    android:focusable="true">
 
     <view
         class="com.sathesh.corporatemail.ui.customwidgets.FontIcon$IconView"
@@ -16,7 +16,7 @@
         android:gravity="center_vertical"
         android:text="icon"
         android:layout_marginLeft="16dp"
-        />
+        android:layout_marginStart="16dp" />
 
     <!--<ImageView
         android:id="@+id/imageView1"
@@ -29,12 +29,15 @@
     <TextView
         android:id="@+id/mailFolderName"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/fontIconViewFave"
+        android:layout_toRightOf="@+id/fontIconView"
         android:gravity="center_vertical"
-        android:layout_marginLeft="72dp"
-        android:text="folder name"
         android:textSize="14sp"
-        />
+        android:layout_toStartOf="@+id/fontIconViewFave"
+        android:layout_toEndOf="@+id/fontIconView"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp" />
 
     <!-- Fave icon -->
     <view
@@ -49,5 +52,7 @@
         android:gravity="center_vertical"
         android:text="fave"
         android:layout_marginLeft="16dp"
-        />
+        android:layout_alignParentEnd="true"
+        android:paddingEnd="23sp"
+        android:layout_marginStart="16dp" />
 </RelativeLayout>
