@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="275dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="@color/white">
@@ -58,7 +58,6 @@
         </LinearLayout>
         <!-- More Folders RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/moreFoldersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,9 +69,10 @@
             android:onClick="emptyClick"
             android:id="@+id/emptyRecyclerViewMsg"
             android:visibility="gone"
-            android:paddingLeft="3sp"
+            android:paddingStart="3sp"
             android:paddingTop="3sp"
-            android:text="@string/drawer_menu_more_folders_empty"/>
+            android:text="@string/drawer_menu_more_folders_empty"
+            android:paddingLeft="3sp" />
     </LinearLayout>
 
 </LinearLayout>
