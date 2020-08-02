@@ -1,7 +1,5 @@
 package com.sathesh.corporatemail.ews;
 
-import com.sathesh.corporatemail.util.Utilities;
-
 import java.text.ParseException;
 import java.util.Date;
 
@@ -69,7 +67,7 @@ public class MailFunctionsImpl implements MailFunctions{
 	@Override
 	public Date getDateTimeReceived(Item item) throws ServiceLocalException, ParseException {
 		//return the local time
-		return Utilities.convertUTCtoLocal(item.getDateTimeReceived());
+		return item.getDateTimeReceived();
 	}
 
 	@Override
