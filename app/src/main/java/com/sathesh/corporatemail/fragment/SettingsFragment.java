@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
@@ -46,7 +46,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
     public final static String COMPOSE_SIGNATURE="compose_signature";
 
     private EditTextPreference webMailServer;
-    private CheckBoxPreference notificationEnable,composeSignatureEnable;
+    private SwitchPreferenceCompat notificationEnable,composeSignatureEnable;
     private Preference changePassword, signOut, clearCache, notificationAdv;
     private ListPreference subscrpyionType;
     @Deprecated
@@ -82,9 +82,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
 
         webMailServer=getPreferenceScreen().findPreference(
                 KEY_WEBMAIL_SERVER);
-        composeSignatureEnable=(CheckBoxPreference)getPreferenceScreen().findPreference(
+        composeSignatureEnable=(SwitchPreferenceCompat) getPreferenceScreen().findPreference(
                 KEY_COMPOSE_SIGNATURE_ENABLE);
-        notificationEnable=(CheckBoxPreference)getPreferenceScreen().findPreference(
+        notificationEnable=(SwitchPreferenceCompat)getPreferenceScreen().findPreference(
                 KEY_NOTIFICATION_ENABLE);
         subscrpyionType=(ListPreference)getPreferenceScreen().findPreference(
                 KEY_NOTIFICATION_TYPE);
