@@ -16,11 +16,8 @@ import com.sathesh.corporatemail.security.EncryptionDecryption;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * @author Sathesh
@@ -31,17 +28,6 @@ import java.util.TimeZone;
  *
  */
 public class Utilities implements Constants {
-
-	private static String tempDateStr="";
-	
-
-	public static Date convertUTCtoLocal(Date gmt) throws ParseException{
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		tempDateStr = sdf.format(gmt);
-		gmt=null;	//since we not going to use this anymore.
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return sdf.parse(tempDateStr);
-	}
 
 	public static String encrypt(String cleartext) throws Exception{
 		return EncryptionDecryption.encrypt(cleartext);

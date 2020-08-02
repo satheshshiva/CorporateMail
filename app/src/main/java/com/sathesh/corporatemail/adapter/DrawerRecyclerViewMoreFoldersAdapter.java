@@ -2,11 +2,12 @@ package com.sathesh.corporatemail.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
@@ -135,13 +136,10 @@ public class DrawerRecyclerViewMoreFoldersAdapter extends RecyclerView.Adapter<D
                             R.string.fontIcon_drawer_fave_off);
 
                     //setting onClick listener for the row
-                    holder.view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //here you inform view that something was change - view will be invalidated
-                            notifyDataSetChanged();
-                            listener.onDrawerLayoutRecyclerView2Click(view, position, moreFolderVO);
-                        }
+                    holder.view.setOnClickListener(view -> {
+                        //here you inform view that something was change - view will be invalidated
+                        notifyDataSetChanged();
+                        listener.onDrawerLayoutRecyclerView2Click(view, position, moreFolderVO);
                     });
 
                     //setting Long Item Click listener for the row

@@ -3,10 +3,7 @@ package com.sathesh.corporatemail.ui.customwidgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.text.Spannable;
 import android.util.AttributeSet;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.constants.Constants;
@@ -91,7 +88,7 @@ public class FontIcon implements Constants{
         return mFont;
     }
 
-    public static class IconView extends TextView{
+    public static class IconView extends androidx.appcompat.widget.AppCompatTextView{
         public IconView(Context context, AttributeSet attrs) {
             super(context, attrs);
            initializeAttributes(context, attrs);
@@ -100,10 +97,7 @@ public class FontIcon implements Constants{
         }
     }
 
-    public static class ButtonView extends Button {
-        CharSequence str="";
-        Typeface typeface;
-        Spannable span;
+    public static class ButtonView extends androidx.appcompat.widget.AppCompatButton {
 
         public ButtonView(Context context, AttributeSet attrs) {
             super(context, attrs);
