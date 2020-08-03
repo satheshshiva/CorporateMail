@@ -3,11 +3,11 @@
     <string-array name="preferences_notification_type_text">
         <item name="pull">Pull</item>
     </string-array>
-    
+
     <string-array name="preferences_notification_type_values">
         <item name="pull">pull</item>
     </string-array>
-    
+
     <!-- Pull Notification Frequency-->
     <string-array name="preferences_pull_notification_frequency_text">
         <item name="30000">Every 30 seconds(not recommended)</item>
@@ -16,15 +16,15 @@
         <item name="14400000">Every 4 hours</item>
         <item name="43200000">Every 12 hours</item>
     </string-array>
-    
+
     <string-array name="preferences_pull_notification_frequency_values">
-         <item name="30000">30000</item>
+        <item name="30000">30000</item>
         <item name="900000">900000</item>
         <item name="3600000">3600000</item>
         <item name="14400000">14400000</item>
         <item name="43200000">43200000</item>
     </string-array>
-    
+
     <!-- Compose Email Link-->
     <string-array name="compose_email_link">
         <item name="viewContactDetails">View Contact Details</item>

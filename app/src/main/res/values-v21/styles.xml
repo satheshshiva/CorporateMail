@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Root style element -->
-    <style name="Style"></style>
+    <style name="Style">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
 
     <style name="Style.Button" >
         <item name="android:textColor">@color/white</item>
@@ -13,7 +14,4 @@
         <!-- for v21 apply the ripple effect -->
         <item name="android:background">@drawable/button_drawable_v21</item>
     </style>
-
-
-
 </resources>
