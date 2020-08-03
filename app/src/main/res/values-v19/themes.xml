@@ -3,7 +3,7 @@
     <!-- The main theme for the app.
     Parent: Theme.AppCompat.Light -->
 
-    <style name="Theme.MainTheme" parent="Theme.MainTheme.Parent">
+    <style name="Theme.MainTheme" parent="Theme.MainTheme.NoActionBar">
 
         <item name="android:windowTranslucentStatus">true</item>
 

@@ -14,7 +14,7 @@
 
     <!-- Compose -->
     <PreferenceCategory android:title="@string/preferences_compose_title" >
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="compose_signature_enable"
             android:title="@string/preferences_compose_signature_enable_title" />
@@ -24,7 +24,7 @@
     <PreferenceCategory android:title="@string/preference_title_notification" >
 
         <!-- Notification Enable -->
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="notification_enable"
             android:summary="@string/preference_notification_enable_ON_summary"
