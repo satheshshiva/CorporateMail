@@ -1,6 +1,9 @@
 package com.sathesh.corporatemail;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
@@ -8,11 +11,14 @@ import androidx.appcompat.app.ActionBar;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.fragment.SettingsFragment;
 
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
+
 public class SettingsActivity extends MyActivity implements SettingsFragment.ActivityDataPasser{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setAnimation();
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -22,6 +28,7 @@ public class SettingsActivity extends MyActivity implements SettingsFragment.Act
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
     }
 
     @Override
@@ -34,5 +41,14 @@ public class SettingsActivity extends MyActivity implements SettingsFragment.Act
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setAnimation() {
+        if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+            Slide slide = new Slide();
+            slide.setSlideEdge(Gravity.RIGHT);
+            getWindow().setExitTransition(slide);
+            getWindow().setEnterTransition(slide);
+        }
     }
 }
