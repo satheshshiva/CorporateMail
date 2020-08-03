@@ -1,6 +1,5 @@
 package com.sathesh.corporatemail.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -116,8 +115,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
             mListener = (ActivityDataPasser) activity;
         } catch (ClassCastException e) {
@@ -136,18 +135,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Consta
     @Override
     public void onResume() {
         super.onResume();
-
-        try {
-            activityDataPasser.getmDrawerToggle().syncState();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     /** Interface - Fragment Interaction Listener
      *
      */
     public interface ActivityDataPasser {
-        androidx.appcompat.app.ActionBarDrawerToggle getmDrawerToggle();
     }
 
 
