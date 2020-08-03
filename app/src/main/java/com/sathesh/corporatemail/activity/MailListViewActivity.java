@@ -36,7 +36,6 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.AboutFragment;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
 import com.sathesh.corporatemail.fragment.SearchContactFragment;
-import com.sathesh.corporatemail.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.FolderVO;
 import com.sathesh.corporatemail.tools.CacheClear;
 import com.sathesh.corporatemail.ui.action.MyActionBarDrawerToggle;
@@ -147,9 +146,6 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             }
 
             // Initializing the Drawer Layout
-            //Navigation Drawer
-            DrawerMenuDAO drawerMenuDAO = new DrawerMenuDAO(context);
-
             //Navigation Drawer - main recycler view
             mDrawerListRecyclerView1 = (RecyclerView) activity.findViewById(R.id.mainRecyclerView);
             mDrawerListRecyclerView1.setScrollContainer(true);
