@@ -1,8 +1,10 @@
 package com.sathesh.corporatemail.activity;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -374,7 +376,13 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     //loads the Settings inside the MailListViewActivity
     public void loadSettingsFragment() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Apply activity transition
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        }else{
+            startActivity(intent);
+
+        }
     }
 
     @Override
