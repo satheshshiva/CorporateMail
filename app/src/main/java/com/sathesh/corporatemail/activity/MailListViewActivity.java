@@ -1,6 +1,7 @@
 package com.sathesh.corporatemail.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
+import com.sathesh.corporatemail.SettingsActivity;
 import com.sathesh.corporatemail.activity.datapasser.MailListActivityDataPasser;
 import com.sathesh.corporatemail.adapter.DrawerRecyclerViewAdapter;
 import com.sathesh.corporatemail.adapter.DrawerRecyclerViewMoreFoldersAdapter;
@@ -34,7 +36,6 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.AboutFragment;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
 import com.sathesh.corporatemail.fragment.SearchContactFragment;
-import com.sathesh.corporatemail.fragment.SettingsFragment;
 import com.sathesh.corporatemail.sqlite.db.cache.dao.DrawerMenuDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.FolderVO;
 import com.sathesh.corporatemail.tools.CacheClear;
@@ -51,7 +52,7 @@ import java.util.List;
  * @author sathesh
  *
  */
-public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser, SearchContactFragment.ActivityDataPasser, SettingsFragment.ActivityDataPasser{
+public class MailListViewActivity extends MyActivity implements Constants, MailListActivityDataPasser ,MailListViewFragment.ActivityDataPasser, AboutFragment.ActivityDataPasser, SearchContactFragment.ActivityDataPasser{
 
     public final static String MAIL_TYPE_EXTRA = "MAIL_TYPE_EXTRA";
     public final static String FOLDER_ID_EXTRA = "FOLDER_ID_EXTRA";
@@ -376,14 +377,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     @Override
     //loads the Settings inside the MailListViewActivity
     public void loadSettingsFragment() {
-        //using fragment transaction, replace the fragment
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        SettingsFragment fragment = SettingsFragment.newInstance();
-        ft.replace(R.id.fragmentContainer, fragment);
-        ft.commit();
-        currentlyLoadedFragment = fragment;
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     @Override
