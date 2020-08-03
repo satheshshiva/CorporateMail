@@ -46,7 +46,7 @@ public class SettingsActivity extends MyActivity implements SettingsFragment.Act
     public void setAnimation() {
         if (Build.VERSION.SDK_INT >= LOLLIPOP) {
             Slide slide = new Slide();
-            slide.setSlideEdge(Gravity.RIGHT);
+            slide.setSlideEdge(Gravity.END);
             getWindow().setExitTransition(slide);
             getWindow().setEnterTransition(slide);
         }
