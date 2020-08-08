@@ -1,42 +1,56 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
     <!-- layout to show image downloading progress -->
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/actionbar_toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/LightGrey"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/view_mail_webview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actionbar_toolbar">
 
         <!-- From -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/ViewMailFromLblId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_from_lbl"
-                android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ViewMailFromId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="14sp"
                 android:paddingLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- To -->
@@ -44,25 +58,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/ViewMailToLblId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_to_lbl"
-                android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ViewMailToId"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:paddingBottom="15dp"
                 android:paddingLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:paddingBottom="15dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/ViewMailToShowMoreBtn"
@@ -82,26 +96,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/ViewMailCCLblId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_cc_lbl"
-                android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ViewMailCCId"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
                 android:paddingBottom="12dp"
                 android:text=""
-                android:textSize="14sp"
-                android:paddingLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/ViewMailCCShowMoreBtn"
@@ -118,25 +132,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/ViewMailDateLblId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/viewmail_date_lbl"
-                 android:textSize="16sp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ViewMailDateId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
                 android:text=""
-                android:textSize="14sp"
-                    android:paddingLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
     <!-- Message Body WebView -->
@@ -144,23 +158,28 @@
 
     <!-- Body and the downloading progress bars -->
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
 
-          <WebView
-            android:id="@+id/view_mail_webview"
-            android:layout_alignParentTop="true"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-             />
-		
-          <!--  layout to show image downloading progress -->
-          <include layout="@layout/include_downloading_notification"/>
-       
-        <!-- Body -->
+    <WebView
+        android:id="@+id/view_mail_webview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-      
-    </RelativeLayout>
+    <!--  layout to show image downloading progress -->
+    <include
+        android:id="@+id/include2"
+        layout="@layout/include_downloading_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-</LinearLayout>
+    <!-- Body -->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,11 +8,11 @@
     android:layout_width="match_parent"
     android:minHeight="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
+    android:fitsSystemWindows="true"
     android:elevation="10dp"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    android:paddingTop="@dimen/tool_bar_top_padding"
-    >
+   >
 
         <ProgressBar
             android:id="@+id/indeterminate_progress"
