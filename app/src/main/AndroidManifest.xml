@@ -74,7 +74,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.MainTheme.DarkActionBar"/>
+            android:theme="@style/ParentTheme.DarkActionBar" />
     </application>
 
 </manifest>
