@@ -63,12 +63,13 @@ public interface Constants {
 
 	//inbox date formats
 	String INBOX_TEXT_DATE_TIME = "h:mm a";
-	String INBOX_TEXT_DATE = "d-MMM-yy";
+	String INBOX_TEXT_DATE_THIS_YEAR = "d-MMM";
+	String INBOX_TEXT_DATE_NOT_THIS_YEAR = "d-MMM-yyyy";
 
 	//inbox date headerformats
 	String INBOX_TEXT_DATE_DAY_HEADER = "EEEE";
 	String INBOX_TEXT_MONTH_HEADER = "MMMM";
-	String INBOX_TEXT_DATE_HEADER = "d-MMM-yy";
+	String INBOX_TEXT_DATE_HEADER = "d-MMM-yyyy";
 
 	//Update MailFunctions
 	//the autosync will fetch this no. changes at a time
@@ -136,7 +137,6 @@ public interface Constants {
 	String LOGGING_IN_PROG3_TEXT = "Getting Folder List";
 
 	String VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT="";
-	String VIEW_MAIL_WEBVIEW_NO_SUBJECT="(no subject)";
 
 	//Text to be displayed in buttons
 	String ERROR_ALERT_DISMISS_TEXT = "Dismiss";

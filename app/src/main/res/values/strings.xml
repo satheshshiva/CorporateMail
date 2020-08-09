@@ -95,10 +95,6 @@
     <string name="viewmail_to_lbl">To:</string>
     <string name="viewmail_cc_lbl">CC:</string>
     <string name="viewmail_date_lbl">Date:</string>
-    <string name="viewmail_showmore_lbl">Show more</string>
-    <string name="viewmail_showless_lbl">Show less</string>
-    <string name="viewmail_showmore_cc_lbl">Show more</string>
-    <string name="viewmail_showless_cc_lbl">Show less</string>
     <string name="viewmail_downloading_imgs">Downloading %1$d of %2$d image(s)</string>
     <string name="viewmail_downloading_img">Downloading %1$d of %2$d image(s)</string>
     <string name="viewmail_mail_deleted">Message Deleted</string>
