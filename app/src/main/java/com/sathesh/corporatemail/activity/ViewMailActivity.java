@@ -6,9 +6,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 
 import com.sathesh.corporatemail.R;
+import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
@@ -36,6 +38,8 @@ public class ViewMailActivity extends MyActivity implements Constants{
         viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
                 .findFragmentById(R.id.viewMailFragment);
         mailHeaderAdapter = new CachedMailHeaderAdapter(this);
+        MailApplication.toolbarInitialize(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

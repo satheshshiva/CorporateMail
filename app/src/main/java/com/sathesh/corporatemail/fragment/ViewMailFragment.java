@@ -3,6 +3,7 @@
  */
 package com.sathesh.corporatemail.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -105,6 +106,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,8 +122,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         if(cachedMailHeaderAdapter==null){
             cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
-        //Initialize toolbar
-        MailApplication.toolbarInitialize(activity, view);
 
         progressStatusDispBar = new ProgressDisplayNotificationBar(activity,view);
         //TODO see whether this works fine
@@ -156,7 +156,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //webSettings.setLoadWithOverviewMode(true);
         //webSettings.setUseWideViewPort(true);
 
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //  webview.loadDataWithBaseURL("fake:///ghj/", "", "text/html", "utf-8", null);
 
