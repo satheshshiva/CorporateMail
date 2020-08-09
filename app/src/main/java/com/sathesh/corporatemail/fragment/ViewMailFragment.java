@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -61,14 +59,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public MyActivity activity ;
     private Context context ;
 
-    private TextView fromIdView ;
-    private TextView toIdView ;
-    private TextView ccIdView;
-    private TextView dateIdView;
-    private Button toShowMoreBtn;
-    private Button cCShowMoreBtn;
+    private TextView subjectIdView, collapsedFromIdView,expandedFromIdView, toIdView, ccIdView, expandedDateIdView, collapsedDateIdView, ccLbl ;
     private StandardWebView standardWebView ;
-    private LinearLayout cc_LinearLayout;
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
     private EmailMessage message;
@@ -139,13 +131,17 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getViewMailTitleBarLayout());
         standardWebView= new StandardWebView();
 
-        fromIdView = (TextView)view.findViewById(R.id.ViewMailFromId);
-        toIdView = (TextView)view.findViewById(R.id.ViewMailToId);
-        ccIdView = (TextView)view.findViewById(R.id.ViewMailCCId);
-        dateIdView = (TextView)view.findViewById(R.id.ViewMailDateId);
+        subjectIdView = (TextView)view.findViewById(R.id.subject);
+        collapsedFromIdView = (TextView)view.findViewById(R.id.collapsedFrom);
+        expandedFromIdView = (TextView)view.findViewById(R.id.expandedFrom);
+        toIdView = (TextView)view.findViewById(R.id.expandedTo);
+        ccIdView = (TextView)view.findViewById(R.id.expandedCc);
+        ccLbl = (TextView)view.findViewById(R.id.expandedCcLbl);
+        expandedDateIdView = (TextView)view.findViewById(R.id.expandedDate);
+        collapsedDateIdView = (TextView)view.findViewById(R.id.collapsedDate);
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
 
-        webview = (WebView)view.findViewById(R.id.view_mail_webview);
+        webview = (WebView)view.findViewById(R.id.webview);
 
         WebSettings webSettings = webview.getSettings();
         webSettings.setAllowFileAccess(true);
@@ -154,6 +150,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         // The Android system will hanldle image caches for the webview
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
         //webSettings.setLoadWithOverviewMode(true);
         //webSettings.setUseWideViewPort(true);
 
@@ -171,13 +168,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //			}
         //		});
 
-        toShowMoreBtn =(Button)view.findViewById(R.id.ViewMailToShowMoreBtn);
-        cCShowMoreBtn =(Button)view.findViewById(R.id.ViewMailCCShowMoreBtn);
-
-        toShowMoreBtn.setOnClickListener(viewMailListener);
-        cCShowMoreBtn.setOnClickListener(viewMailListener);
-
-        cc_LinearLayout =(LinearLayout)view.findViewById(R.id.CC_ViewMail_LinearLayout);
         //load email
         mailHeader = (CachedMailHeaderVO) activity.getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER);
 
@@ -508,59 +498,47 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
             //subject
             if(subject!=null && !(subject.equals(""))){
-                //activity.setTitle(subject);
-                displaySubject(subject);
+                subjectIdView.setText(subject);
             }
             else{
-                //activity.setTitle(VIEW_MAIL_WEBVIEW_NO_SUBJECT);
-                displaySubject(VIEW_MAIL_WEBVIEW_NO_SUBJECT);
+                subjectIdView.setText("");
             }
             // From
-            buildHeaderText(fromIdView, fromReceivers, null);
+            if (fromReceivers.size() > 0) {
+                buildHeaderText(expandedFromIdView, fromReceivers, null);
+                buildHeaderText(collapsedFromIdView, fromReceivers, null);
+            }else{
+                collapsedFromIdView.setText("");
+                expandedFromIdView.setText("");
+            }
 
             // To
             if(isToExist){
-                //limit the number of receivers in To if there are more
-                if(toReceivers.size() > MAX_TO_RECEIVERS_DISPLAY){
-                    //reduce the no. of To: receivers and hide thmem with show more button
-                    buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_DISPLAY);
-                    toShowMoreBtn.setVisibility(View.VISIBLE);
-                }
-                else{
-                    //show all To contacts
-                    buildHeaderText(toIdView, toReceivers, null);
-                }
+                //show all To contacts
+                buildHeaderText(toIdView, toReceivers, null);
+            }else{
+                toIdView.setText("");
             }
 
             //CC
             if(isCCExist){
-                //cc
-                //limit the number of receivers in CC if there are more
-                if(ccReceivers.size() > MAX_CC_RECEIVERS_DISPLAY){
-                    //reduce the no. of CC receivers and hide them with show more button
-                    buildHeaderText(ccIdView, ccReceivers, MAX_CC_RECEIVERS_DISPLAY);
-                    cCShowMoreBtn.setVisibility(View.VISIBLE);
-                }
-                else{
-                    // show all CC contacts
-                    buildHeaderText(ccIdView, ccReceivers, null);
-                }
-
-                cc_LinearLayout.setVisibility(View.VISIBLE);
+                buildHeaderText(ccIdView, ccReceivers, null);
+            }else{
+                ccIdView.setVisibility(View.GONE);
+                ccLbl.setVisibility(View.GONE);
             }
             //date
             if(date!=null){
-                dateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
+                expandedDateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
+                collapsedDateIdView.setText(MailApplication.getShortDate(date));
+            }else{
+                expandedDateIdView.setText("");
+                collapsedDateIdView.setText("");
             }
         }catch(Exception e){
             Utilities.generalCatchBlock(e, this);
         }
 
-    }
-
-    private void displaySubject(String viewMailWebviewNoSubject) {
-        //titleBarSubject.setText(viewMailWebviewNoSubject);
-        activity.getSupportActionBar().setTitle(viewMailWebviewNoSubject);
     }
 
     public void showBody(String html1){
@@ -594,8 +572,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //get the current status whether the mails is in loading state
         boolean statusLoadedMail= (currentStatus!=null &&
                     currentStatus != Status.LOADING
-                    && currentStatus != Status.ERROR)
-                    ? true : false;
+                    && currentStatus != Status.ERROR);
 
         //loop thorugh each contact
         while(counter<contacts.size()){
@@ -698,22 +675,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.subject = subject;
     }
 
-    public Button getToShowMoreBtn() {
-        return toShowMoreBtn;
-    }
-
-    public void setToShowMoreBtn(Button toShowMoreBtn) {
-        this.toShowMoreBtn = toShowMoreBtn;
-    }
-
-    public Button getcCShowMoreBtn() {
-        return cCShowMoreBtn;
-    }
-
-    public void setcCShowMoreBtn(Button cCShowMoreBtn) {
-        this.cCShowMoreBtn = cCShowMoreBtn;
-    }
-
     public String getTo() {
         return to;
     }
@@ -737,37 +698,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setBcc(String bcc) {
         this.bcc = bcc;
     }
-
-    public boolean isToShowMoreFlag() {
-        return toShowMoreFlag;
-    }
-
-    public void setToShowMoreFlag(boolean toShowMoreFlag) {
-        this.toShowMoreFlag = toShowMoreFlag;
-    }
-
-    public boolean isCcShowMoreFlag() {
-        return ccShowMoreFlag;
-    }
-
-    public void setCcShowMoreFlag(boolean ccShowMoreFlag) {
-        this.ccShowMoreFlag = ccShowMoreFlag;
-    }
     @Override
     public CachedMailHeaderVO getCachedMailHeaderVO() {
         return mailHeader;
     }
 
-    public void setCachedMailHeaderVO(CachedMailHeaderVO itemToOpen) {
-        this.mailHeader = itemToOpen;
-    }
 
     public MailFunctions getMailFunctions() {
         return mailFunctions;
-    }
-
-    public void setMailFunctions(MailFunctions mailFunctions) {
-        this.mailFunctions = mailFunctions;
     }
 
     public Date getDate() {
@@ -779,12 +717,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     }
 
 
-    public TextView getFromIdView() {
-        return fromIdView;
+    public TextView getCollapsedFromIdView() {
+        return collapsedFromIdView;
     }
 
-    public void setFromIdView(TextView fromIdView) {
-        this.fromIdView = fromIdView;
+    public void setCollapsedFromIdView(TextView collapsedFromIdView) {
+        this.collapsedFromIdView = collapsedFromIdView;
     }
 
     public TextView getToIdView() {
@@ -802,15 +740,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setCcIdView(TextView ccIdView) {
         this.ccIdView = ccIdView;
     }
-
-    public TextView getDateIdView() {
-        return dateIdView;
-    }
-
-    public void setDateIdView(TextView dateIdView) {
-        this.dateIdView = dateIdView;
-    }
-
     public ProgressDisplayNotificationBar getProgressStatusDispBar() {
         return progressStatusDispBar;
     }

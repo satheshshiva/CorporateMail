@@ -132,7 +132,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
                         subjectView.setText(mailListHeader.getMail_subject());
 
                         //Date Time Received
-                        dateView.setText(MailApplication.getCustomizedInboxDate(mailListHeader.getMail_datetimereceived()));
+                        dateView.setText(MailApplication.getShortDate(mailListHeader.getMail_datetimereceived()));
 
                         //Has Attachment icon
                         if(mailListHeader.isMail_has_attachments()){

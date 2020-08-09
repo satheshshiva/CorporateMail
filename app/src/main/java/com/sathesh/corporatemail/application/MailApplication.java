@@ -54,6 +54,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -254,28 +255,36 @@ public class MailApplication implements Constants {
         return ((null != from) && (from.lastIndexOf(INBOX_FILTER_TEXT_FROM)>0)) ? from.substring(0, from.lastIndexOf(INBOX_FILTER_TEXT_FROM)):from;
     }
 
+    private static SimpleDateFormat sdfShortFormat = new SimpleDateFormat(INBOX_TEXT_DATE_TIME, Locale.getDefault());
+    private static SimpleDateFormat sdfShortThisYearFormat = new SimpleDateFormat(INBOX_TEXT_DATE_THIS_YEAR, Locale.getDefault());
+    private static SimpleDateFormat sdfShortNotThisYearFormat = new SimpleDateFormat(INBOX_TEXT_DATE_NOT_THIS_YEAR, Locale.getDefault());
     /**
      * @return Customized Date field string to be displayed in mail list view  for mails
      */
-    public static CharSequence getCustomizedInboxDate(Date dDate) {
+    public static CharSequence getShortDate(Date dDate) {
 
         String strDate="";
-
+        Calendar now = Calendar.getInstance();
         if (null != dDate){
 
-            long dateDiff = 0;
-            dateDiff= Utilities.getNumberOfDaysFromToday(dDate) ;
+            long dateDiff= Utilities.getNumberOfDaysFromToday(dDate) ;
 
             if (dateDiff <= 0){
-                strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_TIME)).format(dDate.getTime());
+                strDate = sdfShortFormat.format(dDate.getTime());
+                return strDate;
             }
-            else
-            {
-                strDate = (new SimpleDateFormat(INBOX_TEXT_DATE)).format(dDate.getTime());
+            //checking whether the given year is the current year.
+            // subtracting 1900 because java.date.util.Date.getYear returns the current year minus 1900 (for whatever reason they did)
+            if ( (now.get(Calendar.YEAR)-1900) == dDate.getYear()) {
+                strDate = sdfShortThisYearFormat.format(dDate.getTime());
+            }else{
+                strDate = sdfShortNotThisYearFormat.format(dDate.getTime());
             }
+
         }
         return strDate;
     }
+
 
     /**
      * @return Customized Date field string to be displayed in mail list view for Header
