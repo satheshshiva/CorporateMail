@@ -14,7 +14,6 @@ import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
  */
 public  class MailListViewContent{
     private int type=-1;
-
     public static interface types{
         public final int DATE_HEADER=1;
         public final int MAIL=2;
@@ -27,6 +26,7 @@ public  class MailListViewContent{
     private long loading_totalMailCount=-1;
     private long loading_totalCached=-1;
     private long loading_loadingCount=-1;
+    private int mailHeaderPosition;
     private CheckedTextView checkedTextView;
 
     @Override
@@ -105,5 +105,11 @@ public  class MailListViewContent{
     public void setCheckedTextView(CheckedTextView checkedTextView) {
         this.checkedTextView = checkedTextView;
     }
+    public int getMailHeaderPosition() {
+        return mailHeaderPosition;
+    }
 
+    public void setMailHeaderPosition(int mailHeaderPosition) {
+        this.mailHeaderPosition = mailHeaderPosition;
+    }
 }

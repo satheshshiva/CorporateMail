@@ -267,7 +267,7 @@
     <string name="actionBar_Submenu_Reply_Options">Reply Options</string>
     <string name="actionBar_Submenu_Others">Others</string>
     <string name="title_activity_test">TestActivity</string>
-    <string name="cabSelected">%s selected</string>
+    <string name="cabSelected">%d selected</string>
 
     <!-- Action Mode -->
     <string name="actionMode_deleteMail">Delete</string>
