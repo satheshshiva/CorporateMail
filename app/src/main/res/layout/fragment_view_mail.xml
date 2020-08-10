@@ -180,7 +180,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expandButton" />
+        app:layout_constraintTop_toBottomOf="@+id/expandButton"
+        android:fillViewport="true"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/right_guideline"
