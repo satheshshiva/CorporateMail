@@ -348,7 +348,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
         try {
             //update the list view
-            adapter.setMailListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
+            cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
+            adapter.setMailListVOs(cachedHeaderVoList);
             adapter.updateAndNotify();
 
             //update the text switcher
