@@ -6,13 +6,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.sathesh.corporatemail.R;
-import com.sathesh.corporatemail.adapter.ViewMailPagerAdapter;
+import com.sathesh.corporatemail.adapter.ViewMailPagerAdapterAndListeners;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
@@ -30,7 +29,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
     private CachedMailHeaderAdapter mailHeaderAdapter;
     private ViewPager2 viewPager;
-    private FragmentStateAdapter pagerAdapter;
+    private ViewMailPagerAdapterAndListeners pagerAdapter;
     private ArrayList<CachedMailHeaderVO> cachedHeaderVoList;
     /** ON CREATE **
      *  Fragment : ViewMailFragment
@@ -46,15 +45,18 @@ public class ViewMailActivity extends MyActivity implements Constants{
         int position = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, 0);
 
         viewPager = (ViewPager2) findViewById(R.id.pager);
-        pagerAdapter = new ViewMailPagerAdapter(this, cachedHeaderVoList);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(position);
+        pagerAdapter = new ViewMailPagerAdapterAndListeners(this, cachedHeaderVoList);
+        viewPager.setAdapter((FragmentStateAdapter)pagerAdapter);
+        viewPager.setCurrentItem(position, false);
+
         // declaring the fragment
         /*viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
                 .findFragmentById(R.id.viewMailFragment);*/
         mailHeaderAdapter = new CachedMailHeaderAdapter(this);
         MailApplication.toolbarInitialize(this);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -64,39 +66,49 @@ public class ViewMailActivity extends MyActivity implements Constants{
         MenuItem menuItem;
         MenuItem subMenuItem;
 
-        //TODO uncomment this
-        //if the current status is not loading or error states then show the menus
-       /* if(viewMailFragment.getCurrentStatus() != null
-                && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.LOADING
-                && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.ERROR) {
-            //Reply submenu
-            SubMenu subMenuReply = menu.addSubMenu(this.getString(R.string.actionBar_Submenu_Reply_Options));
-            menuItem=subMenuReply
-                    .add(this.getString(R.string.actionBar_Reply))
-                    .setIcon(OptionsUIContent.getReplyIcon());
-            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        if (pagerAdapter!=null && pagerAdapter.getFragmentMap()!=null ) {
+            ViewMailFragmentDataPasser viewMailFragment = pagerAdapter.getFragmentMap().get(viewPager.getCurrentItem());
 
-            menuItem=subMenuReply
-                    .add(this.getString(R.string.actionBar_Reply_All))
-                    .setIcon(OptionsUIContent.getReplyAllIcon());
-            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            if (viewMailFragment != null) {
 
-            menuItem=subMenuReply
-                    .add(this.getString(R.string.actionBar_Forward))
-                    .setIcon(OptionsUIContent.getForwardIcon());
-            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                //if the current status is not loading or error states then show the menus
+                if (viewMailFragment.getCurrentStatus() != null
+                        && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.LOADING
+                        && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.ERROR) {
+                    //Reply submenu
+                    SubMenu subMenuReply = menu.addSubMenu(this.getString(R.string.actionBar_Submenu_Reply_Options));
+                    menuItem = subMenuReply
+                            .add(this.getString(R.string.actionBar_Reply))
+                            .setIcon(OptionsUIContent.getReplyIcon());
+                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-            //Setting icons and settings to Reply Submenu
-            subMenuItem = subMenuReply.getItem();
-            subMenuItem.setIcon(OptionsUIContent.getReplyIcon());
-            MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                    menuItem = subMenuReply
+                            .add(this.getString(R.string.actionBar_Reply_All))
+                            .setIcon(OptionsUIContent.getReplyAllIcon());
+                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-            //Adding Delete Icon to Main Menu
-            menuItem=menu.add(this.getString(R.string.actionBar_Delete))
-                    .setIcon(OptionsUIContent.getDeleteIcon());
-            MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                    menuItem = subMenuReply
+                            .add(this.getString(R.string.actionBar_Forward))
+                            .setIcon(OptionsUIContent.getForwardIcon());
+                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-        }*/
+                    //Setting icons and settings to Reply Submenu
+                    subMenuItem = subMenuReply.getItem();
+                    subMenuItem.setIcon(OptionsUIContent.getReplyIcon());
+                    MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+                    //Adding Delete Icon to Main Menu
+                    menuItem = menu.add(this.getString(R.string.actionBar_Delete))
+                            .setIcon(OptionsUIContent.getDeleteIcon());
+                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+                }
+            }else{
+                Log.e(LOG_TAG, "ViewMailActivity -> viewMailFragment is null from the view pager adapter map. View Pager current position: "+ viewPager.getCurrentItem());
+            }
+        }else{
+            Log.e(LOG_TAG, "ViewMailActivity -> pagerAdapter or fragment map is null from view pager. not showing options menu");
+        }
         // Attachment main menu
 		/*	menu.add(ACTIONBAR_ATTACHMENT)
 		.setIcon(OptionsUIContent.getAttachementIcon())
@@ -122,11 +134,13 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
-    //TODO uncomment this
-    //if the current status is not loading or error states then show the menus
     {
-        /*
-        if(item!=null && item.getItemId()==android.R.id.home){
+        if (pagerAdapter!=null && pagerAdapter.getFragmentMap()!=null ) {
+            ViewMailFragmentDataPasser viewMailFragment = pagerAdapter.getFragmentMap().get(viewPager.getCurrentItem());
+
+            if (viewMailFragment != null) {
+
+                if(item!=null && item.getItemId()==android.R.id.home){
             //Mark the item as read
             //this is done here because when the mail listview network
             // refresh happens after it getting overriden
@@ -177,7 +191,13 @@ public class ViewMailActivity extends MyActivity implements Constants{
                 Utilities.generalCatchBlock(e,this);
             }
         }
-        */
+            }else{
+                Log.e(LOG_TAG, "ViewMailActivity -> viewMailFragment is null from the view pager adapter map. View Pager current position: "+ viewPager.getCurrentItem());
+            }
+        }else{
+            Log.e(LOG_TAG, "ViewMailActivity -> pagerAdapter or fragment map is null from view pager. not showing options menu");
+        }
+
           return super.onOptionsItemSelected(item);
 
     }
