@@ -178,10 +178,10 @@
         android:id="@+id/webview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="600dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expandButton"
-        android:fillViewport="true"/>
+        app:layout_constraintTop_toBottomOf="@+id/expandButton" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/right_guideline"
