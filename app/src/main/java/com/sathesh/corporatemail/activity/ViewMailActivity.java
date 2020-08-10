@@ -8,22 +8,30 @@ import android.view.SubMenu;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.sathesh.corporatemail.R;
+import com.sathesh.corporatemail.adapter.ViewMailPagerAdapter;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.ui.components.MailDeleteDialog;
 import com.sathesh.corporatemail.ui.util.OptionsUIContent;
 import com.sathesh.corporatemail.util.Utilities;
 
+import java.util.ArrayList;
+
 public class ViewMailActivity extends MyActivity implements Constants{
 
-    private ViewMailFragmentDataPasser viewMailFragment;
     private CachedMailHeaderAdapter mailHeaderAdapter;
+    private ViewPager2 viewPager;
+    private FragmentStateAdapter pagerAdapter;
+    private ArrayList<CachedMailHeaderVO> cachedHeaderVoList;
     /** ON CREATE **
      *  Fragment : ViewMailFragment
      */
@@ -34,9 +42,16 @@ public class ViewMailActivity extends MyActivity implements Constants{
         //note: this will trigger OnCreateView in fragment
         setContentView(R.layout.activity_view_mail);
 
+        cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS);
+        int position = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, 0);
+
+        viewPager = (ViewPager2) findViewById(R.id.pager);
+        pagerAdapter = new ViewMailPagerAdapter(this, cachedHeaderVoList);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(position);
         // declaring the fragment
-        viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
-                .findFragmentById(R.id.viewMailFragment);
+        /*viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
+                .findFragmentById(R.id.viewMailFragment);*/
         mailHeaderAdapter = new CachedMailHeaderAdapter(this);
         MailApplication.toolbarInitialize(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,8 +64,9 @@ public class ViewMailActivity extends MyActivity implements Constants{
         MenuItem menuItem;
         MenuItem subMenuItem;
 
+        //TODO uncomment this
         //if the current status is not loading or error states then show the menus
-        if(viewMailFragment.getCurrentStatus() != null
+       /* if(viewMailFragment.getCurrentStatus() != null
                 && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.LOADING
                 && viewMailFragment.getCurrentStatus() != ViewMailFragment.Status.ERROR) {
             //Reply submenu
@@ -80,7 +96,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
                     .setIcon(OptionsUIContent.getDeleteIcon());
             MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        }
+        }*/
         // Attachment main menu
 		/*	menu.add(ACTIONBAR_ATTACHMENT)
 		.setIcon(OptionsUIContent.getAttachementIcon())
@@ -106,7 +122,10 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
+    //TODO uncomment this
+    //if the current status is not loading or error states then show the menus
     {
+        /*
         if(item!=null && item.getItemId()==android.R.id.home){
             //Mark the item as read
             //this is done here because when the mail listview network
@@ -158,7 +177,9 @@ public class ViewMailActivity extends MyActivity implements Constants{
                 Utilities.generalCatchBlock(e,this);
             }
         }
-        return super.onOptionsItemSelected(item);
+        */
+          return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -176,7 +197,9 @@ public class ViewMailActivity extends MyActivity implements Constants{
         //Mark the item as read
         //this is done here because when the mail listview network
         // refresh happens after it getting overriden
-        viewMailFragment.mailAsReadInCache();
+
+        //TODO uncomment this
+        //viewMailFragment.mailAsReadInCache();
         super.onBackPressed();
     }
 

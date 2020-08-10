@@ -176,7 +176,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     public void onItemClick(AdapterView<?> adapterView, View view, int position,
                             long id) {
         //the pull to refresh list view starts from instead of 0.. fix for that
-        CachedMailHeaderVO vo;
         MailListViewContent listViewContent;
 
         try {
@@ -186,9 +185,9 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 switch (listViewContent.getType()) {
                     case MailListViewContent.types.MAIL:
                         //open the mail
-                        vo = listViewContent.getMailVO();
                         Intent viewMailIntent = new Intent((activity).getBaseContext(), ViewMailActivity.class);
-                        viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
+                        viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS, fragment.getCachedHeaderVoList());
+                        viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, listViewContent.getMailHeaderPosition());
                         //start the view mail activity
                         activity.startActivity(viewMailIntent);
                         break;

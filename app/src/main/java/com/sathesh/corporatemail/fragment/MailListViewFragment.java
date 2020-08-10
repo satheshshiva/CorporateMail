@@ -39,6 +39,7 @@ import com.sathesh.corporatemail.threads.ui.GetNewMailsThread;
 import com.sathesh.corporatemail.ui.listeners.MailListViewListener;
 import com.sathesh.corporatemail.util.Utilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,6 +86,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     //contains all the UI listeners for this fragment
     private MailListViewListener listener;
+    private ArrayList<CachedMailHeaderVO> cachedHeaderVoList;
 
     /**
      * @author sathesh
@@ -201,9 +203,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //get the cursor
 
                 //if(adapter==null){	//on config change it wont be null
-                List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
+                cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
                 //initialize the adapter
-                adapter = new MailListViewAdapter(context, this, listVOs);
+                adapter = new MailListViewAdapter(context, this, cachedHeaderVoList);
                 //}
 
                 // initializes the list view with the adapter. also will place all the cached mails in list view initially
@@ -622,5 +624,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     @Override
     public void setFabShown(boolean fabShown) {
         this.fabShown = fabShown;
+    }
+
+    @Override
+    public ArrayList<CachedMailHeaderVO> getCachedHeaderVoList() {
+        return cachedHeaderVoList;
     }
 }

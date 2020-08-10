@@ -66,7 +66,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private ProgressDisplayNotificationBar progressStatusDispBar;
     private EmailMessage message;
 
-    private CachedMailHeaderVO mailHeader;
+    private CachedMailHeaderVO mailHeaderVo;
 
     public enum Status{
         LOADING,	// Started loading body. Network Call for loading body is in progress
@@ -106,6 +106,9 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
 
 
+    public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
+        this.mailHeaderVo = mailHeaderVo;
+    }
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,7 +147,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
 
         webview = (WebView)view.findViewById(R.id.webview);
-
         WebSettings webSettings = webview.getSettings();
         webSettings.setAllowFileAccess(true);
 
@@ -153,8 +155,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
-        //webSettings.setLoadWithOverviewMode(true);
-        //webSettings.setUseWideViewPort(true);
 
 
         //  webview.loadDataWithBaseURL("fake:///ghj/", "", "text/html", "utf-8", null);
@@ -169,26 +169,23 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //			}
         //		});
 
-        //load email
-        mailHeader = (CachedMailHeaderVO) activity.getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER);
-
-        if(mailHeader !=null){
-            from = mailHeader.getMail_from();
-            to = mailHeader.getMail_to();
-            cc = mailHeader.getMail_cc();
-            bcc = mailHeader.getMail_bcc();
-            subject = mailHeader.getMail_subject();
-            mailType=mailHeader.getMail_type();
-            mailFolderName= mailHeader.getFolder_name();
-            mailFolderId=mailHeader.getFolder_id();
-            itemId=mailHeader.getItem_id();
+        if(mailHeaderVo !=null){
+            from = mailHeaderVo.getMail_from();
+            to = mailHeaderVo.getMail_to();
+            cc = mailHeaderVo.getMail_cc();
+            bcc = mailHeaderVo.getMail_bcc();
+            subject = mailHeaderVo.getMail_subject();
+            mailType= mailHeaderVo.getMail_type();
+            mailFolderName= mailHeaderVo.getFolder_name();
+            mailFolderId= mailHeaderVo.getFolder_id();
+            itemId= mailHeaderVo.getItem_id();
         }
 
         if(BuildConfig.DEBUG){
             Log.d(LOG_TAG, "ViewMailFragment -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
         }
         try {
-            date = mailHeader.getMail_datetimereceived();
+            date = mailHeaderVo.getMail_datetimereceived();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,7 +209,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void mailAsReadInCache(){
         //Mark the item as read
         try {
-            cachedMailHeaderAdapter.markMailAsReadUnread(mailHeader.getItem_id(), true);
+            cachedMailHeaderAdapter.markMailAsReadUnread(mailHeaderVo.getItem_id(), true);
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);
         }
@@ -701,7 +698,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     }
     @Override
     public CachedMailHeaderVO getCachedMailHeaderVO() {
-        return mailHeader;
+        return mailHeaderVo;
     }
 
 
@@ -772,12 +769,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.totalInlineImages = totalInlineImages;
     }
 
-    public CachedMailHeaderVO getMailHeader() {
-        return mailHeader;
+    public CachedMailHeaderVO getMailHeaderVo() {
+        return mailHeaderVo;
     }
 
-    public void setMailHeader(CachedMailHeaderVO mailHeader) {
-        this.mailHeader = mailHeader;
+    public void setMailHeaderVo(CachedMailHeaderVO mailHeaderVo) {
+        this.mailHeaderVo = mailHeaderVo;
     }
 
     public Context getContext() {

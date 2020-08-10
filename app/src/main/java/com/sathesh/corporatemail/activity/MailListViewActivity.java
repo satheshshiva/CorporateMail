@@ -61,7 +61,8 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
     public final static String SIGN_OUT_EXTRA = "SIGN_OUT_EXTRA";
     public final static String APP_UPDATE_AVAILABLE = "APP_UPDATE_AVAILABLE";
 
-    public static final String EXTRA_MESSAGE_CACHED_HEADER = "cachedMailHeaderToOpen";
+    public static final String EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS = "allCachedMails";
+    public static final String EXTRA_MESSAGE_POSITION = "position";
 
     private int mailType ;
     private String mailFolderName;
