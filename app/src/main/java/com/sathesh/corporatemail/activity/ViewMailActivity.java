@@ -46,7 +46,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
         //posponing the activity open transition. This is done because the shared elements for transition inside the ViewMailFragment will not be ready.
         // The transition will be resumed in the ViewMailFragement once the shared elements are created.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && MailApplication.getInstance().isViewMailTransitionEnabled()) {
             postponeEnterTransition();
         }
         cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS);
