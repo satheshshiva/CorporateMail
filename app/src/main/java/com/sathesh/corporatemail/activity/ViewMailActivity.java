@@ -15,6 +15,7 @@ import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.ViewMailPagerAdapterAndListeners;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
+import com.sathesh.corporatemail.application.MyApplication;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
@@ -49,12 +50,13 @@ public class ViewMailActivity extends MyActivity implements Constants{
             postponeEnterTransition();
         }
         cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS);
-        incomingPosition = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, 0);
+        incomingPosition = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, -1);
 
         viewPager = (ViewPager2) findViewById(R.id.pager);
         pagerAdapter = new ViewMailPagerAdapterAndListeners(this, cachedHeaderVoList);
         viewPager.setAdapter((FragmentStateAdapter)pagerAdapter);
         viewPager.setCurrentItem(incomingPosition, false);
+        ((MyApplication) getApplication()).setLastViewedMailByViewPager(null); //resetting this value from application memory
 
         // declaring the fragment
         /*viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
@@ -213,11 +215,12 @@ public class ViewMailActivity extends MyActivity implements Constants{
         // detect whether the mail is changed with the view pager. If not changed then default behaviour, which will use the exit animation.
         // If the view page has changed the position, then calling finish() will finish the activity without exit animation. Not using exit animation because currently I do not know how to exit animate to a different item in the list view.
 
-        if (incomingPosition == viewPager.getCurrentItem() ) {
-            super.onBackPressed();
-        }else{
-            finish();
+        if (incomingPosition != viewPager.getCurrentItem() ) {
+            //setting the currently viewed mail in to the application memory. It will be used by MailListViewActivty for transition.
+            CachedMailHeaderVO cachedMailHeaderVO = cachedHeaderVoList.get(viewPager.getCurrentItem());
+            ((MyApplication) getApplication()).setLastViewedMailByViewPager(cachedMailHeaderVO);
         }
+        super.onBackPressed();
     }
 
     @Override
