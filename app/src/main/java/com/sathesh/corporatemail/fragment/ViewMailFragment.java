@@ -6,6 +6,7 @@ package com.sathesh.corporatemail.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -15,10 +16,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
@@ -194,6 +197,21 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         showHeaders();
 
         loadEmail();
+
+        //resume the enter activity transition which was postponed in the ViewMailActivity:onCreate()
+        // the pause and resume was done so that the shared objects will be available.
+        subjectIdView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                // Tell the framework to start.
+                subjectIdView.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity!=null) {
+                    // This code is tied to ViewMailActivity.java -> onCreate -> postponeEnterTransition()
+                    activity.startPostponedEnterTransition();
+                }
+                return true;
+            }
+        });
 
         return view;
     }
