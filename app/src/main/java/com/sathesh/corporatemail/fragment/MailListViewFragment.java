@@ -219,13 +219,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //Initialize SwipeRefreshLayout
                 swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
                 // the refresh listener. this would be called when the layout is pulled down
-                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        //refresh list when the SwipeRefresh is pulled
-                        refreshList();
-                    }
-                });
+                //refresh list when the SwipeRefresh is pulled
+                swipeRefreshLayout.setOnRefreshListener(this::refreshList);
+
                 // sets the colors used in the refresh animation
                 int[] resources = MailApplication.getSwipeRefreshLayoutColorResources();
                 if (resources.length == 4) {

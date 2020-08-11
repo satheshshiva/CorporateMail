@@ -1,6 +1,7 @@
 package com.sathesh.corporatemail.activity;
 
 import android.app.ActivityOptions;
+import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -45,6 +46,7 @@ import com.sathesh.corporatemail.ui.customwidgets.FontIcon;
 import com.sathesh.corporatemail.ui.listeners.MailListViewActivityListener;
 
 import java.util.List;
+import java.util.Map;
 
 /** This Activity is the one which shows the mail list.
  *
@@ -198,6 +200,18 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             if (savedInstanceState != null) {
                 drawerLayoutSelectedPosition = savedInstanceState.getInt(STATE_DRAWER_MENU_HIGHTLIGHTED);
             }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                setExitSharedElementCallback(new SharedElementCallback() {
+
+                    @Override
+                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+
+                        super.onMapSharedElements(names, sharedElements);
+                    }
+                });
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
