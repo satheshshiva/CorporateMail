@@ -1,5 +1,6 @@
 package com.sathesh.corporatemail.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -41,6 +42,11 @@ public class ViewMailActivity extends MyActivity implements Constants{
         //note: this will trigger OnCreateView in fragment
         setContentView(R.layout.activity_view_mail);
 
+        //posponing the activity open transition. This is done because the shared elements for transition inside the ViewMailFragment will not be ready.
+        // The transition will be resumed in the ViewMailFragement once the shared elements are created.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            postponeEnterTransition();
+        }
         cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS);
         int position = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, 0);
 
