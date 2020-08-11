@@ -208,6 +208,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity!=null) {
                     // This code is tied to ViewMailActivity.java -> onCreate -> postponeEnterTransition()
                     activity.startPostponedEnterTransition();
+                    activity.supportStartPostponedEnterTransition();
                 }
                 return true;
             }

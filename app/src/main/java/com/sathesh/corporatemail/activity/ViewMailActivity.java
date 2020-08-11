@@ -32,6 +32,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
     private ViewPager2 viewPager;
     private ViewMailPagerAdapterAndListeners pagerAdapter;
     private ArrayList<CachedMailHeaderVO> cachedHeaderVoList;
+    int incomingPosition;
     /** ON CREATE **
      *  Fragment : ViewMailFragment
      */
@@ -48,12 +49,12 @@ public class ViewMailActivity extends MyActivity implements Constants{
             postponeEnterTransition();
         }
         cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS);
-        int position = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, 0);
+        incomingPosition = getIntent().getIntExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, 0);
 
         viewPager = (ViewPager2) findViewById(R.id.pager);
         pagerAdapter = new ViewMailPagerAdapterAndListeners(this, cachedHeaderVoList);
         viewPager.setAdapter((FragmentStateAdapter)pagerAdapter);
-        viewPager.setCurrentItem(position, false);
+        viewPager.setCurrentItem(incomingPosition, false);
 
         // declaring the fragment
         /*viewMailFragment = (ViewMailFragmentDataPasser) getSupportFragmentManager()
@@ -151,7 +152,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
             //this is done here because when the mail listview network
             // refresh happens after it getting overriden
             viewMailFragment.mailAsReadInCache();
-            finish();
+            backPressed();
         }
 
         else if(item!=null && item.getTitle().equals(this.getString(R.string.actionBar_Reply))){
@@ -208,6 +209,17 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
     }
 
+    private void backPressed() {
+        // detect whether the mail is changed with the view pager. If not changed then default behaviour, which will use the exit animation.
+        // If the view page has changed the position, then calling finish() will finish the activity without exit animation. Not using exit animation because currently I do not know how to exit animate to a different item in the list view.
+
+        if (incomingPosition == viewPager.getCurrentItem() ) {
+            super.onBackPressed();
+        }else{
+            finish();
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -220,13 +232,7 @@ public class ViewMailActivity extends MyActivity implements Constants{
 
     @Override
     public void onBackPressed(){
-        //Mark the item as read
-        //this is done here because when the mail listview network
-        // refresh happens after it getting overriden
-
-        //TODO uncomment this
-        //viewMailFragment.mailAsReadInCache();
-        super.onBackPressed();
+        backPressed();
     }
 
 }
