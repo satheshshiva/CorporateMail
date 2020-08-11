@@ -1,5 +1,9 @@
 package com.sathesh.corporatemail.animation;
 
+import android.os.Build;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
@@ -7,6 +11,8 @@ import android.widget.TextSwitcher;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.MainActivity;
 import com.sathesh.corporatemail.application.MyActivity;
+
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class ApplyAnimation {
 
@@ -73,10 +79,21 @@ public class ApplyAnimation {
 
 	}
 
-	public static void setViewMailAnim(MyActivity activity) {
+	public static void setSlideAnimation(MyActivity activity) {
+		if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.END);
+			activity.getWindow().setExitTransition(slide);
+			activity.getWindow().setEnterTransition(slide);
+		}
+	}
 
-		activity.overridePendingTransition(R.anim.slide_left,R.anim.slide_left);
-
+	public static void setExplodeAnimation(MyActivity activity) {
+		if (Build.VERSION.SDK_INT >= LOLLIPOP) {
+			Explode explode = new Explode();
+			activity.getWindow().setExitTransition(explode);
+			activity.getWindow().setEnterTransition(explode);
+		}
 	}
 
 }
