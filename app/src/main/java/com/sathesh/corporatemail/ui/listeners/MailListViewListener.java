@@ -3,8 +3,11 @@
  */
 package com.sathesh.corporatemail.ui.listeners;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
+import android.util.Pair;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -189,6 +192,23 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                         viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS, fragment.getCachedHeaderVoList());
                         viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, listViewContent.getMailHeaderPosition());
                         //start the view mail activity
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                            View subjectView = view.findViewById(R.id.subject);
+                            View fromView = view.findViewById(R.id.from);
+                            View dateView = view.findViewById(R.id.date);
+
+                            if(subjectView!=null && fromView!=null && dateView!=null) {
+                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                                        Pair.create(subjectView, "transitionSubjectShared"),
+                                        Pair.create(fromView, "transitionFromShared"),
+                                        Pair.create(dateView, "transitionDateShared"),
+                                        Pair.create(view, "transitionWebviewShared")
+                                );
+                                activity.startActivity(viewMailIntent, options.toBundle());
+                                break;
+                            }
+                        }
                         activity.startActivity(viewMailIntent);
                         break;
                     case MailListViewContent.types.DATE_HEADER:
