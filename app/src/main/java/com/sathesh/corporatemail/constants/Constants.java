@@ -226,8 +226,17 @@ public interface Constants {
 		/* -------------------------------------------------------------------------------------
 ----------------------------------  Workers ----------------------------
 --------------------------------------------------------------------------------------*/
-		String WORKER_TAG_PULL_MN = "PullMnWorker";
+		String WORKER_TAG_PULL_MN = "PullMnWorker";}
 
+		/* -------------------------------------------------------------------------------------
+----------------------------------  TransitionShared Elements ----------------------------
+--------------------------------------------------------------------------------------*/
+
+	interface TransitionSharedElementNames{
+		String subject = "transitionSubjectShared";
+		String from = "transitionFromShared";
+		String date = "transitionDateShared";
+		String webview = "transitionWebviewShared";
 	}
 
 }

@@ -198,12 +198,13 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                             View fromView = view.findViewById(R.id.from);
                             View dateView = view.findViewById(R.id.date);
 
-                            if(subjectView!=null && fromView!=null && dateView!=null) {
+                            if(fragment.getNewMailsThreadState() != Status.UPDATING && fragment.getMoreMailsThreadState() != Status.UPDATING && // If these threads are running in the background then it will redraw the listview and the sent views will be invalid
+                                    subjectView!=null && fromView!=null && dateView!=null) {    // just to make sure
                                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
-                                        Pair.create(subjectView, "transitionSubjectShared"),
-                                        Pair.create(fromView, "transitionFromShared"),
-                                        Pair.create(dateView, "transitionDateShared"),
-                                        Pair.create(view, "transitionWebviewShared")
+                                        Pair.create(subjectView, TransitionSharedElementNames.subject),
+                                        Pair.create(fromView, TransitionSharedElementNames.from),
+                                        Pair.create(dateView, TransitionSharedElementNames.date),
+                                        Pair.create(view, TransitionSharedElementNames.webview)
                                 );
                                 activity.startActivity(viewMailIntent, options.toBundle());
                                 break;
