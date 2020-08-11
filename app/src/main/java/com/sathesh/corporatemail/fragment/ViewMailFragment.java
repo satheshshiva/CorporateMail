@@ -21,14 +21,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.ComposeActivity;
 import com.sathesh.corporatemail.activity.ContactDetailsActivity;
-import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.adapter.ComposeActivityAdapter;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
@@ -198,21 +196,22 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
         loadEmail();
 
-        //resume the enter activity transition which was postponed in the ViewMailActivity:onCreate()
-        // the pause and resume was done so that the shared objects will be available.
-        subjectIdView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                // Tell the framework to start.
-                subjectIdView.getViewTreeObserver().removeOnPreDrawListener(this);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity!=null) {
-                    // This code is tied to ViewMailActivity.java -> onCreate -> postponeEnterTransition()
-                    activity.startPostponedEnterTransition();
-                    activity.supportStartPostponedEnterTransition();
+        if (MailApplication.getInstance().isViewMailTransitionEnabled()) {
+            //resume the enter activity transition which was postponed in the ViewMailActivity:onCreate()
+            // the pause and resume was done so that the shared objects will be available.
+            subjectIdView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    // Tell the framework to start.
+                    subjectIdView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity != null) {
+                        // This code is tied to ViewMailActivity.java -> onCreate -> postponeEnterTransition()
+                        activity.startPostponedEnterTransition();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
 
         return view;
     }

@@ -23,6 +23,7 @@ import com.sathesh.corporatemail.activity.ComposeActivity;
 import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.activity.ViewMailActivity;
 import com.sathesh.corporatemail.animation.ApplyAnimation;
+import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
@@ -198,7 +199,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                             View fromView = view.findViewById(R.id.from);
                             View dateView = view.findViewById(R.id.date);
 
-                            if(fragment.getNewMailsThreadState() != Status.UPDATING && fragment.getMoreMailsThreadState() != Status.UPDATING && // If these threads are running in the background then it will redraw the listview and the sent views will be invalid
+                            if(MailApplication.getInstance().isViewMailTransitionEnabled() && fragment.getNewMailsThreadState() != Status.UPDATING && fragment.getMoreMailsThreadState() != Status.UPDATING && // If these threads are running in the background then it will redraw the listview and the sent views will be invalid
                                     subjectView!=null && fromView!=null && dateView!=null) {    // just to make sure
                                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
                                         Pair.create(subjectView, TransitionSharedElementNames.subject),

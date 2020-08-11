@@ -204,61 +204,63 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
                 drawerLayoutSelectedPosition = savedInstanceState.getInt(STATE_DRAWER_MENU_HIGHTLIGHTED);
             }
 
-            //Listener for exit activity transition.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                setExitSharedElementCallback(new SharedElementCallback() {
+            if (MailApplication.getInstance().isViewMailTransitionEnabled()) {
+                //Listener for exit activity transition.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    setExitSharedElementCallback(new SharedElementCallback() {
 
-                    @Override
-                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                        @Override
+                        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                          /*if the viewed mail was changed by view pager, get the corresponding mail from the list view so that transition can happen from the viewed mail to the corresponding
                                 listview item.*/
-                        if (currentlyLoadedFragment instanceof MailListViewFragment) {
+                            if (currentlyLoadedFragment instanceof MailListViewFragment) {
 
-                            CachedMailHeaderVO lastViewedMailVo = ((MyApplication) getApplication()).getLastViewedMailByViewPager();
-                            if (lastViewedMailVo != null) {
-                                try {
+                                CachedMailHeaderVO lastViewedMailVo = ((MyApplication) getApplication()).getLastViewedMailByViewPager();
+                                if (lastViewedMailVo != null) {
+                                    try {
 
-                                    ListView lv = (ListView) findViewById(R.id.listView);
-                                    boolean matchFound=false;
-                                    for (int i=0; i< lv.getCount(); i++){
-                                        MailListViewContent rowContent = (MailListViewContent)lv.getItemAtPosition(i);
-                                        if (rowContent.getMailVO() != null && rowContent.getMailVO().getItem_id().equals(lastViewedMailVo.getItem_id())){
-                                            View row = getViewByPosition(i,lv );
-                                            matchFound = true;
+                                        ListView lv = (ListView) findViewById(R.id.listView);
+                                        boolean matchFound = false;
+                                        for (int i = 0; i < lv.getCount(); i++) {
+                                            MailListViewContent rowContent = (MailListViewContent) lv.getItemAtPosition(i);
+                                            if (rowContent.getMailVO() != null && rowContent.getMailVO().getItem_id().equals(lastViewedMailVo.getItem_id())) {
+                                                View row = getViewByPosition(i, lv);
+                                                matchFound = true;
 
-                                            View subjectView = row.findViewById(R.id.subject);
-                                            View fromView = row.findViewById(R.id.from);
-                                            View dateView = row.findViewById(R.id.date);
+                                                View subjectView = row.findViewById(R.id.subject);
+                                                View fromView = row.findViewById(R.id.from);
+                                                View dateView = row.findViewById(R.id.date);
 
-                                            sharedElements.clear();
-                                            sharedElements.put(TransitionSharedElementNames.subject, subjectView);
-                                            sharedElements.put(TransitionSharedElementNames.from, fromView);
-                                            sharedElements.put(TransitionSharedElementNames.date, dateView);
-                                            sharedElements.put(TransitionSharedElementNames.webview, row);
-                                            break;
+                                                sharedElements.clear();
+                                                sharedElements.put(TransitionSharedElementNames.subject, subjectView);
+                                                sharedElements.put(TransitionSharedElementNames.from, fromView);
+                                                sharedElements.put(TransitionSharedElementNames.date, dateView);
+                                                sharedElements.put(TransitionSharedElementNames.webview, row);
+                                                break;
+                                            }
+
                                         }
-
+                                        if (!matchFound) {
+                                            throw new Exception("No match found in the ListView");
+                                        }
+                                    } catch (Exception e) {
+                                        Log.e(LOG_TAG, "MailListView Activity -> View pager mail change detected. But some exception happened. Silently removing the transition. Exception: " + e);
+                                        if (names != null) {
+                                            names.clear();
+                                        }
+                                        if (sharedElements != null) {
+                                            sharedElements.clear();
+                                        }
+                                    } finally {
+                                        ((MyApplication) getApplication()).setLastViewedMailByViewPager(null); //resetting this value from application memory
                                     }
-                                    if (!matchFound){
-                                        throw new Exception("No match found in the ListView");
-                                    }
-                                } catch (Exception e) {
-                                    Log.e(LOG_TAG, "MailListView Activity -> View pager mail change detected. But some exception happened. Silently removing the transition. Exception: " + e);
-                                    if (names != null) {
-                                        names.clear();
-                                    }
-                                    if (sharedElements != null) {
-                                        sharedElements.clear();
-                                    }
-                                }finally {
-                                    ((MyApplication) getApplication()).setLastViewedMailByViewPager(null); //resetting this value from application memory
                                 }
-                            }
 
+                            }
+                            super.onMapSharedElements(names, sharedElements);
                         }
-                        super.onMapSharedElements(names, sharedElements);
-                    }
-                });
+                    });
+                }
             }
 
         } catch (Exception e) {
@@ -271,9 +273,10 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
         final int firstListItemPosition = listView.getFirstVisiblePosition();
         final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
+        // out of visible range
         if (pos < firstListItemPosition || pos > lastListItemPosition ) {
             listView.smoothScrollToPosition(pos);
-           // return listView.getAdapter().getView(pos, null, listView);
+            // return listView.getAdapter().getView(pos, null, listView);
             throw new Exception("Position not in visible bounds");
         } else {
             final int childIndex = pos - firstListItemPosition;

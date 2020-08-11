@@ -88,6 +88,7 @@ public class MailApplication implements Constants {
     private boolean isWrongPwd = false;
     private static GetMoreFoldersThread getMoreFoldersThread;
     private boolean isNotificationChannelInitialized;
+    private boolean isViewMailTransitionEnabled = true; // toggle for enabling or disabling the view mail transition animation with shared elements. Disable if too intrusive.
 
     public void onEveryAppOpen(Activity activity, Context context){
 
@@ -836,5 +837,12 @@ public class MailApplication implements Constants {
 
     public void setNotificationChannelInitialized(boolean notificationChannelInitialized) {
         isNotificationChannelInitialized = notificationChannelInitialized;
+    }
+
+    /*
+     toggle for enabling or disabling the view mail transition animation with shared elements. Disable if too intrusive.
+     */
+    public boolean isViewMailTransitionEnabled() {
+        return isViewMailTransitionEnabled;
     }
 }
