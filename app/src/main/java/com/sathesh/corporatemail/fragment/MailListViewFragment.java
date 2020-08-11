@@ -40,7 +40,6 @@ import com.sathesh.corporatemail.ui.listeners.MailListViewListener;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author sathesh
