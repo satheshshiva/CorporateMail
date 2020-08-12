@@ -18,6 +18,7 @@
             android:id="@+id/indeterminate_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right|end"
             android:visibility="gone"
             />
 
