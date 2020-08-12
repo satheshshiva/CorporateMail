@@ -15,7 +15,7 @@
         <item name="android:actionModeBackground">@color/blue_material_sample_Primary</item>
         <item name="actionModeStyle">@style/Styled.ActionMode</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="android:windowSoftInputMode">adjustNothing</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item><!-- added this because the action bar resizes down when soft keyboard appear-->
     </style>
 
     <!-- Following theme for Settings activity-->
