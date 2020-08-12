@@ -96,9 +96,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
 
         fbButton.setOnClickListener(listener);
 
-        //Initialize toolbar
-        MailApplication.toolbarInitialize(activity, view);
-
         //action bar initialize
         myActionBar = activity.getSupportActionBar();
         //update mail type in the action bar title
