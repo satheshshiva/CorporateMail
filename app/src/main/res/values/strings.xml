@@ -113,7 +113,7 @@
     <string name="compose_cc_disp_default">CC: </string>
     <string name="compose_bcc_disp_default">BCC: </string>
     <string name="compose_to_lbl">To</string>
-    <string name="compose_to_addRecipientBtn">Add Recipient</string>
+    <string name="compose_to_addRecipientBtn">Add</string>
     <string name="compose_to_no_recep">Please add atleast one recipient</string>
     <string name="compose_resolving_names_wait">Please wait while resolving names</string>
     <string name="compose_to_box_not_empty">Please click the Add symbol to add the To recipient</string>
@@ -149,7 +149,7 @@
     <string name="compose_resolve_notfound_warning">The email id for the following contact(s) are not resolved. Please enter the email id manually.\n%s</string>
 
     <!-- Add Recipient -->
-    <string name="addrecipient_searchdirectory_btn_lbl">Search Directory</string>
+    <string name="addrecipient_searchdirectory_btn_lbl">Search</string>
     <string name="addrecipient_addTo_btn_lbl">To</string>
     <string name="addrecipient_addCC_btn_lbl">CC</string>
     <string name="addrecipient_addBCC_btn_lbl">BCC</string>

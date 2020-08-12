@@ -35,8 +35,8 @@
 
         <Button
             android:id="@+id/searchDirectoryBtn"
-            style="@style/Style.Button"
-            android:layout_width="140sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:layout_marginTop="10dp"
             android:onClick="onClickDirectorySearch"
             android:text="@string/addrecipient_searchdirectory_btn_lbl" />
@@ -58,26 +58,29 @@
 
             <Button
                 android:id="@+id/addTo"
-                style="@style/Style.Button"
                 android:onClick="addToOnClick"
                 android:text="@string/addrecipient_addTo_btn_lbl"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_marginLeft="10sp" />
 
             <Button
                 android:id="@+id/addCC"
-                style="@style/Style.Button"
                 android:onClick="addCCOnClick"
                 android:text="@string/addrecipient_addCC_btn_lbl"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_marginLeft="10sp" />
 
             <Button
                 android:id="@+id/addBCC"
-                style="@style/Style.Button"
                 android:onClick="addBCCOnClick"
                 android:text="@string/addrecipient_addBCC_btn_lbl"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_marginLeft="10sp" />
         </LinearLayout>
     </LinearLayout>
