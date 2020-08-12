@@ -69,9 +69,6 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".activity.TestActivity"
-            android:label="@string/title_activity_test" />
-        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/ParentTheme.DarkActionBar" />

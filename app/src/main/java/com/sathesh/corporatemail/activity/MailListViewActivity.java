@@ -203,6 +203,9 @@ public class MailListViewActivity extends MyActivity implements Constants, MailL
             if (savedInstanceState != null) {
                 drawerLayoutSelectedPosition = savedInstanceState.getInt(STATE_DRAWER_MENU_HIGHTLIGHTED);
             }
+            //Initialize toolbar
+            MailApplication.toolbarInitialize(this);
+            setSupportProgressBarIndeterminateVisibility(false);
 
             if (MailApplication.getInstance().isViewMailTransitionEnabled()) {
                 //Listener for exit activity transition.

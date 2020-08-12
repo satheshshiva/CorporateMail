@@ -140,15 +140,6 @@ public class MailApplication implements Constants {
         return toolbar;
     }
 
-    /** All fragments will call this method in the OnCreate or similarr to initialize the actionbar toolbar
-     *
-     */
-    public static Toolbar toolbarInitialize( MyActivity activity ,View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.actionbar_toolbar);
-        activity.setSupportActionBar(toolbar);
-        return toolbar;
-    }
-
     public static String getWebmailURL(Context context, String url){
         return url + context.getString(R.string.webmail_url_EWS_extension);
     }

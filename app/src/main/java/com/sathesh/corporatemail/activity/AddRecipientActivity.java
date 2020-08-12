@@ -66,9 +66,6 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
         //Initialize toolbar
         MailApplication.toolbarInitialize(this);
 
-        //Initialize toolbar
-        MailApplication.toolbarInitialize(this);
-
 		getSupportActionBar().setHomeButtonEnabled(true);
 		contactSearch= (EditText)findViewById(R.id.contactSearch);
 

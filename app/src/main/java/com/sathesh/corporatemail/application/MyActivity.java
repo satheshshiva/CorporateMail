@@ -18,20 +18,15 @@ public class MyActivity extends AppCompatActivity {
      * in the toolbar
      * @param visibility
      */
+    @Override
     public void setSupportProgressBarIndeterminateVisibility(boolean visibility){
         ProgressBar progressBar=(ProgressBar)findViewById(R.id.indeterminate_progress);
-        if(visibility)
-        progressBar.setVisibility(View.VISIBLE);
-        else
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(visibility ? View.VISIBLE: View.GONE);
     }
 
     //to be called from fragment
-    public void setSupportProgressBarIndeterminateVisibility(View view, boolean visibility){
-        ProgressBar progressBar=(ProgressBar)view.findViewById(R.id.indeterminate_progress);
-        if(visibility)
-            progressBar.setVisibility(View.VISIBLE);
-        else
-            progressBar.setVisibility(View.GONE);
+    public void setSupportProgressBarIndeterminateVisibility(MyActivity activity, boolean visibility){
+        ProgressBar progressBar=(ProgressBar)activity.findViewById(R.id.indeterminate_progress);
+        progressBar.setVisibility(visibility?  View.VISIBLE: View.GONE);
     }
 }
