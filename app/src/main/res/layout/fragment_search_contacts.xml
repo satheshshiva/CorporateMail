@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchContactsActivity" >
+    >
 
     <!-- layout to show image downloading progress -->
     <include layout="@layout/toolbar" />
@@ -27,8 +27,8 @@
 
         <Button
             android:id="@+id/searchDirectoryBtn"
-            style="@style/Style.Button"
-            android:layout_width="140sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/searchContact_searchdirectory_btn_lbl" />
 
