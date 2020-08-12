@@ -192,15 +192,20 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                         Intent viewMailIntent = new Intent((activity).getBaseContext(), ViewMailActivity.class);
                         viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS, fragment.getCachedHeaderVoList());
                         viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, listViewContent.getMailHeaderPosition());
-                        //start the view mail activity
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                        //start the view mail activity with transition
+                        if (MailApplication.getInstance().isViewMailTransitionEnabled()
+                                && fragment.getNewMailsThreadState() != Status.UPDATING  // If these threads are running in the background then it will
+                                && fragment.getMoreMailsThreadState() != Status.UPDATING      //  redraw the listview and the views that will be sent will be invalid
+                                && fragment.getSavedInstanceState()==null               // changing the orientation and then opening mail crashes. So just disabling this transition after screen rotation
+                                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        {
 
                             View subjectView = view.findViewById(R.id.subject);
                             View fromView = view.findViewById(R.id.from);
                             View dateView = view.findViewById(R.id.date);
 
-                            if(MailApplication.getInstance().isViewMailTransitionEnabled() && fragment.getNewMailsThreadState() != Status.UPDATING && fragment.getMoreMailsThreadState() != Status.UPDATING && // If these threads are running in the background then it will redraw the listview and the sent views will be invalid
-                                    subjectView!=null && fromView!=null && dateView!=null) {    // just to make sure
+                            if(subjectView!=null && fromView!=null && dateView!=null) {    // just to make sure
                                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
                                         Pair.create(subjectView, TransitionSharedElementNames.subject),
                                         Pair.create(fromView, TransitionSharedElementNames.from),
@@ -211,6 +216,7 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                                 break;
                             }
                         }
+                        //start the view mail activity without transition
                         activity.startActivity(viewMailIntent);
                         break;
                     case MailListViewContent.types.DATE_HEADER:
