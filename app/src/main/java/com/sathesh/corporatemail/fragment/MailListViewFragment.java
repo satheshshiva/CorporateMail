@@ -86,6 +86,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     //contains all the UI listeners for this fragment
     private MailListViewListener listener;
     private ArrayList<CachedMailHeaderVO> cachedHeaderVoList;
+    private Bundle savedInstanceState;
 
     /**
      * @author sathesh
@@ -144,6 +145,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
         activity = (MyActivity) getActivity();
         context = getActivity();
+        this.savedInstanceState = savedInstanceState;
         if (cacheMailHeaderAdapter == null) {
             cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
@@ -625,5 +627,10 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     @Override
     public ArrayList<CachedMailHeaderVO> getCachedHeaderVoList() {
         return cachedHeaderVoList;
+    }
+
+    @Override
+    public Bundle getSavedInstanceState() {
+        return savedInstanceState;
     }
 }
