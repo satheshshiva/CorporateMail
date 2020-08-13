@@ -17,7 +17,7 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 public class SettingsActivity extends MyActivity implements SettingsFragment.ActivityDataPasser{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ApplyAnimation.setSlideAnimation(this);
         setContentView(R.layout.settings_activity);
