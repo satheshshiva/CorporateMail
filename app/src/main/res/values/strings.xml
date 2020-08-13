@@ -154,7 +154,7 @@
     <string name="addrecipient_addCC_btn_lbl">CC</string>
     <string name="addrecipient_addBCC_btn_lbl">BCC</string>
     <string name="addrecipient_contactSearch_hint">Enter Email Id or Search</string>
-    <string name="addrecipient_contactSearch_helptext">Enter email id or search person and tap To, CC or BCC button</string>
+    <string name="addrecipient_contactSearch_helptext">Enter email id or search and then tap To, CC or BCC</string>
     <string name="addrecipient_error">Unknown Error Occurred</string>
     <string name="addrecipient_nomatch">No match found</string>
     <string name="addrecipient_select_person">Please enter valid email id or search person</string>
