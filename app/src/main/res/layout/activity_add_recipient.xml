@@ -1,87 +1,114 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <!-- layout to show image downloading progress -->
     <include layout="@layout/toolbar" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/add_recipient_contraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".AddRecipientActivity" >
+        tools:context=".AddRecipientActivity">
 
         <EditText
             android:id="@+id/contactSearch"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:hint="@string/addrecipient_contactSearch_hint"
             android:singleLine="true"
-            android:ems="10" />
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/searchHelpText"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@string/addrecipient_contactSearch_helptext"
             android:textSize="13sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/contactSearch" />
 
         <Button
             android:id="@+id/searchDirectoryBtn"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
             android:onClick="onClickDirectorySearch"
-            android:text="@string/addrecipient_searchdirectory_btn_lbl" />
+            android:text="@string/addrecipient_searchdirectory_btn_lbl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchHelpText" />
+
 
         <ListView
             android:id="@+id/suggestionsListView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/searchDirectoryBtn"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/addTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:onClick="addToOnClick"
+            android:text="@string/addrecipient_addTo_btn_lbl"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addCC"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline" />
+
+        <Button
+            android:id="@+id/addCC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="addCCOnClick"
+            android:text="@string/addrecipient_addCC_btn_lbl"
+            app:layout_constraintBottom_toBottomOf="@+id/addTo"
+            app:layout_constraintEnd_toStartOf="@+id/addBCC" />
+
+        <Button
+            android:id="@+id/addBCC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="addBCCOnClick"
+            android:text="@string/addrecipient_addBCC_btn_lbl"
+            app:layout_constraintBottom_toBottomOf="@+id/addCC"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline"
             android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="60"
-            android:fadeScrollbars="false"
-            >
-        </ListView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
-                android:id="@+id/addTo"
-                android:onClick="addToOnClick"
-                android:text="@string/addrecipient_addTo_btn_lbl"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="10sp" />
 
-            <Button
-                android:id="@+id/addCC"
-                android:onClick="addCCOnClick"
-                android:text="@string/addrecipient_addCC_btn_lbl"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="10sp" />
-
-            <Button
-                android:id="@+id/addBCC"
-                android:onClick="addBCCOnClick"
-                android:text="@string/addrecipient_addBCC_btn_lbl"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="10sp" />
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

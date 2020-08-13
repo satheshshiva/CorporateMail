@@ -56,7 +56,7 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 	private final ArrayList<ContactSerializable> selectedList = new ArrayList<ContactSerializable>();
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_add_recipient);

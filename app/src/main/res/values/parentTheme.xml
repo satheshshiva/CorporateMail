@@ -15,7 +15,6 @@
         <item name="android:actionModeBackground">@color/blue_material_sample_Primary</item>
         <item name="actionModeStyle">@style/Styled.ActionMode</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <!-- Following theme for Settings activity-->
