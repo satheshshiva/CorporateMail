@@ -1,109 +1,134 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <!-- layout to show image downloading progress -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="true">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin">
-            <!-- Logo Section -->
+            android:id="@+id/login_constriant_layout">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="88dp">
+        <!-- Logo Section -->
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="90dip"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginLeft="5dp"
-                    android:contentDescription="@string/contetn_desc_logo"
-                    android:src="@drawable/cm_hi_res_icon" />
+            <ImageView
+                android:id="@+id/login_logo"
+                android:layout_width="76dp"
+                android:layout_height="82dp"
+                android:layout_marginTop="36dp"
+                android:contentDescription="@string/contetn_desc_logo"
+                android:src="@drawable/cm_hi_res_icon"
+                app:layout_constraintEnd_toStartOf="@+id/login_right_guideline"
+                app:layout_constraintHorizontal_bias="0.18"
+                app:layout_constraintStart_toStartOf="@+id/login_left_guideline"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="10dip"
-                    android:layout_toRightOf="@+id/imageView1"
-                    android:text="@string/login_logo_bigText"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/login_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/login_logo_bigText"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                app:layout_constraintBottom_toBottomOf="@+id/login_logo"
+                app:layout_constraintStart_toEndOf="@+id/login_logo"
+                app:layout_constraintTop_toTopOf="@+id/login_logo"
+                tools:layout_conversion_absoluteHeight="30dp"
+                tools:layout_conversion_absoluteWidth="146dp" />
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/textView3"
-                    android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@+id/textView3"
-                    android:text="@string/login_logo_bigText_beta"
-                    android:textSize="10dp" />
-            </RelativeLayout>
 
             <!-- Main Content -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+
+
+        <!-- Password -->
+
+            <!-- UserName edittext -->
+
+            <!-- Password -->
+
+            <EditText
+                android:id="@+id/login_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:ems="10"
+                android:hint="@string/login_url"
+                android:inputType="textUri"
+                android:text="@string/login_url_text"
+                app:layout_constraintEnd_toStartOf="@+id/login_right_guideline"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/login_left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/login_logo"
+                tools:layout_conversion_absoluteHeight="45dp"
+                tools:layout_conversion_absoluteWidth="339dp" />
+
+            <EditText
+                android:id="@+id/login_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/login_user_text"
+                android:inputType="textNoSuggestions"
+                app:layout_constraintEnd_toStartOf="@+id/login_right_guideline"
+                app:layout_constraintStart_toStartOf="@+id/login_left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/login_url"
+                tools:layout_conversion_absoluteHeight="45dp"
+                tools:layout_conversion_absoluteWidth="339dp" />
+
+            <EditText
+                android:id="@+id/login_passwd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/login_pwd_text"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toStartOf="@+id/login_right_guideline"
+                app:layout_constraintStart_toStartOf="@+id/login_left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/login_username"
+                tools:layout_conversion_absoluteHeight="45dp"
+                tools:layout_conversion_absoluteWidth="339dp" />
+
+            <Button
+                android:id="@+id/loginBtn"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:onClick="loginButtonClicked"
+                android:text="@string/login_btn_text"
+                app:layout_constraintEnd_toStartOf="@+id/login_right_guideline"
+                app:layout_constraintStart_toStartOf="@+id/login_left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/login_passwd"
+                tools:layout_conversion_absoluteHeight="48dp"
+                tools:layout_conversion_absoluteWidth="339dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/login_left_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="20dp"
-                android:paddingTop="60dp"
-                android:paddingRight="20dp">
+                app:layout_constraintGuide_begin="32dp" />
 
-                <!-- Password -->
-                <EditText
-                    android:id="@+id/login_url"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="17sp"
-                    android:ems="10"
-                    android:hint="@string/login_url"
-                    android:inputType="textUri"
-                    android:text="@string/login_url_text" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/login_right_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="32dp" />
 
-                <!-- UserName edittext -->
-                <EditText
-                    android:id="@+id/login_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/login_user_text"
-                    android:inputType="textNoSuggestions" />
 
-                <!-- Password -->
-                <EditText
-                    android:id="@+id/login_passwd"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/login_pwd_text"
-                    android:inputType="textPassword" />
-
-                <Button
-                    android:id="@+id/loginBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="40sp"
-                    android:onClick="loginButtonClicked"
-                    android:text="@string/login_btn_text" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
