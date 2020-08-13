@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintTop_toTopOf="parent"
-         />
+         tools:targetApi="lollipop" />
 
     <TextView
         android:id="@+id/collapsedFrom"
@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toStartOf="@+id/collapsedDate"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/subject"
-         />
+         tools:targetApi="lollipop" />
 
     <TextView
         android:id="@+id/collapsedDate"
@@ -64,7 +64,8 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/collapsedFrom"
         app:layout_constraintBottom_toBottomOf="@+id/collapsedFrom"
         app:layout_constraintHorizontal_weight="0.2"
-        app:layout_constraintStart_toEndOf="@+id/collapsedFrom" />
+        app:layout_constraintStart_toEndOf="@+id/collapsedFrom"
+        tools:targetApi="lollipop" />
 
     <View
         android:id="@+id/bodyDivider"
@@ -183,10 +184,10 @@
         android:layout_width="0dp"
         android:transitionName="transitionWebviewShared"
         android:layout_height="wrap_content"
-        android:minHeight="600dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expandButton" />
+        app:layout_constraintTop_toBottomOf="@+id/expandButton"
+        tools:targetApi="lollipop" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/right_guideline"
