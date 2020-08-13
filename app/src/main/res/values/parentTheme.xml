@@ -7,7 +7,7 @@
 
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/blue_material_sample_Primary</item>
-        <item name="colorPrimaryDark">@color/blue_material_sample_Primary_Dark</item>
+        <item name="colorPrimaryDark">@color/StatusBarBlueColor</item>
         <item name="android:textColor">@color/black</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>

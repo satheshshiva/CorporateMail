@@ -11,7 +11,6 @@
     android:elevation="10dp"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    android:paddingTop="24dp"
    >
         <!-- using android fitSystemWindows is causing the actionbar go crazy when the soft keyboard comes-->
         <ProgressBar
