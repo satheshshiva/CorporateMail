@@ -53,25 +53,13 @@
         <ListView
             android:id="@+id/suggestionsListView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/addTo"
             app:layout_constraintEnd_toStartOf="@+id/right_guideline"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/searchDirectoryBtn"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
-            android:id="@+id/addTo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:onClick="addToOnClick"
-            android:text="@string/addrecipient_addTo_btn_lbl"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/addCC"
-            app:layout_constraintStart_toStartOf="@+id/left_guideline" />
+            app:layout_constraintTop_toBottomOf="@+id/searchDirectoryBtn" />
 
         <Button
             android:id="@+id/addCC"
@@ -79,8 +67,17 @@
             android:layout_height="wrap_content"
             android:onClick="addCCOnClick"
             android:text="@string/addrecipient_addCC_btn_lbl"
-            app:layout_constraintBottom_toBottomOf="@+id/addTo"
-            app:layout_constraintEnd_toStartOf="@+id/addBCC" />
+            app:layout_constraintBottom_toTopOf="@+id/botton_guideline"
+            tools:layout_editor_absoluteX="161dp" />
+
+        <Button
+            android:id="@+id/addTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="addToOnClick"
+            android:text="@string/addrecipient_addTo_btn_lbl"
+            app:layout_constraintBottom_toTopOf="@+id/botton_guideline"
+            tools:layout_editor_absoluteX="32dp" />
 
         <Button
             android:id="@+id/addBCC"
@@ -88,8 +85,8 @@
             android:layout_height="wrap_content"
             android:onClick="addBCCOnClick"
             android:text="@string/addrecipient_addBCC_btn_lbl"
-            app:layout_constraintBottom_toBottomOf="@+id/addCC"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline" />
+            app:layout_constraintBottom_toTopOf="@+id/botton_guideline"
+            tools:layout_editor_absoluteX="285dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/left_guideline"
@@ -105,7 +102,17 @@
             android:id="@+id/right_guideline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
             android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp"
+            app:layout_constraintStart_toEndOf="@+id/addBCC" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/botton_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintGuide_end="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
