@@ -738,7 +738,7 @@ public class MailApplication implements Constants {
     }
 
 
-    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass){
+    public static void downloadInlineImgs(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass, boolean hardReDownload){
         String path="";
         File file;
         FileAttachment fileAttachment;
@@ -775,7 +775,7 @@ public class MailApplication implements Constants {
                             if(BuildConfig.DEBUG){
                                 Log.d(LOG_TAG, "Caching image file " +fileAttachment.getName() );
                             }
-                            if(!((new File(path)).exists())){
+                            if(hardReDownload || !(new File(path)).exists()){
                                 //EWS call
                                 fos = new FileOutputStream(path);
                                 try{
@@ -792,7 +792,7 @@ public class MailApplication implements Constants {
                             }
                         }
                         else{
-                            Log.d(LOG_TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: " + fileAttachment.getFileName() + " as it is not an inline image" );
+                            Log.d(LOG_TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: File name:" + fileAttachment.getFileName() + " as it is not an inline image" );
                         }
                     } catch (Exception e) {
                         Utilities.generalCatchBlock(e, thisClass);

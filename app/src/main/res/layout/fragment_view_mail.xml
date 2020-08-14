@@ -1,200 +1,217 @@
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/linearLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:ignore="HardcodedText"
-    >
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/left_guideline"
-        android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            tools:ignore="HardcodedText">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/left_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/subject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Subject"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:transitionName="transitionSubjectShared"
+                app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+                app:layout_constraintStart_toStartOf="@+id/left_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:targetApi="lollipop" />
+
+            <TextView
+                android:id="@+id/collapsedFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Sender Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:transitionName="transitionFromShared"
+                app:layout_constraintEnd_toStartOf="@+id/collapsedDate"
+                app:layout_constraintStart_toStartOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/subject"
+                tools:targetApi="lollipop" />
+
+            <TextView
+                android:id="@+id/collapsedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:transitionName="transitionDateShared"
+                app:layout_constraintBaseline_toBaselineOf="@+id/collapsedFrom"
+                app:layout_constraintBottom_toBottomOf="@+id/collapsedFrom"
+                app:layout_constraintHorizontal_weight="0.2"
+                app:layout_constraintStart_toEndOf="@+id/collapsedFrom"
+                tools:targetApi="lollipop" />
+
+            <View
+                android:id="@+id/bodyDivider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="@+id/expandButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/expandButton" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/moreHeaders"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+                app:layout_constraintStart_toStartOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/collapsedFrom">
+
+
+                <TextView
+                    android:id="@+id/expandedFromLbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="From"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/expandedToLbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="To"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
+                    app:layout_constraintTop_toBottomOf="@+id/expandedFromLbl" />
+
+                <TextView
+                    android:id="@+id/expandedCcLbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="CC"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
+                    app:layout_constraintTop_toBottomOf="@+id/expandedToLbl" />
+
+                <TextView
+                    android:id="@+id/expandedDateLbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Date"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
+                    app:layout_constraintTop_toBottomOf="@+id/expandedCcLbl" />
+
+                <TextView
+                    android:id="@+id/expandedFrom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="From"
+                    app:layout_constraintStart_toEndOf="@+id/expandedFromLbl"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/expandedTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="To"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedToLbl"
+                    app:layout_constraintStart_toEndOf="@+id/expandedToLbl" />
+
+                <TextView
+                    android:id="@+id/expandedCc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="Cc"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedCcLbl"
+                    app:layout_constraintStart_toEndOf="@+id/expandedCcLbl" />
+
+                <TextView
+                    android:id="@+id/expandedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="Date"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedDateLbl"
+                    app:layout_constraintStart_toEndOf="@+id/expandedDateLbl" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/expandButton"
+                android:layout_width="44dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="8dp"
+                android:drawableTop="@drawable/round_expand_more_white_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/moreHeaders" />
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:transitionName="transitionWebviewShared"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/expandButton"
+                app:layout_constraintVertical_bias="0.0"
+                tools:targetApi="lollipop" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/right_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+            <!-- layout to show image downloading progress -->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        layout="@layout/include_downloading_notification"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/subject"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Subject"
-        android:transitionName="transitionSubjectShared"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintStart_toStartOf="@+id/left_guideline"
-        app:layout_constraintTop_toTopOf="parent"
-         tools:targetApi="lollipop" />
-
-    <TextView
-        android:id="@+id/collapsedFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Sender Name"
-        android:transitionName="transitionFromShared"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintEnd_toStartOf="@+id/collapsedDate"
-        app:layout_constraintStart_toStartOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/subject"
-         tools:targetApi="lollipop" />
-
-    <TextView
-        android:id="@+id/collapsedDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="Time"
-        android:transitionName="transitionDateShared"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:textStyle="italic"
-        app:layout_constraintBaseline_toBaselineOf="@+id/collapsedFrom"
-        app:layout_constraintBottom_toBottomOf="@+id/collapsedFrom"
-        app:layout_constraintHorizontal_weight="0.2"
-        app:layout_constraintStart_toEndOf="@+id/collapsedFrom"
-        tools:targetApi="lollipop" />
-
-    <View
-        android:id="@+id/bodyDivider"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="@+id/expandButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/expandButton" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/moreHeaders"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintStart_toStartOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/collapsedFrom">
-
-
-        <TextView
-            android:id="@+id/expandedFromLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="From"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-             />
-
-        <TextView
-            android:id="@+id/expandedToLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="To"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-            app:layout_constraintTop_toBottomOf="@+id/expandedFromLbl"
-             />
-
-        <TextView
-            android:id="@+id/expandedCcLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="CC"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-            app:layout_constraintTop_toBottomOf="@+id/expandedToLbl" />
-
-        <TextView
-            android:id="@+id/expandedDateLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Date"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-            app:layout_constraintTop_toBottomOf="@+id/expandedCcLbl" />
-
-        <TextView
-            android:id="@+id/expandedFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="From"
-            app:layout_constraintStart_toEndOf="@+id/expandedFromLbl"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/expandedTo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="To"
-            app:layout_constraintBottom_toBottomOf="@+id/expandedToLbl"
-            app:layout_constraintStart_toEndOf="@+id/expandedToLbl" />
-
-        <TextView
-            android:id="@+id/expandedCc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="Cc"
-            app:layout_constraintBottom_toBottomOf="@+id/expandedCcLbl"
-            app:layout_constraintStart_toEndOf="@+id/expandedCcLbl" />
-
-        <TextView
-            android:id="@+id/expandedDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="Date"
-            app:layout_constraintBottom_toBottomOf="@+id/expandedDateLbl"
-            app:layout_constraintStart_toEndOf="@+id/expandedDateLbl" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/expandButton"
-        android:layout_width="44dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:drawableTop="@drawable/round_expand_more_white_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moreHeaders" />
-
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="0dp"
-        android:transitionName="transitionWebviewShared"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expandButton"
-        tools:targetApi="lollipop" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/right_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>

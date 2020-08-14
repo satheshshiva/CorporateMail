@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Root style element -->
+    <style name="Style">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+</resources>
