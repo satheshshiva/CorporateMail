@@ -73,7 +73,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             // get the cached body items by passing item id
             List<CachedMailBodyVO> bodyVOList = cacheMailBodyAdapter.getMailBody(parent.getItemId());
 
-            if(bodyVOList!=null && bodyVOList.size()>0){
+            if(bodyVOList!=null && bodyVOList.size()>0 && false){
             //cache exist
                 //get the first body record from the list of body for the item id. there must be only one record
                 CachedMailBodyVO bodyVO = bodyVOList.get(0);
@@ -130,7 +130,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                     parent.setProcessedHtml(bodyWithImg);
 
                     // download and cache images. html body will be refreshed after each img download to show the imgs
-                    MailApplication.cacheInlineImages(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this);
+                    MailApplication.downloadInlineImgs(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this, false);
                 }
                 //no inline images
                 else {

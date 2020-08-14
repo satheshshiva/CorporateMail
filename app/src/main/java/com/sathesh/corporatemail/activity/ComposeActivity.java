@@ -175,7 +175,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         quoteWebview  = (WebView)findViewById(R.id.quoteWebview);
         progressDispBar = new ProgressDisplayNotificationBar(activity);
         warningDispBar = new WarningDisplayNotificationBar(activity);
-        titleBar_Progress_linearLayout = (LinearLayout)findViewById(R.id.titleBar_Progress_linearLayout);
+        titleBar_Progress_linearLayout = (LinearLayout)findViewById(R.id.titleBar_Progress_layout);
 
         titleBar_Progress_linearLayout.setVisibility(View.INVISIBLE);	// the default in layout is "GONE".
         // Changing to invisible so that users wont experience a layout change on when this disappears.

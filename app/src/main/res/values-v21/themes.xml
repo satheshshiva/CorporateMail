@@ -1,0 +1,13 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The main theme for the app.
+    Parent: Theme.AppCompat.Light -->
+
+    <style name="Theme.MainTheme" parent="ParentTheme.NoActionBar">
+
+        <item name="android:navigationBarColor">@color/blue_material_sample_Primary_Dark</item>
+
+    </style>
+
+
+</resources>

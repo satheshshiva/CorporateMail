@@ -33,11 +33,11 @@ public class ApplyAnimation {
 	//View Mail Activity
 	public static Animation getDownloadingImagesLblInAnim(MyActivity activity){
 
-		return  AnimationUtils.loadAnimation(activity, R.anim.slide_in_from_top);
+		return  AnimationUtils.loadAnimation(activity, R.anim.slide_in_from_bottom);
 
 	}
 	public static Animation getDownloadingImagesLblOutAnim(MyActivity activity){
-		return  AnimationUtils.loadAnimation(activity, R.anim.slide_out_to_top);
+		return  AnimationUtils.loadAnimation(activity, R.anim.slide_out_to_bottom);
 	}
 
 	public static Animation getLoginPageTextViewShakeAnim(MyActivity activity){

@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -19,7 +20,7 @@ import com.sathesh.corporatemail.constants.Constants;
  */
 public class ProgressDisplayNotificationBar implements Constants{
 
-	private LinearLayout titleBar_Progress_linearLayout;
+	private ConstraintLayout titleBar_Progress_linearLayout;
 	private Activity activity;
 	private TextView titlebar_viewmail_status;
 
@@ -28,7 +29,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 	 */
 	public ProgressDisplayNotificationBar(Activity activity, View view){
 		this.activity=activity;
-		this.titleBar_Progress_linearLayout=(LinearLayout)view.findViewById(R.id.titleBar_Progress_linearLayout);
+		this.titleBar_Progress_linearLayout=(ConstraintLayout)view.findViewById(R.id.titleBar_Progress_layout);
 		this.titlebar_viewmail_status=(TextView)view.findViewById(R.id.titlebar_viewmail_status);
 	}
 
@@ -37,7 +38,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 	 */
 	public ProgressDisplayNotificationBar(Activity activity){
 		this.activity=activity;
-		this.titleBar_Progress_linearLayout=(LinearLayout)activity.findViewById(R.id.titleBar_Progress_linearLayout);
+		this.titleBar_Progress_linearLayout=(ConstraintLayout)activity.findViewById(R.id.titleBar_Progress_layout);
 		this.titlebar_viewmail_status=(TextView)activity.findViewById(R.id.titlebar_viewmail_status);
 	}
 	
