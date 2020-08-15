@@ -130,7 +130,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                     parent.setProcessedHtml(bodyWithImg);
 
                     // download and cache images. html body will be refreshed after each img download to show the imgs
-                    MailApplication.downloadInlineImgs(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this, false);
+                    MailApplication.downloadInlineImgs(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this, true);
                 }
                 //no inline images
                 else {
