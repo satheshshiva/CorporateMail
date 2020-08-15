@@ -128,7 +128,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
 
         progressStatusDispBar = new ProgressDisplayNotificationBar(activity,view);
-        //TODO see whether this works fine
 
         //listener for this frament and activity
         viewMailListener = new ViewMailListener(this);
@@ -760,10 +759,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         return progressStatusDispBar;
     }
 
-    public void setProgressStatusDispBar(
-            ProgressDisplayNotificationBar progressStatusDispBar) {
-        this.progressStatusDispBar = progressStatusDispBar;
-    }
     public StandardWebView getStandardWebView() {
         return standardWebView;
     }
