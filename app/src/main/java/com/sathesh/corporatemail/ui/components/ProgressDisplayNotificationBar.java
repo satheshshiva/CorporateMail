@@ -31,7 +31,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 		this.activity=activity;
 		this.titleBar_Progress_linearLayout=(ConstraintLayout)view.findViewById(R.id.titleBar_Progress_layout);
 		this.titlebar_viewmail_status=(TextView)view.findViewById(R.id.titlebar_viewmail_status);
-		titleBar_Progress_linearLayout.setVisibility(View.GONE);
+		titleBar_Progress_linearLayout.setVisibility(View.INVISIBLE);
 	}
 
 	/** this class will display the status of downloading or resolving names
@@ -41,6 +41,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 		this.activity=activity;
 		this.titleBar_Progress_linearLayout=(ConstraintLayout)activity.findViewById(R.id.titleBar_Progress_layout);
 		this.titlebar_viewmail_status=(TextView)activity.findViewById(R.id.titlebar_viewmail_status);
+		titleBar_Progress_linearLayout.setVisibility(View.INVISIBLE);
 	}
 	
 	/** shows the layout with anim
@@ -59,7 +60,7 @@ public class ProgressDisplayNotificationBar implements Constants{
 	public void hideStatusBar(){
 		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim((MyActivity) activity);
 		titleBar_Progress_linearLayout.setAnimation(animation);
-		titleBar_Progress_linearLayout.setVisibility(View.GONE);
+		titleBar_Progress_linearLayout.setVisibility(View.INVISIBLE);
 	}
 
 	/** updates the text

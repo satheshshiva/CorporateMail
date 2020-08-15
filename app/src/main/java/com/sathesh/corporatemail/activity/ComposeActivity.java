@@ -126,7 +126,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private static LinearLayout quotedTextLinearLayout;
     private static boolean resolvingNames=false;
 
-    private static LinearLayout titleBar_Progress_linearLayout;
     private  static int notResolved=0;
     private  static StringBuffer notResolvedNames = new StringBuffer();
 
@@ -175,9 +174,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         quoteWebview  = (WebView)findViewById(R.id.quoteWebview);
         progressDispBar = new ProgressDisplayNotificationBar(activity);
         warningDispBar = new WarningDisplayNotificationBar(activity);
-        titleBar_Progress_linearLayout = (LinearLayout)findViewById(R.id.titleBar_Progress_layout);
-
-        titleBar_Progress_linearLayout.setVisibility(View.INVISIBLE);	// the default in layout is "GONE".
         // Changing to invisible so that users wont experience a layout change on when this disappears.
 
         quotedTextLinearLayout = (LinearLayout)findViewById(R.id.quoteLinearLayout);

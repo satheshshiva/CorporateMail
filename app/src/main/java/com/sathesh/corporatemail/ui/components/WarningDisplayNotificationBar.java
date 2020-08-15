@@ -29,7 +29,7 @@ public class WarningDisplayNotificationBar implements Constants{
 		this.activity=activity;
 		titleBar_Warning_linearLayout=(LinearLayout)activity.findViewById(R.id.titleBar_Warning_linearLayout);
 		titlebar_warning_msg=(TextView)activity.findViewById(R.id.titlebar_warning_msg);
-
+		titleBar_Warning_linearLayout.setVisibility(View.GONE);
 	}
 
 
@@ -37,7 +37,6 @@ public class WarningDisplayNotificationBar implements Constants{
 	 * 
 	 */
 	public void showStatusBar(){
-		Log.d(LOG_TAG, "Show status bar clled");
 		//show resolving names notification layout
 		Animation animation = ApplyAnimation.getDownloadingImagesLblInAnim((MyActivity) activity);
 		titleBar_Warning_linearLayout.setAnimation(animation);
@@ -48,10 +47,9 @@ public class WarningDisplayNotificationBar implements Constants{
 	 * 
 	 */
 	public void hideStatusBar(){
-		Log.d(LOG_TAG, "hide status bar clled");
 		Animation animation = ApplyAnimation.getDownloadingImagesLblOutAnim((MyActivity) activity);
 		titleBar_Warning_linearLayout.setAnimation(animation);
-		titleBar_Warning_linearLayout.setVisibility(View.GONE);
+		titleBar_Warning_linearLayout.setVisibility(View.INVISIBLE);
 	}
 
 	/** updates the text
