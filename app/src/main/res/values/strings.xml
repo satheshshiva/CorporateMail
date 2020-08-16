@@ -145,7 +145,7 @@
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 
-    <string name="compose_resolving_names_text">Resolving email id(s) %1$d of %2$d</string>
+    <string name="compose_resolving_names_text">Resolving email id</string>
     <string name="compose_resolve_notfound_warning">The email id for the following contact(s) are not resolved. Please enter the email id manually.\n%s</string>
 
     <!-- Add Recipient -->
