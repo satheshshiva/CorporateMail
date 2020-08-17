@@ -14,6 +14,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -42,7 +43,6 @@ import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
-import com.sathesh.corporatemail.ui.listeners.ViewMailListener;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
@@ -103,14 +103,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private String processedHtml="";
     private int remainingInlineImages=0;
     private Status currentStatus;
-    private ViewMailListener viewMailListener;
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
 
 
     public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
         this.mailHeaderVo = mailHeaderVo;
     }
-    @SuppressLint("SetJavaScriptEnabled")
+    private boolean zooming;
+    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -128,9 +128,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
 
         progressStatusDispBar = new ProgressDisplayNotificationBar(activity,view);
-
-        //listener for this frament and activity
-        viewMailListener = new ViewMailListener(this);
 
         //if(customTitleSupported)
         //	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getViewMailTitleBarLayout());
@@ -156,6 +153,35 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDisplayZoomControls(false);
 
+        /*nestedScrollview.setOnTouchListener((View view1, MotionEvent ev)->{
+            mScaleDetector= new ScaleGestureDetector(context, new ScaleListener());
+            // Let the ScaleGestureDetector inspect all events.
+            mScaleDetector.onTouchEvent(ev);
+            return false;
+        });*/
+
+        webview.setOnTouchListener((View v, MotionEvent event) -> {
+            int action = event.getActionMasked();
+
+            // Setting on Touch Listener for handling the touch inside ScrollView
+                // Disallow the touch request for parent scroll on touch of child view
+            if (action == MotionEvent.ACTION_POINTER_DOWN ) {
+                zooming = true;
+                return false;
+            }
+
+            if (action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+                zooming = false;
+            }
+
+            if (zooming) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+
+            return false;
+
+        });
 
         //  webview.loadDataWithBaseURL("fake:///ghj/", "", "text/html", "utf-8", null);
 
