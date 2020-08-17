@@ -20,7 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="0dp"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        tools:layout_editor_absoluteX="-41dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout"
@@ -87,11 +89,15 @@
                 android:id="@+id/bodyDivider"
                 android:layout_width="0dp"
                 android:layout_height="2dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
                 android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="@+id/expandButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/expandButton" />
+                app:layout_constraintTop_toBottomOf="@+id/expandBtn" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/moreHeaders"
@@ -183,23 +189,13 @@
                     app:layout_constraintStart_toEndOf="@+id/expandedDateLbl" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/expandButton"
-                android:layout_width="44dp"
-                android:layout_height="38dp"
-                android:layout_marginTop="8dp"
-                android:drawableTop="@drawable/round_expand_more_white_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/moreHeaders" />
-
             <WebView
                 android:id="@+id/webview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:transitionName="transitionWebviewShared"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/expandButton"
+                app:layout_constraintTop_toBottomOf="@+id/bodyDivider"
                 tools:targetApi="lollipop" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -208,6 +204,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="16dp" />
+
+            <ImageButton
+                android:id="@+id/expandBtn"
+                android:layout_width="35dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/left_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/moreHeaders"
+                app:srcCompat="@drawable/round_more_horiz_white_18"
+                android:onClick="expandBtnOnClick"/>
+
             <!-- layout to show image downloading progress -->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
