@@ -20,8 +20,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
@@ -66,8 +68,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
     private EmailMessage message;
+    private ConstraintLayout moreHeadersLayout;
 
     private CachedMailHeaderVO mailHeaderVo;
+    private boolean expanded;
 
     public enum Status{
         LOADING,	// Started loading body. Network Call for loading body is in progress
@@ -104,6 +108,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private int remainingInlineImages=0;
     private Status currentStatus;
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
+    private ImageButton expandBtn;
 
 
     public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
@@ -141,7 +146,11 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         ccLbl = (TextView)view.findViewById(R.id.expandedCcLbl);
         expandedDateIdView = (TextView)view.findViewById(R.id.expandedDate);
         collapsedDateIdView = (TextView)view.findViewById(R.id.collapsedDate);
+        moreHeadersLayout = (ConstraintLayout) view.findViewById(R.id.moreHeaders);
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
+        expandBtn = (ImageButton) view.findViewById(R.id.expandBtn);
+
+        moreHeadersLayout.setVisibility(View.GONE);
 
         webview = (WebView)view.findViewById(R.id.webview);
         WebSettings webSettings = webview.getSettings();
@@ -257,6 +266,16 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             Utilities.generalCatchBlock(e, this);
         }
     }
+
+    @Override
+    public void expandBtnOnClick(View view) {
+        expandBtn.setVisibility(View.GONE);
+        moreHeadersLayout.setVisibility(View.VISIBLE);
+        collapsedFromIdView.setVisibility(View.GONE);
+        collapsedDateIdView.setVisibility(View.GONE);
+        expanded=true;
+    }
+
     /**
      *
      */
@@ -440,6 +459,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         super.onResume();
         boolean doNotRateAppFlag=false;
         int counterOpenedMails=0;
+        expandBtn.setVisibility(expanded?View.GONE:View.VISIBLE);       //for a bug fix. Without this, when the expand btn once hidden by clicking it, when you open contact details from email and then when going back
+                                                                                            //to the View mails page, this button again shows up for no reason.
         //increase the counter to check the rate app
         try {
             //increase the opened mail counter by 1.

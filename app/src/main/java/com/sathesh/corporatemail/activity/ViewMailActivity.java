@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
 
 import androidx.core.view.MenuItemCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -75,10 +76,8 @@ public class ViewMailActivity extends MyActivity implements Constants{
         MenuItem menuItem;
         MenuItem subMenuItem;
 
-        if (pagerAdapter!=null && pagerAdapter.getFragmentMap()!=null ) {
-            ViewMailFragmentDataPasser viewMailFragment = pagerAdapter.getFragmentMap().get(viewPager.getCurrentItem());
-
-            if (viewMailFragment != null) {
+        ViewMailFragmentDataPasser viewMailFragment = getCurrentlyLoadedFragment();
+        if (viewMailFragment !=null ) {
 
                 //if the current status is not loading or error states then show the menus
                 if (viewMailFragment.getCurrentStatus() != null
@@ -112,9 +111,6 @@ public class ViewMailActivity extends MyActivity implements Constants{
                     MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
                 }
-            }else{
-                Log.e(LOG_TAG, "ViewMailActivity -> viewMailFragment is null from the view pager adapter map. View Pager current position: "+ viewPager.getCurrentItem());
-            }
         }else{
             Log.e(LOG_TAG, "ViewMailActivity -> pagerAdapter or fragment map is null from view pager. not showing options menu");
         }
@@ -135,6 +131,13 @@ public class ViewMailActivity extends MyActivity implements Constants{
         return true;
     }
 
+    private ViewMailFragmentDataPasser getCurrentlyLoadedFragment(){
+        ViewMailFragmentDataPasser viewMailFragment=null;
+        if (pagerAdapter!=null && pagerAdapter.getFragmentMap()!=null ) {
+            viewMailFragment = pagerAdapter.getFragmentMap().get(viewPager.getCurrentItem());
+        }
+        return viewMailFragment;
+    }
     @Override
     public void onDestroy()
     {
@@ -144,10 +147,8 @@ public class ViewMailActivity extends MyActivity implements Constants{
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (pagerAdapter!=null && pagerAdapter.getFragmentMap()!=null ) {
-            ViewMailFragmentDataPasser viewMailFragment = pagerAdapter.getFragmentMap().get(viewPager.getCurrentItem());
-
-            if (viewMailFragment != null) {
+        ViewMailFragmentDataPasser viewMailFragment = getCurrentlyLoadedFragment();
+        if (viewMailFragment !=null ) {
 
                 if(item!=null && item.getItemId()==android.R.id.home){
             //Mark the item as read
@@ -200,11 +201,9 @@ public class ViewMailActivity extends MyActivity implements Constants{
                 Utilities.generalCatchBlock(e,this);
             }
         }
-            }else{
-                Log.e(LOG_TAG, "ViewMailActivity -> viewMailFragment is null from the view pager adapter map. View Pager current position: "+ viewPager.getCurrentItem());
-            }
+
         }else{
-            Log.e(LOG_TAG, "ViewMailActivity -> pagerAdapter or fragment map is null from view pager. not showing options menu");
+            Log.e(LOG_TAG, "ViewMailActivity -> pagerAdapter or fragment map is null from view pager. not initializing options menu");
         }
 
           return super.onOptionsItemSelected(item);
@@ -238,4 +237,12 @@ public class ViewMailActivity extends MyActivity implements Constants{
         backPressed();
     }
 
+    public void expandBtnOnClick(View view) {
+        ViewMailFragmentDataPasser viewMailFragment = getCurrentlyLoadedFragment();
+        if (viewMailFragment !=null ) {
+            viewMailFragment.expandBtnOnClick(view);
+        }else{
+            Log.e(LOG_TAG, "ViewMailActivity -> pagerAdapter or fragment map is null from view pager. not able to call the expandBtnOnClick(view) in fragment");
+        }
+    }
 }
