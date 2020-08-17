@@ -193,6 +193,7 @@
                 android:id="@+id/webview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:transitionName="transitionWebviewShared"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bodyDivider"

@@ -73,7 +73,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             // get the cached body items by passing item id
             List<CachedMailBodyVO> bodyVOList = cacheMailBodyAdapter.getMailBody(parent.getItemId());
 
-            if(bodyVOList!=null && bodyVOList.size()>0 && false){
+            if(bodyVOList!=null && bodyVOList.size()>0){
             //cache exist
                 //get the first body record from the list of body for the item id. there must be only one record
                 CachedMailBodyVO bodyVO = bodyVOList.get(0);
