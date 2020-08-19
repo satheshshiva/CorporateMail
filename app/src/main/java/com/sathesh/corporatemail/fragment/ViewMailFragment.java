@@ -558,7 +558,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 subjectIdView.setText(subject);
             }
             else{
-                subjectIdView.setText("");
+                subjectIdView.setText(R.string.noSubjectDisplay);
             }
             // From
             if (fromReceivers.size() > 0) {
