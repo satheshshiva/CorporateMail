@@ -66,7 +66,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public MyActivity activity ;
     private Context context ;
 
-    private TextView subjectIdView, expandedDateIdView, collapsedDateIdView, ccLbl ;
+    private TextView subjectIdView, expandedDateIdView, collapsedDateIdView, toLbl, ccLbl ;
     private StandardWebView standardWebView ;
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
@@ -147,6 +147,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         expandedFromChipGrp = (ChipGroup)view.findViewById(R.id.expandedFromChipGrp);
         expandedToChipGrp = (ChipGroup)view.findViewById(R.id.expandedToChipGrp);
         expandedCcChipGrp = (ChipGroup)view.findViewById(R.id.expandedCcChipGrp);
+        toLbl = (TextView)view.findViewById(R.id.expandedToLbl);
         ccLbl = (TextView)view.findViewById(R.id.expandedCcLbl);
         expandedDateIdView = (TextView)view.findViewById(R.id.expandedDate);
         collapsedDateIdView = (TextView)view.findViewById(R.id.collapsedDate);
@@ -572,7 +573,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 //show all To contacts
                 buildContactChips(expandedToChipGrp, toReceivers);
             }else{
-                expandedToChipGrp.removeAllViews();
+                expandedCcChipGrp.setVisibility(View.GONE);
+                toLbl.setVisibility(View.GONE);
             }
 
             //CC
