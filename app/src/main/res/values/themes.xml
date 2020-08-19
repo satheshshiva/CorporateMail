@@ -3,7 +3,7 @@
     <!-- The main theme for the app.
     Parent: Theme.AppCompat.Light -->
 
-    <style name="Theme.MainTheme" parent="Theme.MainTheme.NoActionBar">
+    <style name="Theme.MainTheme" parent="ParentTheme.NoActionBar">
 
     </style>
 

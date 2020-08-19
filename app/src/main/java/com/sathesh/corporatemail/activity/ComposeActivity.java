@@ -62,8 +62,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     private  static MyActivity activity;
     //making this change
-    private  static EditText composeSubject;
-    private  static EditText composeBody, composeSignature;
+    private  EditText composeSubject;
+    private  EditText composeBody, composeSignature;
     private  static Collection<ContactSerializable> to;
     private  static Collection<ContactSerializable> cc;
     private  static Collection<ContactSerializable> bcc;
@@ -77,9 +77,9 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private static StandardWebView standardWebView ;
     private static CharSequence msgSendingFailedLbl="";
     private static ProgressDialog progressDialog;
-    private static TextView compose_to_disp;
-    private static TextView compose_cc_disp;
-    private static TextView compose_bcc_disp;
+    private TextView compose_to_disp;
+    private TextView compose_cc_disp;
+    private TextView compose_bcc_disp;
 
     private static String tempStr="";
     private  static Map<Integer, ContactSerializable> actualToReceivers;
@@ -90,8 +90,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private  static int actualCCReceiversId;
     private  static int actualBCCReceiversId;
 
-    private static LinearLayout ccLayout;
-    private static LinearLayout bccLayout;
+    private LinearLayout ccLayout;
+    private LinearLayout bccLayout;
 
     private static final String RESOLVE_NAME_ALERT_DIALOG_TYPE_TO="RESOLVE_NAME_ALERT_DIALOG_TYPE_TO";
     private static final String RESOLVE_NAME_ALERT_DIALOG_TYPE_CC="RESOLVE_NAME_ALERT_DIALOG_TYPE_CC";
@@ -122,20 +122,19 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public static final String PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA="PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA";
     public static final String PREFILL_DATA_QUOTE_HTML="PREFILL_DATA_QUOTE_HTML";
 
-    private static WebView quoteWebview;
-    private static LinearLayout quotedTextLinearLayout;
-    private static boolean resolvingNames=false;
+    private WebView quoteWebview;
+    private LinearLayout quotedTextLinearLayout;
+    private boolean resolvingNames=false;
 
-    private static LinearLayout titleBar_Progress_linearLayout;
     private  static int notResolved=0;
     private  static StringBuffer notResolvedNames = new StringBuffer();
 
     public static int TOTAL_RESOLVE_NAMES=0;
     public  static int resolvedNames=0;
 
-    private static ProgressDisplayNotificationBar progressDispBar;
+    private ProgressDisplayNotificationBar progressDispBar;
 
-    private static WarningDisplayNotificationBar warningDispBar;
+    private WarningDisplayNotificationBar warningDispBar;
 
 
     //The To CC and BCC will expect a bundle of ContactSerializable objects
@@ -175,9 +174,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         quoteWebview  = (WebView)findViewById(R.id.quoteWebview);
         progressDispBar = new ProgressDisplayNotificationBar(activity);
         warningDispBar = new WarningDisplayNotificationBar(activity);
-        titleBar_Progress_linearLayout = (LinearLayout)findViewById(R.id.titleBar_Progress_linearLayout);
-
-        titleBar_Progress_linearLayout.setVisibility(View.INVISIBLE);	// the default in layout is "GONE".
         // Changing to invisible so that users wont experience a layout change on when this disappears.
 
         quotedTextLinearLayout = (LinearLayout)findViewById(R.id.quoteLinearLayout);
@@ -568,17 +564,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         }
     }
 
-	/*public void toSearchOnClick(View view){
-
-		if( null!=composeTo.getText() && null!=composeTo.getText().toString() && !(composeTo.getText().toString().equals(""))){
-
-			//EWS Call
-
-			new ResolveNamesAsyncTask(this,this,service,composeTo.getText().toString(),true,getText(R.string.compose_resoleNameDialog_progress).toString(),RESOLVE_NAME_ALERT_DIALOG_TYPE_TO).execute();
-
-		}
-	}*/
-
     private void alertAndSendMail() {
         String alertMsg="";
 
@@ -810,12 +795,11 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         resolvingNames=true;
         setSupportProgressBarIndeterminateVisibility(true);
         progressDispBar.showStatusBar();
-        progressDispBar.setText(getString(R.string.compose_resolving_names_text,(resolvedNames+1),TOTAL_RESOLVE_NAMES));
+        progressDispBar.setText(getString(R.string.compose_resolving_names_text));
     }
 
     @Override
-    public void handleResolveNamesOutput(
-            NameResolutionCollection outputCollection, String extra1) {
+    public void handleResolveNamesOutput(NameResolutionCollection outputCollection, String extra1) {
 
         try {
             if(outputCollection!= null && outputCollection.getCount()==1){
@@ -826,12 +810,12 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 }
                 if(extra1!=null && (extra1.length() ==2 || extra1.length() ==3)){
                     int type=Character.getNumericValue(extra1.charAt(0));
-                    int id=0;
+                    int id;
                     if(extra1.length() == 2){
                         id=Character.getNumericValue(extra1.charAt(1));
                     }
-                    else if(extra1.length() == 3){
-                        id=Integer.valueOf(String.valueOf(extra1.charAt(1)) + String.valueOf(extra1.charAt(2))) ;
+                    else{
+                        id=extra1.charAt(1) + extra1.charAt(2) ;
                     }
                     if(BuildConfig.DEBUG) {
                         Log.d(LOG_TAG, "type " + type);
@@ -881,8 +865,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     if(extra1.length() == 2){
                         id=Character.getNumericValue(extra1.charAt(1));
                     }
-                    else if(extra1.length() == 3){
-                        id=Integer.valueOf(String.valueOf(extra1.charAt(1)) + String.valueOf(extra1.charAt(2))) ;
+                    else {
+                        id= extra1.charAt(1) + extra1.charAt(2);
                     }
 
                     if(type== TYPE_CC){

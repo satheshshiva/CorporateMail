@@ -64,7 +64,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             mailFunctions = parent.getMailFunctions();
             service = EWSConnection.getServiceFromStoredCredentials(parent.getContext());
 
-            cachedMailHeaderVO= parent.getMailHeader();
+            cachedMailHeaderVO= parent.getMailHeaderVo();
             cacheMailBodyAdapter = new CachedMailBodyAdapter(parent.getContext());
 
             //Mark the item as read in cache
@@ -130,7 +130,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                     parent.setProcessedHtml(bodyWithImg);
 
                     // download and cache images. html body will be refreshed after each img download to show the imgs
-                    MailApplication.cacheInlineImages(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this);
+                    MailApplication.downloadInlineImgs(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this, false);
                 }
                 //no inline images
                 else {

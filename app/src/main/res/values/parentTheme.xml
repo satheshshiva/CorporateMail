@@ -3,11 +3,11 @@
     <!-- The main theme for the app.
     Parent: Theme.AppCompat.Light.NoActionBar -->
 
-    <style name="Theme.MainTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ParentTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
 
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/blue_material_sample_Primary</item>
-        <item name="colorPrimaryDark">@color/blue_material_sample_Primary_Dark</item>
+        <item name="colorPrimaryDark">@color/StatusBarBlueColor</item>
         <item name="android:textColor">@color/black</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
@@ -18,7 +18,7 @@
     </style>
 
     <!-- Following theme for Settings activity-->
-    <style name="Theme.MainTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ParentTheme.DarkActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- The following 2 settings will be different than the NoActionBar theme -->
         <item name="windowActionBar">true</item>
         <item name="windowActionModeOverlay">false</item>

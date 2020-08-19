@@ -285,7 +285,7 @@ public class MailListRecyclerViewAdapter extends RecyclerView.Adapter<MailListRe
                     ViewHolder.subjectView.setText(mailListHeader.getMail_subject());
 
                     //Date Time Received
-                    ViewHolder.dateView.setText(MailApplication.getCustomizedInboxDate(mailListHeader.getMail_datetimereceived()));
+                    ViewHolder.dateView.setText(MailApplication.getShortDate(mailListHeader.getMail_datetimereceived()));
 
                     //Has Attachment icon
                     if(mailListHeader.isMail_has_attachments()){

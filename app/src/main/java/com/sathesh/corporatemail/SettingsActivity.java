@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 
+import com.sathesh.corporatemail.animation.ApplyAnimation;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.fragment.SettingsFragment;
 
@@ -16,9 +17,9 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 public class SettingsActivity extends MyActivity implements SettingsFragment.ActivityDataPasser{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setAnimation();
+        ApplyAnimation.setSlideAnimation(this);
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -43,12 +44,4 @@ public class SettingsActivity extends MyActivity implements SettingsFragment.Act
         return super.onOptionsItemSelected(item);
     }
 
-    public void setAnimation() {
-        if (Build.VERSION.SDK_INT >= LOLLIPOP) {
-            Slide slide = new Slide();
-            slide.setSlideEdge(Gravity.END);
-            getWindow().setExitTransition(slide);
-            getWindow().setEnterTransition(slide);
-        }
-    }
 }

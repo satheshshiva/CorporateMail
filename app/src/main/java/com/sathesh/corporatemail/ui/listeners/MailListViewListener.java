@@ -3,8 +3,11 @@
  */
 package com.sathesh.corporatemail.ui.listeners;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
+import android.util.Pair;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +23,7 @@ import com.sathesh.corporatemail.activity.ComposeActivity;
 import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.activity.ViewMailActivity;
 import com.sathesh.corporatemail.animation.ApplyAnimation;
+import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
@@ -176,7 +180,6 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
     public void onItemClick(AdapterView<?> adapterView, View view, int position,
                             long id) {
         //the pull to refresh list view starts from instead of 0.. fix for that
-        CachedMailHeaderVO vo;
         MailListViewContent listViewContent;
 
         try {
@@ -186,10 +189,34 @@ public class MailListViewListener implements  OnScrollListener, OnItemClickListe
                 switch (listViewContent.getType()) {
                     case MailListViewContent.types.MAIL:
                         //open the mail
-                        vo = listViewContent.getMailVO();
                         Intent viewMailIntent = new Intent((activity).getBaseContext(), ViewMailActivity.class);
-                        viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER, vo);
-                        //start the view mail activity
+                        viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_ALL_MAIL_HEADERS, fragment.getCachedHeaderVoList());
+                        viewMailIntent.putExtra(MailListViewActivity.EXTRA_MESSAGE_POSITION, listViewContent.getMailHeaderPosition());
+
+                        //start the view mail activity with transition
+                        if (MailApplication.getInstance().isViewMailTransitionEnabled()
+                                && fragment.getNewMailsThreadState() != Status.UPDATING  // If these threads are running in the background then it will
+                                && fragment.getMoreMailsThreadState() != Status.UPDATING      //  redraw the listview and the views that will be sent will be invalid
+                                && fragment.getSavedInstanceState()==null               // changing the orientation and then opening mail crashes. So just disabling this transition after screen rotation
+                                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        {
+
+                            View subjectView = view.findViewById(R.id.subject);
+                            View fromView = view.findViewById(R.id.from);
+                            View dateView = view.findViewById(R.id.date);
+
+                            if(subjectView!=null && fromView!=null && dateView!=null) {    // just to make sure
+                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                                        Pair.create(subjectView, TransitionSharedElementNames.subject),
+                                        Pair.create(fromView, TransitionSharedElementNames.from),
+                                        Pair.create(dateView, TransitionSharedElementNames.date),
+                                        Pair.create(view, TransitionSharedElementNames.webview)
+                                );
+                                activity.startActivity(viewMailIntent, options.toBundle());
+                                break;
+                            }
+                        }
+                        //start the view mail activity without transition
                         activity.startActivity(viewMailIntent);
                         break;
                     case MailListViewContent.types.DATE_HEADER:

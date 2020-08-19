@@ -2,6 +2,7 @@ package com.sathesh.corporatemail.fragment.datapasser;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.widget.ListView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -10,6 +11,9 @@ import com.melnykov.fab.FloatingActionButton;
 import com.sathesh.corporatemail.adapter.MailListViewAdapter;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.fragment.MailListViewFragment;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
+
+import java.util.ArrayList;
 
 public interface MailListFragmentDataPasser {
 
@@ -70,5 +74,9 @@ public interface MailListFragmentDataPasser {
 
     boolean isFabShown();
     void setFabShown(boolean shown);
+
+    ArrayList<CachedMailHeaderVO> getCachedHeaderVoList();
+
+    Bundle getSavedInstanceState();
 
 }

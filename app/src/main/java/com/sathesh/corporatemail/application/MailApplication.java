@@ -54,6 +54,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -87,6 +88,7 @@ public class MailApplication implements Constants {
     private boolean isWrongPwd = false;
     private static GetMoreFoldersThread getMoreFoldersThread;
     private boolean isNotificationChannelInitialized;
+    private boolean isViewMailTransitionEnabled = true; // toggle for enabling or disabling the view mail transition animation with shared elements. Disable if too intrusive.
 
     public void onEveryAppOpen(Activity activity, Context context){
 
@@ -134,15 +136,6 @@ public class MailApplication implements Constants {
      */
     public static Toolbar toolbarInitialize(MyActivity activity) {
         toolbar = (Toolbar) activity.findViewById(R.id.actionbar_toolbar);
-        activity.setSupportActionBar(toolbar);
-        return toolbar;
-    }
-
-    /** All fragments will call this method in the OnCreate or similarr to initialize the actionbar toolbar
-     *
-     */
-    public static Toolbar toolbarInitialize( MyActivity activity ,View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.actionbar_toolbar);
         activity.setSupportActionBar(toolbar);
         return toolbar;
     }
@@ -254,28 +247,36 @@ public class MailApplication implements Constants {
         return ((null != from) && (from.lastIndexOf(INBOX_FILTER_TEXT_FROM)>0)) ? from.substring(0, from.lastIndexOf(INBOX_FILTER_TEXT_FROM)):from;
     }
 
+    private static SimpleDateFormat sdfShortFormat = new SimpleDateFormat(INBOX_TEXT_DATE_TIME, Locale.getDefault());
+    private static SimpleDateFormat sdfShortThisYearFormat = new SimpleDateFormat(INBOX_TEXT_DATE_THIS_YEAR, Locale.getDefault());
+    private static SimpleDateFormat sdfShortNotThisYearFormat = new SimpleDateFormat(INBOX_TEXT_DATE_NOT_THIS_YEAR, Locale.getDefault());
     /**
      * @return Customized Date field string to be displayed in mail list view  for mails
      */
-    public static CharSequence getCustomizedInboxDate(Date dDate) {
+    public static CharSequence getShortDate(Date dDate) {
 
         String strDate="";
-
+        Calendar now = Calendar.getInstance();
         if (null != dDate){
 
-            long dateDiff = 0;
-            dateDiff= Utilities.getNumberOfDaysFromToday(dDate) ;
+            long dateDiff= Utilities.getNumberOfDaysFromToday(dDate) ;
 
             if (dateDiff <= 0){
-                strDate = (new SimpleDateFormat(INBOX_TEXT_DATE_TIME)).format(dDate.getTime());
+                strDate = sdfShortFormat.format(dDate.getTime());
+                return strDate;
             }
-            else
-            {
-                strDate = (new SimpleDateFormat(INBOX_TEXT_DATE)).format(dDate.getTime());
+            //checking whether the given year is the current year.
+            // subtracting 1900 because java.date.util.Date.getYear returns the current year minus 1900 (for whatever reason they did)
+            if ( (now.get(Calendar.YEAR)-1900) == dDate.getYear()) {
+                strDate = sdfShortThisYearFormat.format(dDate.getTime());
+            }else{
+                strDate = sdfShortNotThisYearFormat.format(dDate.getTime());
             }
+
         }
         return strDate;
     }
+
 
     /**
      * @return Customized Date field string to be displayed in mail list view for Header
@@ -737,7 +738,7 @@ public class MailApplication implements Constants {
     }
 
 
-    public static void cacheInlineImages(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass){
+    public static void downloadInlineImgs(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass, boolean hardReDownload){
         String path="";
         File file;
         FileAttachment fileAttachment;
@@ -774,7 +775,7 @@ public class MailApplication implements Constants {
                             if(BuildConfig.DEBUG){
                                 Log.d(LOG_TAG, "Caching image file " +fileAttachment.getName() );
                             }
-                            if(!((new File(path)).exists())){
+                            if(hardReDownload || !(new File(path)).exists()){
                                 //EWS call
                                 fos = new FileOutputStream(path);
                                 try{
@@ -791,7 +792,7 @@ public class MailApplication implements Constants {
                             }
                         }
                         else{
-                            Log.d(LOG_TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: " + fileAttachment.getFileName() + " as it is not an inline image" );
+                            Log.d(LOG_TAG, "ViewMailActivity -> cacheInlineImages() -> Skipping attachment: File name:" + fileAttachment.getFileName() + " as it is not an inline image" );
                         }
                     } catch (Exception e) {
                         Utilities.generalCatchBlock(e, thisClass);
@@ -827,5 +828,12 @@ public class MailApplication implements Constants {
 
     public void setNotificationChannelInitialized(boolean notificationChannelInitialized) {
         isNotificationChannelInitialized = notificationChannelInitialized;
+    }
+
+    /*
+     toggle for enabling or disabling the view mail transition animation with shared elements. Disable if too intrusive.
+     */
+    public boolean isViewMailTransitionEnabled() {
+        return isViewMailTransitionEnabled;
     }
 }
