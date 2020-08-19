@@ -8,11 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +22,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.sathesh.corporatemail.BuildConfig;
@@ -40,6 +36,8 @@ import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
+import com.sathesh.corporatemail.customui.AttachmentCardView;
+import com.sathesh.corporatemail.datamodels.FileAttachmentMeta;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
@@ -74,11 +72,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private ConstraintLayout moreHeadersLayout;
 
     private CachedMailHeaderVO mailHeaderVo;
+
+    private List<FileAttachmentMeta> attachmentsMeta;
     private boolean expanded;
 
     public enum Status{
         LOADING,	// Started loading body. Network Call for loading body is in progress
         SHOW_BODY,	// Network call made for body and got the body. Refreshe the body in UI
+        SHOW_ATTACHMENTS, //Displays the attachments card view
         SHOW_IMG_LOADING_PROGRESSBAR,	// Inline images are present. Show the status bar for downloading images
         DOWNLOADED_AN_IMAGE,	// Triggered each time an image got downloaded. Body gets refreshed so that the newly downloaded image will be displayed
         LOADED,		// Everything loaded. Will call read email network call. after this
@@ -113,6 +114,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
     private ImageButton expandBtn;
     private ChipGroup collapsedfromChipGrp, expandedFromChipGrp, expandedToChipGrp, expandedCcChipGrp ;
+    private FlexboxLayout attachmentsLayout;
 
 
     public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
@@ -154,6 +156,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         moreHeadersLayout = (ConstraintLayout) view.findViewById(R.id.moreHeaders);
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
         expandBtn = (ImageButton) view.findViewById(R.id.expandBtn);
+        attachmentsLayout =(FlexboxLayout) view.findViewById(R.id.view_mail_attachments_layout) ;
 
         moreHeadersLayout.setVisibility(View.GONE);
 
@@ -297,6 +300,24 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
         else if (currentStatus==Status.ERROR){
             standardWebView.loadData(webview, VIEW_MAIL_ERROR_HTML);
+        }
+    }
+
+    /**
+     * Displays the attachments card view from the attachments meta
+     */
+    @Override
+    public void showAttachments() {
+        if(attachmentsLayout!=null) {
+            attachmentsLayout.removeAllViews();
+            for (FileAttachmentMeta attachmentMeta : attachmentsMeta) {
+                AttachmentCardView attachmentCardView = new AttachmentCardView(context, null);
+                attachmentCardView.setFileName(attachmentMeta.getFileName());
+                attachmentCardView.setSizeOrStatus(attachmentMeta.getHumanReadableSize());
+                attachmentsLayout.addView(attachmentCardView);
+            }
+        }else{
+            Log.e(LOG_TAG, "ViewMailFragment -> attachmentsLayout is null");
         }
     }
 
@@ -502,6 +523,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     }
 
+    @Override
     public void displayHeadersAndBody(){
 
         try{
@@ -618,6 +640,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
     }
 
+    @Override
     public void showBody(String html1){
 
         if(null!=html1 && !(html1.equals(""))){
@@ -637,6 +660,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     /*** GETTER SETTER ***/
 
+    @Override
+    public MyActivity getMyActivity(){
+        return activity;
+    }
     public String getProcessedHtml() {
         return processedHtml;
     }
@@ -645,6 +672,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.processedHtml = processedHtml;
     }
 
+    @Override
     public int getRemainingInlineImages() {
         return remainingInlineImages;
     }
@@ -658,6 +686,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         return currentStatus;
     }
 
+    @Override
     public void setCurrentStatus(Status currentStatus) {
         this.currentStatus = currentStatus;
     }
@@ -695,16 +724,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.to = to;
     }
 
-    public String getCc() {
-        return cc;
-    }
-
     public void setCc(String cc) {
         this.cc = cc;
-    }
-
-    public String getBcc() {
-        return bcc;
     }
 
     public void setBcc(String bcc) {
@@ -727,18 +748,17 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setDate(Date date) {
         this.date = date;
     }
+    @Override
     public ProgressDisplayNotificationBar getProgressStatusDispBar() {
         return progressStatusDispBar;
     }
 
+    @Override
     public StandardWebView getStandardWebView() {
         return standardWebView;
     }
 
-    public void setStandardWebView(StandardWebView standardWebView) {
-        this.standardWebView = standardWebView;
-    }
-
+    @Override
     public WebView getWebview() {
         return webview;
     }
@@ -746,6 +766,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setWebview(WebView webview) {
         this.webview = webview;
     }
+    @Override
     public int getTotalInlineImages() {
         return totalInlineImages;
     }
@@ -756,10 +777,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     public CachedMailHeaderVO getMailHeaderVo() {
         return mailHeaderVo;
-    }
-
-    public void setMailHeaderVo(CachedMailHeaderVO mailHeaderVo) {
-        this.mailHeaderVo = mailHeaderVo;
     }
 
     public Context getContext() {
@@ -802,35 +819,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.itemId = itemId;
     }
 
-    public List<ContactSerializable> getToReceivers() {
-        return toReceivers;
-    }
-
-    public void setToReceivers(List<ContactSerializable> toReceivers) {
-        this.toReceivers = toReceivers;
-    }
-
-    public List<ContactSerializable> getCcReceivers() {
-        return ccReceivers;
-    }
-
-    public void setCcReceivers(List<ContactSerializable> ccReceivers) {
-        this.ccReceivers = ccReceivers;
-    }
-
-    public List<ContactSerializable> getBccReceivers() {
-        return bccReceivers;
-    }
-
-    public void setBccReceivers(List<ContactSerializable> bccReceivers) {
-        this.bccReceivers = bccReceivers;
-    }
-
-    public List<ContactSerializable> getFromReceivers() {
-        return fromReceivers;
-    }
-
-    public void setFromReceivers(List<ContactSerializable> fromReceivers) {
-        this.fromReceivers = fromReceivers;
+    @Override
+    public void setAttachmentsMeta(List<FileAttachmentMeta> attachmentsMeta) {
+        this.attachmentsMeta = attachmentsMeta;
     }
 }

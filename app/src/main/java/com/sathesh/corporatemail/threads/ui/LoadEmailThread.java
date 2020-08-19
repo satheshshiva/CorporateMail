@@ -16,6 +16,7 @@ import com.sathesh.corporatemail.customexceptions.NoUserSignedInException;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.files.AttachmentsManager;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.fragment.ViewMailFragment.Status;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailBodyVO;
@@ -73,7 +74,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             // get the cached body items by passing item id
             List<CachedMailBodyVO> bodyVOList = cacheMailBodyAdapter.getMailBody(parent.getItemId());
 
-            if(bodyVOList!=null && bodyVOList.size()>0){
+            if(bodyVOList!=null && bodyVOList.size()>0 && false){
             //cache exist
                 //get the first body record from the list of body for the item id. there must be only one record
                 CachedMailBodyVO bodyVO = bodyVOList.get(0);
@@ -115,7 +116,10 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
 
                 sendHandlerMsg(Status.SHOW_BODY);    //shows the headers and body
                 attachmentCollection = message.getAttachments();
-                parent.setTotalInlineImages(MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this));
+                parent.setAttachmentsMeta(AttachmentsManager.convertAttachmentCollection(parent.getContext(), attachmentCollection, this));
+                sendHandlerMsg(Status.SHOW_ATTACHMENTS);    //shows the attachments
+
+                parent.setTotalInlineImages(AttachmentsManager.getTotalNoOfInlineImgs(attachmentCollection, this));
                 parent.setRemainingInlineImages(parent.getTotalInlineImages());
 
                 //if inline images present
@@ -130,7 +134,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                     parent.setProcessedHtml(bodyWithImg);
 
                     // download and cache images. html body will be refreshed after each img download to show the imgs
-                    MailApplication.downloadInlineImgs(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this, false);
+                    AttachmentsManager.downloadInlineImgs(parent.getContext(), attachmentCollection, parent.getItemId(), bodyWithImg, this, this, false);
                 }
                 //no inline images
                 else {

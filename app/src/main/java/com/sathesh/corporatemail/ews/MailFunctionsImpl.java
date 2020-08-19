@@ -75,7 +75,7 @@ public class MailFunctionsImpl implements MailFunctions{
 		return getStringFromMessageBody(item.getBody());
 	}
 
-	public static MailFunctions getInbox() {
+	public static MailFunctions getInstance() {
 		return mailFunctions;
 	}
 

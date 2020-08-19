@@ -20,6 +20,7 @@ import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
 import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.files.AttachmentsManager;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.util.ArrayList;
@@ -203,7 +204,7 @@ public class PullMnWorker extends Worker implements Constants{
 			attachmentCollection = message.getAttachments();
 
 			//get the total number of inline images
-			totalInlineImgs = MailApplication.getTotalNoOfInlineImgs(attachmentCollection, this);
+			totalInlineImgs = AttachmentsManager.getTotalNoOfInlineImgs(attachmentCollection, this);
 
 			//INLINE IMGS PRESENT
 			if (totalInlineImgs > 0) {
@@ -214,7 +215,7 @@ public class PullMnWorker extends Worker implements Constants{
 				cachedMailBodyAdapter.cacheNewData(message,bodyWithImg, MailType.INBOX, "Inbox", "" );
 
 				// download and cache images. html body will be refreshed after each img download to show the imgs
-				MailApplication.downloadInlineImgs(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this, false);
+				AttachmentsManager.downloadInlineImgs(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this, false);
 			}
 			//NO INLINE IMGS
 			else {
