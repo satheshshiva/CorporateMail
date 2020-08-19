@@ -164,12 +164,11 @@
                     android:id="@+id/expandedDateLbl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:text="Date"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedDate"
                     app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-                    app:layout_constraintTop_toTopOf="@+id/expandedDate"
-                    app:layout_constraintBottm_toBottomOf="@+id/expandedDate"/>
+                    app:layout_constraintTop_toTopOf="@+id/expandedDate" />
 
                 <TextView
                     android:id="@+id/expandedDate"
