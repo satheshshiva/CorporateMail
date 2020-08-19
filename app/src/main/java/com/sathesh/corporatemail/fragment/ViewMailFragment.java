@@ -19,6 +19,7 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
@@ -46,6 +47,7 @@ import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
+import com.sathesh.corporatemail.ui.util.UIutilities;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
@@ -309,7 +311,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     @Override
     public void showAttachments() {
         if(attachmentsLayout!=null) {
-            attachmentsLayout.removeAllViews();
             for (FileAttachmentMeta attachmentMeta : attachmentsMeta) {
                 AttachmentCardView attachmentCardView = new AttachmentCardView(context, null);
                 attachmentCardView.setFileName(attachmentMeta.getFileName());
