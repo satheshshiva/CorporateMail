@@ -100,9 +100,9 @@
                     android:id="@+id/expandedFromLbl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/view_mail_contact_expanded_margin_top"
                     android:text="From"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedFromChipGrp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/expandedFromChipGrp" />
 
@@ -120,10 +120,9 @@
                     android:id="@+id/expandedToLbl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/view_mail_contact_expanded_margin_top"
                     android:text="To"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedToChipGrp"
                     app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
                     app:layout_constraintTop_toTopOf="@+id/expandedToChipGrp" />
 
@@ -133,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintStart_toEndOf="@id/expandedToLbl"
                     app:layout_constraintTop_toBottomOf="@+id/expandedFromChipGrp" />
 
@@ -142,10 +141,9 @@
                     android:id="@+id/expandedCcLbl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/view_mail_contact_expanded_margin_top"
                     android:text="CC"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedCcChipGrp"
                     app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
                     app:layout_constraintTop_toTopOf="@+id/expandedCcChipGrp" />
 
@@ -155,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintStart_toEndOf="@id/expandedCcLbl"
                     app:layout_constraintTop_toBottomOf="@+id/expandedToChipGrp" />
 
@@ -176,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:text="Date"
                     app:layout_constraintStart_toEndOf="@+id/expandedDateLbl"
                     app:layout_constraintTop_toBottomOf="@+id/expandedCcChipGrp" />
