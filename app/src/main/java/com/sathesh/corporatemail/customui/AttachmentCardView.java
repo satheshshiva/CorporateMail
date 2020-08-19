@@ -31,22 +31,28 @@ public class AttachmentCardView extends CardView implements Constants {
         }else{
             Log.e(LOG_TAG, "inflater is null ");
         }
+        // getting the attribute values from xml
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.AttachmentCardView, 0, 0);
         String fileName = a.getString(R.styleable.AttachmentCardView_fileName);
         if (fileName!=null){
             setFileName(fileName);
         }
+        // setting some default properties
         setFocusable(true);
         setClickable(true);
         setCardElevation(UIutilities.convertDpToPx(context, ELEVATION));
 
-        /*FrameLayout.LayoutParams params= new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(UIutilities.convertDpToPx(context, MARGIN),
-                UIutilities.convertDpToPx(context, MARGIN),
-                        UIutilities.convertDpToPx(context, MARGIN),
-                                UIutilities.convertDpToPx(context, MARGIN));
-        setLayoutParams(params);*/
+        // setting some margins. Oterwise elevation is not shown when inside the flex box layout
+        CardView.LayoutParams params = new  CardView.LayoutParams(
+                CardView.LayoutParams.WRAP_CONTENT,
+                CardView.LayoutParams.WRAP_CONTENT
+        );
+        int px = UIutilities.convertDpToPx(context, MARGIN);
+        params.setMargins(px, px, px, px);
+        setLayoutParams(params);
+        // setting some margins ** ends
+
         a.recycle();
     }
 
