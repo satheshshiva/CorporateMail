@@ -102,9 +102,9 @@
                     android:layout_height="wrap_content"
                     android:text="From"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedFromChipGrp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/expandedFromChipGrp"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedFromChipGrp" />
+                    app:layout_constraintTop_toTopOf="@+id/expandedFromChipGrp" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/expandedFromChipGrp"
@@ -123,9 +123,9 @@
                     android:layout_marginTop="8dp"
                     android:text="To"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedToChipGrp"
                     app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-                    app:layout_constraintTop_toTopOf="@+id/expandedToChipGrp"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedToChipGrp"/>
+                    app:layout_constraintTop_toTopOf="@+id/expandedToChipGrp" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/expandedToChipGrp"
@@ -145,9 +145,9 @@
                     android:layout_marginTop="8dp"
                     android:text="CC"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/expandedCcChipGrp"
                     app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-                    app:layout_constraintTop_toTopOf="@+id/expandedCcChipGrp"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedCcChipGrp"/>
+                    app:layout_constraintTop_toTopOf="@+id/expandedCcChipGrp" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/expandedCcChipGrp"

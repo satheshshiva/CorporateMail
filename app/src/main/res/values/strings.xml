@@ -5,6 +5,9 @@
     <string name="app_name">Corporate Mail</string>
     <string name="app_version">1.0.1</string>
 
+    <!-- General -->
+    <string name="noSubjectDisplay">(no subject)</string>
+
     <!-- Login Page -->
     <string name="api_version_low">You are using an older version of Android</string>
 
@@ -58,7 +61,6 @@
 
     <!-- Mail Notification Service -->
     <string name="mnsServiceNewMailNotification">You have %d new email</string>
-    <string name="mnsServiceNotificationWithNoSubject">(no subject)</string>
     <string name="mnsServiceNotificationWithNullMessage">New Email</string>
     <string name="mns_service_started">Starting Corporate Mail Notification Service..</string>
     <string name="mns_service_stopped">Corporate Mail Notification Service Stopped</string>

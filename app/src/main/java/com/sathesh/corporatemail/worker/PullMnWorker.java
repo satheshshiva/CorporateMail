@@ -151,7 +151,7 @@ public class PullMnWorker extends Worker implements Constants{
 							showNewMailNotification(message.getSender().getName() , message.getSubject());
 						}
 						else if(null !=  message.getSender() && null !=  message.getSender().getName() ){
-							showNewMailNotification(message.getSender().getName(), context.getText(R.string.mnsServiceNotificationWithNoSubject).toString());
+							showNewMailNotification(message.getSender().getName(), context.getText(R.string.noSubjectDisplay).toString());
 						}
 						else
 						{
