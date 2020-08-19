@@ -12,6 +12,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.ComposeActivity;
@@ -63,7 +66,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public MyActivity activity ;
     private Context context ;
 
-    private TextView subjectIdView, collapsedFromIdView,expandedFromIdView, toIdView, ccIdView, expandedDateIdView, collapsedDateIdView, ccLbl ;
+    private TextView subjectIdView, expandedDateIdView, collapsedDateIdView, ccLbl ;
     private StandardWebView standardWebView ;
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
@@ -109,6 +112,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private Status currentStatus;
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
     private ImageButton expandBtn;
+    private ChipGroup collapsedfromChipGrp, expandedFromChipGrp, expandedToChipGrp, expandedCcChipGrp ;
 
 
     public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
@@ -139,10 +143,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         standardWebView= new StandardWebView();
 
         subjectIdView = (TextView)view.findViewById(R.id.subject);
-        collapsedFromIdView = (TextView)view.findViewById(R.id.collapsedFrom);
-        expandedFromIdView = (TextView)view.findViewById(R.id.expandedFrom);
-        toIdView = (TextView)view.findViewById(R.id.expandedTo);
-        ccIdView = (TextView)view.findViewById(R.id.expandedCc);
+        collapsedfromChipGrp = (ChipGroup) view.findViewById(R.id.collapsedFromChipGrp);
+        expandedFromChipGrp = (ChipGroup)view.findViewById(R.id.expandedFromChipGrp);
+        expandedToChipGrp = (ChipGroup)view.findViewById(R.id.expandedToChipGrp);
+        expandedCcChipGrp = (ChipGroup)view.findViewById(R.id.expandedCcChipGrp);
         ccLbl = (TextView)view.findViewById(R.id.expandedCcLbl);
         expandedDateIdView = (TextView)view.findViewById(R.id.expandedDate);
         collapsedDateIdView = (TextView)view.findViewById(R.id.collapsedDate);
@@ -192,17 +196,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
         });
 
-        //  webview.loadDataWithBaseURL("fake:///ghj/", "", "text/html", "utf-8", null);
-
         webview.setWebChromeClient(new CommonWebChromeClient());
-        //		webview.setWebViewClient(new WebViewClient(){
-        //
-        //			@Override
-        //			public void onLoadResource (WebView view, String url){
-        //				//Log.i(TAG, "View MailAcivity -> URL Loading " +url);
-        //
-        //			}
-        //		});
 
         if(mailHeaderVo !=null){
             from = mailHeaderVo.getMail_from();
@@ -271,7 +265,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void expandBtnOnClick(View view) {
         expandBtn.setVisibility(View.GONE);
         moreHeadersLayout.setVisibility(View.VISIBLE);
-        collapsedFromIdView.setVisibility(View.GONE);
+        collapsedfromChipGrp.setVisibility(View.GONE);
         collapsedDateIdView.setVisibility(View.GONE);
         expanded=true;
     }
@@ -567,26 +561,25 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             }
             // From
             if (fromReceivers.size() > 0) {
-                buildHeaderText(expandedFromIdView, fromReceivers, null);
-                buildHeaderText(collapsedFromIdView, fromReceivers, null);
+                buildContactChips(expandedFromChipGrp, fromReceivers);
+                buildContactChips(collapsedfromChipGrp, fromReceivers);
             }else{
-                collapsedFromIdView.setText("");
-                expandedFromIdView.setText("");
+                expandedFromChipGrp.removeAllViews();
             }
 
             // To
             if(isToExist){
                 //show all To contacts
-                buildHeaderText(toIdView, toReceivers, null);
+                buildContactChips(expandedToChipGrp, toReceivers);
             }else{
-                toIdView.setText("");
+                expandedToChipGrp.removeAllViews();
             }
 
             //CC
             if(isCCExist){
-                buildHeaderText(ccIdView, ccReceivers, null);
+                buildContactChips(expandedCcChipGrp, ccReceivers);
             }else{
-                ccIdView.setVisibility(View.GONE);
+                expandedCcChipGrp.setVisibility(View.GONE);
                 ccLbl.setVisibility(View.GONE);
             }
             //date
@@ -599,6 +592,26 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
             }
         }catch(Exception e){
             Utilities.generalCatchBlock(e, this);
+        }
+
+    }
+
+    private void buildContactChips(ChipGroup chipGrp, List<ContactSerializable> fromReceivers) {
+        Chip chip;
+        chipGrp.removeAllViews();   // remove all the existing chips. This fn will be called once before loading and once after loading the email. So we should not create duplicate chips
+        for(ContactSerializable contact: fromReceivers) {
+            chip = new Chip(context);
+            chip.setText(contact.getDisplayName());
+            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    (int)activity.getResources().getDimension(R.dimen.view_mail_contact_chip_height));
+            chip.setLayoutParams(params);
+            chipGrp.addView(chip);
+            //onclick listener for this chip.
+            chip.setOnClickListener((View v)->{
+                Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
+                contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
+                startActivity(contactDetailsIntent);
+            });
         }
 
     }
@@ -776,31 +789,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-
-    public TextView getCollapsedFromIdView() {
-        return collapsedFromIdView;
-    }
-
-    public void setCollapsedFromIdView(TextView collapsedFromIdView) {
-        this.collapsedFromIdView = collapsedFromIdView;
-    }
-
-    public TextView getToIdView() {
-        return toIdView;
-    }
-
-    public void setToIdView(TextView toIdView) {
-        this.toIdView = toIdView;
-    }
-
-    public TextView getCcIdView() {
-        return ccIdView;
-    }
-
-    public void setCcIdView(TextView ccIdView) {
-        this.ccIdView = ccIdView;
     }
     public ProgressDisplayNotificationBar getProgressStatusDispBar() {
         return progressStatusDispBar;

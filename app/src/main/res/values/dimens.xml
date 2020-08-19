@@ -4,4 +4,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="tool_bar_top_padding">0dp</dimen>
+    <dimen name="view_mail_contact_chip_height">40dp</dimen>
 </resources>
