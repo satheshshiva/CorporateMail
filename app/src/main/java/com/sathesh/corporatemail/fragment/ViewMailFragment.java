@@ -604,6 +604,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         for(ContactSerializable contact: fromReceivers) {
             chip = new Chip(context);
             chip.setText(contact.getDisplayName());
+            chip.setFocusable(true);
             ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
                     (int)activity.getResources().getDimension(R.dimen.view_mail_contact_chip_height));
             chip.setLayoutParams(params);
@@ -615,7 +616,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 startActivity(contactDetailsIntent);
             });
         }
-
     }
 
     public void showBody(String html1){
@@ -632,71 +632,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         else{
             //webvew.loadData(VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT, StandardWebView.MIME_TYPE_HTML,StandardWebView.ENCODING);
             standardWebView.loadData(webview, VIEW_MAIL_WEBVIEW_BODY_NO_CONTENT);
-        }
-    }
-
-    /** Build the headers display with links
-     *
-     * @param textView  - TextView
-     * @param contacts  - list of ContactSerializables to display
-     * @param max   - the no of entries to display
-     */
-    public void buildHeaderText(TextView textView, List<ContactSerializable> contacts, Integer max) {
-        SpannableStringBuilder sBuilder = new SpannableStringBuilder();
-        int initLength=0;
-        int counter = 0;
-        String nonLinkText="";
-        //get the current status whether the mails is in loading state
-        boolean statusLoadedMail= (currentStatus!=null &&
-                    currentStatus != Status.LOADING
-                    && currentStatus != Status.ERROR);
-
-        //loop thorugh each contact
-        while(counter<contacts.size()){
-            final ContactSerializable contact = contacts.get(counter);
-            initLength = sBuilder.length();
-
-            //if the mail is loaded then build the link for the contact
-            if(statusLoadedMail) {
-                sBuilder.append(contact.getDisplayName() + EMAIL_DELIMITER_DISP);
-
-                //click action to perform when clicked
-                sBuilder.setSpan(new ClickableSpan() {
-                    //on click of the link open the Contacts display
-                    @Override
-                    public void onClick(View arg0) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOG_TAG, contact + " clicked");
-                        }
-                        Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
-                        contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
-                        startActivity(contactDetailsIntent);
-                    }
-                }, initLength, sBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                   //length determines the length of string to make as clickables
-            }
-            //if the mail is in loading or error state then just display the contact witout link
-            else{
-                nonLinkText = contact.getDisplayName() + EMAIL_DELIMITER_DISP;
-            }
-
-            counter++;
-
-            //if the max no of contacts is given then break out of the loop
-            if (max != null && counter >= max) {
-                break;
-            }
-        }   //end while loop
-        //set the textview with the StringBuilder
-
-        //loads the text link in to textview
-        if(statusLoadedMail) {
-           textView.setText(sBuilder);
-           textView.setMovementMethod(LinkMovementMethod.getInstance());
-        }
-        //loads the text in to textview
-        else{
-           textView.setText(nonLinkText);
         }
     }
 
