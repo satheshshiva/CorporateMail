@@ -41,10 +41,6 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
 
         try {
             activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            // change the navigation bar color to translucent
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                changeNavigtionBarColor(true);
-            }
 
             //refresh the list (may be favourites got changed
             activityDataPasser.refreshDrawerListRecyclerView();
@@ -102,10 +98,7 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
     public void onDrawerClosed(View view) {
         super.onDrawerClosed(view);
         activity.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()\
-        // revert the navigation bar color from translucent
-        if(Build.VERSION.SDK_INT  >= Build.VERSION_CODES.LOLLIPOP) {
-             changeNavigtionBarColor(false);
-        }
+
         //MailListFragment instance
         MailListFragmentDataPasser mailListViewFragment = MailListViewFragment.getInstance();
         if(mailListViewFragment!=null){
@@ -114,6 +107,10 @@ public class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
 
     }
 
+    @Deprecated
+    /**
+     * issue - Changing the nav color changes the size of the action bar when opening and closing nav drawer
+     */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     /**
      * Changes the navigationBarColor to translucent when the navigation drawer is opnened

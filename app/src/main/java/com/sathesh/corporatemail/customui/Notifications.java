@@ -3,8 +3,10 @@ package com.sathesh.corporatemail.customui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.sathesh.corporatemail.constants.Constants;
 
 public class Notifications implements Constants {
@@ -22,6 +24,17 @@ public class Notifications implements Constants {
 	public static void showToast(Context context, CharSequence text){
 		showToast(context, text, Toast.LENGTH_SHORT);
 	}
+
+	public static void showSnackBarShort(View view, CharSequence text){
+		Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+    	.show();
+	}
+
+	public static void showSnackBarLong(View view, CharSequence text){
+		Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+				.show();
+	}
+
 
 	public static void showAlert(Context context, CharSequence text ){
 

@@ -40,6 +40,7 @@
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textColor="@color/Black"
+                    android:transitionName="transitionFromShared"
                     android:textSize="15dip" />
 
               <ImageView
@@ -65,6 +66,7 @@
                 android:paddingLeft="2dip"
                 android:singleLine="true"
                 android:textColor="@color/Black"
+                android:transitionName="transitionSubjectShared"
                 android:textSize="12dip" />
 
             <TextView
@@ -76,6 +78,7 @@
                 android:paddingRight="5dip"
                 android:singleLine="true"
                 android:textColor="@color/blue"
+                android:transitionName="transitionDateShared"
                 android:textSize="12dip" />
         </LinearLayout>
     </LinearLayout>

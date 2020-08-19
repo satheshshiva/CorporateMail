@@ -6,8 +6,19 @@
     <!-- layout to show image downloading progress -->
     <include layout="@layout/toolbar" />
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+    <!-- layout to show image downloading progress -->
+    <include layout="@layout/downloading_notification" />
+
+    <!-- layout to show error or warning -->
+    <include layout="@layout/include_warning_notification" />
+
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
         android:fillViewport="true"
@@ -17,15 +28,11 @@
         android:scrollbarStyle="insideOverlay" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <!-- layout to show image downloading progress -->
-            <include layout="@layout/include_downloading_notification" />
 
-            <!-- layout to show error or warning -->
-            <include layout="@layout/include_warning_notification" />
 
             <!-- To -->
             <LinearLayout
@@ -108,8 +115,8 @@
 
             <Button
                 android:id="@+id/compose_to_addRecipientBtn"
-                style="@style/Style.Button"
-                android:layout_width="120sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:onClick="toAddOnClick"
                 android:text="@string/compose_to_addRecipientBtn" />
@@ -237,5 +244,6 @@
 
         </LinearLayout>
     </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>

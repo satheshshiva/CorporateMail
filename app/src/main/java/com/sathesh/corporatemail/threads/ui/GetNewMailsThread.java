@@ -72,7 +72,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 				}
 
 				//if the cache is present, then get the same number of rows from EWS as of the local no of rows
-				int noOfMailsToFetch=(totalCachedRecords>MIN_NO_OF_MAILS?totalCachedRecords:MIN_NO_OF_MAILS);
+				int noOfMailsToFetch=Math.max(totalCachedRecords, MIN_NO_OF_MAILS);
 
 				if(parent.getMailFolderId()!=null && !(parent.getMailFolderId().equals("")))
 					//Ews call

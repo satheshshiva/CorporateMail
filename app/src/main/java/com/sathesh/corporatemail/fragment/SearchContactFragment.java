@@ -22,7 +22,6 @@ import androidx.fragment.app.Fragment;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.ContactDetailsActivity;
-import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.asynctask.interfaces.IResolveNames;
 import com.sathesh.corporatemail.constants.Constants;
@@ -116,9 +115,6 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         activityDataPasser =   (ActivityDataPasser)getActivity();
         context =  getActivity();
 
-        //Initialize toolbar
-        MailApplication.toolbarInitialize(activity, view);
-
         //action bar initialize
         myActionBar = activity.getSupportActionBar();
         //update mail type in the action bar title
@@ -130,7 +126,7 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         contactSearch= (EditText)view.findViewById(R.id.contactSearch);
 
         listView = (ListView)view.findViewById(R.id.suggestionsListView);
-        activity.setSupportProgressBarIndeterminateVisibility(view, false);
+        activity.setSupportProgressBarIndeterminateVisibility(activity, false);
 
         listener = new SearchContactFragmentListener(activity, context, this);
 
@@ -158,7 +154,7 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
     // asynchronous calls
     @Override
     public void handleResolvingNames() {
-        activity.setSupportProgressBarIndeterminateVisibility(view, true);
+        activity.setSupportProgressBarIndeterminateVisibility(activity, true);
     }
 
     @Override
@@ -222,7 +218,7 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
         } catch (ServiceLocalException e) {
             e.printStackTrace();
         }
-        activity.setSupportProgressBarIndeterminateVisibility(view, false);
+        activity.setSupportProgressBarIndeterminateVisibility(activity, false);
     }
 
     @Override
@@ -230,7 +226,7 @@ public class SearchContactFragment extends Fragment implements Constants,SearchC
             NameResolutionCollection outputCollection, String extra1,
             Exception pE) {
         Notifications.showToast(context, getText(R.string.addrecipient_error), Toast.LENGTH_SHORT);
-        activity.setSupportProgressBarIndeterminateVisibility(view, false);
+        activity.setSupportProgressBarIndeterminateVisibility(activity, false);
     }
 
     /** Interface - Fragment Interaction Listener

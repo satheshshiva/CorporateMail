@@ -3,10 +3,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/viewMailFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        class="com.sathesh.corporatemail.fragment.ViewMailFragment" ></fragment>
+    <include layout="@layout/toolbar" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

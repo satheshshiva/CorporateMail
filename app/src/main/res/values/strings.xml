@@ -5,6 +5,9 @@
     <string name="app_name">Corporate Mail</string>
     <string name="app_version">1.0.1</string>
 
+    <!-- General -->
+    <string name="noSubjectDisplay">(no subject)</string>
+
     <!-- Login Page -->
     <string name="api_version_low">You are using an older version of Android</string>
 
@@ -58,7 +61,6 @@
 
     <!-- Mail Notification Service -->
     <string name="mnsServiceNewMailNotification">You have %d new email</string>
-    <string name="mnsServiceNotificationWithNoSubject">(no subject)</string>
     <string name="mnsServiceNotificationWithNullMessage">New Email</string>
     <string name="mns_service_started">Starting Corporate Mail Notification Service..</string>
     <string name="mns_service_stopped">Corporate Mail Notification Service Stopped</string>
@@ -95,10 +97,6 @@
     <string name="viewmail_to_lbl">To:</string>
     <string name="viewmail_cc_lbl">CC:</string>
     <string name="viewmail_date_lbl">Date:</string>
-    <string name="viewmail_showmore_lbl">Show more</string>
-    <string name="viewmail_showless_lbl">Show less</string>
-    <string name="viewmail_showmore_cc_lbl">Show more</string>
-    <string name="viewmail_showless_cc_lbl">Show less</string>
     <string name="viewmail_downloading_imgs">Downloading %1$d of %2$d image(s)</string>
     <string name="viewmail_downloading_img">Downloading %1$d of %2$d image(s)</string>
     <string name="viewmail_mail_deleted">Message Deleted</string>
@@ -117,7 +115,7 @@
     <string name="compose_cc_disp_default">CC: </string>
     <string name="compose_bcc_disp_default">BCC: </string>
     <string name="compose_to_lbl">To</string>
-    <string name="compose_to_addRecipientBtn">Add Recipient</string>
+    <string name="compose_to_addRecipientBtn">Add</string>
     <string name="compose_to_no_recep">Please add atleast one recipient</string>
     <string name="compose_resolving_names_wait">Please wait while resolving names</string>
     <string name="compose_to_box_not_empty">Please click the Add symbol to add the To recipient</string>
@@ -149,16 +147,16 @@
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 
-    <string name="compose_resolving_names_text">Resolving email id(s) %1$d of %2$d</string>
+    <string name="compose_resolving_names_text">Resolving email id</string>
     <string name="compose_resolve_notfound_warning">The email id for the following contact(s) are not resolved. Please enter the email id manually.\n%s</string>
 
     <!-- Add Recipient -->
-    <string name="addrecipient_searchdirectory_btn_lbl">Search Directory</string>
+    <string name="addrecipient_searchdirectory_btn_lbl">Search</string>
     <string name="addrecipient_addTo_btn_lbl">To</string>
     <string name="addrecipient_addCC_btn_lbl">CC</string>
     <string name="addrecipient_addBCC_btn_lbl">BCC</string>
     <string name="addrecipient_contactSearch_hint">Enter Email Id or Search</string>
-    <string name="addrecipient_contactSearch_helptext">Enter email id or search person and tap To, CC or BCC button</string>
+    <string name="addrecipient_contactSearch_helptext">Enter email id or search and then tap To, CC or BCC</string>
     <string name="addrecipient_error">Unknown Error Occurred</string>
     <string name="addrecipient_nomatch">No match found</string>
     <string name="addrecipient_select_person">Please enter valid email id or search person</string>
@@ -271,7 +269,7 @@
     <string name="actionBar_Submenu_Reply_Options">Reply Options</string>
     <string name="actionBar_Submenu_Others">Others</string>
     <string name="title_activity_test">TestActivity</string>
-    <string name="cabSelected">%s selected</string>
+    <string name="cabSelected">%d selected</string>
 
     <!-- Action Mode -->
     <string name="actionMode_deleteMail">Delete</string>

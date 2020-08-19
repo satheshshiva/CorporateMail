@@ -3,30 +3,36 @@
  */
 package com.sathesh.corporatemail.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.activity.ComposeActivity;
 import com.sathesh.corporatemail.activity.ContactDetailsActivity;
-import com.sathesh.corporatemail.activity.MailListViewActivity;
 import com.sathesh.corporatemail.adapter.ComposeActivityAdapter;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
@@ -42,7 +48,6 @@ import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
-import com.sathesh.corporatemail.ui.listeners.ViewMailListener;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
@@ -61,19 +66,15 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public MyActivity activity ;
     private Context context ;
 
-    private TextView fromIdView ;
-    private TextView toIdView ;
-    private TextView ccIdView;
-    private TextView dateIdView;
-    private Button toShowMoreBtn;
-    private Button cCShowMoreBtn;
+    private TextView subjectIdView, expandedDateIdView, collapsedDateIdView, toLbl, ccLbl ;
     private StandardWebView standardWebView ;
-    private LinearLayout cc_LinearLayout;
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
     private EmailMessage message;
+    private ConstraintLayout moreHeadersLayout;
 
-    private CachedMailHeaderVO mailHeader;
+    private CachedMailHeaderVO mailHeaderVo;
+    private boolean expanded;
 
     public enum Status{
         LOADING,	// Started loading body. Network Call for loading body is in progress
@@ -109,10 +110,16 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private String processedHtml="";
     private int remainingInlineImages=0;
     private Status currentStatus;
-    private ViewMailListener viewMailListener;
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
+    private ImageButton expandBtn;
+    private ChipGroup collapsedfromChipGrp, expandedFromChipGrp, expandedToChipGrp, expandedCcChipGrp ;
 
 
+    public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
+        this.mailHeaderVo = mailHeaderVo;
+    }
+    private boolean zooming;
+    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -128,25 +135,29 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         if(cachedMailHeaderAdapter==null){
             cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
-        //Initialize toolbar
-        MailApplication.toolbarInitialize(activity, view);
 
         progressStatusDispBar = new ProgressDisplayNotificationBar(activity,view);
-        //listener for this frament and activity
-        viewMailListener = new ViewMailListener(this);
 
         //if(customTitleSupported)
         //	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getViewMailTitleBarLayout());
         standardWebView= new StandardWebView();
 
-        fromIdView = (TextView)view.findViewById(R.id.ViewMailFromId);
-        toIdView = (TextView)view.findViewById(R.id.ViewMailToId);
-        ccIdView = (TextView)view.findViewById(R.id.ViewMailCCId);
-        dateIdView = (TextView)view.findViewById(R.id.ViewMailDateId);
+        subjectIdView = (TextView)view.findViewById(R.id.subject);
+        collapsedfromChipGrp = (ChipGroup) view.findViewById(R.id.collapsedFromChipGrp);
+        expandedFromChipGrp = (ChipGroup)view.findViewById(R.id.expandedFromChipGrp);
+        expandedToChipGrp = (ChipGroup)view.findViewById(R.id.expandedToChipGrp);
+        expandedCcChipGrp = (ChipGroup)view.findViewById(R.id.expandedCcChipGrp);
+        toLbl = (TextView)view.findViewById(R.id.expandedToLbl);
+        ccLbl = (TextView)view.findViewById(R.id.expandedCcLbl);
+        expandedDateIdView = (TextView)view.findViewById(R.id.expandedDate);
+        collapsedDateIdView = (TextView)view.findViewById(R.id.collapsedDate);
+        moreHeadersLayout = (ConstraintLayout) view.findViewById(R.id.moreHeaders);
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
+        expandBtn = (ImageButton) view.findViewById(R.id.expandBtn);
 
-        webview = (WebView)view.findViewById(R.id.view_mail_webview);
+        moreHeadersLayout.setVisibility(View.GONE);
 
+        webview = (WebView)view.findViewById(R.id.webview);
         WebSettings webSettings = webview.getSettings();
         webSettings.setAllowFileAccess(true);
 
@@ -154,50 +165,57 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         // The Android system will hanldle image caches for the webview
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
-        //webSettings.setLoadWithOverviewMode(true);
-        //webSettings.setUseWideViewPort(true);
+        webSettings.setDisplayZoomControls(false);
 
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*nestedScrollview.setOnTouchListener((View view1, MotionEvent ev)->{
+            mScaleDetector= new ScaleGestureDetector(context, new ScaleListener());
+            // Let the ScaleGestureDetector inspect all events.
+            mScaleDetector.onTouchEvent(ev);
+            return false;
+        });*/
 
-        //  webview.loadDataWithBaseURL("fake:///ghj/", "", "text/html", "utf-8", null);
+        webview.setOnTouchListener((View v, MotionEvent event) -> {
+            int action = event.getActionMasked();
+
+            // Setting on Touch Listener for handling the touch inside ScrollView
+                // Disallow the touch request for parent scroll on touch of child view
+            if (action == MotionEvent.ACTION_POINTER_DOWN ) {
+                zooming = true;
+                return false;
+            }
+
+            if (action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+                zooming = false;
+            }
+
+            if (zooming) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+
+            return false;
+
+        });
 
         webview.setWebChromeClient(new CommonWebChromeClient());
-        //		webview.setWebViewClient(new WebViewClient(){
-        //
-        //			@Override
-        //			public void onLoadResource (WebView view, String url){
-        //				//Log.i(TAG, "View MailAcivity -> URL Loading " +url);
-        //
-        //			}
-        //		});
 
-        toShowMoreBtn =(Button)view.findViewById(R.id.ViewMailToShowMoreBtn);
-        cCShowMoreBtn =(Button)view.findViewById(R.id.ViewMailCCShowMoreBtn);
-
-        toShowMoreBtn.setOnClickListener(viewMailListener);
-        cCShowMoreBtn.setOnClickListener(viewMailListener);
-
-        cc_LinearLayout =(LinearLayout)view.findViewById(R.id.CC_ViewMail_LinearLayout);
-        //load email
-        mailHeader = (CachedMailHeaderVO) activity.getIntent().getSerializableExtra(MailListViewActivity.EXTRA_MESSAGE_CACHED_HEADER);
-
-        if(mailHeader !=null){
-            from = mailHeader.getMail_from();
-            to = mailHeader.getMail_to();
-            cc = mailHeader.getMail_cc();
-            bcc = mailHeader.getMail_bcc();
-            subject = mailHeader.getMail_subject();
-            mailType=mailHeader.getMail_type();
-            mailFolderName= mailHeader.getFolder_name();
-            mailFolderId=mailHeader.getFolder_id();
-            itemId=mailHeader.getItem_id();
+        if(mailHeaderVo !=null){
+            from = mailHeaderVo.getMail_from();
+            to = mailHeaderVo.getMail_to();
+            cc = mailHeaderVo.getMail_cc();
+            bcc = mailHeaderVo.getMail_bcc();
+            subject = mailHeaderVo.getMail_subject();
+            mailType= mailHeaderVo.getMail_type();
+            mailFolderName= mailHeaderVo.getFolder_name();
+            mailFolderId= mailHeaderVo.getFolder_id();
+            itemId= mailHeaderVo.getItem_id();
         }
 
         if(BuildConfig.DEBUG){
             Log.d(LOG_TAG, "ViewMailFragment -> from " + from + " to " + to  + " cc " + cc + " bcc " + bcc + " subject " + subject);
         }
         try {
-            date = mailHeader.getMail_datetimereceived();
+            date = mailHeaderVo.getMail_datetimereceived();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,6 +224,23 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         showHeaders();
 
         loadEmail();
+
+        if (MailApplication.getInstance().isViewMailTransitionEnabled()) {
+            //resume the enter activity transition which was postponed in the ViewMailActivity:onCreate()
+            // the pause and resume was done so that the shared objects will be available.
+            subjectIdView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    // Tell the framework to start.
+                    subjectIdView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && activity != null) {
+                        // This code is tied to ViewMailActivity.java -> onCreate -> postponeEnterTransition()
+                        activity.startPostponedEnterTransition();
+                    }
+                    return true;
+                }
+            });
+        }
 
         return view;
     }
@@ -221,11 +256,21 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void mailAsReadInCache(){
         //Mark the item as read
         try {
-            cachedMailHeaderAdapter.markMailAsReadUnread(mailHeader.getItem_id(), true);
+            cachedMailHeaderAdapter.markMailAsReadUnread(mailHeaderVo.getItem_id(), true);
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);
         }
     }
+
+    @Override
+    public void expandBtnOnClick(View view) {
+        expandBtn.setVisibility(View.GONE);
+        moreHeadersLayout.setVisibility(View.VISIBLE);
+        collapsedfromChipGrp.setVisibility(View.GONE);
+        collapsedDateIdView.setVisibility(View.GONE);
+        expanded=true;
+    }
+
     /**
      *
      */
@@ -409,6 +454,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         super.onResume();
         boolean doNotRateAppFlag=false;
         int counterOpenedMails=0;
+        expandBtn.setVisibility(expanded?View.GONE:View.VISIBLE);       //for a bug fix. Without this, when the expand btn once hidden by clicking it, when you open contact details from email and then when going back
+                                                                                            //to the View mails page, this button again shows up for no reason.
         //increase the counter to check the rate app
         try {
             //increase the opened mail counter by 1.
@@ -508,49 +555,42 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
             //subject
             if(subject!=null && !(subject.equals(""))){
-                //activity.setTitle(subject);
-                displaySubject(subject);
+                subjectIdView.setText(subject);
             }
             else{
-                //activity.setTitle(VIEW_MAIL_WEBVIEW_NO_SUBJECT);
-                displaySubject(VIEW_MAIL_WEBVIEW_NO_SUBJECT);
+                subjectIdView.setText(R.string.noSubjectDisplay);
             }
             // From
-            buildHeaderText(fromIdView, fromReceivers, null);
+            if (fromReceivers.size() > 0) {
+                buildContactChips(expandedFromChipGrp, fromReceivers);
+                buildContactChips(collapsedfromChipGrp, fromReceivers);
+            }else{
+                expandedFromChipGrp.removeAllViews();
+            }
 
             // To
             if(isToExist){
-                //limit the number of receivers in To if there are more
-                if(toReceivers.size() > MAX_TO_RECEIVERS_DISPLAY){
-                    //reduce the no. of To: receivers and hide thmem with show more button
-                    buildHeaderText(toIdView, toReceivers, MAX_TO_RECEIVERS_DISPLAY);
-                    toShowMoreBtn.setVisibility(View.VISIBLE);
-                }
-                else{
-                    //show all To contacts
-                    buildHeaderText(toIdView, toReceivers, null);
-                }
+                //show all To contacts
+                buildContactChips(expandedToChipGrp, toReceivers);
+            }else{
+                expandedCcChipGrp.setVisibility(View.GONE);
+                toLbl.setVisibility(View.GONE);
             }
 
             //CC
             if(isCCExist){
-                //cc
-                //limit the number of receivers in CC if there are more
-                if(ccReceivers.size() > MAX_CC_RECEIVERS_DISPLAY){
-                    //reduce the no. of CC receivers and hide them with show more button
-                    buildHeaderText(ccIdView, ccReceivers, MAX_CC_RECEIVERS_DISPLAY);
-                    cCShowMoreBtn.setVisibility(View.VISIBLE);
-                }
-                else{
-                    // show all CC contacts
-                    buildHeaderText(ccIdView, ccReceivers, null);
-                }
-
-                cc_LinearLayout.setVisibility(View.VISIBLE);
+                buildContactChips(expandedCcChipGrp, ccReceivers);
+            }else{
+                expandedCcChipGrp.setVisibility(View.GONE);
+                ccLbl.setVisibility(View.GONE);
             }
             //date
             if(date!=null){
-                dateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
+                expandedDateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
+                collapsedDateIdView.setText(MailApplication.getShortDate(date));
+            }else{
+                expandedDateIdView.setText("");
+                collapsedDateIdView.setText("");
             }
         }catch(Exception e){
             Utilities.generalCatchBlock(e, this);
@@ -558,9 +598,24 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     }
 
-    private void displaySubject(String viewMailWebviewNoSubject) {
-        //titleBarSubject.setText(viewMailWebviewNoSubject);
-        activity.getSupportActionBar().setTitle(viewMailWebviewNoSubject);
+    private void buildContactChips(ChipGroup chipGrp, List<ContactSerializable> fromReceivers) {
+        Chip chip;
+        chipGrp.removeAllViews();   // remove all the existing chips. This fn will be called once before loading and once after loading the email. So we should not create duplicate chips
+        for(ContactSerializable contact: fromReceivers) {
+            chip = new Chip(context);
+            chip.setText(contact.getDisplayName());
+            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    (int)activity.getResources().getDimension(R.dimen.view_mail_contact_chip_height));
+            chip.setLayoutParams(params);
+            chipGrp.addView(chip);
+            //onclick listener for this chip.
+            chip.setOnClickListener((View v)->{
+                Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
+                contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
+                startActivity(contactDetailsIntent);
+            });
+        }
+
     }
 
     public void showBody(String html1){
@@ -594,8 +649,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         //get the current status whether the mails is in loading state
         boolean statusLoadedMail= (currentStatus!=null &&
                     currentStatus != Status.LOADING
-                    && currentStatus != Status.ERROR)
-                    ? true : false;
+                    && currentStatus != Status.ERROR);
 
         //loop thorugh each contact
         while(counter<contacts.size()){
@@ -698,22 +752,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.subject = subject;
     }
 
-    public Button getToShowMoreBtn() {
-        return toShowMoreBtn;
-    }
-
-    public void setToShowMoreBtn(Button toShowMoreBtn) {
-        this.toShowMoreBtn = toShowMoreBtn;
-    }
-
-    public Button getcCShowMoreBtn() {
-        return cCShowMoreBtn;
-    }
-
-    public void setcCShowMoreBtn(Button cCShowMoreBtn) {
-        this.cCShowMoreBtn = cCShowMoreBtn;
-    }
-
     public String getTo() {
         return to;
     }
@@ -737,37 +775,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setBcc(String bcc) {
         this.bcc = bcc;
     }
-
-    public boolean isToShowMoreFlag() {
-        return toShowMoreFlag;
-    }
-
-    public void setToShowMoreFlag(boolean toShowMoreFlag) {
-        this.toShowMoreFlag = toShowMoreFlag;
-    }
-
-    public boolean isCcShowMoreFlag() {
-        return ccShowMoreFlag;
-    }
-
-    public void setCcShowMoreFlag(boolean ccShowMoreFlag) {
-        this.ccShowMoreFlag = ccShowMoreFlag;
-    }
     @Override
     public CachedMailHeaderVO getCachedMailHeaderVO() {
-        return mailHeader;
+        return mailHeaderVo;
     }
 
-    public void setCachedMailHeaderVO(CachedMailHeaderVO itemToOpen) {
-        this.mailHeader = itemToOpen;
-    }
 
     public MailFunctions getMailFunctions() {
         return mailFunctions;
-    }
-
-    public void setMailFunctions(MailFunctions mailFunctions) {
-        this.mailFunctions = mailFunctions;
     }
 
     public Date getDate() {
@@ -777,48 +792,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setDate(Date date) {
         this.date = date;
     }
-
-
-    public TextView getFromIdView() {
-        return fromIdView;
-    }
-
-    public void setFromIdView(TextView fromIdView) {
-        this.fromIdView = fromIdView;
-    }
-
-    public TextView getToIdView() {
-        return toIdView;
-    }
-
-    public void setToIdView(TextView toIdView) {
-        this.toIdView = toIdView;
-    }
-
-    public TextView getCcIdView() {
-        return ccIdView;
-    }
-
-    public void setCcIdView(TextView ccIdView) {
-        this.ccIdView = ccIdView;
-    }
-
-    public TextView getDateIdView() {
-        return dateIdView;
-    }
-
-    public void setDateIdView(TextView dateIdView) {
-        this.dateIdView = dateIdView;
-    }
-
     public ProgressDisplayNotificationBar getProgressStatusDispBar() {
         return progressStatusDispBar;
     }
 
-    public void setProgressStatusDispBar(
-            ProgressDisplayNotificationBar progressStatusDispBar) {
-        this.progressStatusDispBar = progressStatusDispBar;
-    }
     public StandardWebView getStandardWebView() {
         return standardWebView;
     }
@@ -842,12 +819,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.totalInlineImages = totalInlineImages;
     }
 
-    public CachedMailHeaderVO getMailHeader() {
-        return mailHeader;
+    public CachedMailHeaderVO getMailHeaderVo() {
+        return mailHeaderVo;
     }
 
-    public void setMailHeader(CachedMailHeaderVO mailHeader) {
-        this.mailHeader = mailHeader;
+    public void setMailHeaderVo(CachedMailHeaderVO mailHeaderVo) {
+        this.mailHeaderVo = mailHeaderVo;
     }
 
     public Context getContext() {

@@ -132,7 +132,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
                         subjectView.setText(mailListHeader.getMail_subject());
 
                         //Date Time Received
-                        dateView.setText(MailApplication.getCustomizedInboxDate(mailListHeader.getMail_datetimereceived()));
+                        dateView.setText(MailApplication.getShortDate(mailListHeader.getMail_datetimereceived()));
 
                         //Has Attachment icon
                         if(mailListHeader.isMail_has_attachments()){
@@ -194,7 +194,6 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
      * @return
      * @throws Exception
      */
-    @SuppressLint("UseSparseArrays")
     private List<MailListViewContent> buildListViewContent(List<CachedMailHeaderVO> mailListHeaderData) throws Exception{
         Date thisDate,prevDate=null;
         List<String> dateHeaderList;
@@ -208,7 +207,8 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
             contentList = new ArrayList<MailListViewContent>();
         }
         MailListViewContent localContent;
-        for(CachedMailHeaderVO mailListHeader: mailListHeaderData){
+        for(int i=0; i<mailListHeaderData.size(); i++ ){
+            CachedMailHeaderVO mailListHeader = mailListHeaderData.get(i);
             thisDate = mailListHeader.getMail_datetimereceived();
             //if this date is same as previously processed date then do nothing and increment counter
             if(!thisDate.equals(prevDate)){
@@ -246,6 +246,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
                     //store the vo in a sepearate object in the list
                     localContent = new MailListViewContent();
                     localContent.setMailVO(mailListHeader);
+                    localContent.setMailHeaderPosition(i); //used by viewpager
                     localContent.setType(MailListViewContent.types.MAIL);
                     contentList.add(localContent);
 
@@ -259,6 +260,7 @@ public class MailListViewAdapter extends BaseAdapter implements Constants{
             //create a new MailListViewContent object with only vo and not date
             localContent = new MailListViewContent();
             localContent.setMailVO(mailListHeader);
+            localContent.setMailHeaderPosition(i); //used by viewpager
             localContent.setType(MailListViewContent.types.MAIL);
             contentList.add(localContent);
         }

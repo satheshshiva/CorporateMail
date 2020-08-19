@@ -151,7 +151,7 @@ public class PullMnWorker extends Worker implements Constants{
 							showNewMailNotification(message.getSender().getName() , message.getSubject());
 						}
 						else if(null !=  message.getSender() && null !=  message.getSender().getName() ){
-							showNewMailNotification(message.getSender().getName(), context.getText(R.string.mnsServiceNotificationWithNoSubject).toString());
+							showNewMailNotification(message.getSender().getName(), context.getText(R.string.noSubjectDisplay).toString());
 						}
 						else
 						{
@@ -214,7 +214,7 @@ public class PullMnWorker extends Worker implements Constants{
 				cachedMailBodyAdapter.cacheNewData(message,bodyWithImg, MailType.INBOX, "Inbox", "" );
 
 				// download and cache images. html body will be refreshed after each img download to show the imgs
-				MailApplication.cacheInlineImages(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this);
+				MailApplication.downloadInlineImgs(context, attachmentCollection, mailFunctions.getItemId(message), bodyWithImg, null, this, false);
 			}
 			//NO INLINE IMGS
 			else {

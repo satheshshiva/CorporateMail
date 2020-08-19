@@ -63,7 +63,9 @@ public class LoginPageActivity extends MyActivity implements Constants {
         login_username = (EditText)findViewById(R.id.login_username);
         login_passwd = (EditText)findViewById(R.id.login_passwd);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        if (getSupportActionBar() != null ) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         //testingdb(activity);
 		/* if(customTitleSupported)
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getInboxTitleBarLayout());*/

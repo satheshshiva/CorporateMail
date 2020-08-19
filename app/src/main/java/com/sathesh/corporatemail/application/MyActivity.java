@@ -1,8 +1,10 @@
 package com.sathesh.corporatemail.application;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.sathesh.corporatemail.R;
 
@@ -18,20 +20,20 @@ public class MyActivity extends AppCompatActivity {
      * in the toolbar
      * @param visibility
      */
+    @Override
     public void setSupportProgressBarIndeterminateVisibility(boolean visibility){
         ProgressBar progressBar=(ProgressBar)findViewById(R.id.indeterminate_progress);
-        if(visibility)
-        progressBar.setVisibility(View.VISIBLE);
-        else
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(visibility ? View.VISIBLE: View.GONE);
     }
 
     //to be called from fragment
-    public void setSupportProgressBarIndeterminateVisibility(View view, boolean visibility){
-        ProgressBar progressBar=(ProgressBar)view.findViewById(R.id.indeterminate_progress);
-        if(visibility)
-            progressBar.setVisibility(View.VISIBLE);
-        else
-            progressBar.setVisibility(View.GONE);
+    public void setSupportProgressBarIndeterminateVisibility(MyActivity activity, boolean visibility){
+        ProgressBar progressBar=(ProgressBar)activity.findViewById(R.id.indeterminate_progress);
+        progressBar.setVisibility(visibility?  View.VISIBLE: View.GONE);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 }

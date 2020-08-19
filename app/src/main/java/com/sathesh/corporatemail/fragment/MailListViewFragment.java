@@ -39,7 +39,7 @@ import com.sathesh.corporatemail.threads.ui.GetNewMailsThread;
 import com.sathesh.corporatemail.ui.listeners.MailListViewListener;
 import com.sathesh.corporatemail.util.Utilities;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author sathesh
@@ -85,6 +85,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
     //contains all the UI listeners for this fragment
     private MailListViewListener listener;
+    private ArrayList<CachedMailHeaderVO> cachedHeaderVoList;
+    private Bundle savedInstanceState;
 
     /**
      * @author sathesh
@@ -143,6 +145,7 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
 
         activity = (MyActivity) getActivity();
         context = getActivity();
+        this.savedInstanceState = savedInstanceState;
         if (cacheMailHeaderAdapter == null) {
             cacheMailHeaderAdapter = new CachedMailHeaderAdapter(context);
         }
@@ -155,9 +158,6 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 if (listener == null) {
                     listener = new MailListViewListener((MyActivity) activityDataPasser, this);
                 }
-
-                //Initialize toolbar
-                MailApplication.toolbarInitialize(activity, view);
 
                 //List View Initialization
                 listView = (ListView) view.findViewById(R.id.listView);
@@ -201,9 +201,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //get the cursor
 
                 //if(adapter==null){	//on config change it wont be null
-                List<CachedMailHeaderVO> listVOs = cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
+                cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
                 //initialize the adapter
-                adapter = new MailListViewAdapter(context, this, listVOs);
+                adapter = new MailListViewAdapter(context, this, cachedHeaderVoList);
                 //}
 
                 // initializes the list view with the adapter. also will place all the cached mails in list view initially
@@ -217,13 +217,9 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
                 //Initialize SwipeRefreshLayout
                 swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
                 // the refresh listener. this would be called when the layout is pulled down
-                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        //refresh list when the SwipeRefresh is pulled
-                        refreshList();
-                    }
-                });
+                //refresh list when the SwipeRefresh is pulled
+                swipeRefreshLayout.setOnRefreshListener(this::refreshList);
+
                 // sets the colors used in the refresh animation
                 int[] resources = MailApplication.getSwipeRefreshLayoutColorResources();
                 if (resources.length == 4) {
@@ -346,7 +342,8 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
         }
         try {
             //update the list view
-            adapter.setMailListVOs(cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId));
+            cachedHeaderVoList = (ArrayList<CachedMailHeaderVO>) cacheMailHeaderAdapter.getMailHeaders(mailType, mailFolderId);
+            adapter.setMailListVOs(cachedHeaderVoList);
             adapter.updateAndNotify();
 
             //update the text switcher
@@ -622,5 +619,15 @@ public class MailListViewFragment extends Fragment implements Constants, MailLis
     @Override
     public void setFabShown(boolean fabShown) {
         this.fabShown = fabShown;
+    }
+
+    @Override
+    public ArrayList<CachedMailHeaderVO> getCachedHeaderVoList() {
+        return cachedHeaderVoList;
+    }
+
+    @Override
+    public Bundle getSavedInstanceState() {
+        return savedInstanceState;
     }
 }
