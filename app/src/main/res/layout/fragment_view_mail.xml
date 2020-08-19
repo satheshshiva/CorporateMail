@@ -184,7 +184,7 @@
 
 
             <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/view_mail_attachments_flow"
+                android:id="@+id/view_mail_attachments_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -193,84 +193,84 @@
                 app:layout_constraintStart_toStartOf="@+id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/bodyDivider">
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="SomeTitleText.pdf"
                     android:layout_margin="5dp"/>
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="SomeTitleText2.txt"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fileName="SomeTitleText.ppt"
                 android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="gifFile.gif"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="mp3_file.mp3"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="NoExt"
                     android:layout_margin="5dp"/>
 
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="Video.mpg"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="Excel.xls"
                     android:layout_margin="5dp"/>
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="Excc.xlsx"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="Excc.apk"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="Excc.sh"
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="DotEnd."
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="MultiDot..."
                     android:layout_margin="5dp"/>
 
-                <com.sathesh.corporatemail.customui.AttachmentsCardView
+                <com.sathesh.corporatemail.customui.AttachmentCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fileName="MultiDot.s.ad.mp3"
@@ -285,7 +285,7 @@
                 android:layout_marginTop="8dp"
                 android:transitionName="transitionWebviewShared"
                 app:layout_constraintStart_toStartOf="@+id/left_guideline"
-                app:layout_constraintTop_toBottomOf="@+id/view_mail_attachments_flow"
+                app:layout_constraintTop_toBottomOf="@+id/view_mail_attachments_layout"
                 tools:targetApi="lollipop" />
 
             <androidx.constraintlayout.widget.Guideline

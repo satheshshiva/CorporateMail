@@ -18,11 +18,11 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ui.util.UIutilities;
 
 
-public class AttachmentsCardView extends CardView implements Constants {
+public class AttachmentCardView extends CardView implements Constants {
     private final int MARGIN=14;
     private final int ELEVATION=12;
 
-    public AttachmentsCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public AttachmentCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -32,10 +32,11 @@ public class AttachmentsCardView extends CardView implements Constants {
             Log.e(LOG_TAG, "inflater is null ");
         }
         TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.AttachmentsCardView, 0, 0);
-        String titleText = a.getString(R.styleable.AttachmentsCardView_fileName);
-
-        setFileName(titleText);
+                R.styleable.AttachmentCardView, 0, 0);
+        String fileName = a.getString(R.styleable.AttachmentCardView_fileName);
+        if (fileName!=null){
+            setFileName(fileName);
+        }
         setFocusable(true);
         setClickable(true);
         setCardElevation(UIutilities.convertDpToPx(context, ELEVATION));
@@ -85,13 +86,16 @@ public class AttachmentsCardView extends CardView implements Constants {
         }
     }
 
-    public void setSizeStatus(String sizeStatus){
+    public void setSizeOrStatus(String sizeStatus){
         TextView title = (TextView) findViewById(R.id.view_attachment_file_size);
         title.setText(sizeStatus);
     }
 
     private String getFileExtension(String filename) {
-        return filename.substring(filename.lastIndexOf(".") + 1);
+        if (filename!=null) {
+            return filename.substring(filename.lastIndexOf(".") + 1);
+        }
+        return "";
     }
 
 }

@@ -10,7 +10,7 @@
     </declare-styleable>
 
 
-        <declare-styleable name="AttachmentsCardView">
+        <declare-styleable name="AttachmentCardView">
             <attr name="fileName" format="string"  />
         </declare-styleable>
 </resources>
