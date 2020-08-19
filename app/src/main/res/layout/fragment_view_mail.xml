@@ -168,7 +168,8 @@
                     android:text="Date"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/expandedFromLbl"
-                    app:layout_constraintTop_toBottomOf="@+id/expandedCcChipGrp" />
+                    app:layout_constraintTop_toTopOf="@+id/expandedDate"
+                    app:layout_constraintBottm_toBottomOf="@+id/expandedDate"/>
 
                 <TextView
                     android:id="@+id/expandedDate"
@@ -176,9 +177,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="Date"
-                    app:layout_constraintBottom_toBottomOf="@+id/expandedDateLbl"
-                    app:layout_constraintStart_toEndOf="@+id/expandedDateLbl" />
+                    app:layout_constraintStart_toEndOf="@+id/expandedDateLbl"
+                    app:layout_constraintTop_toBottomOf="@+id/expandedCcChipGrp" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
