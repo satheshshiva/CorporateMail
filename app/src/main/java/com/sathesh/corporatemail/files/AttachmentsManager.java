@@ -6,6 +6,7 @@ import android.util.Log;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.cache.CacheDirectories;
 import com.sathesh.corporatemail.constants.Constants;
+import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.datamodels.FileAttachmentMeta;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
@@ -13,6 +14,7 @@ import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ public class AttachmentsManager implements Constants {
                     attachment.setContentType(fAttach.getContentType());
                     attachment.setSize(fAttach.getSize());
                     attachment.setHumanReadableSize(android.text.format.Formatter.formatShortFileSize(context, fAttach.getSize()));
+                    //setting the attachment id
+                    attachment.setId(fAttach.getId());
                     attachments.add(attachment);
                 }
             }
@@ -63,6 +67,32 @@ public class AttachmentsManager implements Constants {
             Utilities.generalCatchBlock(e, thisClass);
         }
         return no;
+    }
+
+    /**
+     *
+     * @param context
+     * @param thisClass
+     * @param hardReDownload
+     */
+    public static void downloadFileToCache(Context context, FileAttachmentMeta fileAttachmentMeta, Object thisClass, boolean hardReDownload) throws Exception{
+        new Thread(() -> {
+            FileOutputStream fos = null;
+            try
+            {
+                String dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getId();
+                new File(dir).mkdirs();
+                fos = new FileOutputStream(dir + "/" + fileAttachmentMeta.getFileName());
+                //Network call
+                NetworkCall.downloadAttachment(context, fileAttachmentMeta.getId(), fos);
+            }catch (Exception e) {
+               e.printStackTrace();
+            } finally{
+                try {fos.flush();} catch (Exception ignored) {}
+                try {fos.close();} catch (Exception ignored) {}
+            }
+        }).start();
+
     }
 
     public static void downloadInlineImgs(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass, boolean hardReDownload){

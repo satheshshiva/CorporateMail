@@ -6,6 +6,7 @@ public class FileAttachmentMeta {
     private String humanReadableSize;
     private String filePath;
     private String contentType;
+    private String id;
 
     public String getFileName() {
         return fileName;
@@ -46,4 +47,13 @@ public class FileAttachmentMeta {
     public void setHumanReadableSize(String humanReadableSize) {
         this.humanReadableSize = humanReadableSize;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }
