@@ -38,9 +38,11 @@ import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
 import com.sathesh.corporatemail.customui.AttachmentCardView;
+import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.datamodels.FileAttachmentMeta;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
+import com.sathesh.corporatemail.files.AttachmentsManager;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.handlers.LoadEmailHandler;
 import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
@@ -51,6 +53,8 @@ import com.sathesh.corporatemail.ui.util.UIutilities;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -315,6 +319,15 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 AttachmentCardView attachmentCardView = new AttachmentCardView(context, null);
                 attachmentCardView.setFileName(attachmentMeta.getFileName());
                 attachmentCardView.setSizeOrStatus(attachmentMeta.getHumanReadableSize());
+                attachmentCardView.setOnClickListener((View v)->{
+                    try {
+                        AttachmentsManager.downloadFileToCache(context, attachmentMeta, this, false);
+                    }catch(Exception e){
+                        Utilities.generalCatchBlock(e, this);
+                    }
+
+                });
+
                 attachmentsLayout.addView(attachmentCardView);
             }
         }else{
