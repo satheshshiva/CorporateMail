@@ -78,15 +78,17 @@ public class AttachmentsManager implements Constants {
     public static void downloadFileToCache(Context context, FileAttachmentMeta fileAttachmentMeta, Object thisClass, boolean hardReDownload) throws Exception{
         new Thread(() -> {
             FileOutputStream fos = null;
+            String dir="";
             try
             {
-                String dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getId();
+                dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getId() ;
                 new File(dir).mkdirs();
                 fos = new FileOutputStream(dir + "/" + fileAttachmentMeta.getFileName());
                 //Network call
                 NetworkCall.downloadAttachment(context, fileAttachmentMeta.getId(), fos);
             }catch (Exception e) {
                e.printStackTrace();
+                new File(dir + "/" + fileAttachmentMeta.getFileName()).delete();
             } finally{
                 try {fos.flush();} catch (Exception ignored) {}
                 try {fos.close();} catch (Exception ignored) {}
@@ -140,6 +142,7 @@ public class AttachmentsManager implements Constants {
                                 }
                                 catch(Exception e){
                                     Log.e(LOG_TAG, "ViewMailActivity -> Exception while downloading attachment");
+                                    new File(path).delete();
                                     e.printStackTrace();
                                 }
                             }
