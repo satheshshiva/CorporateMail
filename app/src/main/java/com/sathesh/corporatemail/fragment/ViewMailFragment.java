@@ -330,9 +330,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                         public void handleMessage(Message msg) {
                             switch(msg.what){
                                 case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_STARTED:
-                                    Notifications.showSnackBarShort(view, "Starting download");
+                                    attachmentCardView.showProgressBar();
                                     break;
                                 case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_SUCCESS:
+                                    attachmentCardView.hideProgressBar();
                                     File f = new File(msg.obj.toString());
                                     if (f.exists()) {
                                         try {
@@ -346,9 +347,11 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                                     }
                                     break;
                                 case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_ERROR:
+                                    attachmentCardView.hideProgressBar();
                                     Notifications.showSnackBarShort(view, getString(R.string.attachment_download_error));
                                     break;
                                 default:
+                                    attachmentCardView.hideProgressBar();
                                     super.handleMessage(msg);
                             }
                         }

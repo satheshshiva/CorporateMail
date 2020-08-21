@@ -7,8 +7,11 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:ignore="HardcodedText"
-    android:padding="5dp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:paddingBottom="8dp"
+    android:paddingRight="8dp"
+    android:paddingEnd="8dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    >
 
 <!-- Title, secondary and supporting text -->
 
@@ -22,7 +25,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/view_card_attachment_icon"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view_card_attachment_progress_bar" />
 
     <TextView
         android:id="@+id/view_attachment_file_size"
@@ -39,8 +42,21 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/view_card_attachment_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_card_attachment_progress_bar"
         app:srcCompat="@drawable/attachment" />
+
+    <ProgressBar
+        android:id="@+id/view_card_attachment_progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
