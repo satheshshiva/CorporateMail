@@ -1,7 +1,11 @@
 package com.sathesh.corporatemail.files;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.cache.CacheDirectories;
@@ -70,32 +74,57 @@ public class AttachmentsManager implements Constants {
     }
 
     /**
-     *
-     * @param context
-     * @param thisClass
-     * @param hardReDownload
+     * Thread for downloading an attachments given its file attachment meta with the attachment id
      */
-    public static void downloadFileToCache(Context context, FileAttachmentMeta fileAttachmentMeta, Object thisClass, boolean hardReDownload) throws Exception{
-        new Thread(() -> {
-            FileOutputStream fos = null;
-            String dir="";
-            try
-            {
-                dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getId() ;
-                new File(dir).mkdirs();
-                fos = new FileOutputStream(dir + "/" + fileAttachmentMeta.getFileName());
-                //Network call
-                NetworkCall.downloadAttachment(context, fileAttachmentMeta.getId(), fos);
-            }catch (Exception e) {
-               e.printStackTrace();
-                new File(dir + "/" + fileAttachmentMeta.getFileName()).delete();
-            } finally{
-                try {fos.flush();} catch (Exception ignored) {}
-                try {fos.close();} catch (Exception ignored) {}
-            }
-        }).start();
+    public static class DownloadAttachmentThread extends Thread{
+        public static final int CREATING_DIRS = 0;
+        public static final int DOWNLOAD_STARTED = 1;
+        public static final int DOWNLOAD_SUCCESS = 2;
+        public static final int DOWNLOAD_ERROR = 3;
 
+        private Context context;
+        private FileAttachmentMeta fileAttachmentMeta;
+        private Handler handler;
+
+        /***
+         *
+         * @param context
+         * @param fileAttachmentMeta
+         * @param handler
+         */
+        public DownloadAttachmentThread(@NonNull Context context, @NonNull FileAttachmentMeta fileAttachmentMeta, @NonNull Handler handler){
+            this.context = context;
+            this.fileAttachmentMeta = fileAttachmentMeta;
+            this.handler = handler;
+        }
+        @Override
+        public void run() {
+                FileOutputStream fos = null;
+                String dir = "";
+                String actualFilePath=null;
+                try {
+                    handler.sendEmptyMessage(CREATING_DIRS);
+                    dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getId();
+                    new File(dir).mkdirs();
+                    actualFilePath = dir + "/" + fileAttachmentMeta.getFileName();
+                    fos = new FileOutputStream(actualFilePath);
+                    handler.sendEmptyMessage(DOWNLOAD_STARTED);
+                    //Network call
+                    NetworkCall.downloadAttachment(context, fileAttachmentMeta.getId(), fos);
+                    handler.sendMessage(handler.obtainMessage(DOWNLOAD_SUCCESS, actualFilePath));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(DOWNLOAD_ERROR);
+                    if (actualFilePath!=null) {
+                        new File(actualFilePath).delete();
+                    }
+                } finally {
+                    try {fos.flush();} catch (Exception ignored) {}
+                    try {fos.close();} catch (Exception ignored) {}
+                }
+        }
     }
+
 
     public static void downloadInlineImgs(Context context, AttachmentCollection attachmentCollection, String itemId, String body, LoadEmailThread loadEmailThread, Object thisClass, boolean hardReDownload){
         String path="";

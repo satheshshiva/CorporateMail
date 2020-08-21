@@ -78,7 +78,7 @@ public class AttachmentCardView extends CardView implements Constants {
             setIcon(getResources().getDrawable(R.drawable.attachment_jpg));
         }else if (fileExtension.equalsIgnoreCase("mp3") || fileExtension.equalsIgnoreCase("aac") || fileExtension.equalsIgnoreCase("wav")) {
             setIcon(getResources().getDrawable(R.drawable.attachment_mp3));
-        }else if (fileExtension.equalsIgnoreCase("mpg") || fileExtension.equalsIgnoreCase("mpeg") || fileExtension.equalsIgnoreCase("wmv")|| fileExtension.equalsIgnoreCase("3gp")) {
+        }else if (fileExtension.equalsIgnoreCase("mpg") || fileExtension.equalsIgnoreCase("mpeg") || fileExtension.equalsIgnoreCase("mpe") ||fileExtension.equalsIgnoreCase("mp4") ||fileExtension.equalsIgnoreCase("avi") ||fileExtension.equalsIgnoreCase("divx") ||fileExtension.equalsIgnoreCase("wmv")|| fileExtension.equalsIgnoreCase("3gp")) {
             setIcon(getResources().getDrawable(R.drawable.attachment_mpg));
         }else if (fileExtension.equalsIgnoreCase("txt")) {
             setIcon(getResources().getDrawable(R.drawable.attachment_txt));
