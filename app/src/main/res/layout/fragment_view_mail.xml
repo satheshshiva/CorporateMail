@@ -84,7 +84,7 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/expandBtn" />
+                app:layout_constraintTop_toBottomOf="@+id/view_mail_attachments_layout" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/moreHeaders"
@@ -187,11 +187,10 @@
                 android:id="@+id/view_mail_attachments_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 app:flexWrap="wrap"
                 app:layout_constraintEnd_toStartOf="@+id/right_guideline"
                 app:layout_constraintStart_toStartOf="@+id/left_guideline"
-                app:layout_constraintTop_toBottomOf="@+id/bodyDivider" />
+                app:layout_constraintTop_toBottomOf="@+id/expandBtn" />
 
             <WebView
                 android:id="@+id/webview"
@@ -200,7 +199,7 @@
                 android:layout_marginTop="8dp"
                 android:transitionName="transitionWebviewShared"
                 app:layout_constraintStart_toStartOf="@+id/left_guideline"
-                app:layout_constraintTop_toBottomOf="@+id/view_mail_attachments_layout"
+                app:layout_constraintTop_toBottomOf="@+id/bodyDivider"
                 tools:targetApi="lollipop" />
 
             <androidx.constraintlayout.widget.Guideline

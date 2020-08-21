@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -121,6 +124,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private ImageButton expandBtn;
     private ChipGroup collapsedfromChipGrp, expandedFromChipGrp, expandedToChipGrp, expandedCcChipGrp ;
     private FlexboxLayout attachmentsLayout;
+    private View view;
 
 
     public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
@@ -250,7 +254,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 }
             });
         }
-
+        this.view=view;
         return view;
     }
 
@@ -320,12 +324,36 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 attachmentCardView.setFileName(attachmentMeta.getFileName());
                 attachmentCardView.setSizeOrStatus(attachmentMeta.getHumanReadableSize());
                 attachmentCardView.setOnClickListener((View v)->{
-                    try {
-                        AttachmentsManager.downloadFileToCache(context, attachmentMeta, this, false);
-                    }catch(Exception e){
-                        Utilities.generalCatchBlock(e, this);
-                    }
-
+                    //handler
+                    Handler handler = new Handler(Looper.getMainLooper()){
+                        @Override
+                        public void handleMessage(Message msg) {
+                            switch(msg.what){
+                                case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_STARTED:
+                                    Notifications.showSnackBarShort(view, "Starting download");
+                                    break;
+                                case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_SUCCESS:
+                                    File f = new File(msg.obj.toString());
+                                    if (f.exists()) {
+                                        try {
+                                            Utilities.openFile(context, f);
+                                        }catch(Exception e ){
+                                            Notifications.showSnackBarShort(view, getString(R.string.attachment_open_error));
+                                            Utilities.generalCatchBlock(e, this);
+                                        }
+                                    }else{
+                                        Notifications.showSnackBarShort(view, getString(R.string.attachment_download_error));
+                                    }
+                                    break;
+                                case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_ERROR:
+                                    Notifications.showSnackBarShort(view, getString(R.string.attachment_download_error));
+                                    break;
+                                default:
+                                    super.handleMessage(msg);
+                            }
+                        }
+                    };
+                    new AttachmentsManager.DownloadAttachmentThread(context, attachmentMeta, handler).start();
                 });
 
                 attachmentsLayout.addView(attachmentCardView);

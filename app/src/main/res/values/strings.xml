@@ -308,4 +308,8 @@
     <string name="notification_group_summary">New Messages</string>
     <string name="notification_group_summary_pre_api24_more">From %s &amp; more..</string>
 
+    <!-- Attachments -->
+    <string name="attachment_download_error">Download error</string>
+    <string name="attachment_open_error">Could not open file</string>
+
 </resources>
