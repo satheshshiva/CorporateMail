@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +55,8 @@ public class AttachmentCardView extends CardView implements Constants {
         setLayoutParams(params);
         // setting some margins ** ends
 
+        findViewById(R.id.view_card_attachment_progress_bar).setVisibility(View.INVISIBLE);
+
         a.recycle();
     }
 
@@ -65,6 +69,16 @@ public class AttachmentCardView extends CardView implements Constants {
     public void setIcon(Drawable icon) {
         ImageView iconView = findViewById(R.id.view_card_attachment_icon);
         iconView.setImageDrawable(icon);
+    }
+
+    public void showProgressBar() {
+        ProgressBar iconView = findViewById(R.id.view_card_attachment_progress_bar);
+        iconView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        ProgressBar iconView = findViewById(R.id.view_card_attachment_progress_bar);
+        iconView.setVisibility(View.INVISIBLE);
     }
 
     private void updateImageIcon(String fileExtension) {
