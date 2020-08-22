@@ -65,7 +65,7 @@ public class GetNewMailsThread extends Thread implements Runnable, Constants{
 				//get the total no of records in cache and get all the same number of records.
 				totalCachedRecords = parent.getMailHeadersCacheAdapter().getRecordsCount(parent.getMailType(), parent.getMailFolderId());
 				
-				service = EWSConnection.getServiceFromStoredCredentials(parent.getActivity().getApplicationContext());
+				service = EWSConnection.getInstance(parent.getActivity().getApplicationContext());
 
 				if(BuildConfig.DEBUG){
 					Log.d(LOG_TAG, "MailListViewFragment -> Total records in cache"+totalCachedRecords);

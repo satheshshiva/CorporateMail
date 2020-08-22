@@ -73,7 +73,7 @@ public class PullMnWorker extends Worker implements Constants{
 			cachedMailHeaderAdapter = new CachedMailHeaderAdapter(context);
 			cachedMailBodyAdapter = new CachedMailBodyAdapter(context);
 
-			service = EWSConnection.getServiceFromStoredCredentials(context);
+			service = EWSConnection.getInstance(context);
 
 			PullSubscriptionParams pullSubscriptionParams = SharedPreferencesAdapter.getPullSubscriptionParams(context);
 			if ("".equals(pullSubscriptionParams.getSubscriptionId()) ){

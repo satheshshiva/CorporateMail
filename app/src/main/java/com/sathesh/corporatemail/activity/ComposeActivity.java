@@ -180,7 +180,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         try {
-            service = EWSConnection.getServiceFromStoredCredentials(this);}
+            service = EWSConnection.getInstance(this);}
         catch (Exception e) {
             e.printStackTrace();
         }
@@ -604,7 +604,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
             try {
 
-                service = EWSConnection.getServiceFromStoredCredentials(activity.getApplicationContext());
+                service = EWSConnection.getInstance(activity.getApplicationContext());
 
                 to=actualToReceivers.values();
                 cc=actualCCReceivers.values();

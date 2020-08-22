@@ -20,7 +20,7 @@ public class EWSConnection implements Constants{
 	private static String SignedInAccUser=USERNAME_NULL,SignedInAccPassword=PASSWORD_NULL ;
 
 
-	public static ExchangeService getService(Context context, String url, String username, String password) throws Exception{
+	public static ExchangeService getNewService(Context context, String url, String username, String password) throws Exception{
 		service = new ExchangeService();
 
 		try {
@@ -36,6 +36,12 @@ public class EWSConnection implements Constants{
 		return service;
 	}
 
+	public static ExchangeService getInstance(Context context) throws NoUserSignedInException, Exception{
+		if (service!=null){
+			return service;
+		}
+		return getServiceFromStoredCredentials(context);
+	}
 
 	public static ExchangeService getServiceFromStoredCredentials(Context context) throws NoUserSignedInException, Exception{
 
@@ -58,7 +64,6 @@ public class EWSConnection implements Constants{
 				service.setCredentials(new WebCredentials(SignedInAccUser,	SignedInAccPassword));
 
 				service.setUrl(new URI(MailApplication.getWebmailURL(context, new GeneralPreferenceAdapter().getServerURL(context))));
-				//service.setUrl(new URI("https://mail.cognizant.com/EWS/Exchange.asmx"));
 				//service.setTraceEnabled(true);
 
 			}

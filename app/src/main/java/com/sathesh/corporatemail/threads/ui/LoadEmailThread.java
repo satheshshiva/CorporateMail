@@ -66,7 +66,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             sendHandlerMsg(Status.LOADING);
 
             mailFunctions = parent.getMailFunctions();
-            service = EWSConnection.getServiceFromStoredCredentials(parent.getContext());
+            service = EWSConnection.getInstance(parent.getContext());
 
             cachedMailHeaderVO= parent.getMailHeaderVo();
             cacheMailBodyAdapter = new CachedMailBodyAdapter(parent.getContext());

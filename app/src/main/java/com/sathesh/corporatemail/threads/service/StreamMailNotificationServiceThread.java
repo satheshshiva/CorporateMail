@@ -58,7 +58,7 @@ extends Thread implements Constants, StreamingSubscriptionConnection.INotificati
 	{
 
 		try{
-			service = EWSConnection.getServiceFromStoredCredentials(context);
+			service = EWSConnection.getInstance(context);
 
 			Log.i("MailNotificationService", service.getUrl().toString());
 			folder.add(new FolderId(WellKnownFolderName.Inbox));

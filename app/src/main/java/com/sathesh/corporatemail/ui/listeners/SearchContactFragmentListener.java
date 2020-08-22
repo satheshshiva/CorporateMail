@@ -31,7 +31,7 @@ public class SearchContactFragmentListener implements Constants, OnClickListener
         this.fragmentDataPasser = fragmentDataPasser;
 
         try {
-            service = EWSConnection.getServiceFromStoredCredentials(context);}
+            service = EWSConnection.getInstance(context);}
         catch (Exception e) {
             e.printStackTrace();
         }
