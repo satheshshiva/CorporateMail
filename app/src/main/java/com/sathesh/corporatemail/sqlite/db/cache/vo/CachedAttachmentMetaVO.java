@@ -10,8 +10,8 @@ public class CachedAttachmentMetaVO implements PojoVO {
     private String human_readable_size;
     private String file_path;
     private String content_type;
-    private Date created_date;
-    private Date last_accessed_type;
+    private long created_date;
+    private long last_accessed_date;
 
     public String getAttachment_id() {
         return attachment_id;
@@ -61,27 +61,27 @@ public class CachedAttachmentMetaVO implements PojoVO {
         this.content_type = content_type;
     }
 
-    public Date getCreated_date() {
-        return created_date;
-    }
-
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
-    }
-
-    public Date getLast_accessed_type() {
-        return last_accessed_type;
-    }
-
-    public void setLast_accessed_type(Date last_accessed_type) {
-        this.last_accessed_type = last_accessed_type;
-    }
-
     public int getSize_bytes() {
         return size_bytes;
     }
 
     public void setSize_bytes(int size_bytes) {
         this.size_bytes = size_bytes;
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
+    }
+
+    public long getLast_accessed_date() {
+        return last_accessed_date;
+    }
+
+    public void setLast_accessed_date(long last_accessed_date) {
+        this.last_accessed_date = last_accessed_date;
     }
 }

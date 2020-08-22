@@ -11,6 +11,7 @@ import com.sathesh.corporatemail.cache.CacheDirectories;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
+import com.sathesh.corporatemail.sqlite.db.cache.dao.CachedAttachmentsMetaDAO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.util.Utilities;
@@ -80,6 +81,7 @@ public class AttachmentsManager implements Constants {
         public static final int DOWNLOAD_SUCCESS = 2;
         public static final int DOWNLOAD_ERROR = 3;
         private final CachedAttachmentMetaVO fileAttachmentMeta;
+        private CachedAttachmentsMetaDAO attachmentsDao;
 
         private Context context;
         private Handler handler;
@@ -96,12 +98,14 @@ public class AttachmentsManager implements Constants {
             this.fileAttachmentMeta = fileAttachmentMeta;
             this.handler = handler;
             this.hardRedownload=hardRedownload;
+            attachmentsDao = new CachedAttachmentsMetaDAO(context);
         }
         @Override
         public void run() {
                 FileOutputStream fos = null;
                 String dir = "";
                 String actualFilePath=null;
+
                 try {
                     handler.sendEmptyMessage(CREATING_DIRS);
                     dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getAttachment_id();
@@ -114,6 +118,8 @@ public class AttachmentsManager implements Constants {
                         //Network call
                         NetworkCall.downloadAttachment(context, fileAttachmentMeta.getAttachment_id(), fos);
                     }
+                    //update the file last accessed time. will be used by attachment garbage collection in future
+                    attachmentsDao.updateLastAccessedTime(fileAttachmentMeta.getItem_id(), fileAttachmentMeta.getAttachment_id(), actualFilePath);
                     handler.sendMessage(handler.obtainMessage(DOWNLOAD_SUCCESS, actualFilePath));
                 } catch (Exception e) {
                     e.printStackTrace();

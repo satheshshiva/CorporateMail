@@ -10,6 +10,7 @@ import com.sathesh.corporatemail.sqlite.db.cache.CacheDbHelper;
 import com.sathesh.corporatemail.sqlite.db.cache.tables.TableCachedMailAttachmentMeta;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 
+import java.util.Date;
 import java.util.List;
 
 /** DAO for the Table CACHED_ATTACHMENT_META
@@ -126,12 +127,12 @@ public class CachedAttachmentsMetaDAO extends BaseCacheDAO {
      * Where Clause - Item Id
      * @throws Exception
      */
-    public void updateLastAccessedTime(String itemId, String attachmentId) throws Exception {
+    public void updateLastAccessedTime(String itemId, String attachmentId, String filePath) throws Exception {
 
         try{
             open(cacheDbHelper);
             database.execSQL(TableCachedMailAttachmentMeta.updateLastAccessedTime(),
-                        new String[]{itemId});
+                        new String[]{String.valueOf(System.currentTimeMillis()), filePath, itemId, attachmentId});
         }finally{
             close(cacheDbHelper);
         }
@@ -158,6 +159,7 @@ public class CachedAttachmentsMetaDAO extends BaseCacheDAO {
      */
     private long saveVOInDB(CachedAttachmentMetaVO vo) {
         ContentValues values = autoMapVoToContentValues(vo,tableClass);
+        values.put(TableCachedMailAttachmentMeta.COLUMN_CREATED_DATE, System.currentTimeMillis());
         return database.insertWithOnConflict(CacheDbConstants.table.CACHED_ATTACHMENT_META, null,
                 values, SQLiteDatabase.CONFLICT_REPLACE);
     }

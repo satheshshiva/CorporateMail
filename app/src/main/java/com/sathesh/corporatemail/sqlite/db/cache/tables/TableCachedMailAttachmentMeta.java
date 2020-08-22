@@ -38,8 +38,8 @@ public class TableCachedMailAttachmentMeta implements CacheDbConstants, DbTable{
 				+ COLUMN_HUMAN_READABLE_SIZE + " TEXT,"
 				+ COLUMN_FILE_PATH + " TEXT,"
 				+ COLUMN_CONTENT_TYPE + " TEXT,"
-				+ COLUMN_CREATED_DATE + " DATE,"
-				+ COLUMN_LAST_ACCESSED_DATE + " DATE"
+				+ COLUMN_CREATED_DATE + " INT,"
+				+ COLUMN_LAST_ACCESSED_DATE + " INT"
 				+");";
 	}
 
@@ -64,7 +64,7 @@ public class TableCachedMailAttachmentMeta implements CacheDbConstants, DbTable{
      * @return
      */
     public static String updateLastAccessedTime(){
-        return "UPDATE " + tableName + " SET " + COLUMN_LAST_ACCESSED_DATE + " =date('now') WHERE " + COLUMN_ITEM_ID + "=? AND " + COLUMN_ATTACHMENT_ID + "=?";
+        return "UPDATE " + tableName + " SET " + COLUMN_LAST_ACCESSED_DATE + "=?," + COLUMN_FILE_PATH + "=? WHERE " + COLUMN_ITEM_ID + "=? AND " + COLUMN_ATTACHMENT_ID + "=?";
     }
 
 	/** DELETE
