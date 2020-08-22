@@ -22,7 +22,6 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
@@ -42,22 +41,20 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
 import com.sathesh.corporatemail.customui.AttachmentCardView;
 import com.sathesh.corporatemail.customui.Notifications;
-import com.sathesh.corporatemail.datamodels.FileAttachmentMeta;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
 import com.sathesh.corporatemail.files.AttachmentsManager;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.handlers.LoadEmailHandler;
 import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
-import com.sathesh.corporatemail.ui.util.UIutilities;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +79,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     private CachedMailHeaderVO mailHeaderVo;
 
-    private List<FileAttachmentMeta> attachmentsMeta;
+    private List<CachedAttachmentMetaVO> attachmentsMeta;
     private boolean expanded;
 
     public enum Status{
@@ -319,10 +316,10 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     @Override
     public void showAttachments() {
         if(attachmentsLayout!=null) {
-            for (FileAttachmentMeta attachmentMeta : attachmentsMeta) {
+            for (CachedAttachmentMetaVO attachmentMeta : attachmentsMeta) {
                 AttachmentCardView attachmentCardView = new AttachmentCardView(context, null);
-                attachmentCardView.setFileName(attachmentMeta.getFileName());
-                attachmentCardView.setSizeOrStatus(attachmentMeta.getHumanReadableSize());
+                attachmentCardView.setFileName(attachmentMeta.getFile_name());
+                attachmentCardView.setSizeOrStatus(attachmentMeta.getHuman_readable_size());
                 attachmentCardView.setOnClickListener((View v)->{
                     //handler
                     Handler handler = new Handler(Looper.getMainLooper()){
@@ -865,7 +862,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     }
 
     @Override
-    public void setAttachmentsMeta(List<FileAttachmentMeta> attachmentsMeta) {
+    public void setAttachmentsMeta(List<CachedAttachmentMetaVO> attachmentsMeta) {
         this.attachmentsMeta = attachmentsMeta;
     }
 }

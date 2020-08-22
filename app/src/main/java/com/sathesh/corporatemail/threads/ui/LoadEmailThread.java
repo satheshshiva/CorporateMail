@@ -19,6 +19,8 @@ import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.files.AttachmentsManager;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.fragment.ViewMailFragment.Status;
+import com.sathesh.corporatemail.sqlite.db.cache.dao.CachedAttachmentsMetaDAO;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailBodyVO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 
@@ -117,7 +119,14 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
 
                 sendHandlerMsg(Status.SHOW_BODY);    //shows the headers and body
                 attachmentCollection = message.getAttachments();
-                parent.setAttachmentsMeta(AttachmentsManager.convertAttachmentCollection(parent.getContext(), attachmentCollection, this));
+                List<CachedAttachmentMetaVO>  fileAttachmentsMeta = AttachmentsManager.convertAttachmentCollection(parent.getContext(), attachmentCollection, cachedMailHeaderVO.getItem_id(), this);
+                parent.setAttachmentsMeta(fileAttachmentsMeta);
+
+                CachedAttachmentsMetaDAO dao = new CachedAttachmentsMetaDAO(parent.getContext());
+                dao.delete(fileAttachmentsMeta);        //remove the current ones for a clean insert.
+                dao.createOrUpdate(fileAttachmentsMeta);
+
+                //FYI this thread will never download the full attachment. It will be downloaded on click of the attachment. (AttachmentsManager.DownloadAttachmentThread)
                 sendHandlerMsg(Status.SHOW_ATTACHMENTS);    //shows the attachments
 
                 parent.setTotalInlineImages(AttachmentsManager.getTotalNoOfInlineImgs(attachmentCollection, this));

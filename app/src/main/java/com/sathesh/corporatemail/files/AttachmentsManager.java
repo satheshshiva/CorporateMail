@@ -2,7 +2,6 @@ package com.sathesh.corporatemail.files;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,15 +9,13 @@ import androidx.annotation.NonNull;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.cache.CacheDirectories;
 import com.sathesh.corporatemail.constants.Constants;
-import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
-import com.sathesh.corporatemail.datamodels.FileAttachmentMeta;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,20 +27,21 @@ import microsoft.exchange.webservices.data.property.complex.FileAttachment;
 
 public class AttachmentsManager implements Constants {
 
-    public static List<FileAttachmentMeta> convertAttachmentCollection(Context context, AttachmentCollection attachmentCollection, Object thisClass){
-        List<FileAttachmentMeta> attachments = new ArrayList<>();
-        FileAttachmentMeta attachment;
+    public static List<CachedAttachmentMetaVO> convertAttachmentCollection(Context context, AttachmentCollection attachmentCollection, String itemId, Object thisClass){
+        List<CachedAttachmentMetaVO> attachments = new ArrayList<>();
+        CachedAttachmentMetaVO attachment;
         try {
             for(Attachment fAttach:  attachmentCollection){
                 //if(attachment.getIsInline() && attachment.getContentType()!=null && attachment.getContentType().contains("image") && !(attachment.getContentType().equalsIgnoreCase("message/rfc822"))){
                 if (!fAttach.getIsInline() && !(fAttach.getContentType() != null && fAttach.getContentType().equalsIgnoreCase("message/rfc822"))){
-                    attachment = new FileAttachmentMeta();
-                    attachment.setFileName(fAttach.getName());
-                    attachment.setContentType(fAttach.getContentType());
-                    attachment.setSize(fAttach.getSize());
-                    attachment.setHumanReadableSize(android.text.format.Formatter.formatShortFileSize(context, fAttach.getSize()));
+                    attachment = new CachedAttachmentMetaVO();
+                    attachment.setFile_name(fAttach.getName());
+                    attachment.setContent_type(fAttach.getContentType());
+                    attachment.setSize_bytes(fAttach.getSize());
+                    attachment.setItem_id(itemId);
+                    attachment.setHuman_readable_size(android.text.format.Formatter.formatShortFileSize(context, fAttach.getSize()));
                     //setting the attachment id
-                    attachment.setId(fAttach.getId());
+                    attachment.setAttachment_id(fAttach.getId());
                     attachments.add(attachment);
                 }
             }
@@ -81,9 +79,9 @@ public class AttachmentsManager implements Constants {
         public static final int DOWNLOAD_STARTED = 1;
         public static final int DOWNLOAD_SUCCESS = 2;
         public static final int DOWNLOAD_ERROR = 3;
+        private final CachedAttachmentMetaVO fileAttachmentMeta;
 
         private Context context;
-        private FileAttachmentMeta fileAttachmentMeta;
         private Handler handler;
 
         /***
@@ -92,7 +90,7 @@ public class AttachmentsManager implements Constants {
          * @param fileAttachmentMeta
          * @param handler
          */
-        public DownloadAttachmentThread(@NonNull Context context, @NonNull FileAttachmentMeta fileAttachmentMeta, @NonNull Handler handler){
+        public DownloadAttachmentThread(@NonNull Context context, @NonNull CachedAttachmentMetaVO fileAttachmentMeta, @NonNull Handler handler){
             this.context = context;
             this.fileAttachmentMeta = fileAttachmentMeta;
             this.handler = handler;
@@ -104,13 +102,13 @@ public class AttachmentsManager implements Constants {
                 String actualFilePath=null;
                 try {
                     handler.sendEmptyMessage(CREATING_DIRS);
-                    dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getId();
+                    dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getAttachment_id();
                     new File(dir).mkdirs();
-                    actualFilePath = dir + "/" + fileAttachmentMeta.getFileName();
+                    actualFilePath = dir + "/" + fileAttachmentMeta.getFile_name();
                     fos = new FileOutputStream(actualFilePath);
                     handler.sendEmptyMessage(DOWNLOAD_STARTED);
                     //Network call
-                    NetworkCall.downloadAttachment(context, fileAttachmentMeta.getId(), fos);
+                    NetworkCall.downloadAttachment(context, fileAttachmentMeta.getAttachment_id(), fos);
                     handler.sendMessage(handler.obtainMessage(DOWNLOAD_SUCCESS, actualFilePath));
                 } catch (Exception e) {
                     e.printStackTrace();
