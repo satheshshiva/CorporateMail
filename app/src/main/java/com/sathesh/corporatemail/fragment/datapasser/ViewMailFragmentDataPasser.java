@@ -7,8 +7,8 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.sathesh.corporatemail.application.MyActivity;
-import com.sathesh.corporatemail.datamodels.FileAttachmentMeta;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
 import com.sathesh.corporatemail.web.StandardWebView;
@@ -72,5 +72,5 @@ public interface ViewMailFragmentDataPasser {
     void mailAsReadInCache();
     void expandBtnOnClick(View view);
 
-    void setAttachmentsMeta(List<FileAttachmentMeta> attachmentMetas);
+    void setAttachmentsMeta(List<CachedAttachmentMetaVO> attachmentMetas);
 }
