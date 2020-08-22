@@ -60,6 +60,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
         CachedMailHeaderVO cachedMailHeaderVO;
         CachedMailBodyAdapter cacheMailBodyAdapter;
         String from_delimited="",to_delimited="", cc_delimited="", bcc_delimited="";
+        CachedAttachmentsMetaDAO attachmentsCacheDao = new CachedAttachmentsMetaDAO(parent.getContext());
 
         try {
             sendHandlerMsg(Status.LOADING);
@@ -76,8 +77,7 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
             // get the cached body items by passing item id
             List<CachedMailBodyVO> bodyVOList = cacheMailBodyAdapter.getMailBody(parent.getItemId());
 
-            //TODO revert this disable cache
-            if(bodyVOList!=null && bodyVOList.size()>0 && false){
+            if(bodyVOList!=null && bodyVOList.size()>0){
             //cache exist
                 //get the first body record from the list of body for the item id. there must be only one record
                 CachedMailBodyVO bodyVO = bodyVOList.get(0);
@@ -91,6 +91,12 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                 // the  image cache are handled by the Android System Webview Cache
 
                 sendHandlerMsg(Status.SHOW_BODY);	//shows the headers and body
+
+                //check and display if there is any attachments from the cache
+                List<CachedAttachmentMetaVO> attachmentMetaVOList = attachmentsCacheDao.getAllRecordsByItemId(parent.getItemId());
+                parent.setAttachmentsMeta(attachmentMetaVOList);
+                sendHandlerMsg(Status.SHOW_ATTACHMENTS);    //shows the attachments
+
                 sendHandlerMsg(Status.LOADED);      //sets the status message to mail loaded completely
 
                 // Network call to mark the item as read
@@ -122,9 +128,9 @@ public class LoadEmailThread extends Thread implements Runnable, Constants{
                 List<CachedAttachmentMetaVO>  fileAttachmentsMeta = AttachmentsManager.convertAttachmentCollection(parent.getContext(), attachmentCollection, cachedMailHeaderVO.getItem_id(), this);
                 parent.setAttachmentsMeta(fileAttachmentsMeta);
 
-                CachedAttachmentsMetaDAO dao = new CachedAttachmentsMetaDAO(parent.getContext());
-                dao.delete(fileAttachmentsMeta);        //remove the current ones for a clean insert.
-                dao.createOrUpdate(fileAttachmentsMeta);
+                //update the cache db about the metadata of the attachments
+                attachmentsCacheDao.delete(fileAttachmentsMeta);        //remove the current ones for a clean insert.
+                attachmentsCacheDao.createOrUpdate(fileAttachmentsMeta);
 
                 //FYI this thread will never download the full attachment. It will be downloaded on click of the attachment. (AttachmentsManager.DownloadAttachmentThread)
                 sendHandlerMsg(Status.SHOW_ATTACHMENTS);    //shows the attachments
