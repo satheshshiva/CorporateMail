@@ -42,7 +42,7 @@ public class DeleteMultipleMailsThread extends Thread implements Runnable, Const
             if(BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "DeleteMultipleMailsThread -> Item count for deletion " + itemIds.size());
             }
-            ExchangeService service = EWSConnection.getServiceFromStoredCredentials(context);
+            ExchangeService service = EWSConnection.getInstance(context);
             NetworkCall.deleteItemIds(service, itemIds, permanent);
 
         } catch (Exception e) {

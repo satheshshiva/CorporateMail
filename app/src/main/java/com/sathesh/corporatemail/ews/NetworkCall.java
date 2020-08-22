@@ -124,7 +124,7 @@ public class NetworkCall implements Constants{
      * @throws Exception
      */
     public static void markEmailAsReadUnread(Context context, String itemId, boolean isRead) throws NoInternetConnectionException, Exception{
-        ExchangeService  service = EWSConnection.getServiceFromStoredCredentials(context);
+        ExchangeService  service = EWSConnection.getInstance(context);
         if(Utils.checkInternetConnection(context)){
             ItemId _itemId = ItemId.getItemIdFromString(itemId);
             EmailMessage item=(EmailMessage)Item.bind(service, _itemId);
@@ -352,7 +352,7 @@ public class NetworkCall implements Constants{
 	 * @throws Exception
 	 */
 	public static void downloadAttachment(Context context, String id, OutputStream fos) throws NoInternetConnectionException, Exception {
-		ExchangeService  service = EWSConnection.getServiceFromStoredCredentials(context);
+		ExchangeService  service = EWSConnection.getInstance(context);
 		if (!StringUtils.isEmpty(id)) {
 			if(fos!=null) {
 

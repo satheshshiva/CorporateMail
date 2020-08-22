@@ -86,7 +86,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
             if(sContact.isResolveOnLoad() ) {
                 try {
                     //make the network call by calling the async task
-                    service = EWSConnection.getServiceFromStoredCredentials(this);
+                    service = EWSConnection.getInstance(this);
                     //if the email is not empty then resolve the name with the email
                     if(sContact.getEmail()!=null && !sContact.getEmail().equals("")) {
                         new ResolveNamesAsyncTask(this, this, service, sContact.getEmail().toString(), false, "", "").execute();
