@@ -83,6 +83,7 @@ public class AttachmentsManager implements Constants {
 
         private Context context;
         private Handler handler;
+        private boolean hardRedownload;
 
         /***
          *
@@ -90,10 +91,11 @@ public class AttachmentsManager implements Constants {
          * @param fileAttachmentMeta
          * @param handler
          */
-        public DownloadAttachmentThread(@NonNull Context context, @NonNull CachedAttachmentMetaVO fileAttachmentMeta, @NonNull Handler handler){
+        public DownloadAttachmentThread(@NonNull Context context, @NonNull CachedAttachmentMetaVO fileAttachmentMeta, @NonNull Handler handler, boolean hardRedownload){
             this.context = context;
             this.fileAttachmentMeta = fileAttachmentMeta;
             this.handler = handler;
+            this.hardRedownload=hardRedownload;
         }
         @Override
         public void run() {
@@ -105,10 +107,13 @@ public class AttachmentsManager implements Constants {
                     dir = CacheDirectories.getAttachmentsCacheDirectory(context) + "/" + fileAttachmentMeta.getAttachment_id();
                     new File(dir).mkdirs();
                     actualFilePath = dir + "/" + fileAttachmentMeta.getFile_name();
-                    fos = new FileOutputStream(actualFilePath);
-                    handler.sendEmptyMessage(DOWNLOAD_STARTED);
-                    //Network call
-                    NetworkCall.downloadAttachment(context, fileAttachmentMeta.getAttachment_id(), fos);
+                    File actualFile = new File(actualFilePath);
+                    if (!actualFile.exists() || hardRedownload) {
+                        fos = new FileOutputStream(actualFilePath);
+                        handler.sendEmptyMessage(DOWNLOAD_STARTED);
+                        //Network call
+                        NetworkCall.downloadAttachment(context, fileAttachmentMeta.getAttachment_id(), fos);
+                    }
                     handler.sendMessage(handler.obtainMessage(DOWNLOAD_SUCCESS, actualFilePath));
                 } catch (Exception e) {
                     e.printStackTrace();
