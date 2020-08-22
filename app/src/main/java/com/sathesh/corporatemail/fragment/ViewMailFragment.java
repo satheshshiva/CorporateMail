@@ -353,7 +353,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                             }
                         }
                     };
-                    new AttachmentsManager.DownloadAttachmentThread(context, attachmentMeta, handler).start();
+                    new AttachmentsManager.DownloadAttachmentThread(context, attachmentMeta, handler, false).start();
                 });
 
                 attachmentsLayout.addView(attachmentCardView);
