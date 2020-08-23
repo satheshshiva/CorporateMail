@@ -238,6 +238,7 @@ public interface Constants {
 		String from = "transitionFromShared";
 		String date = "transitionDateShared";
 		String webview = "transitionWebviewShared";
+		String contact = "transitionContactShared";
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.sathesh.corporatemail.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -674,11 +675,25 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                     (int)activity.getResources().getDimension(R.dimen.view_mail_contact_chip_height));
             chip.setLayoutParams(params);
             chipGrp.addView(chip);
+            final Chip finalChip=chip;
             //onclick listener for this chip.
             chip.setOnClickListener((View v)->{
                 Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
                 contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
-                startActivity(contactDetailsIntent);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finalChip.setTransitionName(TransitionSharedElementNames.contact);
+                    // Apply activity transition
+                    startActivity(contactDetailsIntent,
+                            ActivityOptions.makeSceneTransitionAnimation(
+                                    this.getMyActivity(),
+                                    finalChip,
+                                    TransitionSharedElementNames.contact)
+                                    .toBundle());
+                }else{
+                    startActivity(contactDetailsIntent);
+
+                }
             });
         }
     }
