@@ -86,27 +86,27 @@ public class ViewMailActivity extends MyActivity implements Constants{
                     SubMenu subMenuReply = menu.addSubMenu(this.getString(R.string.actionBar_Submenu_Reply_Options));
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Reply))
-                            .setIcon(R.drawable.baseline_reply_black_36);
+                            .setIcon(R.drawable.round_reply_black_24);
                     menuItem.setShowAsAction( MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Reply_All))
-                            .setIcon(R.drawable.baseline_reply_all_black_36);
+                            .setIcon(R.drawable.round_reply_all_black_24);
                     menuItem.setShowAsAction( MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Forward))
-                            .setIcon(R.drawable.baseline_forward_black_36);
+                            .setIcon(R.drawable.round_forward_black_24);
                     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     //Setting icons and settings to Reply Submenu
                     subMenuItem = subMenuReply.getItem();
-                    subMenuItem.setIcon(R.drawable.baseline_reply_white_36);
+                    subMenuItem.setIcon(R.drawable.round_reply_white_24);
                     subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
                     //Adding Delete Icon to Main Menu
                     menuItem = menu.add(this.getString(R.string.actionBar_Delete))
-                            .setIcon(R.drawable.baseline_delete_white_36);
+                            .setIcon(R.drawable.round_delete_white_24);
                     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
                 }
