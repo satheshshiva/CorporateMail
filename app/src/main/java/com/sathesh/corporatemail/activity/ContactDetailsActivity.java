@@ -175,7 +175,7 @@ public class ContactDetailsActivity extends MyActivity implements Constants,IRes
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if(item!=null && item.getItemId()==android.R.id.home){
-            finish();
+            super.onBackPressed();
         }
         else if(item!=null && item.getTitle().equals(this.getString(R.string.actionBar_Send_Mail)))
         {
