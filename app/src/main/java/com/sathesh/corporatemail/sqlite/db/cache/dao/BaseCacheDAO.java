@@ -255,7 +255,7 @@ public class BaseCacheDAO implements Constants{
 						else if(cursor.getType(columnIndex) == Cursor.FIELD_TYPE_INTEGER){
 							//The datatype from the database is of type Integer
 							//call the VO objects set method with the value from the db table as argument
-							//if the column name is contains the word "date" then consider it as a date field holding a current time in millis and call getLong
+							//if the column name contains the word "date" then consider this as a date field holding a current time in millis and call getLong
 							if (columnName.toLowerCase().contains("date")){
 								method.invoke(vo,cursor.getLong(columnIndex));
 							}else {
