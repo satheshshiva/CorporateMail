@@ -23,7 +23,6 @@ import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.ui.components.MailDeleteDialog;
-import com.sathesh.corporatemail.ui.util.OptionsUIContent;
 import com.sathesh.corporatemail.util.Utilities;
 
 import java.util.ArrayList;
@@ -87,27 +86,27 @@ public class ViewMailActivity extends MyActivity implements Constants{
                     SubMenu subMenuReply = menu.addSubMenu(this.getString(R.string.actionBar_Submenu_Reply_Options));
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Reply))
-                            .setIcon(OptionsUIContent.getReplyIcon());
+                            .setIcon(R.drawable.baseline_reply_black_36);
                     MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Reply_All))
-                            .setIcon(OptionsUIContent.getReplyAllIcon());
+                            .setIcon(R.drawable.baseline_reply_all_black_36);
                     MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Forward))
-                            .setIcon(OptionsUIContent.getForwardIcon());
+                            .setIcon(R.drawable.baseline_forward_black_36);
                     MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     //Setting icons and settings to Reply Submenu
                     subMenuItem = subMenuReply.getItem();
-                    subMenuItem.setIcon(OptionsUIContent.getReplyIcon());
+                    subMenuItem.setIcon(R.drawable.baseline_reply_white_36);
                     MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
                     //Adding Delete Icon to Main Menu
                     menuItem = menu.add(this.getString(R.string.actionBar_Delete))
-                            .setIcon(OptionsUIContent.getDeleteIcon());
+                            .setIcon(R.drawable.baseline_delete_white_36);
                     MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
                 }
