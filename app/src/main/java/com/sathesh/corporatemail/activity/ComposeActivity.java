@@ -62,12 +62,11 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     private  static MyActivity activity;
     //making this change
-    private  EditText composeSubject;
-    private  EditText composeBody, composeSignature;
+    private  static EditText composeSubject;
+    private  static EditText composeBody, composeSignature;
     private  static Collection<ContactSerializable> to;
     private  static Collection<ContactSerializable> cc;
     private  static Collection<ContactSerializable> bcc;
-    private  static String  subject="",body="";
     private  static final String STATUS_SENT="STATUS_SENT";
     private  static final String STATUS_ERROR="STATUS_ERROR";
     private  static ExchangeService service;
@@ -586,6 +585,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public class Send extends AsyncTask<Void, String, Boolean>{
 
         private ExchangeService service;
+        private String subject="", body="", signature="";
 
         @Override
         protected void onPreExecute() {
@@ -593,6 +593,9 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             try {
                 progressDialog = ProgressDialog.show(activity, "",
                         activity.getString(R.string.compose_sending), true);
+                subject = composeSubject.getText().toString();
+                body=Utilities.convertEditableToHTML(composeBody.getText());
+                signature = Utilities.convertEditableToHTML(composeSignature.getText());
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(LOG_TAG, "Exception occured on preexecute");
@@ -609,8 +612,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 to=actualToReceivers.values();
                 cc=actualCCReceivers.values();
                 bcc=actualBCCReceivers.values();
-                subject=composeSubject.getText().toString();
-                body=Utilities.convertEditableToHTML(composeBody.getText());
+
                 if(generalSettings.isComposeSignatureEnabled(activity)){
                     body=appendSignature(body);
                 }
@@ -659,7 +661,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
         private String appendSignature(String body) {
 
-            body=body+Utilities.convertEditableToHTML(composeSignature.getText());
+            body=body+signature;
             return body;
         }
 
@@ -976,7 +978,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         }
         else{
             resolvingNames=true;
-            progressDispBar.setText(getString(R.string.compose_resolving_names_text,(resolvedNames+1),TOTAL_RESOLVE_NAMES));
+            progressDispBar.setText(getString(R.string.compose_resolving_names_text));
         }
     }
 

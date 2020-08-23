@@ -126,7 +126,7 @@
     <string name="compose_sending">Sending.. </string>
     <string name="compose_msg_sent">Message Sent</string>
     <string name="compose_msg_send_failed">Message Sending Failed</string>
-    <string name="compose_signature_default"><![CDATA[<p>---<br>Sent from my Android</p>]]></string>
+    <string name="compose_signature_default"></string>
     <string name="compose_resoleNameDialog_to_title">To:</string>
     <string name="compose_resoleNameDialog_progress">Please wait..</string>
     <string name="compose_resoleNameDialog_error">Unknown Error Occurred</string>
@@ -147,7 +147,7 @@
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 
-    <string name="compose_resolving_names_text">Resolving email id</string>
+    <string name="compose_resolving_names_text">Validating email id</string>
     <string name="compose_resolve_notfound_warning">The email id for the following contact(s) are not resolved. Please enter the email id manually.\n%s</string>
 
     <!-- Add Recipient -->
