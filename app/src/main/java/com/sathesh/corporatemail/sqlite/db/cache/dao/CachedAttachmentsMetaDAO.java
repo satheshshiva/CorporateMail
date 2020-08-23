@@ -10,7 +10,6 @@ import com.sathesh.corporatemail.sqlite.db.cache.CacheDbHelper;
 import com.sathesh.corporatemail.sqlite.db.cache.tables.TableCachedMailAttachmentMeta;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 
-import java.util.Date;
 import java.util.List;
 
 /** DAO for the Table CACHED_ATTACHMENT_META
