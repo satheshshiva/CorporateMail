@@ -32,12 +32,6 @@ public class AboutFragmentListener implements Constants, OnClickListener{
         this.fragment = fragment;
     }
 
-    /*** ON CLICK METHODS ***/
-
-    private void onClickChkUpdate(View view) {
-        fragment.checkForUpdates();
-    }
-
     /** open the Compose activity to send email to developer with prefilled developer details
      * @param view
      * @throws PackageManager.NameNotFoundException

@@ -4,15 +4,14 @@
 package com.sathesh.corporatemail.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.util.AttributeSet;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.sathesh.corporatemail.BuildConfig;
@@ -40,17 +40,22 @@ import com.sathesh.corporatemail.application.SharedPreferencesAdapter;
 import com.sathesh.corporatemail.cache.adapter.CachedMailHeaderAdapter;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
+import com.sathesh.corporatemail.customui.AttachmentCardView;
+import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.MailFunctions;
 import com.sathesh.corporatemail.ews.MailFunctionsImpl;
+import com.sathesh.corporatemail.files.AttachmentsManager;
 import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 import com.sathesh.corporatemail.handlers.LoadEmailHandler;
 import com.sathesh.corporatemail.jsinterfaces.CommonWebChromeClient;
+import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedAttachmentMetaVO;
 import com.sathesh.corporatemail.sqlite.db.cache.vo.CachedMailHeaderVO;
 import com.sathesh.corporatemail.threads.ui.LoadEmailThread;
 import com.sathesh.corporatemail.ui.components.ProgressDisplayNotificationBar;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -74,11 +79,14 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private ConstraintLayout moreHeadersLayout;
 
     private CachedMailHeaderVO mailHeaderVo;
+
+    private List<CachedAttachmentMetaVO> attachmentsMeta;
     private boolean expanded;
 
     public enum Status{
         LOADING,	// Started loading body. Network Call for loading body is in progress
         SHOW_BODY,	// Network call made for body and got the body. Refreshe the body in UI
+        SHOW_ATTACHMENTS, //Displays the attachments card view
         SHOW_IMG_LOADING_PROGRESSBAR,	// Inline images are present. Show the status bar for downloading images
         DOWNLOADED_AN_IMAGE,	// Triggered each time an image got downloaded. Body gets refreshed so that the newly downloaded image will be displayed
         LOADED,		// Everything loaded. Will call read email network call. after this
@@ -113,6 +121,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     private CachedMailHeaderAdapter cachedMailHeaderAdapter;
     private ImageButton expandBtn;
     private ChipGroup collapsedfromChipGrp, expandedFromChipGrp, expandedToChipGrp, expandedCcChipGrp ;
+    private FlexboxLayout attachmentsLayout;
+    private View view;
 
 
     public ViewMailFragment(CachedMailHeaderVO mailHeaderVo){
@@ -154,6 +164,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         moreHeadersLayout = (ConstraintLayout) view.findViewById(R.id.moreHeaders);
         //titleBarSubject = (TextView)findViewById(R.id.titlebar_viewmail_sub) ;
         expandBtn = (ImageButton) view.findViewById(R.id.expandBtn);
+        attachmentsLayout =(FlexboxLayout) view.findViewById(R.id.view_mail_attachments_layout) ;
 
         moreHeadersLayout.setVisibility(View.GONE);
 
@@ -241,7 +252,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
                 }
             });
         }
-
+        this.view=view;
         return view;
     }
 
@@ -297,6 +308,60 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
         else if (currentStatus==Status.ERROR){
             standardWebView.loadData(webview, VIEW_MAIL_ERROR_HTML);
+        }
+    }
+
+    /**
+     * Displays the attachments card view from the attachments meta
+     */
+    @Override
+    public void showAttachments() {
+        if(attachmentsLayout!=null) {
+            for (CachedAttachmentMetaVO attachmentMeta : attachmentsMeta) {
+                AttachmentCardView attachmentCardView = new AttachmentCardView(context, null);
+                attachmentCardView.setFileName(attachmentMeta.getFile_name());
+                attachmentCardView.setSizeOrStatus(attachmentMeta.getHuman_readable_size());
+                attachmentCardView.setOnClickListener((View v)->{
+                    //handler
+                    Handler handler = new Handler(Looper.getMainLooper()){
+                        @Override
+                        public void handleMessage(Message msg) {
+                            switch(msg.what){
+                                case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_STARTED:
+                                    attachmentCardView.showProgressBar();
+                                    break;
+                                case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_SUCCESS:
+                                    attachmentCardView.hideProgressBar();
+                                    File f = new File(msg.obj.toString());
+                                    if (f.exists()) {
+                                        try {
+                                            Utilities.openFile(context, f);
+                                        }catch(Exception e ){
+                                            Notifications.showSnackBarShort(view, getString(R.string.attachment_open_error));
+                                            Utilities.generalCatchBlock(e, this);
+                                        }
+                                    }else{
+                                        Notifications.showSnackBarShort(view, getString(R.string.attachment_download_error));
+                                    }
+                                    break;
+                                case AttachmentsManager.DownloadAttachmentThread.DOWNLOAD_ERROR:
+                                    attachmentCardView.hideProgressBar();
+                                    Notifications.showSnackBarShort(view, getString(R.string.attachment_download_error));
+                                    break;
+                                default:
+                                    attachmentCardView.hideProgressBar();
+                                    super.handleMessage(msg);
+                            }
+                        }
+                    };
+                    //download attachments thread
+                    new AttachmentsManager.DownloadAttachmentThread(context, attachmentMeta, handler, false).start();
+                });
+
+                attachmentsLayout.addView(attachmentCardView);
+            }
+        }else{
+            Log.e(LOG_TAG, "ViewMailFragment -> attachmentsLayout is null");
         }
     }
 
@@ -502,6 +567,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     }
 
+    @Override
     public void displayHeadersAndBody(){
 
         try{
@@ -604,20 +670,35 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         for(ContactSerializable contact: fromReceivers) {
             chip = new Chip(context);
             chip.setText(contact.getDisplayName());
+            chip.setFocusable(true);
             ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
                     (int)activity.getResources().getDimension(R.dimen.view_mail_contact_chip_height));
             chip.setLayoutParams(params);
             chipGrp.addView(chip);
+            final Chip finalChip=chip;
             //onclick listener for this chip.
             chip.setOnClickListener((View v)->{
                 Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
                 contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
-                startActivity(contactDetailsIntent);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finalChip.setTransitionName(TransitionSharedElementNames.contact);
+                    // Apply activity transition
+                    startActivity(contactDetailsIntent,
+                            ActivityOptions.makeSceneTransitionAnimation(
+                                    this.getMyActivity(),
+                                    finalChip,
+                                    TransitionSharedElementNames.contact)
+                                    .toBundle());
+                }else{
+                    startActivity(contactDetailsIntent);
+
+                }
             });
         }
-
     }
 
+    @Override
     public void showBody(String html1){
 
         if(null!=html1 && !(html1.equals(""))){
@@ -635,73 +716,12 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         }
     }
 
-    /** Build the headers display with links
-     *
-     * @param textView  - TextView
-     * @param contacts  - list of ContactSerializables to display
-     * @param max   - the no of entries to display
-     */
-    public void buildHeaderText(TextView textView, List<ContactSerializable> contacts, Integer max) {
-        SpannableStringBuilder sBuilder = new SpannableStringBuilder();
-        int initLength=0;
-        int counter = 0;
-        String nonLinkText="";
-        //get the current status whether the mails is in loading state
-        boolean statusLoadedMail= (currentStatus!=null &&
-                    currentStatus != Status.LOADING
-                    && currentStatus != Status.ERROR);
-
-        //loop thorugh each contact
-        while(counter<contacts.size()){
-            final ContactSerializable contact = contacts.get(counter);
-            initLength = sBuilder.length();
-
-            //if the mail is loaded then build the link for the contact
-            if(statusLoadedMail) {
-                sBuilder.append(contact.getDisplayName() + EMAIL_DELIMITER_DISP);
-
-                //click action to perform when clicked
-                sBuilder.setSpan(new ClickableSpan() {
-                    //on click of the link open the Contacts display
-                    @Override
-                    public void onClick(View arg0) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOG_TAG, contact + " clicked");
-                        }
-                        Intent contactDetailsIntent = new Intent(context, ContactDetailsActivity.class);
-                        contactDetailsIntent.putExtra(ContactDetailsActivity.CONTACT_SERIALIZABLE_EXTRA, contact);
-                        startActivity(contactDetailsIntent);
-                    }
-                }, initLength, sBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                   //length determines the length of string to make as clickables
-            }
-            //if the mail is in loading or error state then just display the contact witout link
-            else{
-                nonLinkText = contact.getDisplayName() + EMAIL_DELIMITER_DISP;
-            }
-
-            counter++;
-
-            //if the max no of contacts is given then break out of the loop
-            if (max != null && counter >= max) {
-                break;
-            }
-        }   //end while loop
-        //set the textview with the StringBuilder
-
-        //loads the text link in to textview
-        if(statusLoadedMail) {
-           textView.setText(sBuilder);
-           textView.setMovementMethod(LinkMovementMethod.getInstance());
-        }
-        //loads the text in to textview
-        else{
-           textView.setText(nonLinkText);
-        }
-    }
-
     /*** GETTER SETTER ***/
 
+    @Override
+    public MyActivity getMyActivity(){
+        return activity;
+    }
     public String getProcessedHtml() {
         return processedHtml;
     }
@@ -710,6 +730,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.processedHtml = processedHtml;
     }
 
+    @Override
     public int getRemainingInlineImages() {
         return remainingInlineImages;
     }
@@ -723,6 +744,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         return currentStatus;
     }
 
+    @Override
     public void setCurrentStatus(Status currentStatus) {
         this.currentStatus = currentStatus;
     }
@@ -760,16 +782,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.to = to;
     }
 
-    public String getCc() {
-        return cc;
-    }
-
     public void setCc(String cc) {
         this.cc = cc;
-    }
-
-    public String getBcc() {
-        return bcc;
     }
 
     public void setBcc(String bcc) {
@@ -792,18 +806,17 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setDate(Date date) {
         this.date = date;
     }
+    @Override
     public ProgressDisplayNotificationBar getProgressStatusDispBar() {
         return progressStatusDispBar;
     }
 
+    @Override
     public StandardWebView getStandardWebView() {
         return standardWebView;
     }
 
-    public void setStandardWebView(StandardWebView standardWebView) {
-        this.standardWebView = standardWebView;
-    }
-
+    @Override
     public WebView getWebview() {
         return webview;
     }
@@ -811,6 +824,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public void setWebview(WebView webview) {
         this.webview = webview;
     }
+    @Override
     public int getTotalInlineImages() {
         return totalInlineImages;
     }
@@ -821,10 +835,6 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
 
     public CachedMailHeaderVO getMailHeaderVo() {
         return mailHeaderVo;
-    }
-
-    public void setMailHeaderVo(CachedMailHeaderVO mailHeaderVo) {
-        this.mailHeaderVo = mailHeaderVo;
     }
 
     public Context getContext() {
@@ -867,35 +877,8 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         this.itemId = itemId;
     }
 
-    public List<ContactSerializable> getToReceivers() {
-        return toReceivers;
-    }
-
-    public void setToReceivers(List<ContactSerializable> toReceivers) {
-        this.toReceivers = toReceivers;
-    }
-
-    public List<ContactSerializable> getCcReceivers() {
-        return ccReceivers;
-    }
-
-    public void setCcReceivers(List<ContactSerializable> ccReceivers) {
-        this.ccReceivers = ccReceivers;
-    }
-
-    public List<ContactSerializable> getBccReceivers() {
-        return bccReceivers;
-    }
-
-    public void setBccReceivers(List<ContactSerializable> bccReceivers) {
-        this.bccReceivers = bccReceivers;
-    }
-
-    public List<ContactSerializable> getFromReceivers() {
-        return fromReceivers;
-    }
-
-    public void setFromReceivers(List<ContactSerializable> fromReceivers) {
-        this.fromReceivers = fromReceivers;
+    @Override
+    public void setAttachmentsMeta(List<CachedAttachmentMetaVO> attachmentsMeta) {
+        this.attachmentsMeta = attachmentsMeta;
     }
 }

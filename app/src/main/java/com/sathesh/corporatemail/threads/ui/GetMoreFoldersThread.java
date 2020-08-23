@@ -58,7 +58,7 @@ public class GetMoreFoldersThread extends Thread implements Runnable, Constants 
             sendHandlerMsg(Status.RUNNING);
             listVos.clear();    //clear the vo list on every run
             this.currentStatus = Status.RUNNING;
-            service = EWSConnection.getServiceFromStoredCredentials(this.context);
+            service = EWSConnection.getInstance(this.context);
 
             // call the recursive folder search from the root
             recursivePopulateFolders(service, FolderId.getFolderIdFromWellKnownFolderName(WellKnownFolderName.MsgFolderRoot), "MsgFolderRoot");

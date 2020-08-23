@@ -163,7 +163,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
                 publishProgress("2" ,"RUNNING", LOGGING_IN_PROG1_TEXT);
 
-                service = EWSConnection.getService(activity, paramArrayOfParams[0], paramArrayOfParams[1], paramArrayOfParams[2]);
+                service = EWSConnection.getNewService(activity, paramArrayOfParams[0], paramArrayOfParams[1], paramArrayOfParams[2]);
 
                 //get and store userd detials
                 //EWS call

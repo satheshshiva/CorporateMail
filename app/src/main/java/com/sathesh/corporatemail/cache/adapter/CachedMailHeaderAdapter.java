@@ -252,7 +252,7 @@ public class CachedMailHeaderAdapter implements Constants{
 	 */
 	private CachedMailHeaderVO covertItemToVO(int mailType, String mailFolderName,  String strFolderId, Item item) throws ServiceLocalException, Exception{
 		CachedMailHeaderVO vo = new CachedMailHeaderVO();
-		mailFunctions = MailFunctionsImpl.getInbox();
+		mailFunctions = MailFunctionsImpl.getInstance();
 		
 		vo.setItem_id(mailFunctions.getItemId(item));
 		vo.setFolder_name(mailFolderName);
