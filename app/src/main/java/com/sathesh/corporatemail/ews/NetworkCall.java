@@ -9,6 +9,8 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -122,7 +124,7 @@ public class NetworkCall implements Constants{
      * @throws Exception
      */
     public static void markEmailAsReadUnread(Context context, String itemId, boolean isRead) throws NoInternetConnectionException, Exception{
-        ExchangeService  service = EWSConnection.getServiceFromStoredCredentials(context);
+        ExchangeService  service = EWSConnection.getInstance(context);
         if(Utils.checkInternetConnection(context)){
             ItemId _itemId = ItemId.getItemIdFromString(itemId);
             EmailMessage item=(EmailMessage)Item.bind(service, _itemId);
@@ -341,6 +343,30 @@ public class NetworkCall implements Constants{
 	 */
 	public static void downloadAttachment(FileAttachment fileAttachment, OutputStream fos) throws NoInternetConnectionException, Exception {
 		fileAttachment.load(fos);
+	}
+
+	/** Downloads the image inside file attachment. Uncoventional way to recreate the fileattachment obj from the id.
+	 * @param id - Attachment id
+	 * @param fos
+	 * @throws NoInternetConnectionException
+	 * @throws Exception
+	 */
+	public static void downloadAttachment(Context context, String id, OutputStream fos) throws NoInternetConnectionException, Exception {
+		ExchangeService  service = EWSConnection.getInstance(context);
+		if (!StringUtils.isEmpty(id)) {
+			if(fos!=null) {
+
+					FileAttachment fileAttachment = new FileAttachment(new Item(service));
+					fileAttachment.setId(id);
+					fileAttachment.load(fos);
+
+			}else{
+				Log.e(LOG_TAG, "NetworkCall -> downloadAttachment -> FileOutputStream is null. Cannot proceed with attachment download");
+			}
+		}else{
+			Log.e(LOG_TAG, "NetworkCall -> downloadAttachment -> Given id is null. Cannot proceed with attachment download");
+		}
+
 	}
 
 

@@ -18,7 +18,6 @@ import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
-import com.sathesh.corporatemail.asynctask.DownloadAndUpdateAppAsyncTask;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.fragment.datapasser.AboutFragmentDataPasser;
@@ -116,21 +115,6 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void downloadAndUpdate() {
-        if (BuildConfig.DEBUG){
-            new DownloadAndUpdateAppAsyncTask(activity).execute(APPLICATION_APK_DOWNLOAD_URL1_DEV);
-        }
-        else {
-            new DownloadAndUpdateAppAsyncTask(activity).execute(APPLICATION_APK_DOWNLOAD_URL1_REL);
-        }
-    }
-
-    @Override
-    public void checkForUpdates() {
-
     }
 
     /** Unused right now

@@ -1,5 +1,6 @@
 package com.sathesh.corporatemail.sqlite.db.cache;
 
+import com.sathesh.corporatemail.sqlite.db.cache.tables.TableCachedMailAttachmentMeta;
 import com.sathesh.corporatemail.sqlite.db.cache.tables.TableCachedMailBody;
 import com.sathesh.corporatemail.sqlite.db.cache.tables.TableCachedMailHeader;
 import com.sathesh.corporatemail.sqlite.db.cache.tables.TableDrawerMenu;
@@ -21,6 +22,8 @@ public class TableMetaData {
 		dbTable= new TableCachedMailHeader();
 		list.add(dbTable);
 		dbTable= new TableCachedMailBody();
+		list.add(dbTable);
+		dbTable= new TableCachedMailAttachmentMeta();
 		list.add(dbTable);
         dbTable= new TableDrawerMenu();
         list.add(dbTable);

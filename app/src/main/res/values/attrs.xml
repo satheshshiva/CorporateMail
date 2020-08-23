@@ -8,4 +8,9 @@
             <enum name="iconapp" value="1"/>
         </attr>
     </declare-styleable>
+
+
+        <declare-styleable name="AttachmentCardView">
+            <attr name="fileName" format="string"  />
+        </declare-styleable>
 </resources>

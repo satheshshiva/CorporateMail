@@ -46,6 +46,7 @@ public interface Constants {
 	----------------------------------  CACHE ----------------------------------------------
 	--------------------------------------------------------------------------------------*/
 	String CACHE_DIRECTORY_INLINE_IMGS = "inlineImgs";
+	String CACHE_DIRECTORY_ATTACHMENTS = "attachments";
 
 	/* -------------------------------------------------------------------------------------
 	----------------------------------  INBOX ----------------------------------------------
@@ -237,6 +238,7 @@ public interface Constants {
 		String from = "transitionFromShared";
 		String date = "transitionDateShared";
 		String webview = "transitionWebviewShared";
+		String contact = "transitionContactShared";
 	}
 
 }

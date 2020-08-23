@@ -32,7 +32,16 @@ public class CacheDirectories implements Constants {
      * @return
      * @throws Exception
      */
-    public static String getMailCacheImageDirectory(Context context) throws Exception{
+    public static String getMailCacheImageDirectory(Context context){
         return getApplicationCacheDirectory(context)+"/" + CACHE_DIRECTORY_INLINE_IMGS ;
     }
+
+	/** Gets the attachments cache directory
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getAttachmentsCacheDirectory(Context context){
+		return getApplicationCacheDirectory(context)+"/" + CACHE_DIRECTORY_ATTACHMENTS ;
+	}
 }

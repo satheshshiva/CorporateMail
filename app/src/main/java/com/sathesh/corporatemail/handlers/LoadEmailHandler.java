@@ -12,6 +12,7 @@ import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.fragment.ViewMailFragment;
 import com.sathesh.corporatemail.fragment.ViewMailFragment.Status;
+import com.sathesh.corporatemail.fragment.datapasser.ViewMailFragmentDataPasser;
 
 /**
  * @author sathesh
@@ -20,9 +21,9 @@ import com.sathesh.corporatemail.fragment.ViewMailFragment.Status;
 public class LoadEmailHandler extends Handler implements Constants{
 
 	/*** HANDLER ****/
-	private ViewMailFragment parent;
+	private ViewMailFragmentDataPasser parent;
 
-	public LoadEmailHandler(ViewMailFragment viewMailFragment){
+	public LoadEmailHandler(ViewMailFragmentDataPasser viewMailFragment){
 		this.parent=viewMailFragment;
 	}
 
@@ -52,10 +53,14 @@ public class LoadEmailHandler extends Handler implements Constants{
 		case SHOW_BODY:
 			parent.setCurrentStatus(Status.SHOW_BODY);
 			parent.displayHeadersAndBody();
-            if(parent.getActivity()!=null) {    //activity will be null when exit
-                parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            if(parent.getMyActivity()!=null) {    //activity will be null when exit
+                parent.getMyActivity().supportInvalidateOptionsMenu();    //refreshes the menu
             }
 			break;
+        case SHOW_ATTACHMENTS:
+        	//not setting the show attachments as current status.
+        	parent.showAttachments();
+        	break;
 
 		case SHOW_IMG_LOADING_PROGRESSBAR:
 			parent.setCurrentStatus(Status.SHOW_IMG_LOADING_PROGRESSBAR);
@@ -73,8 +78,8 @@ public class LoadEmailHandler extends Handler implements Constants{
 		case LOADED:
 			//the mail has been displayed fully
 			parent.setCurrentStatus(Status.LOADED);
-            if(parent.getActivity()!=null) {    //activity will be null when exit
-                parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            if(parent.getMyActivity()!=null) {    //activity will be null when exit
+                parent.getMyActivity().supportInvalidateOptionsMenu();    //refreshes the menu
             }
 			break;
 		case ERROR:
@@ -82,8 +87,8 @@ public class LoadEmailHandler extends Handler implements Constants{
             if(parent.getStandardWebView() !=null){
             parent.getStandardWebView().loadData(parent.getWebview(), VIEW_MAIL_ERROR_HTML);
             }
-            if(parent.getActivity()!=null) {    //activity will be null when exit
-                parent.getActivity().supportInvalidateOptionsMenu();    //refreshes the menu
+            if(parent.getMyActivity()!=null) {    //activity will be null when exit
+                parent.getMyActivity().supportInvalidateOptionsMenu();    //refreshes the menu
             }
 			break;
 		}
@@ -99,12 +104,12 @@ public class LoadEmailHandler extends Handler implements Constants{
 		if(remainingImgs>0){
 			// if only one remaining image to load then show a customized label
 			if(remainingImgs == 1){
-				parent.getProgressStatusDispBar().setText(parent.getContext().getString(R.string.viewmail_downloading_img,
+				parent.getProgressStatusDispBar().setText(parent.getMyActivity().getString(R.string.viewmail_downloading_img,
 						((totalImgs+1) - remainingImgs), totalImgs));
 			}
 			//if there are more no of remaining images to load then show lable " x of n"
 			else{
-				parent.getProgressStatusDispBar().setText(parent.getContext().getString(R.string.viewmail_downloading_imgs,
+				parent.getProgressStatusDispBar().setText(parent.getMyActivity().getString(R.string.viewmail_downloading_imgs,
 						((totalImgs+1) - remainingImgs), totalImgs));
 			}
 			//	Notifications.showToast(activity, getString(R.string.viewmail_downloading_img,no), Toast.LENGTH_SHORT);

@@ -70,7 +70,7 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 		contactSearch= (EditText)findViewById(R.id.contactSearch);
 
 		try {
-			service = EWSConnection.getServiceFromStoredCredentials(this);}
+			service = EWSConnection.getInstance(this);}
 		catch (Exception e) {
 			e.printStackTrace();
 		}

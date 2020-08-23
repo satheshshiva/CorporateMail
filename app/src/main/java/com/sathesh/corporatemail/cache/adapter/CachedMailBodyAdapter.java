@@ -148,7 +148,7 @@ public class CachedMailBodyAdapter {
      */
     private CachedMailBodyVO covertItemToVO(int mailType, Item item, String mailFolderName, String strFolderId, String from_delimited, String to_delimited, String cc_delimited, String bcc_delimited) throws ServiceLocalException, Exception{
         CachedMailBodyVO vo = new CachedMailBodyVO();
-        mailFunctions = MailFunctionsImpl.getInbox();
+        mailFunctions = MailFunctionsImpl.getInstance();
 
         vo.setItem_id(mailFunctions.getItemId(item));
         vo.setFolder_name(mailFolderName);

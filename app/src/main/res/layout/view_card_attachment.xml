@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText"
+    android:paddingBottom="8dp"
+    android:paddingRight="8dp"
+    android:paddingEnd="8dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    >
+
+<!-- Title, secondary and supporting text -->
+
+    <TextView
+        android:id="@+id/view_card_attachment_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="File Name"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/view_card_attachment_icon"
+        app:layout_constraintTop_toBottomOf="@+id/view_card_attachment_progress_bar" />
+
+    <TextView
+        android:id="@+id/view_attachment_file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="1.2MB"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/view_card_attachment_file_name"
+        app:layout_constraintTop_toBottomOf="@+id/view_card_attachment_file_name" />
+
+    <ImageView
+        android:id="@+id/view_card_attachment_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_card_attachment_progress_bar"
+        app:srcCompat="@drawable/attachment" />
+
+    <ProgressBar
+        android:id="@+id/view_card_attachment_progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
