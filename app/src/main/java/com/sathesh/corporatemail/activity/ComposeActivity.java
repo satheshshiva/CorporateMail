@@ -682,27 +682,26 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     //the start activity for result intent of "AddRecipientActivity" will  be called on clicking the "Add Recipient" buton. This method will be called when the child is finished.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        List<ContactSerializable> contactList ;
-        if (resultCode == RESULT_OK ) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<ContactSerializable> contactList;
+        if (resultCode == RESULT_OK) {
             if (data.hasExtra(AddRecipientActivity.ADD_TYPE_EXTRA) && data.hasExtra(AddRecipientActivity.ADD_TYPE_COLLECTION)) {
 
-                contactList = (ArrayList<ContactSerializable>)data.getSerializableExtra(AddRecipientActivity.ADD_TYPE_COLLECTION);
+                contactList = (ArrayList<ContactSerializable>) data.getSerializableExtra(AddRecipientActivity.ADD_TYPE_COLLECTION);
                 int type = data.getIntExtra(AddRecipientActivity.ADD_TYPE_EXTRA, 0);
 
-                if(type == AddRecipientActivity.ADD_TYPE_TO){
-                    for(ContactSerializable contact  : contactList){
+                if (type == AddRecipientActivity.ADD_TYPE_TO) {
+                    for (ContactSerializable contact : contactList) {
                         addToRecipient(contact);
 
                     }
-                }
-                else if(type == AddRecipientActivity.ADD_TYPE_CC){
-                    for(ContactSerializable contact  : contactList){
+                } else if (type == AddRecipientActivity.ADD_TYPE_CC) {
+                    for (ContactSerializable contact : contactList) {
 
                         addCCRecipient(contact);
                     }
-                }
-                else if(type == AddRecipientActivity.ADD_TYPE_BCC){
-                    for(ContactSerializable contact  : contactList){
+                } else if (type == AddRecipientActivity.ADD_TYPE_BCC) {
+                    for (ContactSerializable contact : contactList) {
                         addBCCRecipient(contact);
                     }
                 }
@@ -714,13 +713,17 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-            MenuItem menuItem;
+            menu.add(getText(R.string.compose_actionbar_attach))
+                .setIcon(R.drawable.round_attachment_white_24)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
-            menuItem = menu.add(getText(R.string.compose_actionbar_send));
-            menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
+            menu.add(getText(R.string.compose_actionbar_send))
+                    .setIcon(R.drawable.round_send_white_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
-            menuItem = menu.add(getText(R.string.compose_actionbar_cancel));
-            menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            menu.add(getText(R.string.compose_actionbar_cancel))
+                    .setIcon(R.drawable.outline_cancel_white_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return true;
     }
