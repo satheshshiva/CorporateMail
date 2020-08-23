@@ -87,27 +87,27 @@ public class ViewMailActivity extends MyActivity implements Constants{
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Reply))
                             .setIcon(R.drawable.baseline_reply_black_36);
-                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    menuItem.setShowAsAction( MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Reply_All))
                             .setIcon(R.drawable.baseline_reply_all_black_36);
-                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    menuItem.setShowAsAction( MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     menuItem = subMenuReply
                             .add(this.getString(R.string.actionBar_Forward))
                             .setIcon(R.drawable.baseline_forward_black_36);
-                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
                     //Setting icons and settings to Reply Submenu
                     subMenuItem = subMenuReply.getItem();
                     subMenuItem.setIcon(R.drawable.baseline_reply_white_36);
-                    MenuItemCompat.setShowAsAction(subMenuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                    subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
                     //Adding Delete Icon to Main Menu
                     menuItem = menu.add(this.getString(R.string.actionBar_Delete))
                             .setIcon(R.drawable.baseline_delete_white_36);
-                    MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
                 }
         }else{

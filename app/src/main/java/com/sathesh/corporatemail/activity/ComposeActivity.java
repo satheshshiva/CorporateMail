@@ -717,34 +717,10 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             MenuItem menuItem;
 
             menuItem = menu.add(getText(R.string.compose_actionbar_send));
-            MenuItemCompat.setShowAsAction(menuItem,
-                    MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
             menuItem = menu.add(getText(R.string.compose_actionbar_cancel));
-            MenuItemCompat.setShowAsAction(menuItem,
-                    MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		/*
-				//Submenu
-				SubMenu subMenu = menu.addSubMenu("");
-
-				subMenu
-				.add(ACTIONBAR_SETTINGS)
-				.setIcon(OptionsUIContent.getSettingsIcon())
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-
-				subMenu
-				.add(ACTIONBAR_ABOUT)
-				.setIcon(OptionsUIContent.getAboutIcon())
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-
-				//Overflow submenu icon
-				MenuItem subMenuItem = subMenu.getItem();
-				subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-				subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		 */
+            menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         return true;
     }
