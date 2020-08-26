@@ -151,6 +151,7 @@
     <string name="compose_attachment_error">Could not attach file(s)</string>
     <string name="compose_save_draft_success">Message saved as Draft</string>
     <string name="compose_saving_draft">Saving Draft</string>
+    <string name="compose_statusbar_save_success">Draft saved successfully</string>
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 

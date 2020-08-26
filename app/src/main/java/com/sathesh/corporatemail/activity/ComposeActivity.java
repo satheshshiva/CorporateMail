@@ -65,6 +65,7 @@ import microsoft.exchange.webservices.data.core.exception.service.remote.Service
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
 
 import static android.content.Intent.EXTRA_ALLOW_MULTIPLE;
 
@@ -781,6 +782,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     for (Uri uri : uriList) {
                       attachAttachmentToMsg(uri);
                     }
+                    saveDraft(false);
                     break;
                 default:
                     Log.w(LOG_TAG, "Compose Activity -> unknown activity result code received: " + resultCode);
@@ -810,7 +812,18 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 attachmentCardView.setSizeOrStatus(fileAttach.size);
             }
             attachmentCardView.showRemoveIcon((View v) -> {
-                attachmentsLayout.removeView(attachmentCardView);
+                try {
+                    for(Attachment attach : msg.getAttachments()){
+                        if (attach.getName().equalsIgnoreCase(fileAttach.fileName)){
+                            msg.getAttachments().remove(attach);
+                            break;
+                        }
+                    }
+                    attachmentsLayout.removeView(attachmentCardView);
+                    saveDraft(false);
+                }catch(Exception e){
+                    Utilities.generalCatchBlock(e, this);
+                }
             });
             attachmentsLayout.addView(attachmentCardView);
         }
@@ -915,7 +928,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     }
 
     private void exitActivity(){
-        super.onBackPressed();
+        activity.finish();
         ApplyAnimation.setComposeActivityCloseAnim(activity);
     }
 
@@ -934,10 +947,13 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                         progressDispBar.showStatusBar();
                         break;
                     case 1:
-                        progressDispBar.hideStatusBar();
-                        Notifications.showToast(activity, activity.getString(R.string.compose_save_draft_success));
+                        progressDispBar.hideProgressBar();
+                        progressDispBar.setText(getString(R.string.compose_statusbar_save_success));
                         if(exitPage) {
+                            Notifications.showToast(activity, activity.getString(R.string.compose_save_draft_success));
                             exitActivity();
+                        }else{
+                            new Handler().postDelayed(()->progressDispBar.hideStatusBar(),2000);
                         }
                         break;
                     case 2:
@@ -957,9 +973,9 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
             }
         };
-        new Thread(saveDraft(h) ).start();
+        new Thread(getSaveDraftThread(h) ).start();
     }
-    private Runnable saveDraft(Handler h){
+    private Runnable getSaveDraftThread(Handler h){
         updateAllValues();
         return new Runnable() {
             @Override
