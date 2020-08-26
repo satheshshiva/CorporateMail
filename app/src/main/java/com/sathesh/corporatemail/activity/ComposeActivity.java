@@ -29,8 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.view.MenuItemCompat;
-
 import com.google.android.flexbox.FlexboxLayout;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
@@ -51,7 +49,6 @@ import com.sathesh.corporatemail.ui.components.WarningDisplayNotificationBar;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +65,6 @@ import microsoft.exchange.webservices.data.core.exception.service.remote.Service
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
-import microsoft.exchange.webservices.data.property.complex.ItemId;
 
 import static android.content.Intent.EXTRA_ALLOW_MULTIPLE;
 
@@ -168,6 +164,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private ArrayList<FileAttach> fileAttachList = new ArrayList<FileAttach>();
     private FlexboxLayout attachmentsLayout;
     private static EmailMessage msg;
+    private static boolean existingDraft;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -234,6 +231,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);
         }
+        existingDraft=false;
 
     }
 
@@ -652,19 +650,28 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         buildAlertDialog(this, getString(R.string.compose_alert_confirm_title), alertMsg,getString(R.string.alertdialog_positive_lbl), getString(R.string.alertdialog_negative_lbl));
     }
 
+    private static String subject="", body="", signature="";
+
+    private void updateAllValues(){
+        subject = composeSubject.getText().toString();
+        body=Utilities.convertEditableToHTML(composeBody.getText());
+        signature = Utilities.convertEditableToHTML(composeSignature.getText());
+        to=actualToReceivers.values();
+        cc=actualCCReceivers.values();
+        bcc=actualBCCReceivers.values();
+
+        if(generalSettings.isComposeSignatureEnabled(activity)){
+            body += signature;
+        }
+    }
     public class Send extends AsyncTask<Void, String, Boolean>{
-
-        private String subject="", body="", signature="";
-
         @Override
         protected void onPreExecute() {
 
             try {
                 progressDialog = ProgressDialog.show(activity, "",
                         activity.getString(R.string.compose_sending), true);
-                subject = composeSubject.getText().toString();
-                body=Utilities.convertEditableToHTML(composeBody.getText());
-                signature = Utilities.convertEditableToHTML(composeSignature.getText());
+                updateAllValues();
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(LOG_TAG, "Exception occured on preexecute");
@@ -675,14 +682,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         protected Boolean doInBackground(Void... paramArrayOfParams) {
 
             try {
-                to=actualToReceivers.values();
-                cc=actualCCReceivers.values();
-                bcc=actualBCCReceivers.values();
-
-                if(generalSettings.isComposeSignatureEnabled(activity)){
-                    body=appendSignature(body);
-                }
-
                 //EWS call
                 switch(prefill_type){
                     case PREFILL_TYPE_REPLY:
@@ -694,7 +693,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     case PREFILL_TYPE_FORWARD:
                         NetworkCall.forwardMail(activity, msg, to, cc, bcc, subject, body);
                         break;
-                    default:
+                    default:    //Send
                         NetworkCall.sendMail(activity, msg, to, cc,bcc, subject, body);
                 }
                 publishProgress(STATUS_SENT, "");
@@ -724,12 +723,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             return true;
         }
 
-        private String appendSignature(String body) {
-
-            body=body+signature;
-            return body;
-        }
-
         @Override
         protected void onProgressUpdate(String... progress) {
 
@@ -738,7 +731,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Notifications.showAlert(activity, progress[1]);
             }else if(progress[0].equalsIgnoreCase(STATUS_SENT)){
                 progressDialog.dismiss();
-                onBackPressed();
+                exitActivity();
                 Notifications.showToast(activity, activity.getText(R.string.compose_msg_sent), Toast.LENGTH_SHORT);
             }
         }
@@ -786,25 +779,40 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
                     // create AttachmentCardView for all the URIs found in the arraylist.
                     for (Uri uri : uriList) {
-                        FileAttach fileAttach = getDocumentData(uri);
-                        if (fileAttach != null) {
-                            AttachmentCardView attachmentCardView = new AttachmentCardView(this, null);
-                            attachmentCardView.setFileName(fileAttach.fileName);
-                            try {
-                                attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, Long.parseLong(fileAttach.size)));
-                            } catch (ParseException | NumberFormatException e) {
-                                attachmentCardView.setSizeOrStatus(fileAttach.size);
-                            }
-                            attachmentCardView.showRemoveIcon((View v) -> {
-                                attachmentsLayout.removeView(attachmentCardView);
-                            });
-                            attachmentsLayout.addView(attachmentCardView);
-                        }
+                      attachAttachmentToMsg(uri);
                     }
                     break;
                 default:
                     Log.w(LOG_TAG, "Compose Activity -> unknown activity result code received: " + resultCode);
                 }
+        }
+    }
+
+    /**
+     * Creates the card view for the given uri and shows in UI. Also attaces the attachment to the msg
+     * @param uri
+     */
+    private void attachAttachmentToMsg(Uri uri) {
+        FileAttach fileAttach = getDocumentData(uri);
+        if (fileAttach != null) {
+            AttachmentCardView attachmentCardView = new AttachmentCardView(this, null);
+            try {
+                msg.getAttachments().addFileAttachment(fileAttach.fileName, getContentResolver().openInputStream(uri));
+            }catch(Exception e){
+                Utilities.generalCatchBlock(e, this);
+                Notifications.showToast(activity, getString(R.string.compose_attachment_error));
+                return;
+            }
+            attachmentCardView.setFileName(fileAttach.fileName);
+            try {
+                attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, Long.parseLong(fileAttach.size)));
+            } catch (ParseException | NumberFormatException e) {
+                attachmentCardView.setSizeOrStatus(fileAttach.size);
+            }
+            attachmentCardView.showRemoveIcon((View v) -> {
+                attachmentsLayout.removeView(attachmentCardView);
+            });
+            attachmentsLayout.addView(attachmentCardView);
         }
     }
 
@@ -819,6 +827,12 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         }
     }
 
+    /**
+     * Code copied from https://developer.android.com/training/data-storage/shared/documents-files#examine-metadata
+     * Retrieves the meta data of a file selected from the Storage Access Framework browser.
+     * @param uri
+     * @return
+     */
     private FileAttach getDocumentData(Uri uri) {
         try (Cursor cursor = activity.getContentResolver()
                 .query(uri, null, null, null, null, null)) {
@@ -852,6 +866,10 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     .setIcon(R.drawable.round_send_white_24)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
+             menu.add(getText(R.string.compose_actionbar_save_draft))
+                .setIcon(R.drawable.round_save_white_24)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+
             menu.add(getText(R.string.compose_actionbar_cancel))
                     .setIcon(R.drawable.outline_cancel_white_24)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -864,11 +882,14 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     {
         if (item !=null) {
             if (item.getItemId() == android.R.id.home) {
-                onBackPressed();
+                saveDraft(true);
             } else if (item.getTitle().equals(getText(R.string.compose_actionbar_send))) {
                 sendMail();
-            } else if (item.getTitle().equals(getText(R.string.compose_actionbar_cancel))) {
-                cancelPage();
+            }else if (item.getTitle().equals(getText(R.string.compose_actionbar_save_draft))) {
+                saveDraft(false);
+            }
+            else if (item.getTitle().equals(getText(R.string.compose_actionbar_cancel))) {
+                exitActivity();
             }else if (item.getTitle().equals(getText(R.string.compose_actionbar_attach))) {
                 Intent intent=null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
@@ -890,27 +911,71 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     @Override
     public void onBackPressed() {
-        activity.finish();
+        saveDraft(true);
+    }
+
+    private void exitActivity(){
+        super.onBackPressed();
         ApplyAnimation.setComposeActivityCloseAnim(activity);
     }
 
-    private void cancelPage() {
-        AlertDialog myConfirmBox =new AlertDialog.Builder(this)
-                //set message, title, and icon
-                .setTitle(getString(R.string.compose_alert_confirm_cancel_title))
-                .setMessage(getString(R.string.compose_alert_confirm_cancel_msg) )
-                .setPositiveButton(getString(R.string.alertdialog_positive_lbl)	, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        onBackPressed();
-                    }
-                })
-                .setNegativeButton(getString(R.string.alertdialog_negative_lbl), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        myConfirmBox.show();
+    /**
+     * User is navigating out of page. Automatically save a draft. Alert the user if the saving draft fails.
+     * @param exitPage - exits the page after saving
+     */
+    private void saveDraft(boolean exitPage) {
+        //handler for bind msg call
+        Handler h = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message m) {
+                switch(m.what){
+                    case 0:
+                        progressDispBar.setText(getString(R.string.compose_saving_draft));
+                        progressDispBar.showStatusBar();
+                        break;
+                    case 1:
+                        progressDispBar.hideStatusBar();
+                        Notifications.showToast(activity, activity.getString(R.string.compose_save_draft_success));
+                        if(exitPage) {
+                            exitActivity();
+                        }
+                        break;
+                    case 2:
+                        progressDispBar.hideStatusBar();
+                        if (exitPage) {
+                            AlertDialog myConfirmBox = new AlertDialog.Builder(activity)
+                                    //set message, title, and icon
+                                    .setTitle(getString(R.string.compose_alert_confirm_cancel_title))
+                                    .setMessage(getString(R.string.compose_alert_confirm_cancel_msg))
+                                    .setPositiveButton(getString(R.string.alertdialog_positive_lbl), (dialog, whichButton) -> exitActivity())
+                                    .setNegativeButton(getString(R.string.alertdialog_negative_lbl), (dialog, which) -> dialog.dismiss())
+                                    .create();
+                            myConfirmBox.show();
+                        }
+                        break;
+                }
+
+            }
+        };
+        new Thread(saveDraft(h) ).start();
+    }
+    private Runnable saveDraft(Handler h){
+        updateAllValues();
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    h.sendEmptyMessage(0);
+                    NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
+                    existingDraft=true; //when saving the draft multiple times, save() or update() will be called correspondingly based on this bool.
+                    h.sendEmptyMessage(1);
+                }catch(Exception e){
+                    Utilities.generalCatchBlock(e, this);
+                    h.sendEmptyMessage(2);
+                }
+            }
+        };
+
     }
 
     @Override

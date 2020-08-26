@@ -134,6 +134,7 @@
     <string name="compose_resoleNameDialog_nomatch">No match found</string>
     <string name="compose_actionbar_send">Send</string>
     <string name="compose_actionbar_attach">Attach</string>
+    <string name="compose_actionbar_save_draft">Save Draft</string>
     <string name="compose_actionbar_cancel">Discard</string>
     <string name="compose_emptyString">(empty)</string>
     <string name="compose_reply_subject_prefix">RE:</string>
@@ -145,8 +146,11 @@
     <string name="compose_alert_confirm_nobody_nosub_send">No subject and message body. Send anyway?</string>
     <string name="compose_alert_confirm_title">Send</string>
     <string name="compose_alert_confirm_cancel_title">Cancel</string>
-    <string name="compose_alert_confirm_cancel_msg">Cancel message? Message will not be saved.</string>
+    <string name="compose_alert_confirm_cancel_msg">Error saving draft. Proceed?</string>
     <string name="compose_unknown_attachment_size">Unknown</string>
+    <string name="compose_attachment_error">Could not attach file(s)</string>
+    <string name="compose_save_draft_success">Message saved as Draft</string>
+    <string name="compose_saving_draft">Saving Draft</string>
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 
