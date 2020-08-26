@@ -71,7 +71,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
     public MyActivity activity ;
     private Context context ;
 
-    private TextView subjectIdView, expandedDateIdView, collapsedDateIdView, toLbl, ccLbl ;
+    private TextView subjectIdView, expandedDateIdView, collapsedDateIdView, fromLbl, toLbl, ccLbl ;
     private StandardWebView standardWebView ;
     private WebView webview;
     private ProgressDisplayNotificationBar progressStatusDispBar;
@@ -157,6 +157,7 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         expandedFromChipGrp = (ChipGroup)view.findViewById(R.id.expandedFromChipGrp);
         expandedToChipGrp = (ChipGroup)view.findViewById(R.id.expandedToChipGrp);
         expandedCcChipGrp = (ChipGroup)view.findViewById(R.id.expandedCcChipGrp);
+        fromLbl = (TextView)view.findViewById(R.id.expandedFromLbl);
         toLbl = (TextView)view.findViewById(R.id.expandedToLbl);
         ccLbl = (TextView)view.findViewById(R.id.expandedCcLbl);
         expandedDateIdView = (TextView)view.findViewById(R.id.expandedDate);
@@ -589,67 +590,56 @@ public class ViewMailFragment extends Fragment implements Constants, ViewMailFra
         try {
             //convert "from" delimitered text to from list of ContactSerializable
             if(from!=null && !(from.equals(""))){
-                isToExist=true;
                 fromReceivers= MailApplication.getContactsFromDelimitedString(from);
+                if (fromReceivers.size() > 0) {
+                    buildContactChips(expandedFromChipGrp, fromReceivers);
+                    buildContactChips(collapsedfromChipGrp, fromReceivers);
+                }
+            }else{
+                fromLbl.setVisibility(View.INVISIBLE);
+                expandedFromChipGrp.setVisibility(View.INVISIBLE);
+                collapsedfromChipGrp.setVisibility(View.INVISIBLE);
             }
 
             //convert "to" delimitered text to "to" list of ContactSerializable
             if(to!=null && !(to.equals(""))){
-                isToExist=true;
                 toReceivers= MailApplication.getContactsFromDelimitedString(to);
-            }
-            else{
-                isToExist=false;
+                if(toReceivers.size() > 0 ){
+                    isToExist=true;
+                    //show all To contacts
+                    buildContactChips(expandedToChipGrp, toReceivers);
+                }
+            }else{
+                expandedToChipGrp.setVisibility(View.INVISIBLE);
+                toLbl.setVisibility(View.INVISIBLE);
             }
 
             //convert "cc" delimitered text to "cc" list of ContactSerializable
             if(cc!=null && !(cc.equals(""))){
-                isCCExist=true;
                 ccReceivers= MailApplication.getContactsFromDelimitedString(cc);
+                if(ccReceivers.size() > 0){
+                    isCCExist=true;
+                    buildContactChips(expandedCcChipGrp, ccReceivers);
+                }
+            }else{
+                expandedCcChipGrp.setVisibility(View.INVISIBLE);
+                ccLbl.setVisibility(View.INVISIBLE);
             }
-            else{
-                isCCExist=false;
-            }
+
             if(bcc!=null && !(bcc.equals(""))){
                 isBCCExist=true;
                 bccReceivers= MailApplication.getContactsFromDelimitedString(bcc);
                 //	BCC_ViewMail_LinearLayout.setVisibility(View.VISIBLE);
-            }
-            else{
-                isBCCExist=false;
+                //TODO bcc display for draft
             }
 
             //subject
-            if(subject!=null && !(subject.equals(""))){
-                subjectIdView.setText(subject);
-            }
-            else{
-                subjectIdView.setText(R.string.noSubjectDisplay);
-            }
-            // From
-            if (fromReceivers.size() > 0) {
-                buildContactChips(expandedFromChipGrp, fromReceivers);
-                buildContactChips(collapsedfromChipGrp, fromReceivers);
-            }else{
-                expandedFromChipGrp.removeAllViews();
-            }
-
-            // To
-            if(isToExist){
-                //show all To contacts
-                buildContactChips(expandedToChipGrp, toReceivers);
-            }else{
-                expandedCcChipGrp.setVisibility(View.GONE);
-                toLbl.setVisibility(View.GONE);
-            }
-
-            //CC
-            if(isCCExist){
-                buildContactChips(expandedCcChipGrp, ccReceivers);
-            }else{
-                expandedCcChipGrp.setVisibility(View.GONE);
-                ccLbl.setVisibility(View.GONE);
-            }
+            subjectIdView.setText(
+                    (subject != null && !subject.equals(""))
+                            ?
+                    subject
+                            :getString(R.string.noSubjectDisplay)
+            );
             //date
             if(date!=null){
                 expandedDateIdView.setText((new SimpleDateFormat(VIEW_MAIL_DATE_FORMAT)).format(date.getTime()));
