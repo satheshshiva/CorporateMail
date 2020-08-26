@@ -279,6 +279,11 @@ public class NetworkCall implements Constants{
 		if(Utils.checkInternetConnection(context)) {
 			msg.setSubject(subject);
 			msg.setBody(MessageBody.getMessageBodyFromText(body));
+			//since save draft can be called multiple times, clear the variables for fresh insertion from the ui parameters
+			msg.getToRecipients().clear();
+			msg.getCcRecipients().clear();
+			msg.getBccRecipients().clear();
+
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
 					msg.getToRecipients().add(tempRecipient.getEmail());
