@@ -148,7 +148,13 @@ public class NetworkCall implements Constants{
 		if(Utils.checkInternetConnection(context)){
 			msg.setSubject(subject);
 			msg.setBody(MessageBody.getMessageBodyFromText(body));
-            if(BuildConfig.DEBUG) {
+
+			//since save draft can be called multiple times, clear the variables for fresh insertion from the ui parameters
+			msg.getToRecipients().clear();
+			msg.getCcRecipients().clear();
+			msg.getBccRecipients().clear();
+
+			if(BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "To receipients for sending email " + to);
             }
 			if( null != to && to.size()>0){
@@ -195,6 +201,12 @@ public class NetworkCall implements Constants{
 			ResponseMessage replyMsg= msg.createReply(replyAll);
 			replyMsg.setSubject(subject); 
 			replyMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
+
+			//since save draft can be called multiple times, clear the variables for fresh insertion from the ui parameters
+			replyMsg.getToRecipients().clear();
+			replyMsg.getCcRecipients().clear();
+			replyMsg.getBccRecipients().clear();
+
 			Log.d(LOG_TAG, "To receipients for sending email " + to);
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
@@ -245,6 +257,12 @@ public class NetworkCall implements Constants{
 			ResponseMessage forwardMsg= msg.createForward();
 			forwardMsg.setSubject(subject); 
 			forwardMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
+
+			//since save draft can be called multiple times, clear the variables for fresh insertion from the ui parameters
+			forwardMsg.getToRecipients().clear();
+			forwardMsg.getCcRecipients().clear();
+			forwardMsg.getBccRecipients().clear();
+
 			Log.d(LOG_TAG, "To receipients for sending email " + to);
 			if( null != to && to.size()>0){
 				for(ContactSerializable tempRecipient: to){
