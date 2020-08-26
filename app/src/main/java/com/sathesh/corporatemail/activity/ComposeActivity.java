@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ParseException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.core.view.MenuItemCompat;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
@@ -34,6 +39,7 @@ import com.sathesh.corporatemail.asynctask.ResolveNamesAsyncTask;
 import com.sathesh.corporatemail.asynctask.interfaces.IResolveNames;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
+import com.sathesh.corporatemail.customui.AttachmentCardView;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
@@ -42,6 +48,7 @@ import com.sathesh.corporatemail.ui.components.WarningDisplayNotificationBar;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,6 +64,8 @@ import microsoft.exchange.webservices.data.core.exception.service.local.ServiceL
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+
+import static android.content.Intent.EXTRA_ALLOW_MULTIPLE;
 
 public class ComposeActivity extends MyActivity implements Constants,IResolveNames{
 
@@ -121,6 +130,13 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public static final String PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA="PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA";
     public static final String PREFILL_DATA_QUOTE_HTML="PREFILL_DATA_QUOTE_HTML";
 
+    public final static String   ADD_TYPE_EXTRA="ADD_TYPE_EXTRA";
+    public final static String   ADD_TYPE_COLLECTION="ADD_TYPE_COLLECTION";
+    public final static int   ADD_RECIPIENT_REQ_CODE=1;
+    public final static int   OPEN_DOCUMENT_REQ_CODE=2;
+
+    public final static String   ATTACHMENT_EXTRA="ATTACHMENT_EXTRA";
+
     private WebView quoteWebview;
     private LinearLayout quotedTextLinearLayout;
     private boolean resolvingNames=false;
@@ -143,6 +159,10 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private  static String prefill_subject, prefill_body, prefill_titlebar,prefill_quoteWebview;
 
     private static SpannableStringBuilder sBuilder=new SpannableStringBuilder();
+
+    private ArrayList<FileAttach> fileAttachList = new ArrayList<FileAttach>();
+    private FlexboxLayout attachmentsLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,6 +196,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         // Changing to invisible so that users wont experience a layout change on when this disappears.
 
         quotedTextLinearLayout = (LinearLayout)findViewById(R.id.quoteLinearLayout);
+        attachmentsLayout = (FlexboxLayout) findViewById(R.id.compose_attachments_layout);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         try {
@@ -335,7 +356,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private void startAddRecipientActivity() {
         
         Intent i = new Intent(this, AddRecipientActivity.class);
-        startActivityForResult(i, 1);
+        startActivityForResult(i, ADD_RECIPIENT_REQ_CODE);
     }
 
     // Add a To Recipient
@@ -685,28 +706,94 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         super.onActivityResult(requestCode, resultCode, data);
         List<ContactSerializable> contactList;
         if (resultCode == RESULT_OK) {
-            if (data.hasExtra(AddRecipientActivity.ADD_TYPE_EXTRA) && data.hasExtra(AddRecipientActivity.ADD_TYPE_COLLECTION)) {
+            switch(requestCode) {
+                case ADD_RECIPIENT_REQ_CODE:
+                //Add recipient
+                if (data.hasExtra(ADD_TYPE_EXTRA) && data.hasExtra(ADD_TYPE_COLLECTION)) {
+                    contactList = (ArrayList<ContactSerializable>) data.getSerializableExtra(ADD_TYPE_COLLECTION);
+                    int type = data.getIntExtra(ADD_TYPE_EXTRA, 0);
 
-                contactList = (ArrayList<ContactSerializable>) data.getSerializableExtra(AddRecipientActivity.ADD_TYPE_COLLECTION);
-                int type = data.getIntExtra(AddRecipientActivity.ADD_TYPE_EXTRA, 0);
-
-                if (type == AddRecipientActivity.ADD_TYPE_TO) {
-                    for (ContactSerializable contact : contactList) {
-                        addToRecipient(contact);
-
-                    }
-                } else if (type == AddRecipientActivity.ADD_TYPE_CC) {
-                    for (ContactSerializable contact : contactList) {
-
-                        addCCRecipient(contact);
-                    }
-                } else if (type == AddRecipientActivity.ADD_TYPE_BCC) {
-                    for (ContactSerializable contact : contactList) {
-                        addBCCRecipient(contact);
+                    if (type == AddRecipientActivity.ADD_TYPE_TO) {
+                        for (ContactSerializable contact : contactList) {
+                            addToRecipient(contact);
+                        }
+                    } else if (type == AddRecipientActivity.ADD_TYPE_CC) {
+                        for (ContactSerializable contact : contactList) {
+                            addCCRecipient(contact);
+                        }
+                    } else if (type == AddRecipientActivity.ADD_TYPE_BCC) {
+                        for (ContactSerializable contact : contactList) {
+                            addBCCRecipient(contact);
+                        }
                     }
                 }
-            }
+                break;
+                case OPEN_DOCUMENT_REQ_CODE:
+                //attachments
+                    ArrayList<Uri> uriList = new ArrayList<>();
+                    // multiple attachments can be selected. Loading it to a arraylist.
+                    if (data.getData() != null) {
+                        uriList.add(data.getData());
+                    } else if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            uriList.add(data.getClipData().getItemAt(i).getUri());
+                        }
+                    }
+
+                    // create AttachmentCardView for all the URIs found in the arraylist.
+                    for (Uri uri : uriList) {
+                        FileAttach fileAttach = getDocumentData(uri);
+                        if (fileAttach != null) {
+                            AttachmentCardView attachmentCardView = new AttachmentCardView(this, null);
+                            attachmentCardView.setFileName(fileAttach.fileName);
+                            try {
+                                attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, Long.parseLong(fileAttach.size)));
+                            } catch (ParseException | NumberFormatException e) {
+                                attachmentCardView.setSizeOrStatus(fileAttach.size);
+                            }
+                            attachmentCardView.showRemoveIcon((View v) -> {
+                                attachmentsLayout.removeView(attachmentCardView);
+                            });
+                            attachmentsLayout.addView(attachmentCardView);
+                        }
+                    }
+                    break;
+                default:
+                    Log.w(LOG_TAG, "Compose Activity -> unknown activity result code received: " + resultCode);
+                }
         }
+    }
+
+    private class FileAttach{
+        private String fileName;
+        private String size;
+        private Uri uri;
+        private FileAttach(String fileName, String size, Uri uri){
+            this.fileName = fileName;
+            this.size = size;
+            this.uri = uri;
+        }
+    }
+
+    private FileAttach getDocumentData(Uri uri) {
+        try (Cursor cursor = activity.getContentResolver()
+                .query(uri, null, null, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+
+                String displayName = cursor.getString(
+                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                String size = null;
+                if (!cursor.isNull(sizeIndex)) {
+                    size = cursor.getString(sizeIndex);
+                } else {
+                    size = getString(R.string.compose_unknown_attachment_size);
+                }
+                return new FileAttach(displayName, size, uri);
+            }
+        }catch (Exception e){Utilities.generalCatchBlock(e, this);}
+        return null;
     }
 
     @Override
@@ -731,14 +818,27 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item!=null && item.getItemId()==android.R.id.home){
-            onBackPressed();
-        }
-        else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_send))){
-            sendMail();
-        }
-        else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_cancel))){
-            cancelPage();
+        if (item !=null) {
+            if (item.getItemId() == android.R.id.home) {
+                onBackPressed();
+            } else if (item.getTitle().equals(getText(R.string.compose_actionbar_send))) {
+                sendMail();
+            } else if (item.getTitle().equals(getText(R.string.compose_actionbar_cancel))) {
+                cancelPage();
+            }else if (item.getTitle().equals(getText(R.string.compose_actionbar_attach))) {
+                Intent intent=null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.putExtra(EXTRA_ALLOW_MULTIPLE, true);
+                   // intent.putExtra(EXTRA_INITIAL_URI, true);
+
+                }else{
+                    intent = new Intent(Intent.ACTION_GET_CONTENT);
+                }
+                    intent.setType("*/*");
+                    startActivityForResult(intent, OPEN_DOCUMENT_REQ_CODE);
+            }
         }
 
         return super.onOptionsItemSelected(item);

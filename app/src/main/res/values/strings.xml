@@ -145,6 +145,7 @@
     <string name="compose_alert_confirm_title">Send</string>
     <string name="compose_alert_confirm_cancel_title">Cancel</string>
     <string name="compose_alert_confirm_cancel_msg">Cancel message? Message will not be saved.</string>
+    <string name="compose_unknown_attachment_size">Unknown</string>
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 
