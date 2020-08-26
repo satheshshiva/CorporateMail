@@ -184,8 +184,6 @@ public class NetworkCall implements Constants{
 
 	/** Reply or Replyall an Email
 	 * @param context
-	 * @param service
-	 * @param itemIdStr the item id of the original email to send reply
 	 * @param to
 	 * @param subject
 	 * @param body
@@ -275,6 +273,36 @@ public class NetworkCall implements Constants{
 			}
 		}
 		else{	throw new NoInternetConnectionException(); }
+	}
+
+	public static void saveDraft(Context context, EmailMessage msg, boolean existingDraft, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws Exception{
+		if(Utils.checkInternetConnection(context)) {
+			msg.setSubject(subject);
+			msg.setBody(MessageBody.getMessageBodyFromText(body));
+			if( null != to && to.size()>0){
+				for(ContactSerializable tempRecipient: to){
+					msg.getToRecipients().add(tempRecipient.getEmail());
+				}
+
+			}
+			if( null != cc && cc.size()>0){
+				for(ContactSerializable tempRecipient: cc){
+					msg.getCcRecipients().add(tempRecipient.getEmail());
+				}
+
+			}
+			if( null != bcc && bcc.size()>0){
+				for(ContactSerializable tempRecipient: bcc){
+					msg.getBccRecipients().add(tempRecipient.getEmail());
+				}
+			}
+			if (!existingDraft) { //new draft
+				msg.save();
+			}else{
+				msg.update(ConflictResolutionMode.AutoResolve);
+			}
+
+		}else{	throw new NoInternetConnectionException(); }
 	}
 
 	public static FindFoldersResults getInboxFolders(ExchangeService service) throws Exception{
