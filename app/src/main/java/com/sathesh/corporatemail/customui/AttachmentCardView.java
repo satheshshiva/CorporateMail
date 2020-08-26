@@ -21,8 +21,8 @@ import com.sathesh.corporatemail.ui.util.UIutilities;
 
 
 public class AttachmentCardView extends CardView implements Constants {
-    private final int MARGIN=14;
-    private final int ELEVATION=12;
+    private final int MARGIN=7;
+    private final int ELEVATION=5;
     ProgressBar iconView;
     ImageView removeIcon;
 
