@@ -11,6 +11,9 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.OpenableColumns;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -63,7 +66,9 @@ import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRang
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 
 import static android.content.Intent.EXTRA_ALLOW_MULTIPLE;
 
@@ -162,6 +167,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     private ArrayList<FileAttach> fileAttachList = new ArrayList<FileAttach>();
     private FlexboxLayout attachmentsLayout;
+    private static EmailMessage msg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -222,23 +228,27 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         try {
             if(getIntent().getBooleanExtra(PREFILL_DATA_EXTRA, false)){
                 prefillData();
-            }
-            else{
-                prefill_type=PREFILL_TYPE_COMPOSE;
-                prefill_repl_itemid="";
-                prefill_to=null; prefill_cc=null; prefill_bcc=null;
-                prefill_subject="";
-                prefill_body="";
-                prefill_titlebar="";
-                prefill_quoteWebview="";
-
+            }else{
+                prefillEmptyData();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Utilities.generalCatchBlock(e, this);
         }
+
     }
 
-    private void prefillData() {
+    private void prefillEmptyData() throws Exception {
+        prefill_type=PREFILL_TYPE_COMPOSE;
+        prefill_repl_itemid="";
+        prefill_to=null; prefill_cc=null; prefill_bcc=null;
+        prefill_subject="";
+        prefill_body="";
+        prefill_titlebar="";
+        prefill_quoteWebview="";
+        msg= new EmailMessage(service);
+    }
+
+    private void prefillData() throws Exception {
 
         boolean prefill_setfocus_onbody=false;
 
@@ -306,6 +316,45 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         if(prefill_setfocus_onbody){
             composeBody.requestFocus();
         }
+
+        //handler for bind msg call
+        Handler h = new Handler(Looper.getMainLooper()){
+            // simple retry mechanism.
+            int retries=0;
+            @Override
+            public void handleMessage(Message m) {
+                if (m.what == 2) { //failure
+                    if (retries < 3) {
+                        new Thread(bindMsg(this)).start();
+                        retries++;
+                    } else {
+                        try {
+                            msg = new EmailMessage(service);
+                        } catch (Exception e) {
+                            Utilities.generalCatchBlock(e, this);
+                        }
+                    }
+                }
+            }
+        };
+        new Thread(bindMsg(h)).start();
+    }
+
+    private Runnable bindMsg(Handler h){
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    h.sendEmptyMessage(0);
+                    msg = NetworkCall.bind(activity, service, prefill_repl_itemid);
+                    h.sendEmptyMessage(1);
+                }catch(Exception e){
+                    Utilities.generalCatchBlock(e, this);
+                    h.sendEmptyMessage(2);
+                }
+            }
+        };
+
     }
 
     @Override
@@ -605,7 +654,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     public class Send extends AsyncTask<Void, String, Boolean>{
 
-        private ExchangeService service;
         private String subject="", body="", signature="";
 
         @Override
@@ -627,9 +675,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         protected Boolean doInBackground(Void... paramArrayOfParams) {
 
             try {
-
-                service = EWSConnection.getInstance(activity.getApplicationContext());
-
                 to=actualToReceivers.values();
                 cc=actualCCReceivers.values();
                 bcc=actualBCCReceivers.values();
@@ -639,22 +684,21 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 }
 
                 //EWS call
-                if(prefill_type == PREFILL_TYPE_REPLY || prefill_type == PREFILL_TYPE_REPLY_ALL ||  prefill_type == PREFILL_TYPE_REPLY_ALL){
-                    NetworkCall.replyMail(activity, service, prefill_repl_itemid, to, cc, bcc, subject, body, false);
-                    publishProgress(STATUS_SENT, "");
+                switch(prefill_type){
+                    case PREFILL_TYPE_REPLY:
+                        NetworkCall.replyMail(activity, msg, to, cc, bcc, subject, body, false);
+                        break;
+                    case PREFILL_TYPE_REPLY_ALL:
+                        NetworkCall.replyMail(activity, msg, to, cc, bcc, subject, body, true);
+                        break;
+                    case PREFILL_TYPE_FORWARD:
+                        NetworkCall.forwardMail(activity, msg, to, cc, bcc, subject, body);
+                        break;
+                    default:
+                        NetworkCall.sendMail(activity, msg, to, cc,bcc, subject, body);
                 }
-                else if(prefill_type == PREFILL_TYPE_REPLY_ALL){
-                    NetworkCall.replyMail(activity, service, prefill_repl_itemid, to, cc, bcc, subject, body, true);
-                    publishProgress(STATUS_SENT, "");
-                }
-                else if(prefill_type == PREFILL_TYPE_FORWARD){
-                    NetworkCall.forwardMail(activity, service, prefill_repl_itemid, to, cc, bcc, subject, body);
-                    publishProgress(STATUS_SENT, "");
-                }
-                else{
-                    NetworkCall.sendMail(activity, service, to, cc,bcc, subject, body);
-                    publishProgress(STATUS_SENT, "");
-                }
+                publishProgress(STATUS_SENT, "");
+
             } catch (URISyntaxException e) {
                 
                 Log.e(LOG_TAG, "Malformed Webmail URL");

@@ -138,18 +138,15 @@ public class NetworkCall implements Constants{
 
 	/** Send an Email
 	 * @param context
-	 * @param service
 	 * @param to
 	 * @param subject
 	 * @param body
 	 * @throws NoInternetConnectionException
 	 * @throws Exception
 	 */
-	public static void sendMail(Context context, ExchangeService service, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
+	public static void sendMail(Context context, EmailMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
-
-			EmailMessage msg= new EmailMessage(service);
-			msg.setSubject(subject); 
+			msg.setSubject(subject);
 			msg.setBody(MessageBody.getMessageBodyFromText(body));
             if(BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "To receipients for sending email " + to);
@@ -195,13 +192,8 @@ public class NetworkCall implements Constants{
 	 * @throws NoInternetConnectionException
 	 * @throws Exception
 	 */
-	public static void replyMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body, boolean replyAll) throws NoInternetConnectionException, Exception{
+	public static void replyMail(Context context, EmailMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body, boolean replyAll) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
-
-			Log.d(LOG_TAG, "NetworkCall -> replyMail Item id " + itemIdStr);
-			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
-
-			EmailMessage msg = EmailMessage.bind(service, itemId);
 			ResponseMessage replyMsg= msg.createReply(replyAll);
 			replyMsg.setSubject(subject); 
 			replyMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
@@ -223,7 +215,6 @@ public class NetworkCall implements Constants{
 				for(ContactSerializable tempRecipient: bcc){
 					replyMsg.getBccRecipients().add(tempRecipient.getEmail());
 				}
-
 			}
 			if(SEND_EMAIL_SAVE_COPY_IN_SENT){
 				replyMsg.sendAndSaveCopy();
@@ -231,29 +222,28 @@ public class NetworkCall implements Constants{
 			else{
 				replyMsg.send();
 			}
-
 		}
-
-
 		else{	throw new NoInternetConnectionException(); }
 	}
 
+	public static EmailMessage bind(Context context, ExchangeService service, String itemId) throws NoInternetConnectionException, Exception {
+		if(Utils.checkInternetConnection(context)) {
+			return EmailMessage.bind(service, ItemId.getItemIdFromString(itemId));
+		}else{	throw new NoInternetConnectionException(); }
+	}
+
+
 	/** Forward Email
 	 * @param context
-	 * @param service
 	 * @param to
 	 * @param subject
 	 * @param body
 	 * @throws NoInternetConnectionException
 	 * @throws Exception
 	 */
-	public static void forwardMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
+	public static void forwardMail(Context context, EmailMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
 
-			Log.d(LOG_TAG, "NetworkCall -> forwardMail Item id " + itemIdStr);
-			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
-
-			EmailMessage msg = EmailMessage.bind(service, itemId);
 			ResponseMessage forwardMsg= msg.createForward();
 			forwardMsg.setSubject(subject); 
 			forwardMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
@@ -283,16 +273,6 @@ public class NetworkCall implements Constants{
 			else{
 				forwardMsg.send();
 			}
-
-		}
-
-
-		else{	throw new NoInternetConnectionException(); }
-	}
-
-	public static EmailMessage bindEmailMessage(Context context, ExchangeService service, ItemId itemid) throws NoInternetConnectionException, Exception{
-		if(Utils.checkInternetConnection(context)){
-			return EmailMessage.bind(service, itemid);
 		}
 		else{	throw new NoInternetConnectionException(); }
 	}
