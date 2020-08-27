@@ -958,6 +958,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                             // object is getting overwritten. So do a clean exit and clear all the runnables from this page.
 
                         // Currently the shutdownNow is not working as expected. The save draft thread is not getting interrupted as expected.
+                        //Bug: https://trello.com/c/LP5lxUXj
+
                         saveDraftExecutorService.shutdownNow();
                         exitActivity();
                     })
