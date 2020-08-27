@@ -322,7 +322,7 @@ public class NetworkCall implements Constants{
 			if (!existingDraft) { //new draft
 				msg.save();
 			}else{
-				msg.update(ConflictResolutionMode.AutoResolve);
+				msg.update(ConflictResolutionMode.AlwaysOverwrite);
 			}
 
 		}else{	throw new NoInternetConnectionException(); }
