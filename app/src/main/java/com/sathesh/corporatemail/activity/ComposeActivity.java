@@ -56,6 +56,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -168,6 +170,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private static EmailMessage msg;
     private static boolean existingDraft;
     private static ReentrantLock saveDraftLock = new ReentrantLock();
+    private static ExecutorService saveDraftExecutorService ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -235,7 +238,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             Utilities.generalCatchBlock(e, this);
         }
         existingDraft=false;
-
+        saveDraftExecutorService =  Executors.newFixedThreadPool(2);
     }
 
     private void prefillEmptyData() throws Exception {
@@ -338,6 +341,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 }
             }
         };
+        //create the msg object which will be binded with the existing message
         new Thread(bindMsg(h)).start();
     }
 
@@ -942,16 +946,35 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
      * @param exitPage - exits the page after saving
      */
     private void saveDraft(boolean exitPage) {
+        //check if whether wants to exit the activity while already a save draft in progress
+        if (exitPage && saveDraftLock.isLocked()){
+            new AlertDialog.Builder(activity)
+                    //set message, title, and icon
+                    .setTitle(getString(R.string.compose_alert_confirm_cancel_title))
+                    .setMessage(getString(R.string.compose_alert_confirm_cancel_saving))
+                    .setPositiveButton(getString(R.string.alertdialog_positive_lbl), (dialog, whichButton) -> {
+                        // User wants to exit the page even after knowing there is a save in progress. So cancel all the save draft runnables and close the page.
+                         // This shutdown is crucial because, when the user exits this page and immediately open ComposeActivity again, the previous thread will keep on saving the message and the new page "msg"
+                            // object is getting overwritten. So do a clean exit and clear all the runnables from this page.
+
+                        // Currently the shutdownNow is not working as expected. The save draft thread is not getting interrupted as expected.
+                        saveDraftExecutorService.shutdownNow();
+                        exitActivity();
+                    })
+                    .setNegativeButton(getString(R.string.alertdialog_negative_lbl), (dialog, which) -> dialog.dismiss())
+                    .create().show();
+            return;
+        }
         //handler for bind msg call
         Handler h = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message m) {
                 switch(m.what){
-                    case 0:
+                    case 0:// save draft started
                         progressDispBar.setText(getString(R.string.compose_saving_draft));
                         progressDispBar.showStatusBar();
                         break;
-                    case 1:
+                    case 1:// save draft success
                         progressDispBar.hideProgressBar();
                         progressDispBar.setText(getString(R.string.compose_statusbar_save_success));
                         if(exitPage) {
@@ -968,7 +991,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                             },2000);
                         }
                         break;
-                    case 2:
+                    case 2://error
                         progressDispBar.hideStatusBar();
                         if (exitPage) {
                             AlertDialog myConfirmBox = new AlertDialog.Builder(activity)
@@ -985,7 +1008,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
             }
         };
-        new Thread(getSaveDraftThread(h) ).start();
+        saveDraftExecutorService.submit(getSaveDraftThread(h));
     }
     private Runnable getSaveDraftThread(Handler h){
         updateAllValues();
