@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
@@ -166,6 +167,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private FlexboxLayout attachmentsLayout;
     private static EmailMessage msg;
     private static boolean existingDraft;
+    private static ReentrantLock saveDraftLock = new ReentrantLock();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -683,6 +685,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         protected Boolean doInBackground(Void... paramArrayOfParams) {
 
             try {
+                saveDraftLock.lock();
                 //EWS call
                 switch(prefill_type){
                     case PREFILL_TYPE_REPLY:
@@ -720,6 +723,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Log.e(LOG_TAG, "Error Occured!\nDetails:" + e.getMessage());
                 e.printStackTrace();
                 publishProgress(STATUS_ERROR, msgSendingFailedLbl + "\n\nDetails:" + e.getMessage());
+            }finally{
+                saveDraftLock.unlock();
             }
             return true;
         }
@@ -953,7 +958,14 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                             Notifications.showToast(activity, activity.getString(R.string.compose_save_draft_success));
                             exitActivity();
                         }else{
-                            new Handler().postDelayed(()->progressDispBar.hideStatusBar(),2000);
+                            new Handler().postDelayed(()-> {
+                                if (!saveDraftLock.isLocked()) {  //this means already a save draft is in progress by another thread.
+                                    progressDispBar.hideStatusBar();
+                                }else{
+                                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread - not hiding the status bar because another save draft is running");
+                                }
+
+                            },2000);
                         }
                         break;
                     case 2:
@@ -981,6 +993,9 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             @Override
             public void run() {
                 try {
+                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquiring lock..");
+                    saveDraftLock.lock();
+                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquired lock");
                     h.sendEmptyMessage(0);
                     NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
                     existingDraft=true; //when saving the draft multiple times, save() or update() will be called correspondingly based on this bool.
@@ -988,7 +1003,11 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 }catch(Exception e){
                     Utilities.generalCatchBlock(e, this);
                     h.sendEmptyMessage(2);
+                }finally {
+                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> releasing lock");
+                    saveDraftLock.unlock();
                 }
+
             }
         };
 
