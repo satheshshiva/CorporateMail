@@ -994,7 +994,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                         }
                         break;
                     case 2://error
-                        progressDispBar.hideStatusBar();
+                        progressDispBar.hideProgressBar();
+                        progressDispBar.setText(getString(R.string.compose_statusbar_save_failure));
                         if (exitPage) {
                             AlertDialog myConfirmBox = new AlertDialog.Builder(activity)
                                     //set message, title, and icon
@@ -1004,6 +1005,15 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                                     .setNegativeButton(getString(R.string.alertdialog_negative_lbl), (dialog, which) -> dialog.dismiss())
                                     .create();
                             myConfirmBox.show();
+                        }else{
+                            new Handler().postDelayed(()-> {
+                                if (!saveDraftLock.isLocked()) {  //this means already a save draft is in progress by another thread.
+                                    progressDispBar.hideStatusBar();
+                                }else{
+                                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread - not hiding the status bar because another save draft is running");
+                                }
+
+                            },2000);
                         }
                         break;
                 }

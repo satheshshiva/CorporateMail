@@ -92,14 +92,6 @@ public class NetworkCall implements Constants{
 		Log.e(LOG_TAG, "Could not auto discover with the given email:: returning null");
 		return null;
 	}
-
-	public static Item bindItem(Context context, ExchangeService service, ItemId itemid) throws NoInternetConnectionException, Exception{
-		if(Utils.checkInternetConnection(context)){
-			return Item.bind(service, itemid);
-		}
-		else{	throw new NoInternetConnectionException(); }
-	}
-
 	public static EmailMessage bindEmailMessage(Context context, ExchangeService service, ItemEvent itemEvent) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
 			return EmailMessage.bind(service, itemEvent.getItemId());
