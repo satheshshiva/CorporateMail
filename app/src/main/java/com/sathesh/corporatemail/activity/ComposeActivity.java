@@ -67,6 +67,7 @@ import microsoft.exchange.webservices.data.core.exception.service.local.ServiceL
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.response.ResponseMessage;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 import microsoft.exchange.webservices.data.property.complex.Attachment;
 
@@ -168,6 +169,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private ArrayList<FileAttach> fileAttachList = new ArrayList<FileAttach>();
     private FlexboxLayout attachmentsLayout;
     private static EmailMessage msg;
+    private static ResponseMessage responseMsg;
     private static boolean existingDraft;
     private static ReentrantLock saveDraftLock = new ReentrantLock();
     private static ExecutorService saveDraftExecutorService ;
@@ -352,6 +354,17 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 try {
                     h.sendEmptyMessage(0);
                     msg = NetworkCall.bind(activity, service, prefill_repl_itemid);
+                    switch (prefill_type){
+                        case PREFILL_TYPE_REPLY:
+                            responseMsg = msg.createReply(false);
+                            break;
+                        case PREFILL_TYPE_REPLY_ALL:
+                            responseMsg = msg.createReply(true);
+                            break;
+                        case PREFILL_TYPE_FORWARD:
+                            responseMsg = msg.createForward();
+                            break;
+                    }
                     h.sendEmptyMessage(1);
                 }catch(Exception e){
                     Utilities.generalCatchBlock(e, this);
@@ -689,21 +702,15 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         protected Boolean doInBackground(Void... paramArrayOfParams) {
 
             try {
-                saveDraftLock.lock();
+                saveDraftLock.lock();   //save draft thread should not be run in parallel with sending. so locking and unlocking the save draft lock here.
                 //EWS call
-                switch(prefill_type){
-                    case PREFILL_TYPE_REPLY:
-                        NetworkCall.replyMail(activity, msg, to, cc, bcc, subject, body, false);
-                        break;
-                    case PREFILL_TYPE_REPLY_ALL:
-                        NetworkCall.replyMail(activity, msg, to, cc, bcc, subject, body, true);
-                        break;
-                    case PREFILL_TYPE_FORWARD:
-                        NetworkCall.forwardMail(activity, msg, to, cc, bcc, subject, body);
-                        break;
-                    default:    //Send
-                        NetworkCall.sendMail(activity, msg, to, cc,bcc, subject, body);
+                //Send
+                if (isResponseMsg() && !existingDraft) {
+                    NetworkCall.sendMail(activity, responseMsg, to, cc, bcc, subject, body);
+                }else{
+                    NetworkCall.sendMail(activity, msg, to, cc, bcc, subject, body);
                 }
+
                 publishProgress(STATUS_SENT, "");
 
             } catch (URISyntaxException e) {
@@ -1017,7 +1024,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                         }
                         break;
                 }
-
             }
         };
         saveDraftExecutorService.submit(getSaveDraftThread(h));
@@ -1032,8 +1038,14 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     saveDraftLock.lock();
                     Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquired lock");
                     h.sendEmptyMessage(0);
-                    NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
+
+                    if (isResponseMsg() && !existingDraft) {
+                        msg = NetworkCall.saveResponseDraft(activity, responseMsg, to, cc,bcc, subject, body);
+                    }else{
+                        NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
+                    }
                     existingDraft=true; //when saving the draft multiple times, save() or update() will be called correspondingly based on this bool.
+
                     h.sendEmptyMessage(1);
                 }catch(Exception e){
                     Utilities.generalCatchBlock(e, this);
@@ -1217,6 +1229,15 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isResponseMsg(){
+        if (prefill_type == PREFILL_TYPE_REPLY ||
+                prefill_type == PREFILL_TYPE_REPLY_ALL ||
+                prefill_type == PREFILL_TYPE_FORWARD) {
+            return true;
+        }
+        return false;
     }
 
     private void checkResolvedNames() {
