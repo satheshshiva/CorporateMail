@@ -173,6 +173,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private static boolean existingDraft;
     private static ReentrantLock saveDraftLock = new ReentrantLock();
     private static ExecutorService saveDraftExecutorService ;
+    private static EmailMessage oldDraftMail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -705,8 +706,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 saveDraftLock.lock();   //save draft thread should not be run in parallel with sending. so locking and unlocking the save draft lock here.
                 //EWS call
                 //Send
-                if (isResponseMsg() && !existingDraft) {
-                    NetworkCall.sendMail(activity, responseMsg, to, cc, bcc, subject, body);
+                if (isResponseMsg()) {
+                    NetworkCall.sendResponseMail(activity, responseMsg, oldDraftMail, to, cc, bcc, subject, body);
                 }else{
                     NetworkCall.sendMail(activity, msg, to, cc, bcc, subject, body);
                 }
@@ -1039,8 +1040,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquired lock");
                     h.sendEmptyMessage(0);
 
-                    if (isResponseMsg() && !existingDraft) {
-                        msg = NetworkCall.saveResponseDraft(activity, responseMsg, to, cc,bcc, subject, body);
+                    if (isResponseMsg()) {
+                        oldDraftMail = NetworkCall.saveResponseDraft(activity, responseMsg, oldDraftMail, to, cc,bcc, subject, body);
                     }else{
                         NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
                     }
