@@ -8,6 +8,7 @@ import com.sathesh.corporatemail.application.Utils;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
+import com.sathesh.corporatemail.util.Utilities;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -164,7 +165,7 @@ public class NetworkCall implements Constants{
 	 * @throws NoInternetConnectionException
 	 * @throws Exception
 	 */
-	public static void sendMail(Context context, ResponseMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc, Collection<ContactSerializable> bcc, String subject, String body) throws NoInternetConnectionException, Exception{
+	public static void sendResponseMail(Context context, ResponseMessage msg, EmailMessage oldEmailMsg,Collection<ContactSerializable> to, Collection<ContactSerializable> cc, Collection<ContactSerializable> bcc, String subject, String body) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
 			updateEmailValues(msg, to, cc, bcc, subject, body);
 			if(SEND_EMAIL_SAVE_COPY_IN_SENT){
@@ -173,6 +174,16 @@ public class NetworkCall implements Constants{
 			else{
 				msg.send();
 			}
+			if (oldEmailMsg!=null) {
+				new Thread(() -> {
+					try {
+						oldEmailMsg.delete(DeleteMode.HardDelete);
+					} catch (Exception e) {
+						Utilities.generalCatchBlock(e, "Error while deleting the old draft. User may see a duplicate of the old draft in their draft folder");
+					}
+				}).start();
+			}
+
 		}
 		else{	throw new NoInternetConnectionException(); }
 	}
@@ -189,11 +200,20 @@ public class NetworkCall implements Constants{
 		}else{	throw new NoInternetConnectionException(); }
 	}
 
-	public static EmailMessage saveResponseDraft(Context context, ResponseMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws Exception{
+	public static EmailMessage saveResponseDraft(Context context, ResponseMessage msg, EmailMessage oldEmailMsg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws Exception{
 		if(Utils.checkInternetConnection(context)) {
 			updateEmailValues(msg, to, cc, bcc, subject, body);
-			return msg.save();
-
+			EmailMessage newDraftMail = msg.save();
+			if (oldEmailMsg!=null) {
+				new Thread(() -> {
+					try {
+						oldEmailMsg.delete(DeleteMode.HardDelete);
+					} catch (Exception e) {
+						Utilities.generalCatchBlock(e, "Error while deleting the old draft. User may see a duplicate of the old draft in their draft folder");
+					}
+				}).start();
+			}
+			return newDraftMail;
 		}else{	throw new NoInternetConnectionException(); }
 	}
 
