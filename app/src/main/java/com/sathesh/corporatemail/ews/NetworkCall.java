@@ -38,6 +38,7 @@ import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 import microsoft.exchange.webservices.data.notification.GetEventsResults;
 import microsoft.exchange.webservices.data.notification.ItemEvent;
 import microsoft.exchange.webservices.data.notification.PullSubscription;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.FileAttachment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
@@ -173,8 +174,12 @@ public class NetworkCall implements Constants{
 			EmailMessage tempNewEmailMsg = responseMsg.save();
 
 			if (msg!=null) {
+				// BUG: https://trello.com/c/ehwFHtDi
+
 				//copy the attachment collection.
-				//TODO
+				//	tempNewEmailMsg.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Attachments, msg.getAttachments());
+//				for(Attachment attach : msg.getAttachments()){
+//				}
 
 			}
 			if(SEND_EMAIL_SAVE_COPY_IN_SENT){
