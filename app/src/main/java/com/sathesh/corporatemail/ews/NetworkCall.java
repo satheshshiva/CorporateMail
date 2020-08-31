@@ -1,13 +1,16 @@
 package com.sathesh.corporatemail.ews;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.sathesh.corporatemail.BuildConfig;
+import com.sathesh.corporatemail.activity.ComposeActivity;
 import com.sathesh.corporatemail.application.Utils;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
+import com.sathesh.corporatemail.util.Utilities;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,6 +38,7 @@ import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 import microsoft.exchange.webservices.data.notification.GetEventsResults;
 import microsoft.exchange.webservices.data.notification.ItemEvent;
 import microsoft.exchange.webservices.data.notification.PullSubscription;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.FileAttachment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
@@ -92,14 +96,6 @@ public class NetworkCall implements Constants{
 		Log.e(LOG_TAG, "Could not auto discover with the given email:: returning null");
 		return null;
 	}
-
-	public static Item bindItem(Context context, ExchangeService service, ItemId itemid) throws NoInternetConnectionException, Exception{
-		if(Utils.checkInternetConnection(context)){
-			return Item.bind(service, itemid);
-		}
-		else{	throw new NoInternetConnectionException(); }
-	}
-
 	public static EmailMessage bindEmailMessage(Context context, ExchangeService service, ItemEvent itemEvent) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
 			return EmailMessage.bind(service, itemEvent.getItemId());
@@ -134,45 +130,24 @@ public class NetworkCall implements Constants{
         else{	throw new NoInternetConnectionException(); }
     }
 
+	public static EmailMessage bind(Context context, ExchangeService service, String itemId) throws NoInternetConnectionException, Exception {
+		if(Utils.checkInternetConnection(context)) {
+			return EmailMessage.bind(service, ItemId.getItemIdFromString(itemId));
+		}else{	throw new NoInternetConnectionException(); }
+	}
 
 
 	/** Send an Email
 	 * @param context
-	 * @param service
 	 * @param to
 	 * @param subject
 	 * @param body
 	 * @throws NoInternetConnectionException
 	 * @throws Exception
 	 */
-	public static void sendMail(Context context, ExchangeService service, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
+	public static void sendMail(Context context, EmailMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc, Collection<ContactSerializable> bcc, String subject, String body) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
-
-			EmailMessage msg= new EmailMessage(service);
-			msg.setSubject(subject); 
-			msg.setBody(MessageBody.getMessageBodyFromText(body));
-            if(BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "To receipients for sending email " + to);
-            }
-			if( null != to && to.size()>0){
-				for(ContactSerializable tempRecipient: to){
-					Log.d(LOG_TAG, "adding " + tempRecipient);
-					msg.getToRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if( null != cc && cc.size()>0){
-				for(ContactSerializable tempRecipient: cc){
-					msg.getCcRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if( null != bcc && bcc.size()>0){
-				for(ContactSerializable tempRecipient: bcc){
-					msg.getBccRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
+			updateEmailValues(msg, to, cc, bcc, subject, body);
 			if(SEND_EMAIL_SAVE_COPY_IN_SENT){
 				msg.sendAndSaveCopy();
 			}
@@ -187,116 +162,111 @@ public class NetworkCall implements Constants{
 
 	/** Reply or Replyall an Email
 	 * @param context
-	 * @param service
-	 * @param itemIdStr the item id of the original email to send reply
 	 * @param to
 	 * @param subject
 	 * @param body
 	 * @throws NoInternetConnectionException
 	 * @throws Exception
 	 */
-	public static void replyMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body, boolean replyAll) throws NoInternetConnectionException, Exception{
+	public static void sendResponseMail(Context context, ResponseMessage responseMsg, EmailMessage msg,Collection<ContactSerializable> to, Collection<ContactSerializable> cc, Collection<ContactSerializable> bcc, String subject, String body) throws NoInternetConnectionException, Exception{
 		if(Utils.checkInternetConnection(context)){
+			updateEmailValues(responseMsg, to, cc, bcc, subject, body);
+			EmailMessage tempNewEmailMsg = responseMsg.save();
 
-			Log.d(LOG_TAG, "NetworkCall -> replyMail Item id " + itemIdStr);
-			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
+			if (msg!=null) {
+				// BUG: https://trello.com/c/ehwFHtDi
 
-			EmailMessage msg = EmailMessage.bind(service, itemId);
-			ResponseMessage replyMsg= msg.createReply(replyAll);
-			replyMsg.setSubject(subject); 
-			replyMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
-			Log.d(LOG_TAG, "To receipients for sending email " + to);
-			if( null != to && to.size()>0){
-				for(ContactSerializable tempRecipient: to){
-					Log.d(LOG_TAG, "adding " + tempRecipient);
-					replyMsg.getToRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if( null != cc && cc.size()>0){
-				for(ContactSerializable tempRecipient: cc){
-					replyMsg.getCcRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if( null != bcc && bcc.size()>0){
-				for(ContactSerializable tempRecipient: bcc){
-					replyMsg.getBccRecipients().add(tempRecipient.getEmail());
-				}
+				//copy the attachment collection.
+				//	tempNewEmailMsg.getPropertyBag().setObjectFromPropertyDefinition(ItemSchema.Attachments, msg.getAttachments());
+//				for(Attachment attach : msg.getAttachments()){
+//				}
 
 			}
 			if(SEND_EMAIL_SAVE_COPY_IN_SENT){
-				replyMsg.sendAndSaveCopy();
+				tempNewEmailMsg.sendAndSaveCopy();
 			}
 			else{
-				replyMsg.send();
+				tempNewEmailMsg.send();
+			}
+			if (msg!=null) {
+				new Thread(() -> {
+					try {
+						msg.delete(DeleteMode.HardDelete);
+					} catch (Exception e) {
+						Utilities.generalCatchBlock(e, "Error while deleting the old draft. User may see a duplicate of the old draft in their draft folder");
+					}
+				}).start();
 			}
 
-		}
-
-
-		else{	throw new NoInternetConnectionException(); }
-	}
-
-	/** Forward Email
-	 * @param context
-	 * @param service
-	 * @param to
-	 * @param subject
-	 * @param body
-	 * @throws NoInternetConnectionException
-	 * @throws Exception
-	 */
-	public static void forwardMail(Context context, ExchangeService service, String itemIdStr, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws NoInternetConnectionException, Exception{
-		if(Utils.checkInternetConnection(context)){
-
-			Log.d(LOG_TAG, "NetworkCall -> forwardMail Item id " + itemIdStr);
-			ItemId itemId = ItemId.getItemIdFromString(itemIdStr);
-
-			EmailMessage msg = EmailMessage.bind(service, itemId);
-			ResponseMessage forwardMsg= msg.createForward();
-			forwardMsg.setSubject(subject); 
-			forwardMsg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
-			Log.d(LOG_TAG, "To receipients for sending email " + to);
-			if( null != to && to.size()>0){
-				for(ContactSerializable tempRecipient: to){
-					Log.d(LOG_TAG, "adding " + tempRecipient);
-					forwardMsg.getToRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if( null != cc && cc.size()>0){
-				for(ContactSerializable tempRecipient: cc){
-					forwardMsg.getCcRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if( null != bcc && bcc.size()>0){
-				for(ContactSerializable tempRecipient: bcc){
-					forwardMsg.getBccRecipients().add(tempRecipient.getEmail());
-				}
-
-			}
-			if(SEND_EMAIL_SAVE_COPY_IN_SENT){
-				forwardMsg.sendAndSaveCopy();
-			}
-			else{
-				forwardMsg.send();
-			}
-
-		}
-
-
-		else{	throw new NoInternetConnectionException(); }
-	}
-
-	public static EmailMessage bindEmailMessage(Context context, ExchangeService service, ItemId itemid) throws NoInternetConnectionException, Exception{
-		if(Utils.checkInternetConnection(context)){
-			return EmailMessage.bind(service, itemid);
 		}
 		else{	throw new NoInternetConnectionException(); }
 	}
 
+	public static void saveDraft(Context context, EmailMessage msg, boolean existingDraft, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws Exception{
+		if(Utils.checkInternetConnection(context)) {
+			updateEmailValues(msg, to, cc, bcc, subject, body);
+			if (!existingDraft) { //new draft
+				msg.save();
+			}else{
+				msg.update(ConflictResolutionMode.AlwaysOverwrite);
+			}
+
+		}else{	throw new NoInternetConnectionException(); }
+	}
+
+	private static void updateEmailValues(ResponseMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws Exception{
+		msg.setSubject(subject);
+		msg.setBodyPrefix(MessageBody.getMessageBodyFromText(body));
+		//since save draft can be called multiple times, clear the variables for fresh insertion from the ui parameters
+		msg.getToRecipients().clear();
+		msg.getCcRecipients().clear();
+		msg.getBccRecipients().clear();
+
+		if( null != to && to.size()>0){
+			for(ContactSerializable tempRecipient: to){
+				msg.getToRecipients().add(tempRecipient.getEmail());
+			}
+
+		}
+		if( null != cc && cc.size()>0){
+			for(ContactSerializable tempRecipient: cc){
+				msg.getCcRecipients().add(tempRecipient.getEmail());
+			}
+
+		}
+		if( null != bcc && bcc.size()>0){
+			for(ContactSerializable tempRecipient: bcc){
+				msg.getBccRecipients().add(tempRecipient.getEmail());
+			}
+		}
+	}
+
+	private static void updateEmailValues(EmailMessage msg, Collection<ContactSerializable> to, Collection<ContactSerializable> cc,Collection<ContactSerializable> bcc,String subject, String body) throws Exception{
+		msg.setSubject(subject);
+		msg.setBody(MessageBody.getMessageBodyFromText(body));
+		//since save draft can be called multiple times, clear the variables for fresh insertion from the ui parameters
+		msg.getToRecipients().clear();
+		msg.getCcRecipients().clear();
+		msg.getBccRecipients().clear();
+
+		if( null != to && to.size()>0){
+			for(ContactSerializable tempRecipient: to){
+				msg.getToRecipients().add(tempRecipient.getEmail());
+			}
+
+		}
+		if( null != cc && cc.size()>0){
+			for(ContactSerializable tempRecipient: cc){
+				msg.getCcRecipients().add(tempRecipient.getEmail());
+			}
+
+		}
+		if( null != bcc && bcc.size()>0){
+			for(ContactSerializable tempRecipient: bcc){
+				msg.getBccRecipients().add(tempRecipient.getEmail());
+			}
+		}
+	}
 	public static FindFoldersResults getInboxFolders(ExchangeService service) throws Exception{
 
 

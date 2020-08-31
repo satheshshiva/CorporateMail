@@ -21,8 +21,11 @@ import com.sathesh.corporatemail.ui.util.UIutilities;
 
 
 public class AttachmentCardView extends CardView implements Constants {
-    private final int MARGIN=14;
-    private final int ELEVATION=12;
+    private final int MARGIN=7;
+    private final int ELEVATION=5;
+    ProgressBar iconView;
+    ImageView removeIcon;
+
 
     public AttachmentCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -55,7 +58,10 @@ public class AttachmentCardView extends CardView implements Constants {
         setLayoutParams(params);
         // setting some margins ** ends
 
-        findViewById(R.id.view_card_attachment_progress_bar).setVisibility(View.INVISIBLE);
+        iconView = findViewById(R.id.view_card_attachment_progress_bar);
+        iconView.setVisibility(View.INVISIBLE);
+        removeIcon = findViewById(R.id.view_card_attachment_remove);
+        removeIcon.setVisibility(View.INVISIBLE);
 
         a.recycle();
     }
@@ -72,13 +78,16 @@ public class AttachmentCardView extends CardView implements Constants {
     }
 
     public void showProgressBar() {
-        ProgressBar iconView = findViewById(R.id.view_card_attachment_progress_bar);
         iconView.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
-        ProgressBar iconView = findViewById(R.id.view_card_attachment_progress_bar);
         iconView.setVisibility(View.INVISIBLE);
+    }
+
+    public void showRemoveIcon(OnClickListener onClickListener){
+        removeIcon.setVisibility(View.VISIBLE);
+        removeIcon.setOnClickListener(onClickListener);
     }
 
     private void updateImageIcon(String fileExtension) {

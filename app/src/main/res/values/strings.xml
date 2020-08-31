@@ -7,6 +7,7 @@
 
     <!-- General -->
     <string name="noSubjectDisplay">(no subject)</string>
+    <string name="unknownError">Unknown Error</string>
 
     <!-- Login Page -->
     <string name="api_version_low">You are using an older version of Android</string>
@@ -120,7 +121,7 @@
     <string name="compose_resolving_names_wait">Please wait while resolving names</string>
     <string name="compose_to_box_not_empty">Please click the Add symbol to add the To recipient</string>
     <string name="compose_body_lbl">Message</string>
-    <string name="compose_signature_lbl">Signature</string>
+    <string name="compose_signature_lbl">Signature (common for all emails)</string>
     <string name="compose_quoted_text_lbl">Quoted Text:</string>
     <string name="compose_send_btn_lbl">Send</string>
     <string name="compose_sending">Sending.. </string>
@@ -132,7 +133,9 @@
     <string name="compose_resoleNameDialog_error">Unknown Error Occurred</string>
     <string name="compose_resoleNameDialog_nomatch">No match found</string>
     <string name="compose_actionbar_send">Send</string>
-    <string name="compose_actionbar_cancel">Cancel</string>
+    <string name="compose_actionbar_attach">Attach</string>
+    <string name="compose_actionbar_save_draft">Save Draft</string>
+    <string name="compose_actionbar_cancel">Discard</string>
     <string name="compose_emptyString">(empty)</string>
     <string name="compose_reply_subject_prefix">RE:</string>
     <string name="compose_forward_subject_prefix">FW:</string>
@@ -143,7 +146,14 @@
     <string name="compose_alert_confirm_nobody_nosub_send">No subject and message body. Send anyway?</string>
     <string name="compose_alert_confirm_title">Send</string>
     <string name="compose_alert_confirm_cancel_title">Cancel</string>
-    <string name="compose_alert_confirm_cancel_msg">Cancel message? Message will not be saved.</string>
+    <string name="compose_alert_confirm_cancel_msg">Error saving draft. Exit?</string>
+    <string name="compose_alert_confirm_cancel_saving">Save in progress. Exit?</string>
+    <string name="compose_unknown_attachment_size">Unknown</string>
+    <string name="compose_attachment_error">Could not attach file(s)</string>
+    <string name="compose_save_draft_success">Message saved as Draft</string>
+    <string name="compose_saving_draft">Saving Draft</string>
+    <string name="compose_statusbar_save_success">Draft saved successfully</string>
+    <string name="compose_statusbar_save_failure">Couldn\'t save draft</string>
 
     <integer name="compose_resoleNameDialog_to_defaultChecked">0</integer>
 

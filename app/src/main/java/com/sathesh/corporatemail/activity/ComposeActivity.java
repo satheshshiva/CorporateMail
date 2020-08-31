@@ -6,8 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ParseException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.provider.OpenableColumns;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -22,8 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.view.MenuItemCompat;
-
+import com.google.android.flexbox.FlexboxLayout;
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
@@ -34,6 +40,7 @@ import com.sathesh.corporatemail.asynctask.ResolveNamesAsyncTask;
 import com.sathesh.corporatemail.asynctask.interfaces.IResolveNames;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customserializable.ContactSerializable;
+import com.sathesh.corporatemail.customui.AttachmentCardView;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
@@ -42,21 +49,36 @@ import com.sathesh.corporatemail.ui.components.WarningDisplayNotificationBar;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.exception.service.remote.ServiceRequestException;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.response.ResponseMessage;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
+import microsoft.exchange.webservices.data.property.complex.FileAttachment;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
+
+import static android.content.Intent.EXTRA_ALLOW_MULTIPLE;
 
 public class ComposeActivity extends MyActivity implements Constants,IResolveNames{
 
@@ -121,6 +143,13 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public static final String PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA="PREFILL_DATA_SETFOCUS_ON_BODY_EXTRA";
     public static final String PREFILL_DATA_QUOTE_HTML="PREFILL_DATA_QUOTE_HTML";
 
+    public final static String   ADD_TYPE_EXTRA="ADD_TYPE_EXTRA";
+    public final static String   ADD_TYPE_COLLECTION="ADD_TYPE_COLLECTION";
+    public final static int   ADD_RECIPIENT_REQ_CODE=1;
+    public final static int   OPEN_DOCUMENT_REQ_CODE=2;
+
+    public final static String   ATTACHMENT_EXTRA="ATTACHMENT_EXTRA";
+
     private WebView quoteWebview;
     private LinearLayout quotedTextLinearLayout;
     private boolean resolvingNames=false;
@@ -143,6 +172,16 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private  static String prefill_subject, prefill_body, prefill_titlebar,prefill_quoteWebview;
 
     private static SpannableStringBuilder sBuilder=new SpannableStringBuilder();
+
+    private ArrayList<FileAttach> fileAttachList = new ArrayList<FileAttach>();
+    private FlexboxLayout attachmentsLayout;
+    private static EmailMessage msg;
+    private static ResponseMessage responseMsg;
+    private static boolean existingDraft;
+    private static ReentrantLock saveDraftLock = new ReentrantLock();
+    private static ExecutorService saveDraftExecutorService ;
+    private static EmailMessage oldDraftMail;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,6 +215,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         // Changing to invisible so that users wont experience a layout change on when this disappears.
 
         quotedTextLinearLayout = (LinearLayout)findViewById(R.id.quoteLinearLayout);
+        attachmentsLayout = (FlexboxLayout) findViewById(R.id.compose_attachments_layout);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         try {
@@ -197,27 +237,32 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         notResolvedNames = new StringBuffer();
 
         setSupportProgressBarIndeterminateVisibility(false);
+        existingDraft=false;
         //prefill data
         try {
             if(getIntent().getBooleanExtra(PREFILL_DATA_EXTRA, false)){
                 prefillData();
-            }
-            else{
-                prefill_type=PREFILL_TYPE_COMPOSE;
-                prefill_repl_itemid="";
-                prefill_to=null; prefill_cc=null; prefill_bcc=null;
-                prefill_subject="";
-                prefill_body="";
-                prefill_titlebar="";
-                prefill_quoteWebview="";
-
+            }else{
+                prefillEmptyData();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Utilities.generalCatchBlock(e, this);
         }
+        saveDraftExecutorService =  Executors.newFixedThreadPool(2);
     }
 
-    private void prefillData() {
+    private void prefillEmptyData() throws Exception {
+        prefill_type=PREFILL_TYPE_COMPOSE;
+        prefill_repl_itemid="";
+        prefill_to=null; prefill_cc=null; prefill_bcc=null;
+        prefill_subject="";
+        prefill_body="";
+        prefill_titlebar="";
+        prefill_quoteWebview="";
+        msg= new EmailMessage(service);
+    }
+
+    private void prefillData() throws Exception {
 
         boolean prefill_setfocus_onbody=false;
 
@@ -285,6 +330,70 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         if(prefill_setfocus_onbody){
             composeBody.requestFocus();
         }
+
+        //handler for bind msg call
+        Handler h = new Handler(Looper.getMainLooper()){
+            // simple retry mechanism.
+            int retries=0;
+            @Override
+            public void handleMessage(Message m) {
+                if (m.what == 2) { //failure
+                    if (retries < 3) {
+                        new Thread(bindMsg(this)).start();
+                        retries++;
+                    } else {
+                        try {
+                            msg = new EmailMessage(service);
+                        } catch (Exception e) {
+                            Utilities.generalCatchBlock(e, this);
+                        }
+                    }
+                }else if (m.what == 3) { //show attachments
+                    showAttachementsFromMsg(msg);
+                }
+            }
+        };
+        //create the msg object which will be binded with the existing message
+        new Thread(bindMsg(h)).start();
+    }
+
+    private Runnable bindMsg(Handler h){
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    h.sendEmptyMessage(0);
+                    //Network call
+                    msg = NetworkCall.bind(activity, service, prefill_repl_itemid);
+                    switch (prefill_type){
+                        case PREFILL_TYPE_REPLY:
+                            responseMsg = msg.createReply(false);
+                            //Network Call
+                            msg = responseMsg.save();
+                            existingDraft = true;
+                            break;
+                        case PREFILL_TYPE_REPLY_ALL:
+                            responseMsg = msg.createReply(true);
+                            //Network Call
+                            msg = responseMsg.save();
+                            existingDraft = true;
+                            break;
+                        case PREFILL_TYPE_FORWARD:
+                            h.sendEmptyMessage(3);
+                            responseMsg = msg.createForward();
+                            //Network Call
+                            msg = responseMsg.save();
+                            existingDraft = true;
+                            break;
+                    }
+                    h.sendEmptyMessage(1);
+                }catch(Exception e){
+                    Utilities.generalCatchBlock(e, this);
+                    h.sendEmptyMessage(2);
+                }
+            }
+        };
+
     }
 
     @Override
@@ -295,7 +404,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             try {
 
                 //store signature
-                generalSettings.storeComposeSignature(activity, Utilities.convertEditableToHTML(composeSignature.getText()));
+                generalSettings.storeComposeSignature(activity, Utilities.convertEditableToHTML(composeSignature));
             } catch (Exception e1) {
                 
                 e1.printStackTrace();
@@ -323,10 +432,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         }
     }
 
-    public void sendBtnOnClick(View view){
-        sendMail();
-    }
-
     public void toAddOnClick(View view){
         //addToRecipient(composeTo.getText().toString(), composeTo.getText().toString());
         startAddRecipientActivity();
@@ -335,7 +440,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     private void startAddRecipientActivity() {
         
         Intent i = new Intent(this, AddRecipientActivity.class);
-        startActivityForResult(i, 1);
+        startActivityForResult(i, ADD_RECIPIENT_REQ_CODE);
     }
 
     // Add a To Recipient
@@ -582,20 +687,28 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         buildAlertDialog(this, getString(R.string.compose_alert_confirm_title), alertMsg,getString(R.string.alertdialog_positive_lbl), getString(R.string.alertdialog_negative_lbl));
     }
 
+    private static String subject="", body="", signature="";
+
+    private void updateAllValues(){
+        subject = composeSubject.getText().toString();
+        body=Utilities.convertEditableToHTML(composeBody);
+        signature = Utilities.convertEditableToHTML(composeSignature);
+        to=actualToReceivers.values();
+        cc=actualCCReceivers.values();
+        bcc=actualBCCReceivers.values();
+
+        if(generalSettings.isComposeSignatureEnabled(activity)){
+            body +=  signature;
+        }
+    }
     public class Send extends AsyncTask<Void, String, Boolean>{
-
-        private ExchangeService service;
-        private String subject="", body="", signature="";
-
         @Override
         protected void onPreExecute() {
 
             try {
                 progressDialog = ProgressDialog.show(activity, "",
                         activity.getString(R.string.compose_sending), true);
-                subject = composeSubject.getText().toString();
-                body=Utilities.convertEditableToHTML(composeBody.getText());
-                signature = Utilities.convertEditableToHTML(composeSignature.getText());
+                updateAllValues();
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(LOG_TAG, "Exception occured on preexecute");
@@ -606,34 +719,20 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         protected Boolean doInBackground(Void... paramArrayOfParams) {
 
             try {
+                saveDraftLock.lock();   //save draft thread should not be run in parallel with sending. so locking and unlocking the save draft lock here.
 
-                service = EWSConnection.getInstance(activity.getApplicationContext());
-
-                to=actualToReceivers.values();
-                cc=actualCCReceivers.values();
-                bcc=actualBCCReceivers.values();
-
-                if(generalSettings.isComposeSignatureEnabled(activity)){
-                    body=appendSignature(body);
+                if(!isResponseMsg()) {
+                    //EWS call
+                    //Send
+                    NetworkCall.sendMail(activity, msg, to, cc, bcc, subject, body);
+                }else{
+                    //EWS call
+                    //Send
+                    NetworkCall.sendResponseMail(activity, responseMsg, msg, to, cc, bcc, subject, body);
                 }
 
-                //EWS call
-                if(prefill_type == PREFILL_TYPE_REPLY || prefill_type == PREFILL_TYPE_REPLY_ALL ||  prefill_type == PREFILL_TYPE_REPLY_ALL){
-                    NetworkCall.replyMail(activity, service, prefill_repl_itemid, to, cc, bcc, subject, body, false);
-                    publishProgress(STATUS_SENT, "");
-                }
-                else if(prefill_type == PREFILL_TYPE_REPLY_ALL){
-                    NetworkCall.replyMail(activity, service, prefill_repl_itemid, to, cc, bcc, subject, body, true);
-                    publishProgress(STATUS_SENT, "");
-                }
-                else if(prefill_type == PREFILL_TYPE_FORWARD){
-                    NetworkCall.forwardMail(activity, service, prefill_repl_itemid, to, cc, bcc, subject, body);
-                    publishProgress(STATUS_SENT, "");
-                }
-                else{
-                    NetworkCall.sendMail(activity, service, to, cc,bcc, subject, body);
-                    publishProgress(STATUS_SENT, "");
-                }
+                publishProgress(STATUS_SENT, "");
+
             } catch (URISyntaxException e) {
                 
                 Log.e(LOG_TAG, "Malformed Webmail URL");
@@ -655,14 +754,10 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Log.e(LOG_TAG, "Error Occured!\nDetails:" + e.getMessage());
                 e.printStackTrace();
                 publishProgress(STATUS_ERROR, msgSendingFailedLbl + "\n\nDetails:" + e.getMessage());
+            }finally{
+                saveDraftLock.unlock();
             }
             return true;
-        }
-
-        private String appendSignature(String body) {
-
-            body=body+signature;
-            return body;
         }
 
         @Override
@@ -673,7 +768,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 Notifications.showAlert(activity, progress[1]);
             }else if(progress[0].equalsIgnoreCase(STATUS_SENT)){
                 progressDialog.dismiss();
-                onBackPressed();
+                exitActivity();
                 Notifications.showToast(activity, activity.getText(R.string.compose_msg_sent), Toast.LENGTH_SHORT);
             }
         }
@@ -682,69 +777,178 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     //the start activity for result intent of "AddRecipientActivity" will  be called on clicking the "Add Recipient" buton. This method will be called when the child is finished.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        List<ContactSerializable> contactList ;
-        if (resultCode == RESULT_OK ) {
-            if (data.hasExtra(AddRecipientActivity.ADD_TYPE_EXTRA) && data.hasExtra(AddRecipientActivity.ADD_TYPE_COLLECTION)) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<ContactSerializable> contactList;
+        if (resultCode == RESULT_OK) {
+            switch(requestCode) {
+                case ADD_RECIPIENT_REQ_CODE:
+                //Add recipient
+                if (data.hasExtra(ADD_TYPE_EXTRA) && data.hasExtra(ADD_TYPE_COLLECTION)) {
+                    contactList = (ArrayList<ContactSerializable>) data.getSerializableExtra(ADD_TYPE_COLLECTION);
+                    int type = data.getIntExtra(ADD_TYPE_EXTRA, 0);
 
-                contactList = (ArrayList<ContactSerializable>)data.getSerializableExtra(AddRecipientActivity.ADD_TYPE_COLLECTION);
-                int type = data.getIntExtra(AddRecipientActivity.ADD_TYPE_EXTRA, 0);
-
-                if(type == AddRecipientActivity.ADD_TYPE_TO){
-                    for(ContactSerializable contact  : contactList){
-                        addToRecipient(contact);
-
+                    if (type == AddRecipientActivity.ADD_TYPE_TO) {
+                        for (ContactSerializable contact : contactList) {
+                            addToRecipient(contact);
+                        }
+                    } else if (type == AddRecipientActivity.ADD_TYPE_CC) {
+                        for (ContactSerializable contact : contactList) {
+                            addCCRecipient(contact);
+                        }
+                    } else if (type == AddRecipientActivity.ADD_TYPE_BCC) {
+                        for (ContactSerializable contact : contactList) {
+                            addBCCRecipient(contact);
+                        }
                     }
                 }
-                else if(type == AddRecipientActivity.ADD_TYPE_CC){
-                    for(ContactSerializable contact  : contactList){
+                break;
+                case OPEN_DOCUMENT_REQ_CODE:
+                //attachments
+                    ArrayList<Uri> uriList = new ArrayList<>();
+                    // multiple attachments can be selected. Loading it to a arraylist.
+                    if (data.getData() != null) {
+                        uriList.add(data.getData());
+                    } else if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            uriList.add(data.getClipData().getItemAt(i).getUri());
+                        }
+                    }
 
-                        addCCRecipient(contact);
+                    // create AttachmentCardView for all the URIs found in the arraylist.
+                    for (Uri uri : uriList) {
+                      attachAttachmentToMsg(uri);
                     }
+                    saveDraft(false);
+                    break;
+                default:
+                    Log.w(LOG_TAG, "Compose Activity -> unknown activity result code received: " + resultCode);
                 }
-                else if(type == AddRecipientActivity.ADD_TYPE_BCC){
-                    for(ContactSerializable contact  : contactList){
-                        addBCCRecipient(contact);
-                    }
-                }
-            }
         }
+    }
+
+    /**
+     * Creates the card view for the given uri and shows in UI. Also attaces the attachment to the msg
+     * @param uri
+     */
+    private void attachAttachmentToMsg(Uri uri) {
+        FileAttach fileAttach = getDocumentData(uri);
+        if (fileAttach != null) {
+            AttachmentCardView attachmentCardView = new AttachmentCardView(this, null);
+            try {
+                msg.getAttachments().addFileAttachment(fileAttach.fileName, getContentResolver().openInputStream(uri));
+            }catch(Exception e){
+                Utilities.generalCatchBlock(e, this);
+                Notifications.showToast(activity, getString(R.string.compose_attachment_error));
+                return;
+            }
+            attachmentCardView.setFileName(fileAttach.fileName);
+            try {
+                attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, Long.parseLong(fileAttach.size)));
+            } catch (ParseException | NumberFormatException e) {
+                attachmentCardView.setSizeOrStatus(fileAttach.size);
+            }
+            attachmentCardView.showRemoveIcon((View v) -> {
+                try {
+                    for(Attachment attach : msg.getAttachments()){
+                        if (attach.getName().equalsIgnoreCase(fileAttach.fileName)){
+                            msg.getAttachments().remove(attach);
+                            break;
+                        }
+                    }
+                    attachmentsLayout.removeView(attachmentCardView);
+                    saveDraft(false);
+                }catch(Exception e){
+                    Utilities.generalCatchBlock(e, this);
+                }
+            });
+            attachmentsLayout.addView(attachmentCardView);
+        }
+    }
+
+    private void showAttachementsFromMsg(EmailMessage msg) {
+        try {
+            for (Attachment attach : msg.getAttachments()) {
+                AttachmentCardView attachmentCardView = new AttachmentCardView(this, null);
+                attachmentCardView.setFileName(attach.getName());
+                attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, attach.getSize()));
+
+               /* attachmentCardView.showRemoveIcon((View v) -> {
+                    try {
+                        msg.getAttachments().remove(attach);
+                        attachmentsLayout.removeView(attachmentCardView);
+                        saveDraft(false);
+                    }catch(Exception e){
+                        Utilities.generalCatchBlock(e, this);
+                    }
+                });*/
+
+                attachmentsLayout.addView(attachmentCardView);
+            }
+        }catch (Exception e){
+            Utilities.generalCatchBlock(e, this);
+        }
+
+    }
+
+    private class FileAttach{
+        private String fileName;
+        private String size;
+        private Uri uri;
+        private FileAttach(String fileName, String size, Uri uri){
+            this.fileName = fileName;
+            this.size = size;
+            this.uri = uri;
+        }
+    }
+
+    /**
+     * Code copied from https://developer.android.com/training/data-storage/shared/documents-files#examine-metadata
+     * Retrieves the meta data of a file selected from the Storage Access Framework browser.
+     * @param uri
+     * @return
+     */
+    private FileAttach getDocumentData(Uri uri) {
+        try (Cursor cursor = activity.getContentResolver()
+                .query(uri, null, null, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+
+                String displayName = cursor.getString(
+                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                String size = null;
+                if (!cursor.isNull(sizeIndex)) {
+                    size = cursor.getString(sizeIndex);
+                } else {
+                    size = getString(R.string.compose_unknown_attachment_size);
+                }
+                return new FileAttach(displayName, size, uri);
+            }
+        }catch (Exception e){Utilities.generalCatchBlock(e, this);}
+        return null;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-            MenuItem menuItem;
+        if (!isResponseMsg()) {     //response message has issues in attachments
+            menu.add(getText(R.string.compose_actionbar_attach))
+                    .setIcon(R.drawable.round_attachment_white_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
 
-            menuItem = menu.add(getText(R.string.compose_actionbar_send));
-            MenuItemCompat.setShowAsAction(menuItem,
-                    MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menu.add(getText(R.string.compose_actionbar_send))
+                    .setIcon(R.drawable.round_send_white_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
 
-            menuItem = menu.add(getText(R.string.compose_actionbar_cancel));
-            MenuItemCompat.setShowAsAction(menuItem,
-                    MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+             menu.add(getText(R.string.compose_actionbar_save_draft))
+                .setIcon(R.drawable.round_save_white_24)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
-		/*
-				//Submenu
-				SubMenu subMenu = menu.addSubMenu("");
-
-				subMenu
-				.add(ACTIONBAR_SETTINGS)
-				.setIcon(OptionsUIContent.getSettingsIcon())
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-
-				subMenu
-				.add(ACTIONBAR_ABOUT)
-				.setIcon(OptionsUIContent.getAboutIcon())
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-
-				//Overflow submenu icon
-				MenuItem subMenuItem = subMenu.getItem();
-				subMenuItem.setIcon(OptionsUIContent.getMoreoverFlowIcon());
-				subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		 */
+            menu.add(getText(R.string.compose_actionbar_cancel))
+                    .setIcon(R.drawable.outline_cancel_white_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
         return true;
     }
@@ -752,14 +956,30 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(item!=null && item.getItemId()==android.R.id.home){
-            onBackPressed();
-        }
-        else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_send))){
-            sendMail();
-        }
-        else if(item!=null && item.getTitle().equals(getText(R.string.compose_actionbar_cancel))){
-            cancelPage();
+        if (item !=null) {
+            if (item.getItemId() == android.R.id.home) {
+                saveDraft(true);
+            } else if (item.getTitle().equals(getText(R.string.compose_actionbar_send))) {
+                sendMail();
+            }else if (item.getTitle().equals(getText(R.string.compose_actionbar_save_draft))) {
+                saveDraft(false);
+            }
+            else if (item.getTitle().equals(getText(R.string.compose_actionbar_cancel))) {
+                exitActivity();
+            }else if (item.getTitle().equals(getText(R.string.compose_actionbar_attach))) {
+                Intent intent=null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.putExtra(EXTRA_ALLOW_MULTIPLE, true);
+                   // intent.putExtra(EXTRA_INITIAL_URI, true);
+
+                }else{
+                    intent = new Intent(Intent.ACTION_GET_CONTENT);
+                }
+                    intent.setType("*/*");
+                    startActivityForResult(intent, OPEN_DOCUMENT_REQ_CODE);
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -767,27 +987,128 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     @Override
     public void onBackPressed() {
+        saveDraft(true);
+    }
+
+    private void exitActivity(){
         activity.finish();
         ApplyAnimation.setComposeActivityCloseAnim(activity);
     }
 
-    private void cancelPage() {
-        AlertDialog myConfirmBox =new AlertDialog.Builder(this)
-                //set message, title, and icon
-                .setTitle(getString(R.string.compose_alert_confirm_cancel_title))
-                .setMessage(getString(R.string.compose_alert_confirm_cancel_msg) )
-                .setPositiveButton(getString(R.string.alertdialog_positive_lbl)	, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        onBackPressed();
-                    }
-                })
-                .setNegativeButton(getString(R.string.alertdialog_negative_lbl), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        myConfirmBox.show();
+    /**
+     * User is navigating out of page. Automatically save a draft. Alert the user if the saving draft fails.
+     * @param exitPage - exits the page after saving
+     */
+    private void saveDraft(boolean exitPage) {
+        //check if whether wants to exit the activity while already a save draft in progress
+        if (exitPage && saveDraftLock.isLocked()){
+            new AlertDialog.Builder(activity)
+                    //set message, title, and icon
+                    .setTitle(getString(R.string.compose_alert_confirm_cancel_title))
+                    .setMessage(getString(R.string.compose_alert_confirm_cancel_saving))
+                    .setPositiveButton(getString(R.string.alertdialog_positive_lbl), (dialog, whichButton) -> {
+                        // User wants to exit the page even after knowing there is a save in progress. So cancel all the save draft runnables and close the page.
+                         // This shutdown is crucial because, when the user exits this page and immediately open ComposeActivity again, the previous thread will keep on saving the message and the new page "msg"
+                            // object is getting overwritten. So do a clean exit and clear all the runnables from this page.
+
+                        // Currently the shutdownNow is not working as expected. The save draft thread is not getting interrupted as expected.
+                        //Bug: https://trello.com/c/LP5lxUXj
+
+                        saveDraftExecutorService.shutdownNow();
+                        exitActivity();
+                    })
+                    .setNegativeButton(getString(R.string.alertdialog_negative_lbl), (dialog, which) -> dialog.dismiss())
+                    .create().show();
+            return;
+        } else if(exitPage && !isDirty()){
+            exitActivity();
+            return; //don't save draft when user didnt enter anything
+        }
+        //handler for bind msg call
+        Handler h = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message m) {
+                switch(m.what){
+                    case 0:// save draft started
+                        progressDispBar.setText(getString(R.string.compose_saving_draft));
+                        progressDispBar.showStatusBar();
+                        break;
+                    case 1:// save draft success
+                        progressDispBar.hideProgressBar();
+                        progressDispBar.setText(getString(R.string.compose_statusbar_save_success));
+                        if(exitPage) {
+                            Notifications.showToast(activity, activity.getString(R.string.compose_save_draft_success));
+                            exitActivity();
+                        }else{
+                            new Handler().postDelayed(()-> {
+                                if (!saveDraftLock.isLocked()) {  //this means already a save draft is in progress by another thread.
+                                    progressDispBar.hideStatusBar();
+                                }else{
+                                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread - not hiding the status bar because another save draft is running");
+                                }
+
+                            },2000);
+                        }
+                        break;
+                    case 2://error
+                        progressDispBar.hideProgressBar();
+                        progressDispBar.setText(getString(R.string.compose_statusbar_save_failure));
+                        if (exitPage) {
+                            AlertDialog myConfirmBox = new AlertDialog.Builder(activity)
+                                    //set message, title, and icon
+                                    .setTitle(getString(R.string.compose_alert_confirm_cancel_title))
+                                    .setMessage(getString(R.string.compose_alert_confirm_cancel_msg))
+                                    .setPositiveButton(getString(R.string.alertdialog_positive_lbl), (dialog, whichButton) -> exitActivity())
+                                    .setNegativeButton(getString(R.string.alertdialog_negative_lbl), (dialog, which) -> dialog.dismiss())
+                                    .create();
+                            myConfirmBox.show();
+                        }else{
+                            new Handler().postDelayed(()-> {
+                                if (!saveDraftLock.isLocked()) {  //this means already a save draft is in progress by another thread.
+                                    progressDispBar.hideStatusBar();
+                                }else{
+                                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread - not hiding the status bar because another save draft is running");
+                                }
+
+                            },2000);
+                        }
+                        break;
+                }
+            }
+        };
+        saveDraftExecutorService.submit(getSaveDraftThread(h));
+    }
+    private Runnable getSaveDraftThread(Handler h){
+        updateAllValues();
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquiring lock..");
+                    saveDraftLock.lock();
+                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquired lock");
+                    h.sendEmptyMessage(0);
+
+                    NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
+
+                    existingDraft=true; //when saving the draft multiple times, save() or update() will be called correspondingly based on this bool.
+
+                    h.sendEmptyMessage(1);
+                }catch(Exception e){
+                    Utilities.generalCatchBlock(e, this);
+                    h.sendEmptyMessage(2);
+                }finally {
+                    Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> releasing lock");
+                    saveDraftLock.unlock();
+                }
+
+            }
+        };
+
+    }
+
+    private boolean isDirty(){
+        return !(StringUtils.isEmpty(composeSubject.getText()) && StringUtils.isEmpty(composeBody.getText()) );
     }
 
     @Override
@@ -959,6 +1280,15 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isResponseMsg(){
+        if (prefill_type == PREFILL_TYPE_REPLY ||
+                prefill_type == PREFILL_TYPE_REPLY_ALL ||
+                prefill_type == PREFILL_TYPE_FORWARD) {
+            return true;
+        }
+        return false;
     }
 
     private void checkResolvedNames() {

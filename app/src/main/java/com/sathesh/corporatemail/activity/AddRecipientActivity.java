@@ -43,8 +43,6 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 	private ListView listView;
 	private Activity activity;
 	
-	public final static String   ADD_TYPE_EXTRA="ADD_TYPE_EXTRA";
-	public final static String   ADD_TYPE_COLLECTION="ADD_TYPE_COLLECTION";
 	public final static int   ADD_TYPE_TO=0;
 	public final static int   ADD_TYPE_CC=1;
 	public final static int   ADD_TYPE_BCC=2;
@@ -112,8 +110,6 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 
 	//To onclick 
 	public void addToOnClick(View view){
-
-
 		ArrayList<ContactSerializable> selectedList = getCheckedItems();
 		if(selectedList.size()<=0 && contactSearch.getText() !=null && (!(contactSearch.getText().toString().equals("")))&& (Utilities.isValidEmail(contactSearch.getText().toString()))){
 
@@ -127,8 +123,8 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 		}
 		if(selectedList.size()>0){
 			Intent data = new Intent();
-			data.putExtra(ADD_TYPE_EXTRA, ADD_TYPE_TO);
-			data.putExtra(ADD_TYPE_COLLECTION, selectedList);
+			data.putExtra(ComposeActivity.ADD_TYPE_EXTRA, ADD_TYPE_TO);
+			data.putExtra(ComposeActivity.ADD_TYPE_COLLECTION, selectedList);
 			// Activity finished ok, return the data
 			setResult(RESULT_OK, data);
 			finish();
@@ -157,8 +153,8 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 		}
 		if(selectedList.size()>0){
 			Intent data = new Intent();
-			data.putExtra(ADD_TYPE_EXTRA, ADD_TYPE_CC);
-			data.putExtra(ADD_TYPE_COLLECTION, selectedList);
+			data.putExtra(ComposeActivity.ADD_TYPE_EXTRA, ADD_TYPE_CC);
+			data.putExtra(ComposeActivity.ADD_TYPE_COLLECTION, selectedList);
 			// Activity finished ok, return the data
 			setResult(RESULT_OK, data);
 
@@ -186,8 +182,8 @@ public class AddRecipientActivity extends MyActivity implements Constants,IResol
 		}
 		if(selectedList.size()>0){
 			Intent data = new Intent();
-			data.putExtra(ADD_TYPE_EXTRA, ADD_TYPE_BCC);
-			data.putExtra(ADD_TYPE_COLLECTION, selectedList);
+			data.putExtra(ComposeActivity.ADD_TYPE_EXTRA, ADD_TYPE_BCC);
+			data.putExtra(ComposeActivity.ADD_TYPE_COLLECTION, selectedList);
 			// Activity finished ok, return the data
 			setResult(RESULT_OK, data);
 

@@ -12,6 +12,7 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.EditText;
 
 import androidx.core.content.FileProvider;
 
@@ -45,11 +46,9 @@ public class Utilities implements Constants {
 
 	}
 
-	public static String convertEditableToHTML(Editable text){
-
-		Spannable spannedBody=text;
-		return Html.toHtml(spannedBody);
-
+	public static String convertEditableToHTML(EditText editText){
+		editText.clearComposingText();
+		return Html.toHtml(editText.getText());
 	}
 
 	public static String convertHTMLToText(String html){

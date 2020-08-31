@@ -8,8 +8,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     tools:ignore="HardcodedText"
     android:paddingBottom="8dp"
-    android:paddingRight="8dp"
-    android:paddingEnd="8dp"
     android:foreground="?android:attr/selectableItemBackground"
     >
 
@@ -58,5 +56,16 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/view_card_attachment_remove"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/view_card_attachment_file_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/round_close_black_36" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
