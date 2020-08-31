@@ -205,7 +205,7 @@
                 android:ems="10"
                 android:hint="@string/compose_signature_lbl"
                 android:imeOptions="actionDone|flagNoEnterAction"
-                android:inputType="textMultiLine|textAutoCorrect|textCapSentences|textWebEditText"
+                android:inputType="textMultiLine|textCapSentences|textWebEditText"
                 android:minLines="3" >
             </EditText>
 
