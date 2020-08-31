@@ -50,6 +50,8 @@ import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,6 +63,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.exception.http.HttpErrorException;
 import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
@@ -70,6 +73,8 @@ import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.core.service.response.ResponseMessage;
 import microsoft.exchange.webservices.data.misc.NameResolutionCollection;
 import microsoft.exchange.webservices.data.property.complex.Attachment;
+import microsoft.exchange.webservices.data.property.complex.FileAttachment;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
 
 import static android.content.Intent.EXTRA_ALLOW_MULTIPLE;
 
@@ -230,6 +235,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         notResolvedNames = new StringBuffer();
 
         setSupportProgressBarIndeterminateVisibility(false);
+        existingDraft=false;
         //prefill data
         try {
             if(getIntent().getBooleanExtra(PREFILL_DATA_EXTRA, false)){
@@ -240,7 +246,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         } catch (Exception e) {
             Utilities.generalCatchBlock(e, this);
         }
-        existingDraft=false;
         saveDraftExecutorService =  Executors.newFixedThreadPool(2);
     }
 
@@ -341,6 +346,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                             Utilities.generalCatchBlock(e, this);
                         }
                     }
+                }else if (m.what == 3) { //show attachments
+                    showAttachementsFromMsg(msg);
                 }
             }
         };
@@ -354,16 +361,27 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             public void run() {
                 try {
                     h.sendEmptyMessage(0);
+                    //Network call
                     msg = NetworkCall.bind(activity, service, prefill_repl_itemid);
                     switch (prefill_type){
                         case PREFILL_TYPE_REPLY:
                             responseMsg = msg.createReply(false);
+                            //Network Call
+                            msg = responseMsg.save();
+                            existingDraft = true;
                             break;
                         case PREFILL_TYPE_REPLY_ALL:
                             responseMsg = msg.createReply(true);
+                            //Network Call
+                            msg = responseMsg.save();
+                            existingDraft = true;
                             break;
                         case PREFILL_TYPE_FORWARD:
+                            h.sendEmptyMessage(3);
                             responseMsg = msg.createForward();
+                            //Network Call
+                            msg = responseMsg.save();
+                            existingDraft = true;
                             break;
                     }
                     h.sendEmptyMessage(1);
@@ -410,10 +428,6 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
         else{
             composeSignature.setVisibility(View.GONE);
         }
-    }
-
-    public void sendBtnOnClick(View view){
-        sendMail();
     }
 
     public void toAddOnClick(View view){
@@ -704,12 +718,15 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
             try {
                 saveDraftLock.lock();   //save draft thread should not be run in parallel with sending. so locking and unlocking the save draft lock here.
-                //EWS call
-                //Send
-                if (isResponseMsg()) {
-                    NetworkCall.sendResponseMail(activity, responseMsg, oldDraftMail, to, cc, bcc, subject, body);
-                }else{
+
+                if(!isResponseMsg()) {
+                    //EWS call
+                    //Send
                     NetworkCall.sendMail(activity, msg, to, cc, bcc, subject, body);
+                }else{
+                    //EWS call
+                    //Send
+                    NetworkCall.sendResponseMail(activity, responseMsg, msg, to, cc, bcc, subject, body);
                 }
 
                 publishProgress(STATUS_SENT, "");
@@ -844,6 +861,31 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             });
             attachmentsLayout.addView(attachmentCardView);
         }
+    }
+
+    private void showAttachementsFromMsg(EmailMessage msg) {
+        try {
+            for (Attachment attach : msg.getAttachments()) {
+                AttachmentCardView attachmentCardView = new AttachmentCardView(this, null);
+                attachmentCardView.setFileName(attach.getName());
+                attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, attach.getSize()));
+
+                attachmentCardView.showRemoveIcon((View v) -> {
+                    try {
+                        msg.getAttachments().remove(attach);
+                        attachmentsLayout.removeView(attachmentCardView);
+                        saveDraft(false);
+                    }catch(Exception e){
+                        Utilities.generalCatchBlock(e, this);
+                    }
+                });
+
+                attachmentsLayout.addView(attachmentCardView);
+            }
+        }catch (Exception e){
+            Utilities.generalCatchBlock(e, this);
+        }
+
     }
 
     private class FileAttach{
@@ -1040,11 +1082,8 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     Log.d(LOG_TAG, "ComposeActivity -> saveDraftThread -> acquired lock");
                     h.sendEmptyMessage(0);
 
-                    if (isResponseMsg()) {
-                        oldDraftMail = NetworkCall.saveResponseDraft(activity, responseMsg, oldDraftMail, to, cc,bcc, subject, body);
-                    }else{
-                        NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
-                    }
+                    NetworkCall.saveDraft(activity,  msg, existingDraft, to, cc,bcc, subject, body);
+
                     existingDraft=true; //when saving the draft multiple times, save() or update() will be called correspondingly based on this bool.
 
                     h.sendEmptyMessage(1);
