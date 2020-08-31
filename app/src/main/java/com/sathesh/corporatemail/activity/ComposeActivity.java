@@ -870,7 +870,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                 attachmentCardView.setFileName(attach.getName());
                 attachmentCardView.setSizeOrStatus(android.text.format.Formatter.formatShortFileSize(this, attach.getSize()));
 
-                attachmentCardView.showRemoveIcon((View v) -> {
+               /* attachmentCardView.showRemoveIcon((View v) -> {
                     try {
                         msg.getAttachments().remove(attach);
                         attachmentsLayout.removeView(attachmentCardView);
@@ -878,7 +878,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     }catch(Exception e){
                         Utilities.generalCatchBlock(e, this);
                     }
-                });
+                });*/
 
                 attachmentsLayout.addView(attachmentCardView);
             }
@@ -930,9 +930,11 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
+        if (!isResponseMsg()) {     //response message has issues in attachments
             menu.add(getText(R.string.compose_actionbar_attach))
-                .setIcon(R.drawable.round_attachment_white_24)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS );
+                    .setIcon(R.drawable.round_attachment_white_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
 
             menu.add(getText(R.string.compose_actionbar_send))
                     .setIcon(R.drawable.round_send_white_24)
