@@ -404,7 +404,7 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             try {
 
                 //store signature
-                generalSettings.storeComposeSignature(activity, Utilities.convertEditableToHTML(composeSignature.getText()));
+                generalSettings.storeComposeSignature(activity, Utilities.convertEditableToHTML(composeSignature));
             } catch (Exception e1) {
                 
                 e1.printStackTrace();
@@ -691,14 +691,14 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
 
     private void updateAllValues(){
         subject = composeSubject.getText().toString();
-        body=Utilities.convertEditableToHTML(composeBody.getText());
-        signature = Utilities.convertEditableToHTML(composeSignature.getText());
+        body=Utilities.convertEditableToHTML(composeBody);
+        signature = Utilities.convertEditableToHTML(composeSignature);
         to=actualToReceivers.values();
         cc=actualCCReceivers.values();
         bcc=actualBCCReceivers.values();
 
         if(generalSettings.isComposeSignatureEnabled(activity)){
-            body += signature;
+            body +=  signature;
         }
     }
     public class Send extends AsyncTask<Void, String, Boolean>{

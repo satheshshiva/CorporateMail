@@ -121,7 +121,7 @@
     <string name="compose_resolving_names_wait">Please wait while resolving names</string>
     <string name="compose_to_box_not_empty">Please click the Add symbol to add the To recipient</string>
     <string name="compose_body_lbl">Message</string>
-    <string name="compose_signature_lbl">Signature</string>
+    <string name="compose_signature_lbl">Signature (common for all emails)</string>
     <string name="compose_quoted_text_lbl">Quoted Text:</string>
     <string name="compose_send_btn_lbl">Send</string>
     <string name="compose_sending">Sending.. </string>
