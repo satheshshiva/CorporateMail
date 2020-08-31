@@ -172,7 +172,7 @@
                 android:layout_marginTop="5dp"
                 android:ems="10"
                 android:hint="@string/compose_subject_lbl"
-                android:inputType="textEmailSubject"
+                android:inputType="textEmailSubject|textCapSentences"
                 android:singleLine="true" >
             </EditText>
 
