@@ -49,6 +49,8 @@ import com.sathesh.corporatemail.ui.components.WarningDisplayNotificationBar;
 import com.sathesh.corporatemail.util.Utilities;
 import com.sathesh.corporatemail.web.StandardWebView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -1018,6 +1020,9 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
                     .setNegativeButton(getString(R.string.alertdialog_negative_lbl), (dialog, which) -> dialog.dismiss())
                     .create().show();
             return;
+        } else if(exitPage && !isDirty()){
+            exitActivity();
+            return; //don't save draft when user didnt enter anything
         }
         //handler for bind msg call
         Handler h = new Handler(Looper.getMainLooper()){
@@ -1100,6 +1105,10 @@ public class ComposeActivity extends MyActivity implements Constants,IResolveNam
             }
         };
 
+    }
+
+    private boolean isDirty(){
+        return !(StringUtils.isEmpty(composeSubject.getText()) && StringUtils.isEmpty(composeBody.getText()) );
     }
 
     @Override
