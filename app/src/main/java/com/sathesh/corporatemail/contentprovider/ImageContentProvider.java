@@ -9,7 +9,7 @@ import android.os.*;
 public class ImageContentProvider extends ContentProvider {
 
 
-   private static final String URI_PREFIX = "content://com.wipromail.sathesh.localfile";
+   private static final String URI_PREFIX = "content://com.sathesh.corporatemail.localfile";
 
    public static String constructUri(String url) {
        Uri uri = Uri.parse(url);

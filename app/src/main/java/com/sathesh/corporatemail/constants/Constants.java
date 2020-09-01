@@ -158,26 +158,6 @@ public interface Constants {
 	boolean showRateApp = false;
 
 	/* -------------------------------------------------------------------------------------
-	----------------------------------  Application Auto Updater ----------------------------
-	--------------------------------------------------------------------------------------*/
-
-	long UPDATE_AUTO_CHECK_NO_OF_DAYS = 2;
-	String APPLICATION_APK_DOWNLOAD_URL1_DEV = "https://tiny.cc/wipromaildev";
-	String APPLICATION_LATEST_VERSION_PROP_URL_DEV = "https://tiny.cc/wipromailpropdev";
-	String APPLICATION_CHANGELOG_URL_DEV = "https://tiny.cc/wipromailchangelogdev";
-
-	String APPLICATION_APK_DOWNLOAD_URL1_REL = "https://tiny.cc/wipromail";
-	String APPLICATION_LATEST_VERSION_PROP_URL_REL = "https://tiny.cc/wipromailprop";
-	String APPLICATION_CHANGELOG_URL_REL = "https://tiny.cc/wipromailchangelog";
-
-	//String APPLICATION_APK_DOWNLOAD_URL1 = "https://dl.dropbox.com/s/dn6nvxpk4a4fs6h/MainActivity-debug.apk?dl=1";
-	String APPLICATION_APK_DOWNLOAD_TEMPLOC = "/CorporateMail/download/";
-
-	String APPLICATION_APK_DOWNLOAD_TEMP_FILENAME = "CorporateMail.apk";
-	String LATEST_VERSION_CODE = "LATEST_VERSION_CODE";	//look for this prop in remote prop file 
-	String LATEST_VERSION_NAME = "LATEST_VERSION_NAME";	//look for this prop in remote prop file 
-
-	/* -------------------------------------------------------------------------------------
 	----------------------------------  External ----------------------------
 	--------------------------------------------------------------------------------------*/
 	//String FB_LIKE_URL_APP = "fb://profile/370304669770278"; 
