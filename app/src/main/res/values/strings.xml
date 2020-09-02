@@ -324,5 +324,6 @@
 
     <!-- Terms and conditions -->
     <string name="title_activity_tnc">Privacy</string>
+    <string name="privacy_policy">View our privacy policy</string>
 
 </resources>
