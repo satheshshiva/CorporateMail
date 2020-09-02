@@ -3,7 +3,7 @@
     package="com.sathesh.corporatemail"
     android:installLocation="auto"
     android:versionCode="21"
-    android:versionName="1.2">
+    android:versionName="1.2.1">
     <!-- Allow Internet Access to the application -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
