@@ -322,4 +322,7 @@
     <string name="attachment_download_error">Download error</string>
     <string name="attachment_open_error">Could not open file</string>
 
+    <!-- Terms and conditions -->
+    <string name="title_activity_tnc">Privacy</string>
+
 </resources>

@@ -80,6 +80,10 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/ParentTheme.DarkActionBar" />
+        <activity
+            android:name=".activity.TncActivity"
+            android:label="@string/title_activity_tnc"
+            android:uiOptions="splitActionBarWhenNarrow" />
     </application>
 
 </manifest>
