@@ -3,12 +3,14 @@ package com.sathesh.corporatemail.fragment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -16,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
+import com.sathesh.corporatemail.activity.TncActivity;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
@@ -34,6 +37,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
     private ActionBar myActionBar;
     private final static String ARG_CHECK_FOR_UPDATES="ARG_CHECK_FOR_UPDATES";
     private ActivityDataPasser mListener;
+    private TextView aboutTnc;
 
     /** Factory for this fragment
      *
@@ -101,6 +105,13 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         myActionBar.setTitle(activity.getString(R.string.drawer_menu_about));
         myActionBar.setDisplayHomeAsUpEnabled(true);
         myActionBar.setHomeButtonEnabled(true);
+
+        aboutTnc = (TextView) view.findViewById(R.id.about_tnc);
+
+        aboutTnc.setOnClickListener((v)->{
+            Intent intent = new Intent(activity, TncActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }

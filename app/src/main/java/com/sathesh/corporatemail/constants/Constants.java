@@ -221,4 +221,12 @@ public interface Constants {
 		String contact = "transitionContactShared";
 	}
 
+	/* -------------------------------------------------------------------------------------
+----------------------------------  Terms and conditions ----------------------------
+--------------------------------------------------------------------------------------*/
+
+	interface Tnc {
+		String privacyUrl = "https://sites.google.com/view/corporatemailprivacy/home";
+	}
+
 }
