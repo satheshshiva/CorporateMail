@@ -3,7 +3,7 @@
 
     <!-- Application -->
     <string name="app_name">Corporate Mail</string>
-    <string name="app_version">1.2</string>
+    <string name="app_version">1.2.1</string>
 
     <!-- General -->
     <string name="noSubjectDisplay">(no subject)</string>
