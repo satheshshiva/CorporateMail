@@ -29,3 +29,4 @@ CORPORATE MAIL:
 1.0.1           19      25Feb2019 - Firebase integration for cloud messaging, analytics, crashlytics. Removed google analytics
 1.2             20      01Sept2020 - Ton of improvements. ViewPager, fixed date isssue, attachments support, redesigned view mail, etc., (Sqlite,DB VERSION=4).
                         First version for google play store
+1.2.1           21      01Sept2020 - privac policy included in the app
