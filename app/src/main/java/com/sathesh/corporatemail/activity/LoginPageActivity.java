@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
@@ -25,6 +26,7 @@ import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.ui.util.UIutilities;
 
 import java.net.URISyntaxException;
 
@@ -43,7 +45,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
     private Activity activity;
     private Context context;
     private EditText login_url, login_username, login_passwd;
-
+    private TextView tncTextView;
     MyApplication application;
 
     @Override
@@ -63,9 +65,14 @@ public class LoginPageActivity extends MyActivity implements Constants {
         login_username = (EditText)findViewById(R.id.login_username);
         login_passwd = (EditText)findViewById(R.id.login_passwd);
 
+        tncTextView = (TextView) findViewById(R.id.login_tnc);
+
         if (getSupportActionBar() != null ) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+
+        UIutilities.setPrivacyPolicyTextView(this, tncTextView);
+
         //testingdb(activity);
 		/* if(customTitleSupported)
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getInboxTitleBarLayout());*/

@@ -1,13 +1,23 @@
 package com.sathesh.corporatemail.ui.util;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.sathesh.corporatemail.activity.TncActivity;
+import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
 
 public class UIutilities implements Constants{
@@ -53,4 +63,28 @@ public class UIutilities implements Constants{
 				dp,
 				r.getDisplayMetrics());
 	}
+
+    public static void setPrivacyPolicyTextView(MyActivity activity, TextView tncTextView) {
+
+		tncTextView.setMovementMethod(LinkMovementMethod.getInstance());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			tncTextView.setTransitionName(TransitionSharedElementNames.privacyPolicy);
+		}
+		SpannableString ss = new SpannableString("View our privacy policy");
+		ClickableSpan clickableSpan = new ClickableSpan() {
+			@Override
+			public void onClick(View textView) {
+				Intent intent = new Intent(activity, TncActivity.class);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					ActivityOptions options = ActivityOptions
+							.makeSceneTransitionAnimation(activity, tncTextView, TransitionSharedElementNames.privacyPolicy);
+					activity.startActivity(intent, options.toBundle());
+					return;
+				}
+				activity.startActivity(intent);
+			}
+		};
+		ss.setSpan(clickableSpan, 9, 23, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tncTextView.setText(ss);
+    }
 }
