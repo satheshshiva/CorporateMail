@@ -3,7 +3,7 @@
 
     <!-- Application -->
     <string name="app_name">Corporate Mail</string>
-    <string name="app_version">1.0.1</string>
+    <string name="app_version">1.2.1</string>
 
     <!-- General -->
     <string name="noSubjectDisplay">(no subject)</string>
@@ -213,7 +213,7 @@
     <string name="preferences_clear_cache">Clear Cache</string>
     <string name="preferences_clear_cache_summary">Clears all the mail offline data stored in phone</string>
     <string name="preferences_cache_cleared_msg">Cache Cleared. Reopen app.</string>
-    <string name="crash_toast_text">Ooooops ! Wipro Mail has just crashed. Crash log will be sent to the developer.</string>
+    <string name="crash_toast_text">Ooooops ! Corporate Mail has just crashed. Crash log will be sent to the developer.</string>
     <string name="app_updater_downloading">Downloading latest version..</string>
     <string name="dialog_webmail_url_title">Webmail URL</string>
     <string name="dialog_signout_alert_lbl">Are you sure you want to Sign Out?</string>
@@ -321,5 +321,9 @@
     <!-- Attachments -->
     <string name="attachment_download_error">Download error</string>
     <string name="attachment_open_error">Could not open file</string>
+
+    <!-- Terms and conditions -->
+    <string name="title_activity_tnc">Privacy</string>
+    <string name="privacy_policy">View our privacy policy</string>
 
 </resources>

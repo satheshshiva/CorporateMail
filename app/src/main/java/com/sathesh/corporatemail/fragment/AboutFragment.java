@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -22,6 +23,7 @@ import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.fragment.datapasser.AboutFragmentDataPasser;
 import com.sathesh.corporatemail.ui.listeners.AboutFragmentListener;
+import com.sathesh.corporatemail.ui.util.UIutilities;
 
 
 public class AboutFragment extends Fragment implements Constants,AboutFragmentDataPasser{
@@ -34,6 +36,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
     private ActionBar myActionBar;
     private final static String ARG_CHECK_FOR_UPDATES="ARG_CHECK_FOR_UPDATES";
     private ActivityDataPasser mListener;
+    private TextView aboutTnc;
 
     /** Factory for this fragment
      *
@@ -101,6 +104,10 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
         myActionBar.setTitle(activity.getString(R.string.drawer_menu_about));
         myActionBar.setDisplayHomeAsUpEnabled(true);
         myActionBar.setHomeButtonEnabled(true);
+
+        aboutTnc = (TextView) view.findViewById(R.id.about_tnc);
+
+        UIutilities.setPrivacyPolicyTextView(activity, aboutTnc);
 
         return view;
     }

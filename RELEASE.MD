@@ -27,3 +27,6 @@ VERSION NAME	CODE	DATE                                DB VERSION
 CORPORATE MAIL:
 1.0             18      24Feb2019 - Android Pie 9.0 API 28 compatibility. Changed the app name to `Corporate Mail`
 1.0.1           19      25Feb2019 - Firebase integration for cloud messaging, analytics, crashlytics. Removed google analytics
+1.2             20      01Sept2020 - Ton of improvements. ViewPager, fixed date isssue, attachments support, redesigned view mail, etc., (Sqlite,DB VERSION=4).
+                        First version for google play store
+1.2.1           21      01Sept2020 - privac policy included in the app
