@@ -26,6 +26,7 @@ import com.sathesh.corporatemail.customexceptions.NoInternetConnectionException;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
+import com.sathesh.corporatemail.ui.util.UIutilities;
 
 import java.net.URISyntaxException;
 
@@ -70,10 +71,8 @@ public class LoginPageActivity extends MyActivity implements Constants {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
 
-        tncTextView.setOnClickListener((v)->{
-            Intent intent = new Intent(this, TncActivity.class);
-            startActivity(intent);
-        });
+        UIutilities.setPrivacyPolicyTextView(this, tncTextView);
+
         //testingdb(activity);
 		/* if(customTitleSupported)
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, CustomTitleBar.getInboxTitleBarLayout());*/

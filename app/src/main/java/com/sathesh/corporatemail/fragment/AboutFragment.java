@@ -3,7 +3,6 @@ package com.sathesh.corporatemail.fragment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +17,13 @@ import androidx.fragment.app.Fragment;
 
 import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.R;
-import com.sathesh.corporatemail.activity.TncActivity;
 import com.sathesh.corporatemail.application.MailApplication;
 import com.sathesh.corporatemail.application.MyActivity;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.fragment.datapasser.AboutFragmentDataPasser;
 import com.sathesh.corporatemail.ui.listeners.AboutFragmentListener;
+import com.sathesh.corporatemail.ui.util.UIutilities;
 
 
 public class AboutFragment extends Fragment implements Constants,AboutFragmentDataPasser{
@@ -108,10 +107,7 @@ public class AboutFragment extends Fragment implements Constants,AboutFragmentDa
 
         aboutTnc = (TextView) view.findViewById(R.id.about_tnc);
 
-        aboutTnc.setOnClickListener((v)->{
-            Intent intent = new Intent(activity, TncActivity.class);
-            startActivity(intent);
-        });
+        UIutilities.setPrivacyPolicyTextView(activity, aboutTnc);
 
         return view;
     }
