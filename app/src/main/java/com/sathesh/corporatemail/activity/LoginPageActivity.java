@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.sathesh.corporatemail.customui.Notifications;
 import com.sathesh.corporatemail.ews.EWSConnection;
 import com.sathesh.corporatemail.ews.NetworkCall;
 import com.sathesh.corporatemail.ui.util.UIutilities;
+import com.sathesh.corporatemail.util.Utilities;
 
 import java.net.URISyntaxException;
 
@@ -119,7 +121,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
         password = login_passwd.getText().toString();
 
         //validate user name
-        if(loginUrl.equalsIgnoreCase("")) {
+        if(loginUrl.equalsIgnoreCase("") || !URLUtil.isNetworkUrl(loginUrl)) {
             //if user name is null then shake the edit text
             login_url.startAnimation(ApplyAnimation.getLoginPageTextViewShakeAnim((MyActivity) activity));
             return;
@@ -175,9 +177,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 //get and store userd detials
                 //EWS call
                 publishProgress("3" ,"RUNNING", LOGGING_IN_PROG2_TEXT);
-                try{
-                    retrieveAndStoreUserDetails(service, paramArrayOfParams[0]);
-                }catch(Exception e){e.printStackTrace();}
+                retrieveAndStoreUserDetails(service, paramArrayOfParams[1]);
 
                 //EWScall
                 FindFoldersResults findResults = NetworkCall.getInboxFolders(service);
@@ -193,12 +193,15 @@ public class LoginPageActivity extends MyActivity implements Constants {
 
             }
             catch(NullPointerException e){
+                Utilities.generalCatchBlock(e, this);
                 publishProgress("0" ,"ERROR", "Check your Internet Connection\n\nDetails:NPE"  );
             }
             catch (URISyntaxException e) {
+                Utilities.generalCatchBlock(e, this);
                 publishProgress("0" ,"ERROR", MALFORMED_WEBMAIL_URL_TEXT);
             }
             catch(HttpErrorException  | ServiceRequestException e){
+                Utilities.generalCatchBlock(e, this);
                 if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
                     publishProgress("0" ,"ERROR", AUTHENICATION_FAILED_TEXT);
                 }
@@ -209,6 +212,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
             }
 
             catch (Exception e) {
+                Utilities.generalCatchBlock(e, this);
                 publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " +e.getMessage());
             }
 
