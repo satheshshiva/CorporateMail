@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.text.Editable;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
@@ -16,13 +14,11 @@ import android.widget.EditText;
 
 import androidx.core.content.FileProvider;
 
-import com.sathesh.corporatemail.BuildConfig;
 import com.sathesh.corporatemail.constants.Constants;
 import com.sathesh.corporatemail.security.EncryptionDecryption;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -236,7 +232,6 @@ public class Utilities implements Constants {
                 .append(" on ")
                 .append(thisClass.getClass().getName()).append(":").append(e.getStackTrace()[0].getLineNumber())
                 .toString());
-        if(BuildConfig.DEBUG)
             e.printStackTrace();
     }
 
@@ -251,7 +246,6 @@ public class Utilities implements Constants {
         Log.e(LOG_TAG, new StringBuffer()
                 .append(e.getClass().getName()).append(":").append(e.getMessage())
                 .toString());
-        if(BuildConfig.DEBUG)
             e.printStackTrace();
     }
 
