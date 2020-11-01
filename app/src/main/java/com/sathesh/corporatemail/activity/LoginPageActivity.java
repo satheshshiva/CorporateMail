@@ -15,6 +15,7 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.sathesh.corporatemail.R;
 import com.sathesh.corporatemail.adapter.GeneralPreferenceAdapter;
 import com.sathesh.corporatemail.animation.ApplyAnimation;
@@ -183,6 +184,12 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 FindFoldersResults findResults = NetworkCall.getInboxFolders(service);
                 publishProgress("6" ,"RUNNING", LOGGING_IN_PROG3_TEXT);
 
+                //Analytics - recording successful login
+                Bundle bundle = new Bundle();
+                bundle.putString("Login_URL", paramArrayOfParams[0]);
+                FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+                FirebaseAnalytics.getInstance(context).setUserProperty("Login_URL", paramArrayOfParams[0]);
+
                 for(Folder folder : findResults.getFolders())
                 {
                     Log.i(LOG_TAG, "Count======"+folder.getChildFolderCount());
@@ -195,13 +202,17 @@ public class LoginPageActivity extends MyActivity implements Constants {
             catch(NullPointerException e){
                 Utilities.generalCatchBlock(e, this);
                 publishProgress("0" ,"ERROR", "Check your Internet Connection\n\nDetails:NPE"  );
+                analyticsLoginError(paramArrayOfParams[0]);
+
             }
             catch (URISyntaxException e) {
                 Utilities.generalCatchBlock(e, this);
                 publishProgress("0" ,"ERROR", MALFORMED_WEBMAIL_URL_TEXT);
+                analyticsLoginError(paramArrayOfParams[0]);
             }
             catch(HttpErrorException  | ServiceRequestException e){
                 Utilities.generalCatchBlock(e, this);
+                analyticsLoginError(paramArrayOfParams[0]);
                 if(e.getMessage().toLowerCase().contains("Unauthorized".toLowerCase())){
                     publishProgress("0" ,"ERROR", AUTHENICATION_FAILED_TEXT);
                 }
@@ -214,10 +225,19 @@ public class LoginPageActivity extends MyActivity implements Constants {
             catch (Exception e) {
                 Utilities.generalCatchBlock(e, this);
                 publishProgress("0" ,"ERROR", "Error Occured!\n\nDetails: " +e.getMessage());
+                analyticsLoginError(paramArrayOfParams[0]);
             }
 
-            return 0l;
+            return 0L;
 
+        }
+
+        private void analyticsLoginError(String url){
+            //Analytics - recording failed login
+            Bundle bundle = new Bundle();
+            bundle.putString("Login_URL", url);
+            FirebaseAnalytics.getInstance(context).logEvent("login_error", bundle);
+            FirebaseAnalytics.getInstance(context).setUserProperty("Login_URL", url);
         }
 
         private void retrieveAndStoreUserDetails(ExchangeService service, String username) throws NoInternetConnectionException, Exception {

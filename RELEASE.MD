@@ -31,3 +31,4 @@ CORPORATE MAIL:
                         First version for google play store
 1.2.1           21      01Sept2020 - privac policy included in the app
 1.2.2           22      06Sept2020 - Bug fix = Login page error when a malformed URL is used
+1.2.3           23      31Oct2020  - crashlytics -  increased version, added logging of login url
