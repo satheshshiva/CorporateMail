@@ -188,7 +188,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
                 Bundle bundle = new Bundle();
                 bundle.putString("Login_URL", paramArrayOfParams[0]);
                 FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-
+                FirebaseAnalytics.getInstance(context).setUserProperty("Login_URL", paramArrayOfParams[0]);
 
                 for(Folder folder : findResults.getFolders())
                 {
@@ -237,6 +237,7 @@ public class LoginPageActivity extends MyActivity implements Constants {
             Bundle bundle = new Bundle();
             bundle.putString("Login_URL", url);
             FirebaseAnalytics.getInstance(context).logEvent("login_error", bundle);
+            FirebaseAnalytics.getInstance(context).setUserProperty("Login_URL", url);
         }
 
         private void retrieveAndStoreUserDetails(ExchangeService service, String username) throws NoInternetConnectionException, Exception {
