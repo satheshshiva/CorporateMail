@@ -32,3 +32,4 @@ CORPORATE MAIL:
 1.2.1           21      01Sept2020 - privac policy included in the app
 1.2.2           22      06Sept2020 - Bug fix = Login page error when a malformed URL is used
 1.2.3           23      31Oct2020  - crashlytics -  increased version, added logging of login url
+1.2.4           24      27Dec2021  - updated latest dependency versiion. Releasing primarily to resolve a credentials discrepancy in Google console. minsdk bumped from 16 to 19 bcos of firebase 
