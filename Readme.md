@@ -26,8 +26,6 @@ Follow these instructions to build and run the project.
    <img src="docs/screenshot1.png" width="250" hspace="20"/>
    <img src="docs/screenshot2.png" width="250" hspace="20"/>
    <img src="docs/screenshot3.png" width="250" hspace="20"/>
-   <img src="docs/screenshot4.png" width="250" hspace="20"/>
-   <img src="docs/screenshot5.png" width="250" hspace="20"/>
 </div>
 
 ## Contributing Guidelines
