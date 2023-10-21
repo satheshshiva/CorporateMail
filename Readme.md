@@ -3,7 +3,7 @@
 <h2 align="center"><b>Corporte Mail</b></h2>
 <h4 align="center">Email client for a wide range of corporate companies using Microsoft Outlook.</h4>
 
-<p align="center"><a href="https://play.google.com/store/apps/details?id=com.arshad.feedback"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="250"/></a></p>
+<p align="center"><a href="https://play.google.com/store/apps/details?id=com.sathesh.corporatemail"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="250"/></a></p>
 
 ## Corporate Mail
 This android app is an email client for the Microsoft Outlook server. The code is clean without the lot of bloatware found in other similar apps found in the play store.
