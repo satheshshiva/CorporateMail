@@ -2,6 +2,7 @@ Documents
 cert
 Resources
 app/google-services.json
+java*.hprof
 
 # Created by .ignore support plugin (hsz.mobi)
 /.idea/
